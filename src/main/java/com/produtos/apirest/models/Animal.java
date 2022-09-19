@@ -1,0 +1,39 @@
+package com.produtos.apirest.models;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.util.List;
+
+@Entity
+@Table(name = "animal")
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Animal {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
+    private long animalId;
+
+    @Column(name = "nome")
+    private String nome;
+
+    @ManyToOne
+    @JoinColumn(name="tipo_id", nullable = false)
+    private TipoAnimal tipoAnimal;
+
+    @ManyToOne
+    @JoinColumn(name = "dono_id", nullable = false)
+    private Dono dono;
+
+    @OneToMany(mappedBy = "animal")
+    @JsonIgnore
+    private List<Consulta> consultas;
+}
