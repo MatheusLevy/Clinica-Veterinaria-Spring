@@ -30,7 +30,7 @@ public class DonoController {
         }
     }
 
-    @PostMapping("/atualizar")
+    @PutMapping("/atualizar")
     public ResponseEntity atualizar(@RequestBody Dono dono){
         try{
             Dono donoAtualizado = donoService.atualizar(dono);

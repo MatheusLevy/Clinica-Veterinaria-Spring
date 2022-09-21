@@ -44,7 +44,7 @@ public class TipoAnimalController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    @PostMapping("/atualizar")
+    @PutMapping("/atualizar")
     public ResponseEntity atualizar(@RequestBody TipoAnimal tipo_animal){
         try{
             TipoAnimal atualizado = tipoService.atualizar(tipo_animal);
