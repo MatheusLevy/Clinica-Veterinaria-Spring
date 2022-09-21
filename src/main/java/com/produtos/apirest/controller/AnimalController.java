@@ -50,6 +50,17 @@ public class AnimalController {
         }
     }
 
+    @DeleteMapping("/remover/feedback")
+    public ResponseEntity removerComFeedback(@RequestBody Animal animal){
+        try{
+            Animal animalRemovido = animalService.removerFeedback(animal);
+            return ResponseEntity.ok(animalRemovido);
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
     @GetMapping("/buscarId/{id}")
     public ResponseEntity buscarPorId(@PathVariable(value = "id", required = true) Long id){
         Animal animal = Animal.builder().animalId(id).build();
@@ -78,5 +89,18 @@ public class AnimalController {
         }
     }
 
+    @PutMapping("/atualizar/dono")
+    public ResponseEntity atualizarDono(@RequestBody AnimalDTO animalDTO){
+        try {
+            Dono dono = Dono.builder().donoId(animalDTO.getIdDono()).build();
+            Dono donoBuscado = donoService.buscarDonoPorId(dono);
+            Animal animal = Animal.builder().animalId(animalDTO.getId()).build();
+            Animal animalBuscado = animalService.buscarPorId(animal);
+            Animal animaAtualizado = animalService.atualizarDono(donoBuscado, animalBuscado);
+            return ResponseEntity.ok(animaAtualizado);
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 
 }
