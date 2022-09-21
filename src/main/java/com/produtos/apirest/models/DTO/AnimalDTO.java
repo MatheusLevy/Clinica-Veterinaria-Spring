@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AnimalDTO {
+    private Long id;
     private String nome;
-    private Long id_tipo_animal;
-    private Long id_dono;
+    private Long idTipoAnimal;
+    private Long idDono;
 }

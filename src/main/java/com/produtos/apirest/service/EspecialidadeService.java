@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class EspecialidadeService {
+public class    EspecialidadeService {
 
     @Autowired
     public EspecialidadeRepo repo;

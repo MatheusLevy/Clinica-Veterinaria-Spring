@@ -29,8 +29,8 @@ public class AnimalController {
     @PostMapping("/salvar")
     public ResponseEntity salvar(@RequestBody AnimalDTO animaldto){
         try{
-            Dono dono = donoService.buscarDonoPorId(Dono.builder().donoId(animaldto.getId_dono()).build());
-            TipoAnimal tipo = tipoAnimalService.buscarTipo_animalPorId(TipoAnimal.builder().tipoAnimalId(animaldto.getId_tipo_animal()).build());
+            Dono dono = donoService.buscarDonoPorId(Dono.builder().donoId(animaldto.getIdDono()).build());
+            TipoAnimal tipo = tipoAnimalService.buscarTipo_animalPorId(TipoAnimal.builder().tipoAnimalId(animaldto.getIdTipoAnimal()).build());
             Animal animal = Animal.builder().nome(animaldto.getNome()).tipoAnimal(tipo).dono(dono).build();
             Animal animalSalvo = animalService.salvar(animal);
             return new ResponseEntity(animalSalvo, HttpStatus.CREATED);
@@ -77,4 +77,6 @@ public class AnimalController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+
 }
