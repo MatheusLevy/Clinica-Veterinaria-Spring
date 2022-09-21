@@ -68,7 +68,7 @@ public class AnimalController {
         return ResponseEntity.ok(animalBuscado);
     }
 
-    @PutMapping("/atualizar/")
+    @PutMapping("/atualizar")
     public ResponseEntity atualizar(@RequestBody  Animal animal){
         try{
             Animal atualizado = animalService.atualizar(animal);

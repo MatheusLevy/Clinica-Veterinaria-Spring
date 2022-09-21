@@ -24,8 +24,8 @@ public class TipoAnimalController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity deletar(@PathVariable(value = "id", required = true) Long id){
+    @DeleteMapping("/remover/{id}")
+    public ResponseEntity remover(@PathVariable(value = "id", required = true) Long id){
         try{
             TipoAnimal tipo = TipoAnimal.builder().tipoAnimalId(id).build();
             tipoService.removerPorId(tipo);
@@ -35,6 +35,15 @@ public class TipoAnimalController {
         }
     }
 
+    @DeleteMapping("/remover/feedback")
+    public ResponseEntity removerComFeedback(@RequestBody TipoAnimal tipo){
+        try{
+            TipoAnimal tipoRemovido = tipoService.removerFeedback(tipo);
+            return ResponseEntity.ok(tipoRemovido);
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
     @PostMapping("/atualizar")
     public ResponseEntity atualizar(@RequestBody TipoAnimal tipo_animal){
         try{
