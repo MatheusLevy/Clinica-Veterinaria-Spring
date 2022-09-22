@@ -76,6 +76,11 @@ public class VeterinarioService {
     }
 
     @Transactional
+    public Veterinario buscarPorId(Veterinario veterinario){
+        verificaId(veterinario);
+        return  repo.findById(veterinario.getVeterinarioId()).get();
+    }
+    @Transactional
     public List<Veterinario> buscar(Veterinario filtro){
         if (filtro == null)
             throw new NullPointerException("Filtro não pode ser nulo");

@@ -57,6 +57,11 @@ public class ConsultaService {
     }
 
     @Transactional
+    public Consulta buscarComId(Consulta consulta){
+        verificaId(consulta);
+        return repo.findById(consulta.getConsultaId()).get();
+    }
+    @Transactional
     public void remover(Consulta consulta){
         verificaConsulta(consulta);
         verificaId(consulta);
