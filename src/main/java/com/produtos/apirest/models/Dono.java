@@ -32,9 +32,12 @@ public class Dono {
     @Column(name = "cpf")
     private String cpf;
 
-    @OneToMany(mappedBy = "dono")
+    @OneToMany(mappedBy = "dono", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Animal> animais;
 
-
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "[donoId=" + donoId + ", nome=" + nome +", telefone=" + telefone + ", cpf= " + cpf + " ]";
+    }
 }

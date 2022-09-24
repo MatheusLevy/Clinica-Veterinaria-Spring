@@ -40,7 +40,7 @@ public class DonoController {
         }
     }
 
-    @DeleteMapping("/remover/id")
+    @DeleteMapping("/remover/{id}")
     public ResponseEntity remover(@PathVariable(value = "id", required = true) Long id){
         try{
             Dono dono = Dono.builder().donoId(id).build();
@@ -50,7 +50,10 @@ public class DonoController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
+    @GetMapping("/buscarTodos")
+    public ResponseEntity buscarTodos(){
+        return ResponseEntity.ok(donoService.buscarTodos());
+    }
     @GetMapping("/buscar/{id}")
     public ResponseEntity buscarPorId(@PathVariable(value = "id", required = true) Long id){
         try{

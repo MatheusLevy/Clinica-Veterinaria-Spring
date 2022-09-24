@@ -38,6 +38,10 @@ public class DonoService {
     }
 
     @Transactional
+    public List<Dono> buscarTodos(){
+        return repo.findAll();
+    }
+    @Transactional
     public Dono salvar(Dono Dono){
         verificaDono(Dono);
         return repo.save(Dono);
