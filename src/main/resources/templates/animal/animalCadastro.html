@@ -2,12 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Cadastro de Dono</title>
-  <!-- CSS only -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <title>Animal Cadastro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
 </head>
 <body>
-<!-- MENU -->
 <nav class="navbar navbar-expand-lg bg-light">
   <div class="container-fluid">
     <a class="navbar-brand" href="/">Clínica</a>
@@ -54,28 +52,32 @@
 </nav>
 
 <div style="margin: 10px 200px 10px 200px;">
-  <form method="POST" action="/dono/donoCadastro" th:object="${dono}">
-    <input type="hidden" name="donoId" id="donoId-input" th:value="${dono.donoId}">
+  <form method="POST" action="#" th:object="${animaldto}">
+    <input type="hidden" name="id" id="dto-id-input" th:value="${animaldto.id}" >
     <div class="mb-3">
       <label for="nome-input" class="form-label">Nome</label>
-      <input type="text" class ="form-control" name="nome"  id ="nome-input" placeholder="Digite o nome" required th:value="${dono.nome}">
+      <input type="text" class ="form-control" name="nome"  id ="nome-input" placeholder="Digite o nome" required th:value="${animaldto.nome}" >
     </div>
 
     <div class = "mb-3">
-      <label for="telefone-input" class="form-label">Telefone</label>
-      <input type="text" class="form-control" name="telefone" id="telefone-input" placeholder="Digite o telefone" th:value="${dono.telefone}" data-mask="(00) 0000-0000" data-mask-selectonfocus="true" required="required">
+      <label for="dono-input" class="form-label">Dono</label>
+      <select th:field="${animaldto.dono}" id ="dono-input">
+        <option th:each="dono : ${animaldto.donos}" th:value="${dono.donoId}" th:text="${dono.nome}" ></option>
+      </select>
     </div>
 
     <div class = "mb-3">
-      <label for="cpf-input" class="form-label">CPF</label>
-      <input type="text" class="form-control" name="cpf" id="cpf-input" placeholder="Digite o CPF" th:value="${dono.cpf}" required="required">
+      <label for="tipo-input" class="form-label">Tipo</label>
+      <select  th:field="${animaldto.tipo}" id="tipo-input">
+        <option th:each="tipo : ${animaldto.tipos}" th:value="${tipo.tipoAnimalId}" th:text="${tipo.nome}" ></option>
+      </select>
     </div>
 
     <button type="submit" class="btn btn-primary">Cadastrar</button>
   </form>
 </div>
 
-  <!-- JavaScript Bundle with Popper -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+<!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
 </body>
 </html>

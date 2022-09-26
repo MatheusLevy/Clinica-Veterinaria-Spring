@@ -92,6 +92,11 @@ public class AnimalService {
         Optional<Animal> animalTemp = repo.findById(animal.getAnimalId());
         return animalTemp.get();
     }
+
+    @Transactional
+    public List<Animal> buscarTodos(){
+        return repo.findAll();
+    }
     @Transactional
     public Dono buscarDono(Animal animal){
         verificaId(animal);

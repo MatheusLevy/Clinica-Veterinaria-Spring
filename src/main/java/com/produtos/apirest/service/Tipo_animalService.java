@@ -83,4 +83,9 @@ public class Tipo_animalService {
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
         return repo.findAll(example);
     }
+
+    @Transactional
+    public List<TipoAnimal> buscarTodos(){
+        return repo.findAll();
+    }
 }

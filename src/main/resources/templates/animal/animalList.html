@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Lista de Donos</title>
-    <!-- CSS only -->
+    <title>Lista de Animais</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
 </head>
 <body>
-<!-- Menu -->
 <nav class="navbar navbar-expand-lg bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" href="/">Clínica</a>
@@ -52,33 +50,31 @@
         </div>
     </div>
 </nav>
-
 <div>
     <table class="table table-dark table-striped">
         <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Nome</th>
-                <th scope="col">Telefone</th>
-                <th scope="col">CPF</th>
-                <th scope="col">Ações</th>
-            </tr>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nome</th>
+            <th scope="col">Dono</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Ações</th>
+        </tr>
         </thead>
         <tbody>
-            <tr th:each="dono : ${donos}">
-                <td th:text="${dono.donoId}"></td>
-                <td th:text="${dono.nome}"></td>
-                <td th:text="${dono.cpf}"></td>
-                <td th:text="${dono.telefone}"></td>
-                <td>
-                    <a th:href="@{'/dono/atualizar/' + ${dono.donoId}}" class="btn btn-primary">Alterar</a>
-                    <a th:href="@{'/dono/remover/' + ${dono.donoId}}" class="btn btn-danger">Deletar</a>
-                </td>
-            </tr>
+        <tr th:each="animal : ${animais}">
+            <td th:text="${animal.animalId}"></td>
+            <td th:text="${animal.nome}"></td>
+            <td th:text="${animal.dono.getNome()}"></td>
+            <td th:text="${animal.tipoAnimal.getNome()}"></td>
+            <td>
+                <a th:href="@{'/animal/atualizar/' + ${animal.animalId}}" class="btn btn-primary">Alterar</a>
+                <a th:href="@{'/animal/remover/' + ${animal.animalId}}" class="btn btn-danger">Deletar</a>
+            </td>
+        </tr>
         </tbody>
     </table>
 </div>
-<!-- JavaScript Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
 </body>
 </html>

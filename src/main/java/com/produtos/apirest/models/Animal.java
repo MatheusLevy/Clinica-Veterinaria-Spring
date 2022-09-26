@@ -36,4 +36,9 @@ public class Animal {
     @OneToMany(mappedBy = "animal")
     @JsonIgnore
     private List<Consulta> consultas;
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "[id= "+ animalId +", nome= " + nome +", tipo= " + tipoAnimal + ", dono= " + dono + "]";
+    }
 }
