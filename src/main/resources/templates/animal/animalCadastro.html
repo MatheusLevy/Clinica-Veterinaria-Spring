@@ -52,7 +52,7 @@
 </nav>
 
 <div style="margin: 10px 200px 10px 200px;">
-  <form method="POST" action="#" th:object="${animaldto}">
+  <form method="POST" action="/animal/cadastro" th:object="${animaldto}">
     <input type="hidden" name="id" id="dto-id-input" th:value="${animaldto.id}" >
     <div class="mb-3">
       <label for="nome-input" class="form-label">Nome</label>
