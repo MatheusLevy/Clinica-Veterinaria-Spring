@@ -66,17 +66,17 @@
     <div class = "mb-3">
       <label for="dono-input" class="form-label">Dono</label>
       <select th:field="${animaldto.dono}" id ="dono-input" class="js-example-basic-single" name="dono" style="width: 50%">
-        <option th:each="dono : ${animaldto.donos}" th:value="${dono.donoId}" th:text="${dono.nome}" ></option>
+        <option  th:each="dono : ${animaldto.donos}" th:value="${dono.donoId}" th:text="${dono.nome}" th:selected="${animaldto.dono == dono}"> </option>
       </select>
     </div>
 
     <div class = "mb-3">
       <label for="tipo-input" class="form-label">Tipo</label>
       <select  th:field="${animaldto.tipo}" id="tipo-input" class="js-example-basic-single" name="tipo" style="width: 50%">
-        <option th:each="tipo : ${animaldto.tipos}" th:value="${tipo.tipoAnimalId}" th:text="${tipo.nome}" ></option>
+        <option th:each="tipo : ${animaldto.tipos}" th:value="${tipo.tipoAnimalId}" th:text="${tipo.nome}" th:selected="${animaldto.tipo == tipo}"> </option>
       </select>
     </div>
-
+  
     <button type="submit" class="btn btn-primary">Cadastrar</button>
   </form>
 </div>

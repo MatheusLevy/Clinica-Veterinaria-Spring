@@ -66,19 +66,22 @@ public class AnimalViewController {
     public ModelAndView animalAtualizar(@PathVariable(value = "id", required = true) Long id){
         Animal animal = Animal.builder().animalId(id).build();
         Animal animalFind = animalService.buscarPorId(animal);
+
         //Tipo Animal List
         List<TipoAnimal> tipoAnimal = tipoAnimalService.buscarTodos();
-        tipoAnimal.add(0, tipoAnimal.remove(tipoAnimal.indexOf(animalFind.getTipoAnimal())));
 
         //Dono List
         List<Dono> donos = donoService.buscarTodos();
-        donos.add(0, donos.remove(donos.indexOf(animalFind.getDono())));
 
+        //AnimalDTO
         AnimalDTO dto = AnimalDTO.builder().id(animalFind.getAnimalId()).
                 nome(animalFind.getNome())
+                .tipo(animalFind.getTipoAnimal())
                 .tipos(tipoAnimal)
+                .dono(animalFind.getDono())
                 .donos(donos)
                 .build();
+
         ModelAndView mv = new ModelAndView("/animal/animalCadastro");
         mv.addObject("animaldto", dto);
         return mv;
