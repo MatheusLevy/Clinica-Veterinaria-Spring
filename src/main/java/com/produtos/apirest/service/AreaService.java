@@ -80,6 +80,11 @@ public class AreaService {
     }
 
     @Transactional
+    public List<Area> buscarTodos(){
+        return repo.findAll();
+    }
+
+    @Transactional
     public List<Especialidade> buscarTodasEspecialidades(Area area){
         verificaArea(area);
         verificaId(area);

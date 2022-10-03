@@ -81,6 +81,15 @@ public class AreaController {
         }
     }
 
+    @GetMapping("/buscarTodos")
+    public ResponseEntity buscarTodos(){
+        try {
+            List<Area> areas = areaService.buscarTodos();
+            return ResponseEntity.ok(areas);
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
     @GetMapping("/buscar/especialidades/{id}")
     public ResponseEntity buscarEspecialidades(@PathVariable(value = "id", required = true) Long id){
         try {

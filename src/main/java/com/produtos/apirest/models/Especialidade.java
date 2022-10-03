@@ -27,9 +27,9 @@ public class Especialidade {
 
     @ManyToOne
     @JoinColumn(name="area_id", nullable = false)
-    @JsonIgnore
     private Area area;
 
     @OneToMany(mappedBy = "especialidade")
+    @JsonIgnore
     private List<Veterinario> veterinarios;
 }

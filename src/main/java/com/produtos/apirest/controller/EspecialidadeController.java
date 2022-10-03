@@ -1,7 +1,9 @@
 package com.produtos.apirest.controller;
 
 import com.produtos.apirest.models.Area;
+import com.produtos.apirest.models.DTO.EspecialidadeDTO;
 import com.produtos.apirest.models.Especialidade;
+import com.produtos.apirest.service.AreaService;
 import com.produtos.apirest.service.EspecialidadeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,15 +13,21 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/Especialidade")
+@RequestMapping("/api/especialidade")
 public class EspecialidadeController {
 
     @Autowired
     public EspecialidadeService especialidadeService;
 
+    @Autowired
+    public AreaService areaService;
+
     @PostMapping("/salvar")
-    public ResponseEntity salvar(@RequestBody Especialidade especialidade){
+    public ResponseEntity salvar(@RequestBody EspecialidadeDTO dto){
         try {
+            Area area = Area.builder().areaId(dto.getIdArea()).build();
+            Area areaBuscada = areaService.buscarAreaPorId(area);
+            Especialidade especialidade = Especialidade.builder().nome(dto.getNome()).area(areaBuscada).build();
             Especialidade especialidadeSalva = especialidadeService.salvar(especialidade);
             return ResponseEntity.ok(especialidadeSalva);
         } catch (Exception e){
