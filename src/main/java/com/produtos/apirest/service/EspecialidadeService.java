@@ -81,4 +81,9 @@ public class    EspecialidadeService {
         return repo.findAll(example);
     }
 
+    @Transactional
+    public List<Especialidade> buscarTodos(){
+        return repo.findAll();
+    }
+
 }
