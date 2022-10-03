@@ -91,6 +91,11 @@ public class VeterinarioService {
     }
 
     @Transactional
+    public List<Veterinario> buscarTodos(){
+        return repo.findAll();
+    }
+
+    @Transactional
     public Especialidade buscarEspecialidade(Veterinario veterinario){
         verificaVeterinario(veterinario);
         verificaId(veterinario);

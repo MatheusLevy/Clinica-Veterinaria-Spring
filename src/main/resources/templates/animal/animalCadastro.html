@@ -76,7 +76,7 @@
         <option th:each="tipo : ${animaldto.tipos}" th:value="${tipo.tipoAnimalId}" th:text="${tipo.nome}" th:selected="${animaldto.tipo == tipo}"> </option>
       </select>
     </div>
-  
+
     <button type="submit" class="btn btn-primary">Cadastrar</button>
   </form>
 </div>
@@ -86,7 +86,5 @@
     $(".js-example-basic-single").select2();
   });
 </script>
-
-
 </body>
 </html>
