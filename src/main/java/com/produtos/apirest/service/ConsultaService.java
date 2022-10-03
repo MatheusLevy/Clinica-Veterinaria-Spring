@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -60,6 +61,11 @@ public class ConsultaService {
     public Consulta buscarComId(Consulta consulta){
         verificaId(consulta);
         return repo.findById(consulta.getConsultaId()).get();
+    }
+
+    @Transactional
+    public List<Consulta> buscarTodos(){
+        return repo.findAll();
     }
     @Transactional
     public void remover(Consulta consulta){

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Animal Cadastro</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">Clínica</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/">Home</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Donos
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/dono/donoCadastro">Cadastro</a></li>
+            <li><a class="dropdown-item" href="/dono/donoList">Buscar</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Animais
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/animal/cadastro">Cadastro</a></li>
+            <li><a class="dropdown-item" href="/animal/animalList">Buscar</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Veterinario
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/veterinario/cadastro">Cadastro</a></li>
+            <li><a class="dropdown-item" href="/veterinario/veterinarioList">Buscar</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Consulta
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Marcar</a></li>
+            <li><a class="dropdown-item" href="#">Buscar</a></li>
+            <li><a class="dropdown-item" href="#">Atualizar</a></li>
+            <li><a class="dropdown-item" href="#">Deletar</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div style="margin: 10px 200px 10px 200px;">
+  <form method="POST" action="/consulta/cadastro" th:object="${consultadto}">
+    <input type="hidden" name="id" id="dto-id-input" th:value="${consultadto.id}" >
+
+    <div class = "mb-3">
+      <label for="veterinario-input" class="form-label">Veterinário</label>
+      <select th:field="${consultadto.veterinario}" id ="veterinario-input" class="js-example-basic-single" name="veterinario" style="width: 50%">
+        <option  th:each="veterinario : ${consultadto.veterinarios}" th:value="${veterinario.veterinarioId}" th:text="${veterinario.nome}" th:selected="${consultadto.veterinario == veterinario}"> </option>
+      </select>
+    </div>
+
+    <div class = "mb-3">
+      <label for="animal-input" class="form-label">Animal</label>
+      <select th:field="${consultadto.animal}" id ="animal-input" class="js-example-basic-single" name="animal" style="width: 50%">
+        <option  th:each="animal : ${consultadto.animais}" th:value="${animal.animalId}" th:text="${animal.nome}" th:selected="${consultadto.animal == animal}"> </option>
+      </select>
+    </div>
+
+    <div class = "mb-3">
+      <label for="tipo-input" class="form-label">Tipo Consulta</label>
+      <select  th:field="${consultadto.tipo}" id="tipo-input" class="js-example-basic-single" name="tipo" style="width: 50%">
+        <option th:each="tipo : ${consultadto.tiposConsulta}" th:value="${tipo.tipoConsultaId}" th:text="${tipo.nome}" th:selected="${consultadto.tipo == tipo}"> </option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="descricao-input" class="form-label">Descrição</label>
+      <input type="text" class ="form-control" name="descricao"  id ="descricao-input" placeholder="Digite a descrição" required th:value="${consultadto.descricao}" >
+    </div>
+
+    <div class="mb-3">
+      <label for="date-input" class="form-label">Data</label>
+      <input type="date" class ="form-control" name="data"  id ="date-input"  required th:value="${consultadto.data}" th:field="${consultadto.data}" >
+    </div>
+
+    <button type="submit" class="btn btn-primary">Cadastrar</button>
+  </form>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $(".js-example-basic-single").select2();
+  });
+</script>
+</body>
+</html>

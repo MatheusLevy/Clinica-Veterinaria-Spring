@@ -29,4 +29,8 @@ public class TipoConsulta {
     @JsonIgnore
     private List<Consulta> consultas;
 
+    @Override
+    public String toString(){
+        return getClass().getSimpleName() + "[id= " + tipoConsultaId + ", nome= " + nome+ " ]" ;
+    }
 }

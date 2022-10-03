@@ -9,6 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.ws.Response;
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/consulta")
 public class ConsultaController {
@@ -39,6 +42,15 @@ public class ConsultaController {
         }
     }
 
+    @GetMapping("/buscarTodos")
+    public ResponseEntity buscarTodos(){
+        try{
+            List<Consulta> consultas = consultaService.buscarTodos();
+            return ResponseEntity.ok(consultas);
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
     @DeleteMapping("/remover/{id}")
     public ResponseEntity removerPorId(@PathVariable(value = "id", required = true) Long id){
         try{

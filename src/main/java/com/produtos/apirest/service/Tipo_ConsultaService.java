@@ -76,4 +76,9 @@ public class Tipo_ConsultaService {
         return repo.findAll(example);
     }
 
+    @Transactional
+    public List<TipoConsulta> buscarTodos(){
+        return repo.findAll();
+    }
+
 }

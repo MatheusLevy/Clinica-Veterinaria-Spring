@@ -37,4 +37,10 @@ public class Veterinario {
     @OneToMany(mappedBy = "veterinario", fetch = FetchType.EAGER)
     @JsonIgnore
     private List<Consulta> consultas;
+
+    @Override
+    public String toString(){
+        return getClass().getSimpleName() + "[id= " + veterinarioId + ", nome = " + nome
+        + ", telefone= " + telefone + ", cpf= " + cpf + "especialidade= " + especialidade + " ]";
+    }
 }

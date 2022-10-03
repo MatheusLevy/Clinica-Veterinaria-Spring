@@ -47,6 +47,7 @@ public class VeterinarioViewController {
         if(dto.getId() == null){
             veterinarioService.salvar(veterinario);
         }else{
+            veterinario.setVeterinarioId(dto.getId());
             veterinarioService.atualizar(veterinario);
 
         }
