@@ -32,7 +32,6 @@ public class Veterinario {
 
     @ManyToOne
     @JoinColumn(name = "especialidade_id", nullable = false)
-    @JsonIgnore
     private Especialidade especialidade;
 
     @OneToMany(mappedBy = "veterinario", fetch = FetchType.EAGER)

@@ -32,4 +32,9 @@ public class Especialidade {
     @OneToMany(mappedBy = "especialidade")
     @JsonIgnore
     private List<Veterinario> veterinarios;
+
+    @Override
+    public String toString(){
+        return getClass().getSimpleName() + "[id= " + especialidadeId + ", nome= " + nome + ", area= "+ area.getNome() + "]";
+    }
 }
