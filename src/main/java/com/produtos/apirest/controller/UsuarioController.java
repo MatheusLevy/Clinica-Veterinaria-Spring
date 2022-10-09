@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/usario")
+@RequestMapping("/api/usuario")
 public class UsuarioController {
 
     @Autowired
@@ -64,6 +64,16 @@ public class UsuarioController {
             Usuario usuarioBuscado = usuarioService.buscarPorId(usuario);
             return ResponseEntity.ok(usuarioBuscado);
         } catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/buscarPorUsername/{username}")
+    public ResponseEntity buscarPorUsername(@PathVariable(value = "username", required = true) String username){
+        try {
+            Usuario usuario = usuarioService.buscarPorUsername(username);
+            return ResponseEntity.ok(usuario);
+        }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

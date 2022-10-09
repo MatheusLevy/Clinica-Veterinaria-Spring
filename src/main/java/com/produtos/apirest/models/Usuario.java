@@ -27,7 +27,7 @@ public class Usuario {
     private String senha;
 
     @Column(name = "nivel")
-    private Long nivel;
+    private String nivel;
 
     @Override
     public String toString(){

@@ -6,6 +6,7 @@ import com.produtos.apirest.repository.UsuarioRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -18,6 +19,9 @@ public class UsarioService {
     @Autowired
     private UsuarioRepo usuarioRepo;
 
+    private BCryptPasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
     public static void verificaUsuario(Usuario usuario){
         if(usuario == null)
             throw new NullPointerException("Usuario não pode ser nulo!");
@@ -57,8 +61,14 @@ public class UsarioService {
     }
 
     @Transactional
+    public Usuario buscarPorUsername(String username){
+        return usuarioRepo.findByUsername(username);
+    }
+
+    @Transactional
     public Usuario salvar(Usuario usuario){
         verificaUsuario(usuario);
+        usuario.setSenha(passwordEncoder().encode(usuario.getSenha()));
         return usuarioRepo.save(usuario);
     }
 

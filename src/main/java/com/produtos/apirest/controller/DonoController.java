@@ -6,6 +6,7 @@ import com.produtos.apirest.service.DonoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,7 @@ public class DonoController {
     @Autowired
     public DonoService donoService;
 
+    @PreAuthorize("hasRole('A')")
     @PostMapping("/salvar")
     public ResponseEntity salvar(@RequestBody Dono dono){
         try{
@@ -50,6 +52,7 @@ public class DonoController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+    @PreAuthorize("hasRole('A')")
     @GetMapping("/buscarTodos")
     public ResponseEntity buscarTodos(){
         return ResponseEntity.ok(donoService.buscarTodos());
