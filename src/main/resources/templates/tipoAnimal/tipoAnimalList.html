@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Especialidade de Donos</title>
+  <title>Lista de Tipos de Animal</title>
   <!-- CSS only -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
 </head>
@@ -68,18 +68,16 @@
     <tr>
       <th scope="col">#</th>
       <th scope="col">Nome</th>
-      <th scope="col">Area</th>
       <th scope="col">Ações</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="especialidade : ${especialidades}">
-      <td th:text="${especialidade.especialidadeId}"></td>
-      <td th:text="${especialidade.nome}"></td>
-      <td th:text="${especialidade.area.getNome()}"></td>
+    <tr th:each="tipo : ${tipos}">
+      <td th:text="${tipo.tipoAnimalId}"></td>
+      <td th:text="${tipo.nome}"></td>
       <td>
-        <a th:href="@{'/especialidade/atualizar/' + ${especialidade.especialidadeId}}" class="btn btn-primary">Alterar</a>
-        <a th:href="@{'/especialidade/remover/' + ${especialidade.especialidadeId}}" class="btn btn-danger">Deletar</a>
+        <a th:href="@{'/tipoAnimal/atualizar/' + ${tipo.tipoAnimalId}}" class="btn btn-primary">Alterar</a>
+        <a th:href="@{'/tipoAnimal/remover/' + ${tipo.tipoAnimalId}}" class="btn btn-danger">Deletar</a>
       </td>
     </tr>
     </tbody>
