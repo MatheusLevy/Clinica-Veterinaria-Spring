@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lista de Tipos de Consulta</title>
+  <!-- CSS only -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+</head>
+<body>
+<!-- Menu -->
+<nav class="navbar navbar-expand-lg bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">Clínica</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/">Home</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Donos
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/dono/donoCadastro">Cadastro</a></li>
+            <li><a class="dropdown-item" href="/dono/donoList">Buscar</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Animais
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/animal/cadastro">Cadastro</a></li>
+            <li><a class="dropdown-item" href="/animal/animalList">Buscar</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Veterinario
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/veterinario/cadastro">Cadastro</a></li>
+            <li><a class="dropdown-item" href="/veterinario/veterinarioList">Buscar</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Consulta
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/consulta/cadastro">Marcar</a></li>
+            <li><a class="dropdown-item" href="/consulta/consultaList">Buscar</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+
+<div>
+  <table class="table table-dark table-striped">
+    <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Nome</th>
+      <th scope="col">Ações</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="tipo : ${tipos}">
+      <td th:text="${tipo.tipoConsultaId}"></td>
+      <td th:text="${tipo.nome}"></td>
+      <td>
+        <a th:href="@{'/tipoConsulta/atualizar/' + ${tipo.tipoConsultaId}}" class="btn btn-primary">Alterar</a>
+        <a th:href="@{'/tipoConsulta/remover/' + ${tipo.tipoConsultaId}}" class="btn btn-danger">Deletar</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+</body>
+</html>
