@@ -8,6 +8,7 @@ import com.produtos.apirest.service.EspecialidadeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class EspecialidadeController {
     @Autowired
     public AreaService areaService;
 
+    @PreAuthorize("hasRole('A')")
     @PostMapping("/salvar")
     public ResponseEntity salvar(@RequestBody EspecialidadeDTO dto){
         try {
@@ -35,6 +37,7 @@ public class EspecialidadeController {
         }
     }
 
+    @PreAuthorize("hasRole('A')")
     @PutMapping("/atualizar")
     public ResponseEntity atualizar(@RequestBody Especialidade Especialidade){
         try{
@@ -45,6 +48,7 @@ public class EspecialidadeController {
         }
     }
 
+    @PreAuthorize("hasRole('A')")
     @DeleteMapping("/remover/{id}")
     public ResponseEntity remover(@PathVariable(value = "id", required = true) Long id){
         try {
@@ -57,6 +61,7 @@ public class EspecialidadeController {
         }
     }
 
+    @PreAuthorize("hasRole('A')")
     @DeleteMapping("/remover/feedback")
     public ResponseEntity removerComFeedback(@RequestBody Especialidade especialidade){
         try {
@@ -67,6 +72,7 @@ public class EspecialidadeController {
         }
     }
 
+    @PreAuthorize("hasRole('A')")
     @GetMapping("/buscar/{id}")
     public ResponseEntity buscarPorId(@PathVariable(value = "id", required = true) Long id){
         try {
@@ -78,6 +84,7 @@ public class EspecialidadeController {
         }
     }
 
+    @PreAuthorize("hasRole('A')")
     @GetMapping("/buscar/filtro")
     public ResponseEntity buscar(@RequestBody Especialidade filtro){
         try{
@@ -88,6 +95,7 @@ public class EspecialidadeController {
         }
     }
 
+    @PreAuthorize("hasRole('A')")
     @GetMapping("/buscarTodos")
     public ResponseEntity buscarTodos(){
         try{

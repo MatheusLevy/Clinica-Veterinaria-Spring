@@ -8,6 +8,7 @@ import com.produtos.apirest.models.Veterinario;
 import com.produtos.apirest.service.EspecialidadeService;
 import com.produtos.apirest.service.VeterinarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +28,7 @@ public class VeterinarioViewController {
     @Autowired
     public EspecialidadeService especialidadeService;
 
+    @PreAuthorize("hasRole('S')")
     @GetMapping("/veterinario/cadastro")
     public ModelAndView veterinarioCadastroPage(){
         VeterinarioDTO dto = new VeterinarioDTO();
@@ -36,6 +38,7 @@ public class VeterinarioViewController {
         return mv;
     }
 
+    @PreAuthorize("hasRole('S')")
     @PostMapping("/veterinario/cadastro")
     public String veterinarioCadastro(VeterinarioDTO dto){
         Veterinario veterinario = Veterinario.builder()
@@ -54,6 +57,7 @@ public class VeterinarioViewController {
         return "redirect:/veterinario/veterinarioList";
     }
 
+    @PreAuthorize("hasRole('S')")
     @GetMapping("/veterinario/veterinarioList")
     public ModelAndView veterinarioList(){
         List<Veterinario> veterinarios = veterinarioService.buscarTodos();
@@ -63,7 +67,7 @@ public class VeterinarioViewController {
         return mv;
     }
 
-
+    @PreAuthorize("hasRole('S')")
     @GetMapping("/veterinario/atualizar/{id}")
     public ModelAndView veterinarioAtualizar(@PathVariable(value = "id", required = true) Long id){
         //Veterinario
@@ -88,7 +92,7 @@ public class VeterinarioViewController {
         return mv;
     }
 
-
+    @PreAuthorize("hasRole('S')")
     @GetMapping("/veterinario/remover/{id}")
     public String veterinarioRemover(@PathVariable(value = "id", required = true) Long id){
         Veterinario veterinario = Veterinario.builder().veterinarioId(id).build();

@@ -3,6 +3,7 @@ package com.produtos.apirest.viewController;
 import com.produtos.apirest.models.Dono;
 import com.produtos.apirest.service.DonoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,7 @@ public class DonoViewController {
     @Autowired
     public DonoService donoService;
 
+    @PreAuthorize("hasRole('S')")
     @GetMapping("/dono/donoCadastro")
     public ModelAndView dono_cadastro_page(){
         ModelAndView mv = new ModelAndView("/dono/donoCadastro");
@@ -25,6 +27,7 @@ public class DonoViewController {
         return mv;
     }
 
+    @PreAuthorize("hasRole('S')")
     @PostMapping("/dono/donoCadastro")
     public String donoCadastroControll(Dono dono){
 
@@ -36,6 +39,7 @@ public class DonoViewController {
         return "redirect:/dono/donoList";
     }
 
+    @PreAuthorize("hasRole('S')")
     @GetMapping("/dono/donoList")
     public ModelAndView donoList(){
         List<Dono> donos = donoService.buscarTodos();
@@ -45,6 +49,7 @@ public class DonoViewController {
         return mv;
     }
 
+    @PreAuthorize("hasRole('S')")
     @GetMapping("/dono/atualizar/{id}")
     public ModelAndView donoAtualizar(@PathVariable(value = "id", required = true) Long id){
         Dono dono = Dono.builder().donoId(id).build();
@@ -54,6 +59,7 @@ public class DonoViewController {
         return mv;
     }
 
+    @PreAuthorize("hasRole('S')")
     @GetMapping("/dono/remover/{id}")
     public String donoRemover(@PathVariable(value = "id", required = true) Long id){
         Dono dono = Dono.builder().donoId(id).build();

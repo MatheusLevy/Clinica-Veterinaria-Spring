@@ -8,6 +8,7 @@ import com.produtos.apirest.service.AnimalService;
 import com.produtos.apirest.service.DonoService;
 import com.produtos.apirest.service.Tipo_animalService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +32,7 @@ public class AnimalViewController {
     @Autowired
     public Tipo_animalService tipoAnimalService;
 
+    @PreAuthorize("hasRole('S')")
     @GetMapping("/animal/cadastro")
     public ModelAndView animalCadastroControl(){
         ModelAndView mv = new ModelAndView("/animal/animalCadastro");
@@ -41,6 +43,7 @@ public class AnimalViewController {
         return mv;
     }
 
+    @PreAuthorize("hasRole('S')")
     @PostMapping("/animal/cadastro")
     public String animalCadastro(AnimalDTO dto){
         Animal animal = Animal.builder().nome(dto.getNome()).dono(dto.getDono()).tipoAnimal(dto.getTipo()).build();
@@ -53,6 +56,7 @@ public class AnimalViewController {
         return "redirect:/animal/animalList";
     }
 
+    @PreAuthorize("hasRole('S')")
     @GetMapping("/animal/animalList")
     public ModelAndView animalList(){
         List<Animal> animais = animalService.buscarTodos();
@@ -62,6 +66,7 @@ public class AnimalViewController {
         return mv;
     }
 
+    @PreAuthorize("hasRole('S')")
     @GetMapping("/animal/atualizar/{id}")
     public ModelAndView animalAtualizar(@PathVariable(value = "id", required = true) Long id){
         Animal animal = Animal.builder().animalId(id).build();
@@ -87,6 +92,7 @@ public class AnimalViewController {
         return mv;
     }
 
+    @PreAuthorize("hasRole('S')")
     @GetMapping("/animal/remover/{id}")
     public String animalRemover(@PathVariable(value = "id", required = true) Long id){
         Animal animal = Animal.builder().animalId(id).build();

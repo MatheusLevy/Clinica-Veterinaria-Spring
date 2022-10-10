@@ -5,6 +5,7 @@ import com.produtos.apirest.service.Tipo_animalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,6 +15,7 @@ public class TipoAnimalController {
     @Autowired
     public Tipo_animalService tipoService;
 
+    @PreAuthorize("hasRole('A')")
     @PostMapping("/salvar")
     public ResponseEntity salvar(@RequestBody TipoAnimal tipo_animal){
         try{
@@ -24,6 +26,7 @@ public class TipoAnimalController {
         }
     }
 
+    @PreAuthorize("hasRole('A')")
     @DeleteMapping("/remover/{id}")
     public ResponseEntity remover(@PathVariable(value = "id", required = true) Long id){
         try{
@@ -35,6 +38,7 @@ public class TipoAnimalController {
         }
     }
 
+    @PreAuthorize("hasRole('A')")
     @DeleteMapping("/remover/feedback")
     public ResponseEntity removerComFeedback(@RequestBody TipoAnimal tipo){
         try{
@@ -44,6 +48,7 @@ public class TipoAnimalController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+    @PreAuthorize("hasRole('A')")
     @PutMapping("/atualizar")
     public ResponseEntity atualizar(@RequestBody TipoAnimal tipo_animal){
         try{
@@ -54,6 +59,7 @@ public class TipoAnimalController {
         }
     }
 
+    @PreAuthorize("hasRole('A')")
     @GetMapping("/buscarPorId/{id}")
     public ResponseEntity buscar(@PathVariable(value = "id", required = true) Long id){
         try{

@@ -6,6 +6,7 @@ import com.produtos.apirest.service.VeterinarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class VeterinarioController {
     @Autowired
     public VeterinarioService veterinarioService;
 
+    @PreAuthorize("hasRole('S')")
     @PostMapping("/salvar")
     public ResponseEntity salvar(@RequestBody Veterinario veterinario){
         try{
@@ -27,6 +29,7 @@ public class VeterinarioController {
         }
     }
 
+    @PreAuthorize("hasRole('S')")
     @DeleteMapping("/remover/{id}")
     public ResponseEntity removerComId(@PathVariable(value = "id", required = true) Long id){
         try {
@@ -39,6 +42,7 @@ public class VeterinarioController {
         }
     }
 
+    @PreAuthorize("hasRole('S')")
     @DeleteMapping("/remover/feedback")
     public ResponseEntity removerComFeedback(@RequestBody Veterinario veterinario){
         try{
@@ -49,6 +53,7 @@ public class VeterinarioController {
         }
     }
 
+    @PreAuthorize("hasRole('S')")
     @GetMapping("/buscar/{id}")
     public ResponseEntity buscarPorId(@PathVariable(value = "id", required = true) Long id){
         try{
@@ -60,6 +65,7 @@ public class VeterinarioController {
         }
     }
 
+    @PreAuthorize("hasRole('S')")
     @GetMapping("/buscarTodos")
     public ResponseEntity buscarTodos(){
         try{
@@ -70,6 +76,7 @@ public class VeterinarioController {
         }
     }
 
+    @PreAuthorize("hasRole('S')")
     @PutMapping("/atualizar")
     public ResponseEntity atualizar(@RequestBody Veterinario veterinario){
         try{

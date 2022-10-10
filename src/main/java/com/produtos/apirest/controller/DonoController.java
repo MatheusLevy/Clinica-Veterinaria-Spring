@@ -21,7 +21,7 @@ public class DonoController {
     @Autowired
     public DonoService donoService;
 
-    @PreAuthorize("hasRole('A')")
+    @PreAuthorize("hasRole('S')")
     @PostMapping("/salvar")
     public ResponseEntity salvar(@RequestBody Dono dono){
         try{
@@ -32,6 +32,7 @@ public class DonoController {
         }
     }
 
+    @PreAuthorize("hasRole('S')")
     @PutMapping("/atualizar")
     public ResponseEntity atualizar(@RequestBody Dono dono){
         try{
@@ -41,7 +42,7 @@ public class DonoController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
+    @PreAuthorize("hasRole('S')")
     @DeleteMapping("/remover/{id}")
     public ResponseEntity remover(@PathVariable(value = "id", required = true) Long id){
         try{
@@ -52,7 +53,7 @@ public class DonoController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    @PreAuthorize("hasRole('A')")
+    @PreAuthorize("hasRole('S')")
     @GetMapping("/buscarTodos")
     public ResponseEntity buscarTodos(){
         return ResponseEntity.ok(donoService.buscarTodos());
@@ -67,7 +68,7 @@ public class DonoController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
+    @PreAuthorize("hasRole('S')")
     @DeleteMapping("remover/feedback/")
     public ResponseEntity removerComFeedback(@RequestBody Dono dono){
         try{
@@ -77,7 +78,7 @@ public class DonoController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
+    @PreAuthorize("hasRole('S')")
     @GetMapping("/buscar/filtro")
     public ResponseEntity buscarUtilizandoFiltro(@RequestBody Dono filtro){
         try{
@@ -87,7 +88,7 @@ public class DonoController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
+    @PreAuthorize("hasRole('S')")
     @GetMapping("/animais/{id}")
     public ResponseEntity buscarTodosAnimais(@PathVariable(value = "id", required = true) Long id){
         try{

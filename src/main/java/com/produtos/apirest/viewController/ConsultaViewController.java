@@ -8,6 +8,7 @@ import com.produtos.apirest.service.ConsultaService;
 import com.produtos.apirest.service.Tipo_ConsultaService;
 import com.produtos.apirest.service.VeterinarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +32,7 @@ public class ConsultaViewController {
     @Autowired
     public VeterinarioService veterinarioService;
 
+    @PreAuthorize("hasRole('S')")
     @GetMapping("/consulta/cadastro")
     public ModelAndView consultaCadastro(){
         ModelAndView mv = new ModelAndView("consulta/consultaCadastro");
@@ -43,6 +45,7 @@ public class ConsultaViewController {
         return mv;
     }
 
+    @PreAuthorize("hasRole('S')")
     @PostMapping("/consulta/cadastro")
     public String consultaCadastro(ConsultaDTO dto){
         Consulta consulta = Consulta.builder()
@@ -62,6 +65,7 @@ public class ConsultaViewController {
         return "redirect:/consulta/consultaList";
     }
 
+    @PreAuthorize("hasRole('S')")
     @GetMapping("/consulta/consultaList")
     public ModelAndView consultaList(){
         List<Consulta> consultas = consultaService.buscarTodos();
@@ -71,6 +75,7 @@ public class ConsultaViewController {
         return mv;
     }
 
+    @PreAuthorize("hasRole('S')")
     @GetMapping("/consulta/atualizar/{id}")
     public ModelAndView consultaAtualizar(@PathVariable(value = "id") Long id){
         Consulta consulta = Consulta.builder().consultaId(id).build();
@@ -102,6 +107,7 @@ public class ConsultaViewController {
         return mv;
     }
 
+    @PreAuthorize("hasRole('S')")
     @GetMapping("/consulta/remover/{id}")
     public String consultaRemover(@PathVariable(value = "id", required = true) Long id){
         Consulta consulta = Consulta.builder().consultaId(id).build();
@@ -109,6 +115,4 @@ public class ConsultaViewController {
         consultaService.remover(consultaFind);
         return "redirect:/consulta/consultaList";
     }
-
-
 }

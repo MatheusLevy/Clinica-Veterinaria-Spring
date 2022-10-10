@@ -7,6 +7,7 @@ import com.produtos.apirest.service.VeterinarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.xml.ws.Response;
@@ -22,6 +23,7 @@ public class ConsultaController {
     @Autowired
     public VeterinarioService veterinarioService;
 
+    @PreAuthorize("hasRole('S')")
     @PostMapping("/salvar")
     public ResponseEntity salvar(@RequestBody Consulta consulta){
         try {
@@ -31,7 +33,7 @@ public class ConsultaController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
+    @PreAuthorize("hasRole('S')")
     @PutMapping("/atualizar")
     public ResponseEntity atualizar(@RequestBody Consulta consulta){
         try {
@@ -41,7 +43,7 @@ public class ConsultaController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
+    @PreAuthorize("hasRole('S')")
     @GetMapping("/buscarTodos")
     public ResponseEntity buscarTodos(){
         try{
@@ -51,6 +53,7 @@ public class ConsultaController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+    @PreAuthorize("hasRole('S')")
     @DeleteMapping("/remover/{id}")
     public ResponseEntity removerPorId(@PathVariable(value = "id", required = true) Long id){
         try{
@@ -62,7 +65,7 @@ public class ConsultaController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
+    @PreAuthorize("hasRole('S')")
     @DeleteMapping("/remover/feedback")
     public ResponseEntity removerComFeedback(@RequestBody Consulta consulta){
         try{

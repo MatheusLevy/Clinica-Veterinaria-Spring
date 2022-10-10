@@ -6,6 +6,7 @@ import com.produtos.apirest.service.UsarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -35,6 +36,7 @@ public class UsuarioController {
         }
     }
 
+    @PreAuthorize("hasRole('A')")
     @DeleteMapping("/remover/{id}")
     public ResponseEntity removerComId(@PathVariable(value = "id", required = true) Long id){
         try{
@@ -47,6 +49,7 @@ public class UsuarioController {
         }
     }
 
+    @PreAuthorize("hasRole('A')")
     @DeleteMapping("/remover/feedback")
     public ResponseEntity removerComFeedback(@RequestBody Usuario usuario){
         try{
@@ -57,6 +60,7 @@ public class UsuarioController {
         }
     }
 
+    @PreAuthorize("hasRole('A')")
     @GetMapping("/buscar/{id}")
     public ResponseEntity buscarPorId(@PathVariable(value = "id", required = true) Long id){
         try{
@@ -68,6 +72,7 @@ public class UsuarioController {
         }
     }
 
+    @PreAuthorize("hasRole('A')")
     @GetMapping("/buscarPorUsername/{username}")
     public ResponseEntity buscarPorUsername(@PathVariable(value = "username", required = true) String username){
         try {
@@ -78,6 +83,7 @@ public class UsuarioController {
         }
     }
 
+    @PreAuthorize("hasRole('A')")
     @PutMapping("/atualizar")
     public ResponseEntity atualizar(@RequestBody Usuario usuario){
         try{

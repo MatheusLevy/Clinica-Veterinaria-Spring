@@ -6,6 +6,7 @@ import com.produtos.apirest.service.Tipo_animalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,6 +16,7 @@ public class TipoConsultaController {
     @Autowired
     public Tipo_ConsultaService tipoService;
 
+    @PreAuthorize("hasRole('A')")
     @PostMapping("/salvar")
     public ResponseEntity salvar(@RequestBody TipoConsulta tipo){
         try{
@@ -25,6 +27,7 @@ public class TipoConsultaController {
         }
     }
 
+    @PreAuthorize("hasRole('A')")
     @DeleteMapping("/remover/{id}")
     public ResponseEntity removerComId(@PathVariable(value = "id", required = true) Long id){
         try {
@@ -37,6 +40,7 @@ public class TipoConsultaController {
         }
     }
 
+    @PreAuthorize("hasRole('A')")
     @DeleteMapping("/remover/feedback")
     public ResponseEntity removerComFeedback(@RequestBody TipoConsulta tipo){
         try{
@@ -48,6 +52,7 @@ public class TipoConsultaController {
     }
 
 
+    @PreAuthorize("hasRole('A')")
     @GetMapping("/buscar/{id}")
     public ResponseEntity buscarPorId(@PathVariable(value = "id", required = true) Long id){
         try{
@@ -59,6 +64,7 @@ public class TipoConsultaController {
         }
     }
 
+    @PreAuthorize("hasRole('A')")
     @PutMapping("/atualizar")
     public ResponseEntity atualizar(@RequestBody TipoConsulta tipo){
         try{

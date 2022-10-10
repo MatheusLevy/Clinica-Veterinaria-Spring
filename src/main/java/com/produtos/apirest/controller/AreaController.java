@@ -6,6 +6,7 @@ import com.produtos.apirest.service.AreaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +18,7 @@ public class AreaController {
 
     @Autowired
     public AreaService areaService;
-
+    @PreAuthorize("hasRole('A')")
     @PostMapping("/salvar")
     public ResponseEntity salvar(@RequestBody Area area){
         try {
@@ -27,7 +28,7 @@ public class AreaController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
+    @PreAuthorize("hasRole('A')")
     @PutMapping("/atualizar")
     public ResponseEntity atualizar(@RequestBody Area area){
         try{
@@ -37,7 +38,7 @@ public class AreaController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
+    @PreAuthorize("hasRole('A')")
     @DeleteMapping("/remover/{id}")
     public ResponseEntity remover(@PathVariable(value = "id", required = true) Long id){
         try {
@@ -50,6 +51,7 @@ public class AreaController {
         }
     }
 
+    @PreAuthorize("hasRole('A')")
     @DeleteMapping("/remover/feedback")
     public ResponseEntity removerComFeedback(@RequestBody Area area){
         try {
@@ -59,7 +61,7 @@ public class AreaController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
+    @PreAuthorize("hasRole('A')")
     @GetMapping("/buscar/{id}")
     public ResponseEntity buscarPorId(@PathVariable(value = "id", required = true) Long id){
         try {
@@ -70,7 +72,7 @@ public class AreaController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
+    @PreAuthorize("hasRole('A')")
     @GetMapping("/buscar/filtro")
     public ResponseEntity buscar(@RequestBody Area filtro){
         try{
@@ -80,7 +82,7 @@ public class AreaController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
+    @PreAuthorize("hasRole('A')")
     @GetMapping("/buscarTodos")
     public ResponseEntity buscarTodos(){
         try {
@@ -90,6 +92,7 @@ public class AreaController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+    @PreAuthorize("hasRole('A')")
     @GetMapping("/buscar/especialidades/{id}")
     public ResponseEntity buscarEspecialidades(@PathVariable(value = "id", required = true) Long id){
         try {

@@ -10,6 +10,7 @@ import com.produtos.apirest.service.Tipo_animalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,7 +26,7 @@ public class AnimalController {
     @Autowired
     public Tipo_animalService tipoAnimalService;
 
-
+    @PreAuthorize("hasRole('S')")
     @PostMapping("/salvar")
     public ResponseEntity salvar(@RequestBody AnimalDTO animaldto){
         try{
@@ -38,7 +39,7 @@ public class AnimalController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
+    @PreAuthorize("hasRole('S')")
     @DeleteMapping("/remover/{id}")
     public ResponseEntity remover(@PathVariable(value = "id", required = true) Long id){
         try{
@@ -49,7 +50,7 @@ public class AnimalController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
+    @PreAuthorize("hasRole('S')")
     @DeleteMapping("/remover/feedback")
     public ResponseEntity removerComFeedback(@RequestBody Animal animal){
         try{
@@ -60,14 +61,14 @@ public class AnimalController {
         }
     }
 
-
+    @PreAuthorize("hasRole('S')")
     @GetMapping("/buscarId/{id}")
     public ResponseEntity buscarPorId(@PathVariable(value = "id", required = true) Long id){
         Animal animal = Animal.builder().animalId(id).build();
         Animal animalBuscado = animalService.buscarPorId(animal);
         return ResponseEntity.ok(animalBuscado);
     }
-
+    @PreAuthorize("hasRole('S')")
     @PutMapping("/atualizar")
     public ResponseEntity atualizar(@RequestBody  Animal animal){
         try{
@@ -77,7 +78,7 @@ public class AnimalController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
+    @PreAuthorize("hasRole('S')")
     @GetMapping("/buscarDono/{id}")
     public ResponseEntity buscarDono(@PathVariable(value = "id", required = true) Long id){
         try {
@@ -88,7 +89,7 @@ public class AnimalController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
+    @PreAuthorize("hasRole('S')")
     @PutMapping("/atualizar/dono")
     public ResponseEntity atualizarDono(@RequestBody AnimalDTO animalDTO){
         try {
