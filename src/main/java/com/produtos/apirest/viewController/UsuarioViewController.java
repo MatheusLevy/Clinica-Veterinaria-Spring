@@ -65,9 +65,8 @@ public class UsuarioViewController {
     @GetMapping("/usuario/usuarioList")
     public ModelAndView usuarioList(){
         List<Usuario> usuarios = usarioService.buscarTodos();
-        List<Usuario> usuarioListDTO = new ArrayList<>();
         ModelAndView mv = new ModelAndView("/usuarios/usuarioList");
-        mv.addObject("usuarios", usuarioListDTO);
+        mv.addObject("usuarios", usuarios);
         return mv;
     }
 }
