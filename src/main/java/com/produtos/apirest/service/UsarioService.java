@@ -19,6 +19,9 @@ public class UsarioService {
     @Autowired
     private UsuarioRepo usuarioRepo;
 
+    //TODO: **Verificar outras formas de Criptograr
+    // - [ ] SHA256
+    // - [ ] MD5
     private BCryptPasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }

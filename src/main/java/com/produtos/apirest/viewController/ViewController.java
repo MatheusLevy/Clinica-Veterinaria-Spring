@@ -23,16 +23,18 @@ public class ViewController {
         return "index";
     }
 
-    // Login form
+    // TODO: ### **Criar Página de Login**
     @RequestMapping("/login")
     public String login() {
-        return "login.html";
+        return "login";
     }
 
-    // Login form with error
+    // TODO: ### **Criar Página de Erro**
     @RequestMapping("/login-error")
     public String loginError(Model model) {
         model.addAttribute("loginError", true);
         return "login";
     }
+
+    // TODO: ### **Criar Logger de Erro para capturar o Erro **
 }

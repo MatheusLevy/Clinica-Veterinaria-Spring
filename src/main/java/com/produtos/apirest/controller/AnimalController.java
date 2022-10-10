@@ -50,6 +50,8 @@ public class AnimalController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    //TODO: ### ** Substituir Animal por AnimalDTO **
     @PreAuthorize("hasRole('S')")
     @DeleteMapping("/remover/feedback")
     public ResponseEntity removerComFeedback(@RequestBody Animal animal){
@@ -68,6 +70,8 @@ public class AnimalController {
         Animal animalBuscado = animalService.buscarPorId(animal);
         return ResponseEntity.ok(animalBuscado);
     }
+
+    //TODO: ### ** Substituir Animal por AnimalDTO **
     @PreAuthorize("hasRole('S')")
     @PutMapping("/atualizar")
     public ResponseEntity atualizar(@RequestBody  Animal animal){

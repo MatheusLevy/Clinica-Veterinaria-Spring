@@ -21,6 +21,8 @@ public class DonoController {
     @Autowired
     public DonoService donoService;
 
+
+    //TODO: ### ** Substituir Dono por DonoDTO **
     @PreAuthorize("hasRole('S')")
     @PostMapping("/salvar")
     public ResponseEntity salvar(@RequestBody Dono dono){
@@ -32,6 +34,7 @@ public class DonoController {
         }
     }
 
+    //TODO: ### ** Substituir Dono por DonoDTO **
     @PreAuthorize("hasRole('S')")
     @PutMapping("/atualizar")
     public ResponseEntity atualizar(@RequestBody Dono dono){
@@ -68,6 +71,8 @@ public class DonoController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    //TODO: ### ** Substituir Dono por DonoDTO **
     @PreAuthorize("hasRole('S')")
     @DeleteMapping("remover/feedback/")
     public ResponseEntity removerComFeedback(@RequestBody Dono dono){
@@ -78,6 +83,8 @@ public class DonoController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    //TODO: ### ** Substituir Dono por DonoDTO **
     @PreAuthorize("hasRole('S')")
     @GetMapping("/buscar/filtro")
     public ResponseEntity buscarUtilizandoFiltro(@RequestBody Dono filtro){

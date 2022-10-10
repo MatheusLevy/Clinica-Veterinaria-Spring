@@ -20,6 +20,7 @@ public class UsuarioViewController {
     @Autowired
     private UsarioService usarioService;
 
+    //TODO:
     @PreAuthorize("hasRole('A')")
     @GetMapping("/usuario/cadastro")
     public ModelAndView usuarioCadastro(){
@@ -29,6 +30,8 @@ public class UsuarioViewController {
         return mv;
     }
 
+
+    //TODO: ### ** Verificar Criptografica da senha **
     @PreAuthorize("hasRole('A')")
     @PostMapping("/usuario/cadastro")
     public String usuarioCadastroControll(Usuario usuario){

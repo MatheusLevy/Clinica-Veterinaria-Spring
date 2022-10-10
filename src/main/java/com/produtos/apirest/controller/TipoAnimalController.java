@@ -15,6 +15,7 @@ public class TipoAnimalController {
     @Autowired
     public Tipo_animalService tipoService;
 
+    //TOOD: ### ** Substituir TipoAnimal por TipoAnimalDTO **
     @PreAuthorize("hasRole('A')")
     @PostMapping("/salvar")
     public ResponseEntity salvar(@RequestBody TipoAnimal tipo_animal){
@@ -38,6 +39,7 @@ public class TipoAnimalController {
         }
     }
 
+    //TOOD: ### ** Substituir TipoAnimal por TipoAnimalDTO **
     @PreAuthorize("hasRole('A')")
     @DeleteMapping("/remover/feedback")
     public ResponseEntity removerComFeedback(@RequestBody TipoAnimal tipo){
@@ -48,6 +50,8 @@ public class TipoAnimalController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    //TOOD: ### ** Substituir TipoAnimal por TipoAnimalDTO **
     @PreAuthorize("hasRole('A')")
     @PutMapping("/atualizar")
     public ResponseEntity atualizar(@RequestBody TipoAnimal tipo_animal){

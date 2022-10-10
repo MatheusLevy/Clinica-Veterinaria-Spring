@@ -37,6 +37,8 @@ public class EspecialidadeController {
         }
     }
 
+    //TODO: ### ** Substituir a Especialidade por EspecialidadeDTO **
+
     @PreAuthorize("hasRole('A')")
     @PutMapping("/atualizar")
     public ResponseEntity atualizar(@RequestBody Especialidade Especialidade){
@@ -61,6 +63,7 @@ public class EspecialidadeController {
         }
     }
 
+    //TODO: ### ** Substituir a Especialidade por EspecialidadeDTO **
     @PreAuthorize("hasRole('A')")
     @DeleteMapping("/remover/feedback")
     public ResponseEntity removerComFeedback(@RequestBody Especialidade especialidade){
@@ -84,6 +87,7 @@ public class EspecialidadeController {
         }
     }
 
+    //TODO: ### ** Substituir a Especialidade por EspecialidadeDTO **
     @PreAuthorize("hasRole('A')")
     @GetMapping("/buscar/filtro")
     public ResponseEntity buscar(@RequestBody Especialidade filtro){

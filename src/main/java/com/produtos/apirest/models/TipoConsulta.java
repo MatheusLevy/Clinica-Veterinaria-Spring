@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.List;
 
+
+//TODO: ### ** Faltando TipoConsultaDTO **
 @Entity
 @Table(name = "tipo_consulta")
 @Data

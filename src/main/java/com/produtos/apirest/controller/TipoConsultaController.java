@@ -16,6 +16,8 @@ public class TipoConsultaController {
     @Autowired
     public Tipo_ConsultaService tipoService;
 
+
+    //TODO: ### ** Substituir TipoConsulta ppro TipoConsultaDTO **
     @PreAuthorize("hasRole('A')")
     @PostMapping("/salvar")
     public ResponseEntity salvar(@RequestBody TipoConsulta tipo){
@@ -40,6 +42,7 @@ public class TipoConsultaController {
         }
     }
 
+    //TODO: ### ** Substituir TipoConsulta ppro TipoConsultaDTO **
     @PreAuthorize("hasRole('A')")
     @DeleteMapping("/remover/feedback")
     public ResponseEntity removerComFeedback(@RequestBody TipoConsulta tipo){
@@ -63,7 +66,7 @@ public class TipoConsultaController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
+    //TODO: ### ** Substituir TipoConsulta ppro TipoConsultaDTO **
     @PreAuthorize("hasRole('A')")
     @PutMapping("/atualizar")
     public ResponseEntity atualizar(@RequestBody TipoConsulta tipo){

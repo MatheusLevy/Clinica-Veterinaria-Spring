@@ -18,6 +18,7 @@ public class VeterinarioController {
     @Autowired
     public VeterinarioService veterinarioService;
 
+    //TODO: ### ** Substituir o Veterinario por VeterinarioDTO **
     @PreAuthorize("hasRole('S')")
     @PostMapping("/salvar")
     public ResponseEntity salvar(@RequestBody Veterinario veterinario){
@@ -42,6 +43,7 @@ public class VeterinarioController {
         }
     }
 
+    //TODO: ### ** Substituir o Veterinario por VeterinarioDTO **
     @PreAuthorize("hasRole('S')")
     @DeleteMapping("/remover/feedback")
     public ResponseEntity removerComFeedback(@RequestBody Veterinario veterinario){
@@ -65,6 +67,7 @@ public class VeterinarioController {
         }
     }
 
+    //TODO: ### ** Substituir o Veterinario por VeterinarioDTO **
     @PreAuthorize("hasRole('S')")
     @GetMapping("/buscarTodos")
     public ResponseEntity buscarTodos(){
@@ -76,6 +79,7 @@ public class VeterinarioController {
         }
     }
 
+    //TODO: ### ** Substituir o Veterinario por VeterinarioDTO **
     @PreAuthorize("hasRole('S')")
     @PutMapping("/atualizar")
     public ResponseEntity atualizar(@RequestBody Veterinario veterinario){

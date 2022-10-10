@@ -17,6 +17,7 @@ public class UserPrincipal implements UserDetails {
     private Collection<? extends GrantedAuthority> authorities;
 
 
+    //TODO: **Modificar a role do usuário para uma List
     private UserPrincipal(Usuario usuario){
         this.username = usuario.getUsername();
         this.password = usuario.getSenha();

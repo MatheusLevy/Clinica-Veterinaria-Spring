@@ -18,6 +18,8 @@ public class AreaController {
 
     @Autowired
     public AreaService areaService;
+
+    //TODO: ### ** Substituir Area por AreaDTO **
     @PreAuthorize("hasRole('A')")
     @PostMapping("/salvar")
     public ResponseEntity salvar(@RequestBody Area area){
@@ -28,6 +30,8 @@ public class AreaController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    //TODO: ### ** Substituir Area por AreaDTO **
     @PreAuthorize("hasRole('A')")
     @PutMapping("/atualizar")
     public ResponseEntity atualizar(@RequestBody Area area){
@@ -51,6 +55,7 @@ public class AreaController {
         }
     }
 
+    //TODO: ### ** Substituir Area por AreaDTO **
     @PreAuthorize("hasRole('A')")
     @DeleteMapping("/remover/feedback")
     public ResponseEntity removerComFeedback(@RequestBody Area area){
@@ -72,6 +77,8 @@ public class AreaController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    //TODO: ### ** Substituir Area por AreaDTO **
     @PreAuthorize("hasRole('A')")
     @GetMapping("/buscar/filtro")
     public ResponseEntity buscar(@RequestBody Area filtro){
@@ -82,6 +89,8 @@ public class AreaController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    //TODO: ### ** Substituir Area por AreaDTO **
     @PreAuthorize("hasRole('A')")
     @GetMapping("/buscarTodos")
     public ResponseEntity buscarTodos(){

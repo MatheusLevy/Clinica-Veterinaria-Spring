@@ -16,6 +16,7 @@ public class UsuarioController {
     @Autowired
     private UsarioService usuarioService;
 
+    //TODO: ### ** Substituir o Usuario por UsuarioDTO **
     @GetMapping("/autenticar")
     public ResponseEntity autenticar(@RequestBody Usuario usuario){
         try{
@@ -26,6 +27,8 @@ public class UsuarioController {
         }
     }
 
+    //TODO: ### ** Substituir o Usuario por UsuarioDTO **
+    @PreAuthorize("hasRole('A')")
     @PostMapping("/salvar")
     public ResponseEntity salvar(@RequestBody Usuario usuario){
         try{
@@ -49,6 +52,7 @@ public class UsuarioController {
         }
     }
 
+    //TODO: ### ** Substituir o Usuario por UsuarioDTO **
     @PreAuthorize("hasRole('A')")
     @DeleteMapping("/remover/feedback")
     public ResponseEntity removerComFeedback(@RequestBody Usuario usuario){

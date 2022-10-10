@@ -10,6 +10,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+//TODO: ### **Atualizar a dependência**
+// - [ ] WebSecurityConfig
+// - [ ] Erro de Autenthicação sem Habilitar
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -25,11 +28,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailService).passwordEncoder(passwordEncoder());
     }
 
+    //TODO: Pesquisar csrf
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
-                .authorizeRequests().antMatchers("/api/usuario/autenticar", "/api/usuario/salvar", "/api/usuario/buscarPorUsername/**").permitAll()
+                .authorizeRequests().antMatchers("/api/usuario/autenticar").permitAll()
                 .and().httpBasic();
-
     }
 }

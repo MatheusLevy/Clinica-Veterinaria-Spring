@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+//TODO: ### ** Faltando UsuarioDTO **
 @Entity
 @Table(name = "usuarios")
 @Builder
@@ -26,6 +27,10 @@ public class Usuario {
     @Column(name = "senha")
     private String senha;
 
+    //TODO: **Alterar o Nível para ser uma Lista
+    // - [ ] Criar Tabela de Roles no Banco
+    // - [ ] Adicionar Entity de Role
+    // - [ ] Alterar de String pra List<Role>
     @Column(name = "nivel")
     private String nivel;
 

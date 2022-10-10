@@ -9,13 +9,14 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.List;
 
+
+//TODO: ### ** Faltando DonoDTO **
 @Entity
 @Data
 @Table(name = "dono")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class Dono {
 
     @Id

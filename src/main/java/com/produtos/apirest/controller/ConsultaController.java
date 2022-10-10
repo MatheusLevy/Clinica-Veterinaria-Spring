@@ -23,6 +23,7 @@ public class ConsultaController {
     @Autowired
     public VeterinarioService veterinarioService;
 
+    //TODO: ### ** Substituir Consulta por ConsultaDTO **
     @PreAuthorize("hasRole('S')")
     @PostMapping("/salvar")
     public ResponseEntity salvar(@RequestBody Consulta consulta){
@@ -33,6 +34,8 @@ public class ConsultaController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    //TODO: ### ** Substituir Consulta por ConsultaDTO **
     @PreAuthorize("hasRole('S')")
     @PutMapping("/atualizar")
     public ResponseEntity atualizar(@RequestBody Consulta consulta){
@@ -65,6 +68,8 @@ public class ConsultaController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    //TODO: ### ** Substituir Consulta por ConsultaDTO **
     @PreAuthorize("hasRole('S')")
     @DeleteMapping("/remover/feedback")
     public ResponseEntity removerComFeedback(@RequestBody Consulta consulta){
