@@ -26,22 +26,20 @@ public class ConsultaService {
     public TipoConsultaRepo tipo_consultaRepo;
     public static void verificaConsulta(Consulta consulta){
         if(consulta == null)
-            throw new NullConsultaException();
+            throw new NullPointerException("A Consulta não pode ser Nula!");
         if(consulta.getTipoConsulta() == null)
-            throw new NullManytoOneException(consulta.getTipoConsulta());
+            throw new RegraNegocioRunTime("Consulta deve possuir um Tipo de Consulta!");
         if(consulta.getAnimal() == null)
-            throw new NullManytoOneException(consulta.getAnimal());
+            throw new RegraNegocioRunTime("Consulta deve possuir um Animal!");
         if (consulta.getVeterinario() == null)
-            throw new NullManytoOneException(consulta.getVeterinario());
-        if(consulta.getAnimal() == null)
-            throw new NullManytoOneException(consulta.getAnimal());
+            throw new RegraNegocioRunTime("Consulta deve possuir um Veterinario!");
         if(consulta.getData() == null)
-            throw new NullDataException(consulta);
+            throw new RegraNegocioRunTime("Consulta deve ter uma Data!");
     }
 
     public static void verificaId(Consulta consulta){
         if (consulta == null || Long.valueOf(consulta.getConsultaId()) == null)
-            throw new NotIdentifiableObject(consulta);
+            throw new RegraNegocioRunTime("Consulta deve ter um identificador!");
     }
 
     @Transactional
@@ -93,11 +91,11 @@ public class ConsultaService {
 
         Optional<Veterinario> veterinarioTemp = veterinarioRepo.findById(veterinario.getVeterinarioId());
         if(!veterinarioTemp.isPresent())
-            throw new NotFindException(veterinario);
+            throw new RegraNegocioRunTime("Não foi possivel achar o Veterinário!");
 
         Optional<Consulta> consultaTemp = repo.findById(consulta.getConsultaId());
         if(!consultaTemp.isPresent())
-            throw new NotFindException(consulta);
+            throw new RegraNegocioRunTime("Não foi possivel achar a Consulta!");
 
         Consulta consultaAtualizar = consultaTemp.get();
         Veterinario novoVeterinario = veterinarioTemp.get();
@@ -115,11 +113,11 @@ public class ConsultaService {
 
         Optional<Animal> animalTemp = animalRepo.findById(animal.getAnimalId());
         if(!animalTemp.isPresent())
-            throw new NotFindException(animal);
+            throw new RegraNegocioRunTime("Não foi possivel achar o Animal!");
 
         Optional<Consulta> consultaTemp = repo.findById(consulta.getConsultaId());
         if(!consultaTemp.isPresent())
-            throw new NotFindException(consulta);
+            throw new RegraNegocioRunTime("Não foi possivel achar a Consulta");
 
         Consulta consultaAtualizar = consultaTemp.get();
         Animal novoAnimal = animalTemp.get();
@@ -137,11 +135,11 @@ public class ConsultaService {
 
         Optional<TipoConsulta> tipo_consultaTemp = tipo_consultaRepo.findById(tipo.getTipoConsultaId());
         if (!tipo_consultaTemp.isPresent())
-            throw new NotFindException(tipo);
+            throw new RegraNegocioRunTime("Não foi possivel achar o Tipo de Consulta!");
 
         Optional<Consulta> consultaTemp = repo.findById(consulta.getConsultaId());
         if(!consultaTemp.isPresent())
-            throw new NotFindException(consulta);
+            throw new RegraNegocioRunTime("Não foi possivel achar a Consulta!");
 
         Consulta consultaAtualizar = consultaTemp.get();
         TipoConsulta novoTipo = tipo_consultaTemp.get();

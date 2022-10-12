@@ -24,14 +24,14 @@ public class AnimalService {
     public DonoRepo donoRepo;
     public static void verificaAnimal(Animal animal){
         if (animal == null)
-            throw new NullAnimalException();
+            throw new NullPointerException("O Animal não pode ser Nulo!");
         if(animal.getNome() == null || animal.getNome().equals(""))
-            throw new NotNamedAnimalException();
+            throw new RegraNegocioRunTime("Animal deve ter nome!");
     }
 
     public static void verificaId(Animal animal){
         if (Long.valueOf(animal.getAnimalId()) == null || animal == null)
-            throw new NotIdentifiableObject(animal);
+            throw new RegraNegocioRunTime("O Animal deve possuir um identificador!");
     }
 
     @Transactional
@@ -113,11 +113,11 @@ public class AnimalService {
 
         Optional<Dono> donoTemp = donoRepo.findById(dono.getDonoId());
         if (!donoTemp.isPresent())
-            throw new NotFindException(dono);
+            throw new RegraNegocioRunTime("Não foi possivel encontrar o Dono");
 
         Optional<Animal> animalTemp = repo.findById(animal.getAnimalId());
         if(!animalTemp.isPresent())
-            throw new NotFindException(animal);
+            throw new RegraNegocioRunTime("Não foi possivel encontrar o Animal");
 
         Animal animalAtualizar = animalTemp.get();
         Dono novoDono = donoTemp.get();

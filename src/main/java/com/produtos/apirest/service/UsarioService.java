@@ -3,6 +3,7 @@ package com.produtos.apirest.service;
 import com.produtos.apirest.models.Dono;
 import com.produtos.apirest.models.Usuario;
 import com.produtos.apirest.repository.UsuarioRepo;
+import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -29,16 +30,16 @@ public class UsarioService {
         if(usuario == null)
             throw new NullPointerException("Usuario não pode ser nulo!");
         if (usuario.getUsername() == null)
-            throw  new NullPointerException("Nome de usuário não pode ser nulo!");
+            throw  new RegraNegocioRunTime("Nome de usuário não pode ser nulo!");
         if (usuario.getSenha() == null)
-            throw new NullPointerException("Senha não pdoe ser nula!");
+            throw new RegraNegocioRunTime("Senha não pode ser nula!");
         if (usuario.getNivel() == null)
-            throw new NullPointerException("Nivel de usuário não pode ser nulo!");
+            throw new RegraNegocioRunTime("Nivel de usuário não pode ser nulo!");
     }
 
     public static void verificaId(Usuario usuario){
         if (usuario == null || Long.valueOf(usuario.getUsuarioId()) == null){
-            throw new NullPointerException("Identificador de Usuário inválido!");
+            throw new RegraNegocioRunTime("Usuario deve possuir um identificador!");
         }
     }
 

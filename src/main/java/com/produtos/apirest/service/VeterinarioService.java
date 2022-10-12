@@ -25,18 +25,18 @@ public class VeterinarioService {
 
     public static void verificaVeterinario(Veterinario veterinario){
         if (veterinario == null)
-            throw new NullAnimalException();
+            throw new NullPointerException("Veterinario não pode ser Nulo!");
         if(veterinario.getNome() == null || veterinario.getNome().equals(""))
-            throw new NotNamedAnimalException();
+            throw new RegraNegocioRunTime("Veterinario deve ter um Nome!");
         if (veterinario.getCpf() == null || veterinario.getCpf().equals(""))
-            throw new NotHasCpfException(veterinario);
+            throw new RegraNegocioRunTime("Veterinario deve ter um CPF");
         if (veterinario.getEspecialidade() == null)
-            throw new NotHasEspecialidadeExcpetion(veterinario);
+            throw new RegraNegocioRunTime("Veterinario deve ter uma Especialidade");
     }
 
     public static void verificaId(Veterinario veterinario){
         if (Long.valueOf(veterinario.getVeterinarioId()) == null || veterinario == null)
-            throw new NotIdentifiableObject(veterinario);
+            throw new RegraNegocioRunTime("Veterinario deve ter um identificador");
     }
 
     @Transactional
@@ -112,11 +112,11 @@ public class VeterinarioService {
 
         Optional<Veterinario> veterinarioTemp = repo.findById(veterinario.getVeterinarioId());
         if (!veterinarioTemp.isPresent())
-            throw new NotFindException(veterinario);
+            throw new RegraNegocioRunTime("Veterinario não encontrado!");
 
         Optional<Especialidade> especialidadeTemp = especialidadeRepo.findById(especialidade.getEspecialidadeId());
         if(!especialidadeTemp.isPresent())
-            throw new NotFindException(especialidade);
+            throw new RegraNegocioRunTime("Especialidade não encontrada!");
 
         Veterinario veterinarioAtualizar = veterinarioTemp.get();
         Especialidade novaEspecialidade = especialidadeTemp.get();

@@ -3,10 +3,7 @@ package com.produtos.apirest.service;
 import com.produtos.apirest.models.Animal;
 import com.produtos.apirest.models.Dono;
 import com.produtos.apirest.repository.DonoRepo;
-import com.produtos.apirest.service.excecoes.NotHasCpfException;
-import com.produtos.apirest.service.excecoes.NotIdentifiableObject;
-import com.produtos.apirest.service.excecoes.NotNamedDonoException;
-import com.produtos.apirest.service.excecoes.NullDonoException;
+import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -25,16 +22,16 @@ public class DonoService {
 
     public static void verificaDono(Dono dono){
         if(dono == null)
-            throw new NullDonoException();
+            throw new NullPointerException("Dono não pode ser Nulo!");
         if(dono.getNome() == null || dono.getNome().equals(""))
-            throw new NotNamedDonoException();
+            throw new RegraNegocioRunTime("Dono deve ter um nome!");
         if(dono.getCpf() == null || dono.getCpf().equals(""))
-            throw new NotHasCpfException(dono);
+            throw new RegraNegocioRunTime("Dono deve ter um CPF!");
     }
 
     public static void verificaId(Dono dono){
         if(dono == null || Long.valueOf(dono.getDonoId()) == null)
-            throw new NotIdentifiableObject(dono);
+            throw new RegraNegocioRunTime("Dono deve ter um indentificador!");
     }
 
     @Transactional

@@ -21,14 +21,14 @@ public class Tipo_ConsultaService {
 
     public static void verificaTipo_consulta(TipoConsulta tipo){
         if (tipo == null)
-            throw new NullTipo_ConsultaException();
+            throw new NullPointerException("Tipo de Consulta não pode ser Nulo!");
         if (tipo.getNome() == null || tipo.getNome().equals(""))
-            throw new NotNamedTipoConsultaException();
+            throw new RegraNegocioRunTime("Tipo de Consulta deve ter um nome!");
     }
 
     public static void verificaId(TipoConsulta tipo){
         if(tipo == null || Long.valueOf(tipo.getTipoConsultaId()) == null)
-            throw new NotIdentifiableObject(tipo);
+            throw new RegraNegocioRunTime("Tipo de Consulta deve ter um identificador!");
     }
 
     @Transactional

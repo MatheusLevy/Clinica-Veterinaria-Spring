@@ -3,9 +3,7 @@ package com.produtos.apirest.service;
 import com.produtos.apirest.models.Area;
 import com.produtos.apirest.models.Especialidade;
 import com.produtos.apirest.repository.AreaRepo;
-import com.produtos.apirest.service.excecoes.NotIdentifiableObject;
-import com.produtos.apirest.service.excecoes.NotNamedArea;
-import com.produtos.apirest.service.excecoes.NullAreaException;
+import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -23,14 +21,14 @@ public class AreaService {
 
     public static void verificaArea(Area area){
         if (area == null)
-            throw new NullAreaException();
+            throw new NullPointerException("A Area não pode ser Nula!");
         if(area.getNome() == null || area.getNome().equals(""))
-            throw new NotNamedArea();
+            throw new RegraNegocioRunTime("A Area deve ter um nome!");
     }
 
     public static void verificaId(Area area){
         if (Long.valueOf(area.getAreaId()) == null || area == null)
-            throw new NotIdentifiableObject(area);
+            throw new RegraNegocioRunTime("A Area deve possuir um identificador!");
     }
 
     @Transactional

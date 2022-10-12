@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-//TODO: ### ** Faltando UsuarioDTO **
 @Entity
 @Table(name = "usuarios")
 @Builder

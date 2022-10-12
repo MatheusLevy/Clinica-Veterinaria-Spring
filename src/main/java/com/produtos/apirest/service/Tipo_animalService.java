@@ -2,9 +2,7 @@ package com.produtos.apirest.service;
 
 import com.produtos.apirest.models.TipoAnimal;
 import com.produtos.apirest.repository.TipoAnimalRepo;
-import com.produtos.apirest.service.excecoes.NotIdentifiableObject;
-import com.produtos.apirest.service.excecoes.NotNamedTipoAnimalException;
-import com.produtos.apirest.service.excecoes.NullTipo_animalException;
+import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -23,14 +21,14 @@ public class Tipo_animalService {
 
     public static void verificaTipo_Animal(TipoAnimal tipo){
         if (tipo == null)
-            throw new NullTipo_animalException();
+            throw new NullPointerException("Tipo de Animal não pode ser Nulo!");
         if (tipo.getNome() == null || tipo.getNome().equals(""))
-            throw new NotNamedTipoAnimalException();
+            throw new RegraNegocioRunTime("Tipo de Animla deve ter um nome!");
     }
 
     public static void verificaId(TipoAnimal tipo){
         if(tipo == null || Long.valueOf(tipo.getTipoAnimalId()) == null)
-            throw new NotIdentifiableObject(tipo);
+            throw new RegraNegocioRunTime("Tipo de Animal deve ter um identificador!");
     }
 
     @Transactional
