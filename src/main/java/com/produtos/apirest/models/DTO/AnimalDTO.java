@@ -16,10 +16,14 @@ import java.util.List;
 public class AnimalDTO {
     private Long id;
     private String nome;
+
+    private Long idDono;
     private Dono dono;
+    private String nomeDono;
+    private List<Dono> donos;
+
     private TipoAnimal tipo;
     private Long idTipoAnimal;
-    private Long idDono;
-    private List<Dono> donos;
+    private String nomeTipoAnimal;
     private List<TipoAnimal> tipos;
 }

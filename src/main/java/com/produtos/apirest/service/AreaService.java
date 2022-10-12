@@ -6,6 +6,7 @@ import com.produtos.apirest.repository.AreaRepo;
 import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,10 @@ public class AreaService {
             throw new RegraNegocioRunTime("A Area deve possuir um identificador!");
     }
 
+    public static void verificaId(Long id){
+        if (Long.valueOf(id) == null || id < 0)
+            throw new RegraNegocioRunTime("A Area deve possuir um identificador!");
+    }
     @Transactional
     public Area salvar(Area area){
         verificaArea(area);
@@ -44,27 +49,26 @@ public class AreaService {
         return repo.save(area);
     }
 
+    //TODO: Fazer captura de Exceção EmptyResultDataAccessException
     @Transactional
-    public void remover(Area area){
-        verificaArea(area);
-        verificaId(area);
-        repo.delete(area);
+    public void remover(Long id){
+        verificaId(id);
+        repo.deleteById(id);
     }
 
     @Transactional
-    public Area removerFeedback(Area area){
-        verificaArea(area);
-        verificaId(area);
-        Optional<Area> areaRemover = repo.findById(area.getAreaId());
+    public Area removerFeedback(Long id){
+        verificaId(id);
+        Optional<Area> areaRemover = repo.findById(id);
         Area areaTemp = areaRemover.get();
         repo.delete(areaTemp);
         return areaTemp;
     }
 
     @Transactional
-    public Area buscarAreaPorId(Area area){
-        verificaId(area);
-        return repo.findById(area.getAreaId()).get();
+    public Area buscarAreaPorId(Long id){
+        verificaId(id);
+        return repo.findById(id).get();
     }
 
     @Transactional

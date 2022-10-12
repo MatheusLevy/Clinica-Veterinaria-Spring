@@ -27,9 +27,12 @@ public class EspecialidadeController {
     @PostMapping("/salvar")
     public ResponseEntity salvar(@RequestBody EspecialidadeDTO dto){
         try {
-            Area area = Area.builder().areaId(dto.getIdArea()).build();
-            Area areaBuscada = areaService.buscarAreaPorId(area);
-            Especialidade especialidade = Especialidade.builder().nome(dto.getNome()).area(areaBuscada).build();
+            Area areaBuscada = areaService.buscarAreaPorId(dto.getIdArea());
+
+            Especialidade especialidade = Especialidade.builder()
+                    .nome(dto.getNome())
+                    .area(areaBuscada)
+                    .build();
             Especialidade especialidadeSalva = especialidadeService.salvar(especialidade);
             return ResponseEntity.ok(especialidadeSalva);
         } catch (Exception e){

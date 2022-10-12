@@ -34,6 +34,11 @@ public class AnimalService {
             throw new RegraNegocioRunTime("O Animal deve possuir um identificador!");
     }
 
+    public static void verificaId(Long id){
+        if (Long.valueOf(id) == null || id < 0)
+            throw new RegraNegocioRunTime("O Animal deve possuir um identificador!");
+    }
+
     @Transactional
     public Animal salvar(Animal animal){
         verificaAnimal(animal);
@@ -55,16 +60,15 @@ public class AnimalService {
     }
 
     @Transactional
-    public void removerPorId(Animal animal){
-        verificaId(animal);
-        repo.deleteById(animal.getAnimalId());
+    public void removerPorId(Long id){
+        verificaId(id);
+        repo.deleteById(id);
     }
 
     @Transactional
-    public Animal removerFeedback(Animal animal){
-        verificaAnimal(animal);
-        verificaId(animal);
-        Optional<Animal> AnimalRemover = repo.findById(animal.getAnimalId());
+    public Animal removerFeedback(Long id){
+        verificaId(id);
+        Optional<Animal> AnimalRemover = repo.findById(id);
         Animal AnimalTemp = AnimalRemover.get();
         repo.delete(AnimalTemp);
         return AnimalTemp;
@@ -87,9 +91,9 @@ public class AnimalService {
     }
 
     @Transactional
-    public Animal buscarPorId(Animal animal){
-        verificaId(animal);
-        Optional<Animal> animalTemp = repo.findById(animal.getAnimalId());
+    public Animal buscarPorId(Long id){
+        verificaId(id);
+        Optional<Animal> animalTemp = repo.findById(id);
         return animalTemp.get();
     }
 
@@ -98,9 +102,9 @@ public class AnimalService {
         return repo.findAll();
     }
     @Transactional
-    public Dono buscarDono(Animal animal){
-        verificaId(animal);
-        Optional<Animal> animals = repo.findById(animal.getAnimalId());
+    public Dono buscarDono(Long id){
+        verificaId(id);
+        Optional<Animal> animals = repo.findById(id);
         return animals.get().getDono();
     }
 

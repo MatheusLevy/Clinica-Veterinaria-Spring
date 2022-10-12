@@ -58,8 +58,7 @@ public class AreaViewController {
     @PreAuthorize("hasRole('A')")
     @GetMapping("/area/atualizar/{id}")
     public ModelAndView animalAtualizar(@PathVariable(value = "id", required = true) Long id){
-        Area area = Area.builder().areaId(id).build();
-        Area areaFind = areaService.buscarAreaPorId(area);
+        Area areaFind = areaService.buscarAreaPorId(id);
 
         //AreaDTO
         AreaDTO dto = AreaDTO.builder()
@@ -74,9 +73,7 @@ public class AreaViewController {
     @PreAuthorize("hasRole('A')")
     @GetMapping("/area/remover/{id}")
     public String areaRemover(@PathVariable(value = "id", required = true) Long id){
-        Area area = Area.builder().areaId(id).build();
-        Area areaFind = areaService.buscarAreaPorId(area);
-        areaService.remover(areaFind);
+        areaService.remover(id);
         return "redirect:/area/areaList";
     }
 

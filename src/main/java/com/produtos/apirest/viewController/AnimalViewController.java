@@ -66,8 +66,7 @@ public class AnimalViewController {
     @PreAuthorize("hasRole('S')")
     @GetMapping("/animal/atualizar/{id}")
     public ModelAndView animalAtualizar(@PathVariable(value = "id", required = true) Long id){
-        Animal animal = Animal.builder().animalId(id).build();
-        Animal animalFind = animalService.buscarPorId(animal);
+        Animal animalFind = animalService.buscarPorId(id);
 
         //Tipo Animal List
         List<TipoAnimal> tipoAnimal = tipoAnimalService.buscarTodos();
@@ -92,9 +91,8 @@ public class AnimalViewController {
     @PreAuthorize("hasRole('S')")
     @GetMapping("/animal/remover/{id}")
     public String animalRemover(@PathVariable(value = "id", required = true) Long id){
-        Animal animal = Animal.builder().animalId(id).build();
-        Animal animalFind = animalService.buscarPorId(animal);
-        animalService.removerPorId(animalFind);
+        Animal animalFind = animalService.buscarPorId(id);
+        animalService.removerPorId(animalFind.getAnimalId());
         return "redirect:/animal/animalList";
     }
 
