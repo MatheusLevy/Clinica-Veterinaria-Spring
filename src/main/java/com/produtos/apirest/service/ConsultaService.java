@@ -128,8 +128,8 @@ public class ConsultaService {
 
     @Transactional
     public Consulta atualizarTipoConsulta(TipoConsulta tipo, Consulta consulta){
-        Tipo_ConsultaService.verificaTipo_consulta(tipo);
-        Tipo_ConsultaService.verificaId(tipo);
+        TipoConsultaService.verificaTipo_consulta(tipo);
+        TipoConsultaService.verificaId(tipo);
         verificaConsulta(consulta);
         verificaId(consulta);
 

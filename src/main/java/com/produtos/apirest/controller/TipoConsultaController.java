@@ -1,8 +1,7 @@
 package com.produtos.apirest.controller;
 
 import com.produtos.apirest.models.TipoConsulta;
-import com.produtos.apirest.service.Tipo_ConsultaService;
-import com.produtos.apirest.service.Tipo_animalService;
+import com.produtos.apirest.service.TipoConsultaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 public class TipoConsultaController {
 
     @Autowired
-    public Tipo_ConsultaService tipoService;
+    public TipoConsultaService tipoService;
 
 
     //TODO: ### ** Substituir TipoConsulta ppro TipoConsultaDTO **

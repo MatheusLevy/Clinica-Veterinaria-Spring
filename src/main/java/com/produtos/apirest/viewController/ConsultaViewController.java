@@ -5,7 +5,7 @@ import com.produtos.apirest.models.DTO.AnimalDTO;
 import com.produtos.apirest.models.DTO.ConsultaDTO;
 import com.produtos.apirest.service.AnimalService;
 import com.produtos.apirest.service.ConsultaService;
-import com.produtos.apirest.service.Tipo_ConsultaService;
+import com.produtos.apirest.service.TipoConsultaService;
 import com.produtos.apirest.service.VeterinarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,7 +24,7 @@ public class ConsultaViewController {
     public ConsultaService  consultaService;
 
     @Autowired
-    public Tipo_ConsultaService tipo_consultaService;
+    public TipoConsultaService tipo_consultaService;
 
     @Autowired
     public AnimalService animalService;

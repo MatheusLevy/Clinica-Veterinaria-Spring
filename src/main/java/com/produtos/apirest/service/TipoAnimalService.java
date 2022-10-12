@@ -14,7 +14,7 @@ import java.util.Optional;
 
 //TODO: **Alterar Nome da Classe para CamelCase
 @Service
-public class Tipo_animalService {
+public class TipoAnimalService {
 
     @Autowired
     public TipoAnimalRepo repo;

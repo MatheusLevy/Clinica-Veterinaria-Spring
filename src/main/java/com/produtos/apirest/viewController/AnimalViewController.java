@@ -6,18 +6,15 @@ import com.produtos.apirest.models.Dono;
 import com.produtos.apirest.models.TipoAnimal;
 import com.produtos.apirest.service.AnimalService;
 import com.produtos.apirest.service.DonoService;
-import com.produtos.apirest.service.Tipo_animalService;
+import com.produtos.apirest.service.TipoAnimalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -30,7 +27,7 @@ public class AnimalViewController {
     public DonoService donoService;
 
     @Autowired
-    public Tipo_animalService tipoAnimalService;
+    public TipoAnimalService tipoAnimalService;
 
     @PreAuthorize("hasRole('S')")
     @GetMapping("/animal/cadastro")

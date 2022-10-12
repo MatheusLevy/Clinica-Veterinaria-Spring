@@ -4,8 +4,6 @@ import com.produtos.apirest.models.Usuario;
 import com.produtos.apirest.repository.UsuarioRepo;
 import com.produtos.apirest.service.UsarioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

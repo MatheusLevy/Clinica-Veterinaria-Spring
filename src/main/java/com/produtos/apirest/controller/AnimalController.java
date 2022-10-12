@@ -6,7 +6,7 @@ import com.produtos.apirest.models.Dono;
 import com.produtos.apirest.models.TipoAnimal;
 import com.produtos.apirest.service.AnimalService;
 import com.produtos.apirest.service.DonoService;
-import com.produtos.apirest.service.Tipo_animalService;
+import com.produtos.apirest.service.TipoAnimalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +24,7 @@ public class AnimalController {
     public DonoService donoService;
 
     @Autowired
-    public Tipo_animalService tipoAnimalService;
+    public TipoAnimalService tipoAnimalService;
 
     @PreAuthorize("hasRole('S')")
     @PostMapping("/salvar")
@@ -66,9 +66,13 @@ public class AnimalController {
     @PreAuthorize("hasRole('S')")
     @GetMapping("/buscarId/{id}")
     public ResponseEntity buscarPorId(@PathVariable(value = "id", required = true) Long id){
-        Animal animal = Animal.builder().animalId(id).build();
-        Animal animalBuscado = animalService.buscarPorId(animal);
-        return ResponseEntity.ok(animalBuscado);
+        try{
+            Animal animal = Animal.builder().animalId(id).build();
+            Animal animalBuscado = animalService.buscarPorId(animal);
+            return ResponseEntity.ok(animalBuscado);
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     //TODO: ### ** Substituir Animal por AnimalDTO **

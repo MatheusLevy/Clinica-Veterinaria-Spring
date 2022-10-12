@@ -2,7 +2,7 @@ package com.produtos.apirest.Serviços;
 
 import com.produtos.apirest.models.TipoConsulta;
 import com.produtos.apirest.repository.TipoConsultaRepo;
-import com.produtos.apirest.service.Tipo_ConsultaService;
+import com.produtos.apirest.service.TipoConsultaService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import java.util.Optional;
 public class TipoConsultaServiceTeste {
 
     @Autowired
-    public Tipo_ConsultaService tipo_consultaService;
+    public TipoConsultaService tipo_consultaService;
 
     @Autowired
     public TipoConsultaRepo tipo_consultaRepo;

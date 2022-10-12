@@ -1,11 +1,8 @@
 package com.produtos.apirest.viewController;
 
-import com.produtos.apirest.models.DTO.EspecialidadeDTO;
-import com.produtos.apirest.models.Dono;
-import com.produtos.apirest.models.Especialidade;
+
 import com.produtos.apirest.models.TipoAnimal;
-import com.produtos.apirest.service.Tipo_ConsultaService;
-import com.produtos.apirest.service.Tipo_animalService;
+import com.produtos.apirest.service.TipoAnimalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -20,7 +17,7 @@ import java.util.List;
 public class TipoAnimalViewController {
 
     @Autowired
-    private Tipo_animalService tipoService;
+    private TipoAnimalService tipoService;
 
     @PreAuthorize("hasRole('A')")
     @GetMapping("/tipoAnimal/cadastro")
