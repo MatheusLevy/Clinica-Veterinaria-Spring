@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.util.Assert;
 
 import java.util.Optional;
 
@@ -15,7 +16,7 @@ public class TipoAnimalTeste {
     public TipoAnimalRepo repo;
 
     @Test
-    public void deveCriarTipo_animal(){
+    public void deveCriarTipoAnimal(){
         //Cenário
         TipoAnimal novo = TipoAnimal.builder().nome("Cão").build();
 
@@ -31,7 +32,7 @@ public class TipoAnimalTeste {
     }
 
     @Test
-    public void deveRemoverTipo_animal(){
+    public void deveRemoverTipoAnimal(){
         //Cenário
         TipoAnimal novo = TipoAnimal.builder().nome("Cão").build();
         TipoAnimal retorno = repo.save(novo);
@@ -45,7 +46,7 @@ public class TipoAnimalTeste {
     }
 
     @Test
-    public void deveBuscarTipo_animal(){
+    public void deveBuscarTipoAnimal(){
         //Cenário
         TipoAnimal novo = TipoAnimal.builder().nome("Cão").build();
         TipoAnimal retorno = repo.save(novo);
@@ -58,5 +59,25 @@ public class TipoAnimalTeste {
 
         //Rollback
         repo.delete(retorno);
+    }
+
+    @Test
+    public void deveAtualizar(){
+        //Cenário
+        TipoAnimal novo = TipoAnimal.builder().nome("Cão").build();
+        TipoAnimal retorno = repo.save(novo);
+
+        //Ação
+        retorno.setNome("Novo nome");
+        TipoAnimal atualizado = repo.save(retorno);
+
+        //Verificação
+        Assertions.assertNotNull(atualizado);
+        Assertions.assertEquals(atualizado.getTipoAnimalId(), retorno.getTipoAnimalId());
+        Assertions.assertEquals(atualizado.getNome(), "Novo nome");
+
+        //Rollback
+        repo.delete(atualizado);
+
     }
 }

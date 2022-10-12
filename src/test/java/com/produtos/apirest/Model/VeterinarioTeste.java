@@ -27,11 +27,23 @@ public class VeterinarioTeste {
     @Test
     public void deveCriarVeterinario(){
         //Cenário
-        Area novaArea = Area.builder().nome("Cirurgia Geral").build();
+        Area novaArea = Area.builder()
+                .nome("Cirurgia Geral")
+                .build();
         Area retornoArea = areaRepo.save(novaArea);
-        Especialidade novaEspecialidade = Especialidade.builder().nome("Ortopedia").area(retornoArea).build();
+
+        Especialidade novaEspecialidade = Especialidade.builder()
+                .nome("Ortopedia")
+                .area(retornoArea).
+                build();
         Especialidade retornoEspecialidade = especialidadeRepo.save(novaEspecialidade);
-        Veterinario novo = Veterinario.builder().nome("Marcos").cpf("123").especialidade(retornoEspecialidade).telefone("123").build();
+
+        Veterinario novo = Veterinario.builder()
+                .nome("Marcos")
+                .cpf("123")
+                .especialidade(retornoEspecialidade)
+                .telefone("123")
+                .build();
 
         //Ação
         Veterinario retorno = repo.save(novo);
@@ -49,11 +61,23 @@ public class VeterinarioTeste {
     @Test
     public void deveRemoverVeterinario(){
         //Cenário
-        Area novaArea = Area.builder().nome("Cirurgia Geral").build();
+        Area novaArea = Area.builder()
+                .nome("Cirurgia Geral")
+                .build();
         Area retornoArea = areaRepo.save(novaArea);
-        Especialidade novaEspecialidade = Especialidade.builder().nome("Ortopedia").area(retornoArea).build();
+
+        Especialidade novaEspecialidade = Especialidade.builder()
+                .nome("Ortopedia")
+                .area(retornoArea)
+                .build();
         Especialidade retornoEspecialidade = especialidadeRepo.save(novaEspecialidade);
-        Veterinario novo = Veterinario.builder().nome("Marcos").cpf("123").especialidade(retornoEspecialidade).telefone("123").build();
+
+        Veterinario novo = Veterinario.builder()
+                .nome("Marcos")
+                .cpf("123")
+                .especialidade(retornoEspecialidade)
+                .telefone("123")
+                .build();
         Veterinario retorno = repo.save(novo);
 
         //Ação
@@ -71,11 +95,23 @@ public class VeterinarioTeste {
     @Test
     public void deveBuscarVeterinario(){
         //Cenário
-        Area novaArea = Area.builder().nome("Cirurgia Geral").build();
+        Area novaArea = Area.builder()
+                .nome("Cirurgia Geral")
+                .build();
         Area retornoArea = areaRepo.save(novaArea);
-        Especialidade novaEspecialidade = Especialidade.builder().nome("Ortopedia").area(retornoArea).build();
+
+        Especialidade novaEspecialidade = Especialidade.builder()
+                .nome("Ortopedia")
+                .area(retornoArea)
+                .build();
         Especialidade retornoEspecialidade = especialidadeRepo.save(novaEspecialidade);
-        Veterinario novo = Veterinario.builder().nome("Marcos").cpf("123").especialidade(retornoEspecialidade).telefone("123").build();
+
+        Veterinario novo = Veterinario.builder()
+                .nome("Marcos")
+                .cpf("123")
+                .especialidade(retornoEspecialidade)
+                .telefone("123")
+                .build();
         Veterinario retorno = repo.save(novo);
 
         //Ação
@@ -88,5 +124,86 @@ public class VeterinarioTeste {
         repo.delete(retorno);
         especialidadeRepo.delete(retornoEspecialidade);
         areaRepo.delete(retornoArea);
+    }
+
+    @Test
+    public void deveAtualizar(){
+        //Cenário
+        Area novaArea = Area.builder()
+                .nome("Cirurgia Geral")
+                .build();
+        Area retornoArea = areaRepo.save(novaArea);
+
+        Especialidade novaEspecialidade = Especialidade.builder()
+                .nome("Ortopedia")
+                .area(retornoArea)
+                .build();
+        Especialidade retornoEspecialidade = especialidadeRepo.save(novaEspecialidade);
+
+        Veterinario novo = Veterinario.builder()
+                .nome("Marcos")
+                .cpf("123")
+                .especialidade(retornoEspecialidade)
+                .telefone("123")
+                .build();
+        Veterinario retorno = repo.save(novo);
+
+        //Ação
+        retorno.setNome("Novo Nome");
+        Veterinario atualizado = repo.save(retorno);
+
+        //Verificação
+        Assertions.assertNotNull(atualizado);
+        Assertions.assertEquals(atualizado.getVeterinarioId(), retorno.getVeterinarioId());
+        Assertions.assertEquals(atualizado.getNome(), "Novo Nome");
+
+        //Rollback
+        repo.delete(retorno);
+        especialidadeRepo.delete(retornoEspecialidade);
+        areaRepo.delete(retornoArea);
+    }
+
+    @Test
+    public void deveAtualizarEspecialidade(){
+        //Cenário
+        Area novaArea = Area.builder()
+                .nome("Cirurgia Geral")
+                .build();
+        Area retornoArea = areaRepo.save(novaArea);
+
+        Especialidade novaEspecialidade = Especialidade.builder()
+                .nome("Ortopedia")
+                .area(retornoArea)
+                .build();
+        Especialidade retornoEspecialidade = especialidadeRepo.save(novaEspecialidade);
+
+        Especialidade outraEspecialidade = Especialidade.builder()
+                .nome("Outra Especialiade")
+                .area(retornoArea)
+                .build();
+        Especialidade retornoOutraEspecialidade = especialidadeRepo.save(outraEspecialidade);
+
+        Veterinario novo = Veterinario.builder()
+                .nome("Marcos")
+                .cpf("123")
+                .especialidade(retornoEspecialidade)
+                .telefone("123")
+                .build();
+        Veterinario retorno = repo.save(novo);
+
+        //Ação
+        retorno.setEspecialidade(retornoOutraEspecialidade);
+        Veterinario atualizado = repo.save(retorno);
+
+        //Verificação
+        Assertions.assertNotNull(atualizado);
+        Assertions.assertEquals(atualizado.getVeterinarioId(), retorno.getVeterinarioId());
+
+        //Rollback
+        repo.delete(retorno);
+        especialidadeRepo.delete(retornoEspecialidade);
+        especialidadeRepo.delete(retornoOutraEspecialidade);
+        areaRepo.delete(retornoArea);
+
     }
 }

@@ -85,14 +85,26 @@ public class AnimalServiceTeste {
 
     @Test
     public void deveRemoverComFeedBack(){
-        Dono dono = Dono.builder().nome("Dono Teste").cpf("CPF Teste").telefone("Telefone Teste").build();
+        Dono dono = Dono.builder()
+                .nome("Dono Teste")
+                .cpf("CPF Teste")
+                .telefone("Telefone Teste")
+                .build();
         Dono donoRetorno = donoRepo.save(dono);
-        TipoAnimal tipo = TipoAnimal.builder().nome("Tipo Teste").build();
+
+        TipoAnimal tipo = TipoAnimal.builder()
+                .nome("Tipo Teste")
+                .build();
         TipoAnimal tipoRetorno = tipoAnimalRepo.save(tipo);
-        Animal animal = Animal.builder().nome("Animal Teste").tipoAnimal(tipoRetorno).dono(donoRetorno).build();
+
+        Animal animal = Animal.builder()
+                .nome("Animal Teste")
+                .tipoAnimal(tipoRetorno)
+                .dono(donoRetorno)
+                .build();
         Animal animalRetorno = animalRepo.save(animal);
 
-        Animal animalFeedback = animalService.removerFeedback(animalRetorno);
+        Animal animalFeedback = animalService.removerFeedback(animalRetorno.getAnimalId());
 
         Assertions.assertNotNull(animalFeedback);
         Assertions.assertNotNull(animalFeedback.getAnimalId());
@@ -143,14 +155,19 @@ public class AnimalServiceTeste {
 
     @Test
     public void deveBuscarDono(){
-        Dono dono = Dono.builder().nome("Dono Teste").cpf("CPF Teste").telefone("Telefone Teste").build();
+        Dono dono = Dono.builder()
+                .nome("Dono Teste")
+                .cpf("CPF Teste")
+                .telefone("Telefone Teste")
+                .build();
+
         Dono donoRetorno = donoRepo.save(dono);
         TipoAnimal tipo = TipoAnimal.builder().nome("Tipo Teste").build();
         TipoAnimal tipoRetorno = tipoAnimalRepo.save(tipo);
         Animal animal = Animal.builder().nome("Animal Teste").tipoAnimal(tipoRetorno).dono(donoRetorno).build();
         Animal animalRetorno = animalRepo.save(animal);
 
-        Dono donoBuscado = animalService.buscarDono(animalRetorno);
+        Dono donoBuscado = animalService.buscarDono(animalRetorno.getAnimalId());
 
         Assertions.assertNotNull(donoBuscado);
         Assertions.assertNotNull(donoBuscado.getDonoId());

@@ -60,4 +60,22 @@ public class TipoConsultaTeste {
         repo.delete(retorno);
     }
 
+    @Test
+    public void deveAtualizar(){
+        //Cenário
+        TipoConsulta novo = TipoConsulta.builder().nome("Retorno").build();
+        TipoConsulta retorno = repo.save(novo);
+
+        //Ação
+        retorno.setNome("Nome Novo");
+        TipoConsulta atualizado =  repo.save(retorno);
+
+        //Verificação
+        Assertions.assertNotNull(atualizado);
+        Assertions.assertEquals(atualizado.getTipoConsultaId(), retorno.getTipoConsultaId());
+        Assertions.assertEquals(atualizado.getNome(), "Nome Novo");
+
+        //Rollback
+        repo.delete(atualizado);
+    }
 }

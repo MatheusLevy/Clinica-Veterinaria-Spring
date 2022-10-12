@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
+import java.util.Random;
 
 @SpringBootTest
 public class AnimalTeste {
@@ -24,14 +25,28 @@ public class AnimalTeste {
     @Autowired
     public DonoRepo donoRepo;
 
+    Random random = new Random();
+
     @Test
     public void deveCriarAnimal(){
         //Cenário
-        TipoAnimal novoTipoAnimal = TipoAnimal.builder().nome("Gato").build();
+        TipoAnimal novoTipoAnimal = TipoAnimal.builder()
+                .nome("Gato")
+                .build();
         TipoAnimal retornoTipoAnimal = tipoAnimalRepo.save(novoTipoAnimal);
-        Dono novoDono = Dono.builder().nome("Marcos").cpf("123").telefone("111111").build();
+
+        Dono novoDono = Dono.builder()
+                .nome("Marcos")
+                .cpf(String.valueOf(random.nextInt(9999999)))
+                .telefone("111111")
+                .build();
         Dono retornoDono = donoRepo.save(novoDono);
-        Animal novo = Animal.builder().nome("Pepper").tipoAnimal(retornoTipoAnimal).dono(retornoDono).build();
+
+        Animal novo = Animal.builder()
+                .nome("Pepper")
+                .tipoAnimal(retornoTipoAnimal).
+                dono(retornoDono)
+                .build();
 
         //Ação
         Animal retorno = repo.save(novo);
@@ -42,18 +57,30 @@ public class AnimalTeste {
 
         //Rollback
         repo.delete(retorno);
-        tipoAnimalRepo.delete(novoTipoAnimal);
-        donoRepo.delete(novoDono);
+        tipoAnimalRepo.delete(retornoTipoAnimal);
+        donoRepo.delete(retornoDono);
     }
 
     @Test
     public void deveRemoverAnimal(){
         //Cenário
-        TipoAnimal novoTipoAnimal = TipoAnimal.builder().nome("Gato").build();
+        TipoAnimal novoTipoAnimal = TipoAnimal.builder()
+                .nome("Gato")
+                .build();
         TipoAnimal retornoTipoAnimal = tipoAnimalRepo.save(novoTipoAnimal);
-        Dono novoDono = Dono.builder().nome("Marcos").cpf("123").telefone("111111").build();
+
+        Dono novoDono = Dono.builder()
+                .nome("Marcos")
+                .cpf(String.valueOf(random.nextInt(9999999)))
+                .telefone("111111")
+                .build();
         Dono retornoDono = donoRepo.save(novoDono);
-        Animal novo = Animal.builder().nome("Pepper").tipoAnimal(retornoTipoAnimal).dono(retornoDono).build();
+
+        Animal novo = Animal.builder()
+                .nome("Pepper")
+                .tipoAnimal(retornoTipoAnimal)
+                .dono(retornoDono)
+                .build();
         Animal retorno = repo.save(novo);
 
         //Ação
@@ -74,9 +101,17 @@ public class AnimalTeste {
         //Cenário
         TipoAnimal novoTipoAnimal = TipoAnimal.builder().nome("Gato").build();
         TipoAnimal retornoTipoAnimal = tipoAnimalRepo.save(novoTipoAnimal);
-        Dono novoDono = Dono.builder().nome("Marcos").cpf("123").telefone("111111").build();
+        Dono novoDono = Dono.builder()
+                .nome("Marcos")
+                .cpf(String.valueOf(random.nextInt(9999999)))
+                .telefone("111111").build();
         Dono retornoDono = donoRepo.save(novoDono);
-        Animal novo = Animal.builder().nome("Pepper").tipoAnimal(retornoTipoAnimal).dono(retornoDono).build();
+
+        Animal novo = Animal.builder()
+                .nome("Pepper")
+                .tipoAnimal(retornoTipoAnimal)
+                .dono(retornoDono)
+                .build();
         Animal retorno = repo.save(novo);
 
         //Ação
@@ -94,13 +129,30 @@ public class AnimalTeste {
     @Test
     public void deveAlterarDonodoAnimal(){
         //Cenário
-        TipoAnimal novoTipoAnimal = TipoAnimal.builder().nome("Gato").build();
+        TipoAnimal novoTipoAnimal = TipoAnimal.builder()
+                .nome("Gato")
+                .build();
         TipoAnimal retornoTipoAnimal = tipoAnimalRepo.save(novoTipoAnimal);
-        Dono novoDono = Dono.builder().nome("Marcos").cpf("123").telefone("111111").build();
+
+        Dono novoDono = Dono.builder()
+                .nome("Marcos")
+                .cpf(String.valueOf(random.nextInt(9999999)))
+                .telefone("111111")
+                .build();
         Dono retornoDono = donoRepo.save(novoDono);
-        Animal novo = Animal.builder().nome("Pepper").tipoAnimal(retornoTipoAnimal).dono(retornoDono).build();
+
+        Animal novo = Animal.builder()
+                .nome("Pepper")
+                .tipoAnimal(retornoTipoAnimal)
+                .dono(retornoDono)
+                .build();
         Animal retorno = repo.save(novo);
-        Dono novoOutroDono = Dono.builder().nome("João").cpf("1234").telefone("1111111").build();
+
+        Dono novoOutroDono = Dono.builder()
+                .nome("João")
+                .cpf(String.valueOf(random.nextInt(9999999)))
+                .telefone("1111111")
+                .build();
         Dono retornoOutroDono = donoRepo.save(novoOutroDono);
 
         //Ação
@@ -113,8 +165,91 @@ public class AnimalTeste {
 
         //Rollback
         repo.delete(alteradoAnimal);
-        tipoAnimalRepo.delete(novoTipoAnimal);
+        tipoAnimalRepo.delete(retornoTipoAnimal);
         donoRepo.delete(retornoDono);
         donoRepo.delete(retornoOutroDono);
     }
+
+    @Test
+    public void deveAtualizarAnimal(){
+        //Cenário
+        TipoAnimal novoTipoAnimal = TipoAnimal.builder()
+                .nome("Gato")
+                .build();
+        TipoAnimal retornoTipoAnimal = tipoAnimalRepo.save(novoTipoAnimal);
+
+        Dono novoDono = Dono.builder()
+                .nome("Marcos")
+                .cpf(String.valueOf(random.nextInt(9999999)))
+                .telefone("111111")
+                .build();
+        Dono retornoDono = donoRepo.save(novoDono);
+
+        Animal novo = Animal.builder()
+                .nome("Pepper")
+                .tipoAnimal(retornoTipoAnimal)
+                .dono(retornoDono)
+                .build();
+        Animal retorno = repo.save(novo);
+
+        //Ação
+        retorno.setNome("Nome alterado");
+        Animal atualizado = repo.save(retorno);
+
+        //Verificação
+        Assertions.assertNotNull(atualizado);
+        Assertions.assertEquals(atualizado.getAnimalId(), retorno.getAnimalId());
+        Assertions.assertEquals(atualizado.getNome(), "Nome alterado");
+
+        //Rollback
+        repo.delete(atualizado);
+        tipoAnimalRepo.delete(retornoTipoAnimal);
+        donoRepo.delete(retornoDono);
+    }
+
+    @Test
+    public void deveAtualizarTipoAnimal(){
+        //Cenário
+        TipoAnimal novoTipoAnimal = TipoAnimal.builder()
+                .nome("Gato")
+                .build();
+        TipoAnimal retornoTipoAnimal = tipoAnimalRepo.save(novoTipoAnimal);
+
+        TipoAnimal outroTipoAnimal = TipoAnimal.builder()
+                .nome("Novo Tipo Animal")
+                .build();
+        TipoAnimal retornoOutroTipoAnimal = tipoAnimalRepo.save(outroTipoAnimal);
+
+        Dono novoDono = Dono.builder()
+                .nome("Marcos")
+                .cpf(String.valueOf(random.nextInt(9999999)))
+                .telefone("111111")
+                .build();
+        Dono retornoDono = donoRepo.save(novoDono);
+
+        Animal novo = Animal.builder()
+                .nome("Pepper")
+                .tipoAnimal(retornoTipoAnimal)
+                .dono(retornoDono)
+                .build();
+        Animal retorno = repo.save(novo);
+
+        //Ação
+        retorno.setTipoAnimal(retornoOutroTipoAnimal);
+        Animal atualizado = repo.save(retorno);
+
+        //Verificação
+        Assertions.assertNotNull(atualizado);
+        Assertions.assertEquals(atualizado.getAnimalId(), retorno.getAnimalId());
+        Assertions.assertEquals(atualizado.getTipoAnimal().getTipoAnimalId(), retornoOutroTipoAnimal.getTipoAnimalId());
+
+        //Rollback
+        repo.delete(atualizado);
+        tipoAnimalRepo.delete(retornoTipoAnimal);
+        tipoAnimalRepo.delete(retornoOutroTipoAnimal);
+        donoRepo.delete(retornoDono);
+    }
+
+
+
 }

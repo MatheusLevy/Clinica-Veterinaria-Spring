@@ -17,7 +17,9 @@ public class AreaTeste {
     @Test
     public void deveCriarArea(){
         //Cenário
-        Area novaArea = Area.builder().nome("Cirurgia Geral").build();
+        Area novaArea = Area.builder()
+                .nome("Cirurgia Geral")
+                .build();
 
         //Ação
         Area retornoArea = repo.save(novaArea);
@@ -32,7 +34,9 @@ public class AreaTeste {
     @Test
     public void deveRemoverArea(){
         //Cenário
-        Area novaArea = Area.builder().nome("Cirurgia Geral").build();
+        Area novaArea = Area.builder()
+                .nome("Cirurgia Geral")
+                .build();
         Area retornoArea = repo.save(novaArea);
 
         //Ação
@@ -47,7 +51,9 @@ public class AreaTeste {
     @Test
     public void deveBuscarArea(){
         //Cenário
-        Area novaArea = Area.builder().nome("Cirurgia Geral").build();
+        Area novaArea = Area.builder()
+                .nome("Cirurgia Geral")
+                .build();
         Area retornoArea = repo.save(novaArea);
 
         //Ação
@@ -55,6 +61,27 @@ public class AreaTeste {
 
         //Verificação
         Assertions.assertTrue(temp.isPresent());
+
+        //Rollback
+        repo.delete(retornoArea);
+    }
+
+    @Test
+    public void deveAtualizarArea(){
+        //Cenário
+        Area novaArea = Area.builder()
+                .nome("Cirurgia Geral")
+                .build();
+        Area retornoArea = repo.save(novaArea);
+
+        //Ação
+        retornoArea.setNome("Nome Novo");
+        Area atualizado = repo.save(retornoArea);
+
+        //Verificação
+        Assertions.assertNotNull(atualizado);
+        Assertions.assertEquals(atualizado.getAreaId(), retornoArea.getAreaId());
+        Assertions.assertEquals(atualizado.getNome(), "Nome Novo");
 
         //Rollback
         repo.delete(retornoArea);

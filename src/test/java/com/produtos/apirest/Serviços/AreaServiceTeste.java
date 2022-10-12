@@ -46,26 +46,33 @@ public class AreaServiceTeste {
 
     @Test
     public void deveRemover(){
-        Area area = Area.builder().nome("Area Teste").build();
+        Area area = Area.builder()
+                .nome("Area Teste")
+                .build();
         Area arearetorno = areaRepo.save(area);
-        areaService.remover(arearetorno);
+
+        areaService.remover(arearetorno.getAreaId());
         Optional<Area> areaTemp = areaRepo.findById(arearetorno.getAreaId());
         Assertions.assertTrue(!areaTemp.isPresent());
     }
 
     @Test
     public void deveRemovercomFeedback(){
-        Area area = Area.builder().nome("Area Teste").build();
+        Area area = Area.builder()
+                .nome("Area Teste")
+                .build();
         Area arearetorno = areaRepo.save(area);
-        Area areaRemovida = areaService.removerFeedback(arearetorno);
+        Area areaRemovida = areaService.removerFeedback(arearetorno.getAreaId());
         Assertions.assertNotNull(areaRemovida);
     }
 
     @Test
     public void deveBuscarAreaPorId(){
-        Area area = Area.builder().nome("Area Teste").build();
+        Area area = Area.builder()
+                .nome("Area Teste")
+                .build();
         Area arearetorno = areaRepo.save(area);
-        Area areaBuscada = areaService.buscarAreaPorId(arearetorno);
+        Area areaBuscada = areaService.buscarAreaPorId(arearetorno.getAreaId());
         Assertions.assertNotNull(areaBuscada);
         Assertions.assertEquals(arearetorno.getAreaId(), areaBuscada.getAreaId());
         Assertions.assertEquals(arearetorno.getNome(), areaBuscada.getNome());
@@ -83,13 +90,23 @@ public class AreaServiceTeste {
 
     @Test
     public void deveBuscarTodasEspecialidades(){
-        Area area = Area.builder().nome("Area Teste").build();
+        Area area = Area.builder()
+                .nome("Area Teste")
+                .build();
         Area areaRetorno = areaRepo.save(area);
-        Especialidade especialidade1 = Especialidade.builder().nome("Especialidade 1T").area(areaRetorno).build();
-        Especialidade especialidade2 = Especialidade.builder().nome("Especialidade 2T").area(areaRetorno).build();
+
+        Especialidade especialidade1 = Especialidade.builder()
+                .nome("Especialidade 1T")
+                .area(areaRetorno)
+                .build();
+        Especialidade especialidade2 = Especialidade.builder()
+                .nome("Especialidade 2T")
+                .area(areaRetorno)
+                .build();
         Especialidade especialidade1retorno =  especialidadeRepo.save(especialidade1);
         Especialidade especialidade2retorno =  especialidadeRepo.save(especialidade2);
         List<Especialidade> especialidades = areaService.buscarTodasEspecialidades(areaRetorno);
+
         Assertions.assertFalse(especialidades.isEmpty());
         especialidadeRepo.delete(especialidade1retorno);
         especialidadeRepo.delete(especialidade2retorno);

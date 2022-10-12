@@ -2,7 +2,7 @@ package com.produtos.apirest.Serviços;
 
 import com.produtos.apirest.models.TipoAnimal;
 import com.produtos.apirest.repository.TipoAnimalRepo;
-import com.produtos.apirest.service.Tipo_animalService;
+import com.produtos.apirest.service.TipoAnimalService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,37 +14,37 @@ import java.util.Optional;
 public class TipoAnimalServiceTeste {
 
     @Autowired
-    public Tipo_animalService tipo_animalService;
+    public TipoAnimalService tipoAnimalService;
 
     @Autowired
-    public TipoAnimalRepo tipo_animalRepo;
+    public TipoAnimalRepo tipoAnimalRepo;
 
     @Test
     public void deveSalvar(){
         TipoAnimal tipo_animal = TipoAnimal.builder().nome("Tipo Animal Teste").build();
-        TipoAnimal tipo_animalRetorno = tipo_animalService.salvar(tipo_animal);
+        TipoAnimal tipo_animalRetorno = tipoAnimalService.salvar(tipo_animal);
         Assertions.assertNotNull(tipo_animalRetorno);
         Assertions.assertNotNull(tipo_animalRetorno.getTipoAnimalId());
-        tipo_animalRepo.delete(tipo_animalRetorno);
+        tipoAnimalRepo.delete(tipo_animalRetorno);
     }
 
     @Test
     public void deveAtualizar(){
         TipoAnimal tipo_animal = TipoAnimal.builder().nome("Tipo Animal Teste").build();
-        TipoAnimal tipo_animalRetorno = tipo_animalRepo.save(tipo_animal);
+        TipoAnimal tipo_animalRetorno = tipoAnimalRepo.save(tipo_animal);
         tipo_animalRetorno.setNome("Tipo Animal Atualizado");
-        TipoAnimal tipo_animalAtualizado = tipo_animalService.atualizar(tipo_animalRetorno);
+        TipoAnimal tipo_animalAtualizado = tipoAnimalService.atualizar(tipo_animalRetorno);
         Assertions.assertNotNull(tipo_animalAtualizado);
         Assertions.assertEquals(tipo_animalRetorno.getTipoAnimalId(), tipo_animalAtualizado.getTipoAnimalId());
-        tipo_animalRepo.delete(tipo_animalRetorno);
+        tipoAnimalRepo.delete(tipo_animalRetorno);
     }
 
     @Test
     public void deveRemover(){
         TipoAnimal tipo_animal = TipoAnimal.builder().nome("Tipo Animal Teste").build();
-        TipoAnimal tipo_animalRetorno = tipo_animalRepo.save(tipo_animal);
-        tipo_animalService.remover(tipo_animalRetorno);
-        Optional<TipoAnimal> tipo_animalTemp = tipo_animalRepo.findById(tipo_animalRetorno.getTipoAnimalId());
+        TipoAnimal tipo_animalRetorno = tipoAnimalRepo.save(tipo_animal);
+        tipoAnimalService.remover(tipo_animalRetorno);
+        Optional<TipoAnimal> tipo_animalTemp = tipoAnimalRepo.findById(tipo_animalRetorno.getTipoAnimalId());
         Assertions.assertTrue(!tipo_animalTemp.isPresent());
     }
 
