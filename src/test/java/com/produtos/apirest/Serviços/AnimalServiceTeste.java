@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @SpringBootTest
 public class AnimalServiceTeste {
@@ -30,16 +31,35 @@ public class AnimalServiceTeste {
     @Autowired
     public TipoAnimalRepo tipoAnimalRepo;
 
+    Random random = new Random();
     @Test
     public void deveSalvar(){
-        Dono dono = Dono.builder().nome("Dono Teste").cpf("CPF Teste").telefone("Telefone Teste").build();
+        //Cenário
+        Dono dono = Dono.builder()
+                .nome("Dono Teste")
+                .cpf(String.valueOf(random.nextInt(999999)))
+                .telefone("Telefone Teste")
+                .build();
         Dono donoRetorno = donoRepo.save(dono);
-        TipoAnimal tipo = TipoAnimal.builder().nome("Tipo Teste").build();
+
+        TipoAnimal tipo = TipoAnimal.builder()
+                .nome("Tipo Teste")
+                .build();
         TipoAnimal tipoRetorno = tipoAnimalRepo.save(tipo);
-        Animal animal = Animal.builder().nome("Animal Teste").tipoAnimal(tipoRetorno).dono(donoRetorno).build();
+
+        Animal animal = Animal.builder()
+                .nome("Animal Teste")
+                .tipoAnimal(tipoRetorno)
+                .dono(donoRetorno).build();
+
+        //Ação
         Animal animalRetorno = animalService.salvar(animal);
+
+        //Verificação
         Assertions.assertNotNull(animalRetorno);
         Assertions.assertNotNull(animalRetorno.getAnimalId());
+
+        //Rollback
         animalRepo.delete(animalRetorno);
         tipoAnimalRepo.delete(tipoRetorno);
         donoRepo.delete(donoRetorno);
@@ -47,47 +67,10 @@ public class AnimalServiceTeste {
 
     @Test
     public void deveAtualizar(){
-        Dono dono = Dono.builder().nome("Dono Teste").cpf("CPF Teste").telefone("Telefone Teste").build();
-        Dono donoRetorno = donoRepo.save(dono);
-        TipoAnimal tipo = TipoAnimal.builder().nome("Tipo Teste").build();
-        TipoAnimal tipoRetorno = tipoAnimalRepo.save(tipo);
-        Animal animal = Animal.builder().nome("Animal Teste").tipoAnimal(tipoRetorno).dono(donoRetorno).build();
-        Animal animalRetorno = animalRepo.save(animal);
-
-        animalRetorno.setNome("Animal Atualizado");
-        Animal animalAtualizado = animalService.atualizar(animalRetorno);
-        Assertions.assertNotNull(animalAtualizado);
-        Assertions.assertEquals(animalRetorno.getAnimalId(), animalAtualizado.getAnimalId());
-        animalRepo.delete(animalRetorno);
-        tipoAnimalRepo.delete(tipoRetorno);
-        donoRepo.delete(donoRetorno);
-    }
-
-    @Test
-    public void deveRemover(){
-        Dono dono = Dono.builder().nome("Dono Teste").cpf("CPF Teste").telefone("Telefone Teste").build();
-        Dono donoRetorno = donoRepo.save(dono);
-        TipoAnimal tipo = TipoAnimal.builder().nome("Tipo Teste").build();
-        TipoAnimal tipoRetorno = tipoAnimalRepo.save(tipo);
-        Animal animal = Animal.builder().nome("Animal Teste").tipoAnimal(tipoRetorno).dono(donoRetorno).build();
-        Animal animalRetorno = animalRepo.save(animal);
-
-        animalService.remover(animalRetorno);
-
-        Optional<Animal> animalTemp = animalRepo.findById(animalRetorno.getAnimalId());
-        Assertions.assertNotNull(animalTemp);
-        Assertions.assertFalse(animalTemp.isPresent());
-
-        animalRepo.delete(animalRetorno);
-        tipoAnimalRepo.delete(tipoRetorno);
-        donoRepo.delete(donoRetorno);
-    }
-
-    @Test
-    public void deveRemoverComFeedBack(){
+        //Cenário
         Dono dono = Dono.builder()
                 .nome("Dono Teste")
-                .cpf("CPF Teste")
+                .cpf(String.valueOf(random.nextInt(999999)))
                 .telefone("Telefone Teste")
                 .build();
         Dono donoRetorno = donoRepo.save(dono);
@@ -104,31 +87,156 @@ public class AnimalServiceTeste {
                 .build();
         Animal animalRetorno = animalRepo.save(animal);
 
-        Animal animalFeedback = animalService.removerFeedback(animalRetorno.getAnimalId());
+        //Ação
+        animalRetorno.setNome("Animal Atualizado");
+        Animal animalAtualizado = animalService.atualizar(animalRetorno);
 
-        Assertions.assertNotNull(animalFeedback);
-        Assertions.assertNotNull(animalFeedback.getAnimalId());
+        //Verificação
+        Assertions.assertNotNull(animalAtualizado);
+        Assertions.assertEquals(animalRetorno.getAnimalId(), animalAtualizado.getAnimalId());
+        Assertions.assertEquals(animalAtualizado.getNome(), "Animal Atualizado");
 
-        animalRepo.delete(animalRetorno);
+        //Rollback
+        animalRepo.delete(animalAtualizado);
+        tipoAnimalRepo.delete(tipoRetorno);
+        donoRepo.delete(donoRetorno);
+    }
+    @Test
+    public void deveRemover(){
+        //Cenário
+        Dono dono = Dono.builder()
+                .nome("Dono Teste")
+                .cpf(String.valueOf(random.nextInt(999999)))
+                .telefone("Telefone Teste")
+                .build();
+        Dono donoRetorno = donoRepo.save(dono);
+
+        TipoAnimal tipo = TipoAnimal.builder()
+                .nome("Tipo Teste")
+                .build();
+        TipoAnimal tipoRetorno = tipoAnimalRepo.save(tipo);
+
+        Animal animal = Animal.builder().nome("Animal Teste")
+                .tipoAnimal(tipoRetorno)
+                .dono(donoRetorno)
+                .build();
+        Animal animalRetorno = animalRepo.save(animal);
+
+        //Ação
+        animalService.remover(animalRetorno);
+
+        //Verificação
+        Optional<Animal> animalTemp = animalRepo.findById(animalRetorno.getAnimalId());
+        Assertions.assertNotNull(animalTemp);
+        Assertions.assertFalse(animalTemp.isPresent());
+
+        //Rollback
+        tipoAnimalRepo.delete(tipoRetorno);
+        donoRepo.delete(donoRetorno);
+    }
+
+    @Test
+    public void deveRemoverPorId(){
+        //Cenário
+        Dono dono = Dono.builder()
+                .nome("Dono Teste")
+                .cpf(String.valueOf(random.nextInt(999999)))
+                .telefone("Telefone Teste")
+                .build();
+        Dono donoRetorno = donoRepo.save(dono);
+
+        TipoAnimal tipo = TipoAnimal.builder()
+                .nome("Tipo Teste")
+                .build();
+        TipoAnimal tipoRetorno = tipoAnimalRepo.save(tipo);
+
+        Animal animal = Animal.builder().nome("Animal Teste")
+                .tipoAnimal(tipoRetorno)
+                .dono(donoRetorno)
+                .build();
+        Animal animalRetorno = animalRepo.save(animal);
+
+        //Ação
+        animalService.removerPorId(animalRetorno.getAnimalId());
+
+        //Verificação
+        Optional<Animal> animalTemp = animalRepo.findById(animalRetorno.getAnimalId());
+        Assertions.assertNotNull(animalTemp);
+        Assertions.assertFalse(animalTemp.isPresent());
+
+        //Rollback
+        tipoAnimalRepo.delete(tipoRetorno);
+        donoRepo.delete(donoRetorno);
+    }
+
+    @Test
+    public void deveRemoverComFeedback(){
+        //Cenário
+        Dono dono = Dono.builder()
+                .nome("Dono Teste")
+                .cpf(String.valueOf(random.nextInt(999999)))
+                .telefone("Telefone Teste")
+                .build();
+        Dono donoRetorno = donoRepo.save(dono);
+
+        TipoAnimal tipo = TipoAnimal.builder()
+                .nome("Tipo Teste")
+                .build();
+        TipoAnimal tipoRetorno = tipoAnimalRepo.save(tipo);
+
+        Animal animal = Animal.builder().nome("Animal Teste")
+                .tipoAnimal(tipoRetorno)
+                .dono(donoRetorno)
+                .build();
+        Animal animalRetorno = animalRepo.save(animal);
+
+        //Ação
+        Animal feedback = animalService.removerFeedback(animalRetorno.getAnimalId());
+
+        //Verificação
+        Optional<Animal> animalTemp = animalRepo.findById(animalRetorno.getAnimalId());
+        Assertions.assertNotNull(animalTemp);
+        Assertions.assertFalse(animalTemp.isPresent());
+        animalTemp = animalRepo.findById(feedback.getAnimalId());
+        Assertions.assertNotNull(animalTemp);
+        Assertions.assertFalse(animalTemp.isPresent());
+        Assertions.assertEquals(animalRetorno.getAnimalId(), feedback.getAnimalId());
+
+        //Rollback
         tipoAnimalRepo.delete(tipoRetorno);
         donoRepo.delete(donoRetorno);
     }
 
     @Test
     public void deveBuscarPorDonoId(){
-        Dono dono = Dono.builder().nome("Dono Teste").cpf("CPF Teste").telefone("Telefone Teste").build();
+        //Cenário
+        Dono dono = Dono.builder()
+                .nome("Dono Teste")
+                .cpf(String.valueOf(random.nextInt(999999)))
+                .telefone("Telefone Teste")
+                .build();
         Dono donoRetorno = donoRepo.save(dono);
-        TipoAnimal tipo = TipoAnimal.builder().nome("Tipo Teste").build();
+
+        TipoAnimal tipo = TipoAnimal.builder()
+                .nome("Tipo Teste")
+                .build();
         TipoAnimal tipoRetorno = tipoAnimalRepo.save(tipo);
-        Animal animal = Animal.builder().nome("Animal Teste").tipoAnimal(tipoRetorno).dono(donoRetorno).build();
+
+        Animal animal = Animal.builder()
+                .nome("Animal Teste")
+                .tipoAnimal(tipoRetorno)
+                .dono(donoRetorno).build();
         Animal animalRetorno = animalRepo.save(animal);
 
+        //Ação
         Animal animalBuscado = animalService.buscarDonoPorId(animalRetorno);
 
+        //Verificação
         Assertions.assertNotNull(animalBuscado);
         Assertions.assertNotNull(animalBuscado.getAnimalId());
         Assertions.assertEquals(animalRetorno.getDono().getDonoId(), animalBuscado.getDono().getDonoId());
 
+        //Rollback
         animalRepo.delete(animalRetorno);
         tipoAnimalRepo.delete(tipoRetorno);
         donoRepo.delete(donoRetorno);
@@ -136,42 +244,119 @@ public class AnimalServiceTeste {
 
     @Test
     public void deveBuscarComFiltro(){
-        Dono dono = Dono.builder().nome("Dono Teste").cpf("CPF Teste").telefone("Telefone Teste").build();
+        //Cenário
+        Dono dono = Dono.builder()
+                .nome("Dono Teste")
+                .cpf(String.valueOf(random.nextInt(999999)))
+                .telefone("Telefone Teste")
+                .build();
         Dono donoRetorno = donoRepo.save(dono);
-        TipoAnimal tipo = TipoAnimal.builder().nome("Tipo Teste").build();
+
+        TipoAnimal tipo = TipoAnimal.builder()
+                .nome("Tipo Teste")
+                .build();
         TipoAnimal tipoRetorno = tipoAnimalRepo.save(tipo);
-        Animal animal = Animal.builder().nome("Animal Teste").tipoAnimal(tipoRetorno).dono(donoRetorno).build();
+
+        Animal animal = Animal.builder()
+                .nome("Animal Teste")
+                .tipoAnimal(tipoRetorno)
+                .dono(donoRetorno)
+                .build();
         Animal animalRetorno = animalRepo.save(animal);
 
-        List<Animal> animais = animalService.buscar(animalRetorno);
+        //Ação
+        Animal filtro = Animal.builder()
+                .animalId(animalRetorno.getAnimalId())
+                .nome(animalRetorno.getNome())
+                .build();
+        List<Animal> animais = animalService.buscar(filtro);
 
+        //Verificação
         Assertions.assertNotNull(animais);
         Assertions.assertFalse(animais.isEmpty());
 
+        //Rollback
         animalRepo.delete(animalRetorno);
         tipoAnimalRepo.delete(tipoRetorno);
         donoRepo.delete(donoRetorno);
     }
 
     @Test
-    public void deveBuscarDono(){
+    public void deveBuscarTodos(){
+        //Cenário
         Dono dono = Dono.builder()
                 .nome("Dono Teste")
-                .cpf("CPF Teste")
+                .cpf(String.valueOf(random.nextInt(999999)))
+                .telefone("Telefone Teste")
+                .build();
+        Dono donoRetorno = donoRepo.save(dono);
+
+        TipoAnimal tipo = TipoAnimal.builder()
+                .nome("Tipo Teste")
+                .build();
+        TipoAnimal tipoRetorno = tipoAnimalRepo.save(tipo);
+
+        Animal animal = Animal.builder()
+                .nome("Animal Teste")
+                .tipoAnimal(tipoRetorno)
+                .dono(donoRetorno)
+                .build();
+        Animal animalRetorno = animalRepo.save(animal);
+
+        Animal animal2 = Animal.builder()
+                .nome("Animal Teste 2")
+                .tipoAnimal(tipoRetorno)
+                .dono(donoRetorno)
+                .build();
+        Animal animal2Retorno = animalRepo.save(animal2);
+
+        //Ação
+        List<Animal> animais = animalService.buscarTodos();
+
+        //Verificação
+        Assertions.assertNotNull(animais);
+        Assertions.assertFalse(animais.isEmpty());
+
+        //Rollback
+        //Rollback
+        animalRepo.delete(animalRetorno);
+        animalRepo.delete(animal2Retorno);
+        tipoAnimalRepo.delete(tipoRetorno);
+        donoRepo.delete(donoRetorno);
+    }
+
+    @Test
+    public void deveBuscarDono(){
+        //Cenário
+        Dono dono = Dono.builder()
+                .nome("Dono Teste")
+                .cpf(String.valueOf(random.nextInt(999999)))
                 .telefone("Telefone Teste")
                 .build();
 
         Dono donoRetorno = donoRepo.save(dono);
-        TipoAnimal tipo = TipoAnimal.builder().nome("Tipo Teste").build();
+
+        TipoAnimal tipo = TipoAnimal.builder()
+                .nome("Tipo Teste")
+                .build();
         TipoAnimal tipoRetorno = tipoAnimalRepo.save(tipo);
-        Animal animal = Animal.builder().nome("Animal Teste").tipoAnimal(tipoRetorno).dono(donoRetorno).build();
+
+        Animal animal = Animal.builder()
+                .nome("Animal Teste")
+                .tipoAnimal(tipoRetorno)
+                .dono(donoRetorno)
+                .build();
         Animal animalRetorno = animalRepo.save(animal);
 
+        //Ação
         Dono donoBuscado = animalService.buscarDono(animalRetorno.getAnimalId());
 
+        //Verificação
         Assertions.assertNotNull(donoBuscado);
         Assertions.assertNotNull(donoBuscado.getDonoId());
+        Assertions.assertEquals(donoBuscado.getDonoId(), animalRetorno.getDono().getDonoId());
 
+        //Rollback
         animalRepo.delete(animalRetorno);
         tipoAnimalRepo.delete(tipoRetorno);
         donoRepo.delete(donoRetorno);
@@ -179,21 +364,41 @@ public class AnimalServiceTeste {
 
     @Test
     public void deveAtualizarDono(){
-        Dono dono = Dono.builder().nome("Dono Teste").cpf("CPF Teste").telefone("Telefone Teste").build();
+        //Cenário
+        Dono dono = Dono.builder()
+                .nome("Dono Teste")
+                .cpf(String.valueOf(random.nextInt(999999)))
+                .telefone("Telefone Teste")
+                .build();
         Dono donoRetorno = donoRepo.save(dono);
-        TipoAnimal tipo = TipoAnimal.builder().nome("Tipo Teste").build();
+
+        TipoAnimal tipo = TipoAnimal.builder()
+                .nome("Tipo Teste")
+                .build();
         TipoAnimal tipoRetorno = tipoAnimalRepo.save(tipo);
-        Animal animal = Animal.builder().nome("Animal Teste").tipoAnimal(tipoRetorno).dono(donoRetorno).build();
+
+        Animal animal = Animal.builder()
+                .nome("Animal Teste")
+                .tipoAnimal(tipoRetorno)
+                .dono(donoRetorno)
+                .build();
         Animal animalRetorno = animalRepo.save(animal);
 
-        Dono novoDono = Dono.builder().nome("Novo Dono").cpf("Novo CPF").telefone("Telefone").build();
+        Dono novoDono = Dono.builder()
+                .nome("Novo Dono")
+                .cpf(String.valueOf(random.nextInt(999999)))
+                .telefone("Telefone")
+                .build();
         Dono novoDonoRetorno = donoRepo.save(novoDono);
 
+        //Ação
         Animal animalAtualizado = animalService.atualizarDono(novoDonoRetorno, animalRetorno);
 
+        //Verificação
         Assertions.assertNotNull(animalAtualizado);
         Assertions.assertEquals(animalAtualizado.getDono().getDonoId(), novoDonoRetorno.getDonoId());
 
+        //Rollback
         animalRepo.delete(animalRetorno);
         tipoAnimalRepo.delete(tipoRetorno);
         donoRepo.delete(donoRetorno);

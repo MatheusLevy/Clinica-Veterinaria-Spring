@@ -90,6 +90,8 @@ public class AnimalService {
         return repo.findAll(example);
     }
 
+    //TODO: Adicionar Buscar por Nome
+
     @Transactional
     public Animal buscarPorId(Long id){
         verificaId(id);
