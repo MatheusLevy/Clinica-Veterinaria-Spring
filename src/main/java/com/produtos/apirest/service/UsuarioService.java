@@ -1,6 +1,5 @@
 package com.produtos.apirest.service;
 
-import com.produtos.apirest.models.Dono;
 import com.produtos.apirest.models.Usuario;
 import com.produtos.apirest.repository.UsuarioRepo;
 import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
@@ -15,14 +14,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UsarioService {
+public class UsuarioService {
 
     @Autowired
     private UsuarioRepo usuarioRepo;
 
-    //TODO: **Verificar outras formas de Criptograr
-    // - [ ] SHA256
-    // - [ ] MD5
     private BCryptPasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
@@ -43,25 +39,19 @@ public class UsarioService {
         }
     }
 
-    @Transactional
-    public Usuario autenticar (Usuario usuario){
-        Example<Usuario> example = Example.of(usuario, ExampleMatcher.matching()
-                .withIgnoreCase());
-        List<Usuario> usarioList =  usuarioRepo.findAll(example);
-        if (usarioList.isEmpty()){
-            return new Usuario();
+    public static void verificaId(Long id){
+        if (Long.valueOf(id) == null){
+            throw new RegraNegocioRunTime("Usuario deve possuir um identificador!");
         }
-        return usarioList.get(0);
     }
 
     @Transactional
-    public List<Usuario> buscar(Usuario filtro){
-        if (filtro == null)
-            throw new NullPointerException("Filtro não pode ser nulo");
-        Example<Usuario> example = Example.of(filtro, ExampleMatcher.matching()
-                .withIgnoreCase()
-                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
-        return usuarioRepo.findAll(example);
+    public Usuario autenticar (String username, String senha){
+        Usuario usuario = usuarioRepo.findByUsername(username);
+        if(passwordEncoder().matches(senha, usuario.getSenha()))
+            return usuario;
+        else
+            return new Usuario();
     }
 
     @Transactional
@@ -91,19 +81,18 @@ public class UsarioService {
     }
 
     @Transactional
-    public Usuario removerComFeedback(Usuario usuario){
-        verificaUsuario(usuario);
-        verificaId(usuario);
-        Optional<Usuario> usariosList = usuarioRepo.findById(usuario.getUsuarioId());
+    public Usuario removerComFeedback(Long id){
+        verificaId(id);
+        Optional<Usuario> usariosList = usuarioRepo.findById(id);
         Usuario usuarioRemovido = usariosList.get();
-        usuarioRepo.delete(usuario);
+        usuarioRepo.delete(usuarioRemovido);
         return usuarioRemovido;
     }
 
     @Transactional
-    public Usuario buscarPorId(Usuario usuario){
-        verificaId(usuario);
-        return usuarioRepo.findById(usuario.getUsuarioId()).get();
+    public Usuario buscarPorId(Long id){
+        verificaId(id);
+        return usuarioRepo.findById(id).get();
     }
 
     @Transactional

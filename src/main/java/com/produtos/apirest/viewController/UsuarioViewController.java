@@ -1,8 +1,7 @@
 package com.produtos.apirest.viewController;
 
-import com.produtos.apirest.models.TipoConsulta;
 import com.produtos.apirest.models.Usuario;
-import com.produtos.apirest.service.UsarioService;
+import com.produtos.apirest.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -11,14 +10,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class UsuarioViewController {
 
     @Autowired
-    private UsarioService usarioService;
+    private UsuarioService usarioService;
 
     //TODO:
     @PreAuthorize("hasRole('A')")
@@ -47,9 +45,7 @@ public class UsuarioViewController {
     @PreAuthorize("hasRole('A')")
     @GetMapping("/usuario/atualizar/{id}")
     public ModelAndView usuarioAtualizar(@PathVariable(value = "id", required = true) Long id){
-
-        Usuario usuario = Usuario.builder().usuarioId(id).build();
-        Usuario usuarioFind = usarioService.buscarPorId(usuario);
+        Usuario usuarioFind = usarioService.buscarPorId(id);
         ModelAndView mv = new ModelAndView("/usuarios/usuarioCadastro");
         mv.addObject("usuario", usuarioFind);
         return mv;
@@ -58,8 +54,7 @@ public class UsuarioViewController {
     @PreAuthorize("hasRole('A')")
     @GetMapping("/usuario/remover/{id}")
     public String usuarioRemover(@PathVariable(value = "id", required = true) Long id){
-        Usuario usuario = Usuario.builder().usuarioId(id).build();
-        Usuario usuarioFind = usarioService.buscarPorId(usuario);
+        Usuario usuarioFind = usarioService.buscarPorId(id);
         usarioService.remover(usuarioFind);
         return "redirect:/usuario/usuarioList";
     }

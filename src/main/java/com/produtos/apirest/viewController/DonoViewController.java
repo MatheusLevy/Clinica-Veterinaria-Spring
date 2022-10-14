@@ -52,8 +52,7 @@ public class DonoViewController {
     @PreAuthorize("hasRole('S')")
     @GetMapping("/dono/atualizar/{id}")
     public ModelAndView donoAtualizar(@PathVariable(value = "id", required = true) Long id){
-        Dono dono = Dono.builder().donoId(id).build();
-        Dono donoFind = donoService.buscarDonoPorId(dono);
+        Dono donoFind = donoService.buscarDonoPorId(id);
         ModelAndView mv = new ModelAndView("/dono/donoCadastro");
         mv.addObject("dono", donoFind);
         return mv;
@@ -62,9 +61,8 @@ public class DonoViewController {
     @PreAuthorize("hasRole('S')")
     @GetMapping("/dono/remover/{id}")
     public String donoRemover(@PathVariable(value = "id", required = true) Long id){
-        Dono dono = Dono.builder().donoId(id).build();
-        Dono donoFind = donoService.buscarDonoPorId(dono);
-        donoService.removerPorId(donoFind);
+        Dono donoFind = donoService.buscarDonoPorId(id);
+        donoService.removerPorId(donoFind.getDonoId());
         return "redirect:/dono/donoList";
     }
 }

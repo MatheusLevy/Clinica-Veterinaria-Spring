@@ -32,8 +32,7 @@ public class TipoConsultaController {
     @DeleteMapping("/remover/{id}")
     public ResponseEntity removerComId(@PathVariable(value = "id", required = true) Long id){
         try {
-            TipoConsulta tipo = TipoConsulta.builder().tipoConsultaId(id).build();
-            TipoConsulta tipoBuscado = tipoService.buscarTipo_consultaPorId(tipo);
+            TipoConsulta tipoBuscado = tipoService.buscarTipoConsultaPorId(id);
             tipoService.remover(tipoBuscado);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (Exception e){
@@ -46,7 +45,7 @@ public class TipoConsultaController {
     @DeleteMapping("/remover/feedback")
     public ResponseEntity removerComFeedback(@RequestBody TipoConsulta tipo){
         try{
-            TipoConsulta tipoRemovido = tipoService.removerFeedback(tipo);
+            TipoConsulta tipoRemovido = tipoService.removerFeedback(tipo.getTipoConsultaId());
             return ResponseEntity.ok(tipoRemovido);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -58,8 +57,7 @@ public class TipoConsultaController {
     @GetMapping("/buscar/{id}")
     public ResponseEntity buscarPorId(@PathVariable(value = "id", required = true) Long id){
         try{
-            TipoConsulta tipo = TipoConsulta.builder().tipoConsultaId(id).build();
-            TipoConsulta tipoBuscado = tipoService.buscarTipo_consultaPorId(tipo);
+            TipoConsulta tipoBuscado = tipoService.buscarTipoConsultaPorId(id);
             return ResponseEntity.ok(tipoBuscado);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());

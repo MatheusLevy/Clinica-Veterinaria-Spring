@@ -58,7 +58,7 @@ public class EspecialidadeController {
     public ResponseEntity remover(@PathVariable(value = "id", required = true) Long id){
         try {
             Especialidade especialidade = Especialidade.builder().especialidadeId(id).build();
-            Especialidade especialidadeBuscada = especialidadeService.buscarEspecialidadePorId(especialidade);
+            Especialidade especialidadeBuscada = especialidadeService.buscarEspecialidadePorId(especialidade.getEspecialidadeId());
             especialidadeService.remover(especialidadeBuscada);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (Exception e){
@@ -71,7 +71,7 @@ public class EspecialidadeController {
     @DeleteMapping("/remover/feedback")
     public ResponseEntity removerComFeedback(@RequestBody Especialidade especialidade){
         try {
-            Especialidade especialidadeRemovida = especialidadeService.removerFeedback(especialidade);
+            Especialidade especialidadeRemovida = especialidadeService.removerFeedback(especialidade.getEspecialidadeId());
             return ResponseEntity.ok(especialidadeRemovida);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -83,7 +83,7 @@ public class EspecialidadeController {
     public ResponseEntity buscarPorId(@PathVariable(value = "id", required = true) Long id){
         try {
             Especialidade especialidade = Especialidade.builder().especialidadeId(id).build();
-            Especialidade especialidadeBuscada = especialidadeService.buscarEspecialidadePorId(especialidade);
+            Especialidade especialidadeBuscada = especialidadeService.buscarEspecialidadePorId(especialidade.getEspecialidadeId());
             return ResponseEntity.ok(especialidadeBuscada);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());

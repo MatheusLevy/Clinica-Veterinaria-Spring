@@ -1,8 +1,7 @@
 package com.produtos.apirest.controller;
 
-import com.produtos.apirest.models.TipoConsulta;
 import com.produtos.apirest.models.Usuario;
-import com.produtos.apirest.service.UsarioService;
+import com.produtos.apirest.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,13 +13,13 @@ import org.springframework.web.bind.annotation.*;
 public class UsuarioController {
 
     @Autowired
-    private UsarioService usuarioService;
+    private UsuarioService usuarioService;
 
     //TODO: ### ** Substituir o Usuario por UsuarioDTO **
     @GetMapping("/autenticar")
     public ResponseEntity autenticar(@RequestBody Usuario usuario){
         try{
-            Usuario atuenticado = usuarioService.autenticar(usuario);
+            Usuario atuenticado = usuarioService.autenticar(usuario.getUsername(), usuario.getSenha());
             return ResponseEntity.ok(atuenticado);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -43,9 +42,8 @@ public class UsuarioController {
     @DeleteMapping("/remover/{id}")
     public ResponseEntity removerComId(@PathVariable(value = "id", required = true) Long id){
         try{
-            Usuario usario = Usuario.builder().usuarioId(id).build();
-            Usuario usarioBuscado = usuarioService.buscarPorId(usario);
-            usuarioService.remover(usarioBuscado);
+            Usuario usuarioBuscado = usuarioService.buscarPorId(id);
+            usuarioService.remover(usuarioBuscado);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -57,7 +55,7 @@ public class UsuarioController {
     @DeleteMapping("/remover/feedback")
     public ResponseEntity removerComFeedback(@RequestBody Usuario usuario){
         try{
-            Usuario usuarioRemovido = usuarioService.removerComFeedback(usuario);
+            Usuario usuarioRemovido = usuarioService.removerComFeedback(usuario.getUsuarioId());
             return ResponseEntity.ok(usuarioRemovido);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -68,8 +66,7 @@ public class UsuarioController {
     @GetMapping("/buscar/{id}")
     public ResponseEntity buscarPorId(@PathVariable(value = "id", required = true) Long id){
         try{
-            Usuario usuario = Usuario.builder().usuarioId(id).build();
-            Usuario usuarioBuscado = usuarioService.buscarPorId(usuario);
+            Usuario usuarioBuscado = usuarioService.buscarPorId(id);
             return ResponseEntity.ok(usuarioBuscado);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());

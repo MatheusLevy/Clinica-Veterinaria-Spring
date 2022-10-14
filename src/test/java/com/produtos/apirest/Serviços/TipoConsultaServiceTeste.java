@@ -15,65 +15,134 @@ import java.util.Optional;
 public class TipoConsultaServiceTeste {
 
     @Autowired
-    public TipoConsultaService tipo_consultaService;
+    public TipoConsultaService tipoConsultaService;
 
     @Autowired
-    public TipoConsultaRepo tipo_consultaRepo;
+    public TipoConsultaRepo tipoConsultaRepo;
 
 
     @Test
     public void deveSalvar(){
-        TipoConsulta tipo = TipoConsulta.builder().nome("Tipo Consulta Teste").build();
-        TipoConsulta tipoRetorno = tipo_consultaService.salvar(tipo);
+        //Cenário
+        TipoConsulta tipo = TipoConsulta.builder()
+                .nome("Tipo Consulta Teste")
+                .build();
+
+        //Ação
+        TipoConsulta tipoRetorno = tipoConsultaService.salvar(tipo);
+
+        //Verificação
         Assertions.assertNotNull(tipoRetorno);
         Assertions.assertNotNull(tipoRetorno.getTipoConsultaId());
-        tipo_consultaRepo.delete(tipoRetorno);
+
+        //Rollback
+        tipoConsultaRepo.delete(tipoRetorno);
     }
 
     @Test
     public void deveAtualizar(){
-        TipoConsulta tipo = TipoConsulta.builder().nome("Tipo Consulta Teste").build();
-        TipoConsulta tipoRetorno = tipo_consultaRepo.save(tipo);
+        //Cenário
+        TipoConsulta tipo = TipoConsulta.builder()
+                .nome("Tipo Consulta Teste")
+                .build();
+        TipoConsulta tipoRetorno = tipoConsultaRepo.save(tipo);
+
+        //Ação
         tipoRetorno.setNome("Tipo Consulta Atualizado");
-        TipoConsulta tipo_consultaAtualizada = tipo_consultaService.atualizar(tipoRetorno);
-        Assertions.assertNotNull(tipo_consultaAtualizada);
-        Assertions.assertEquals(tipoRetorno.getTipoConsultaId(), tipo_consultaAtualizada.getTipoConsultaId());
-        tipo_consultaRepo.delete(tipoRetorno);
+        TipoConsulta tipoConsultaAtualizada = tipoConsultaService.atualizar(tipoRetorno);
+
+        //Verificação
+        Assertions.assertNotNull(tipoConsultaAtualizada);
+        Assertions.assertEquals(tipoRetorno.getTipoConsultaId(), tipoConsultaAtualizada.getTipoConsultaId());
+
+        //Rollback
+        tipoConsultaRepo.delete(tipoRetorno);
     }
 
     @Test
     public void deveRemover(){
-        TipoConsulta tipo = TipoConsulta.builder().nome("Tipo Consulta Teste").build();
-        TipoConsulta tipoRetorno = tipo_consultaRepo.save(tipo);
-        tipo_consultaService.remover(tipoRetorno);
-        Optional<TipoConsulta> tipoTemp = tipo_consultaRepo.findById(tipoRetorno.getTipoConsultaId());
+        //Cenário
+        TipoConsulta tipo = TipoConsulta.builder()
+                .nome("Tipo Consulta Teste")
+                .build();
+        TipoConsulta tipoRetorno = tipoConsultaRepo.save(tipo);
+
+        //Ação
+        tipoConsultaService.remover(tipoRetorno);
+
+        //Verificação
+        Optional<TipoConsulta> tipoTemp = tipoConsultaRepo.findById(tipoRetorno.getTipoConsultaId());
         Assertions.assertFalse(tipoTemp.isPresent());
     }
 
     @Test
     public void deveRemoverComFeedback(){
-        TipoConsulta tipo = TipoConsulta.builder().nome("Tipo Consulta Teste").build();
-        TipoConsulta tipoRetorno = tipo_consultaRepo.save(tipo);
-        TipoConsulta tipoFeedback = tipo_consultaService.removerFeedback(tipoRetorno);
+        //Cenário
+        TipoConsulta tipo = TipoConsulta.builder()
+                .nome("Tipo Consulta Teste")
+                .build();
+        TipoConsulta tipoRetorno = tipoConsultaRepo.save(tipo);
+
+        //Ação
+        TipoConsulta tipoFeedback = tipoConsultaService.removerFeedback(tipoRetorno.getTipoConsultaId());
+
+        //Verificação
         Assertions.assertNotNull(tipoFeedback);
     }
 
     @Test
-    public void deveBuscarTipoConsutlaPorId(){
-        TipoConsulta tipo = TipoConsulta.builder().nome("Tipo Consulta Teste").build();
-        TipoConsulta tipoRetorno = tipo_consultaRepo.save(tipo);
-        TipoConsulta tipoBuscado = tipo_consultaService.buscarTipo_consultaPorId(tipoRetorno);
+    public void deveBuscarTipoConsultaPorId(){
+        //Cenário
+        TipoConsulta tipo = TipoConsulta.builder()
+                .nome("Tipo Consulta Teste")
+                .build();
+        TipoConsulta tipoRetorno = tipoConsultaRepo.save(tipo);
+
+        //Ação
+        TipoConsulta tipoBuscado = tipoConsultaService.buscarTipoConsultaPorId(tipoRetorno.getTipoConsultaId());
+
+        //Verificação
         Assertions.assertNotNull(tipoBuscado);
         Assertions.assertEquals(tipoRetorno.getTipoConsultaId(), tipoBuscado.getTipoConsultaId());
-        tipo_consultaRepo.delete(tipoRetorno);
+
+        //Rollback
+        tipoConsultaRepo.delete(tipoRetorno);
     }
 
     @Test
     public void deveBuscarComFiltro(){
-        TipoConsulta tipo = TipoConsulta.builder().nome("Tipo Consulta Teste").build();
-        TipoConsulta tipoRetorno = tipo_consultaRepo.save(tipo);
-        List<TipoConsulta> tipos = tipo_consultaService.buscar(tipoRetorno);
+        //Cenário
+        TipoConsulta tipo = TipoConsulta.builder()
+                .nome("Tipo Consulta Teste")
+                .build();
+        TipoConsulta tipoRetorno = tipoConsultaRepo.save(tipo);
+
+        //Ação
+        List<TipoConsulta> tipos = tipoConsultaService.buscar(tipoRetorno);
+
+        //Verificação
         Assertions.assertFalse(tipos.isEmpty());
-        tipo_consultaRepo.delete(tipoRetorno);
+
+        //Rollback
+        tipoConsultaRepo.delete(tipoRetorno);
+    }
+
+    @Test
+    public void deveBuscarTodos(){
+        //Cenário
+        TipoConsulta tipo = TipoConsulta.builder()
+                .nome("Tipo Consulta Teste")
+                .build();
+        TipoConsulta tipoRetorno = tipoConsultaRepo.save(tipo);
+
+        //Ação
+        List<TipoConsulta> tipos = tipoConsultaService.buscarTodos();
+
+        //Verificação
+        Assertions.assertNotNull(tipos);
+        Assertions.assertFalse(tipos.isEmpty());
+
+        //Rollback
+        tipoConsultaRepo.delete(tipoRetorno);
     }
 }

@@ -49,7 +49,6 @@ public class AreaService {
         return repo.save(area);
     }
 
-    //TODO: Fazer captura de Exceção EmptyResultDataAccessException
     @Transactional
     public void remover(Long id){
         verificaId(id);

@@ -2,7 +2,7 @@ package com.produtos.apirest.autenticacao;
 
 import com.produtos.apirest.models.Usuario;
 import com.produtos.apirest.repository.UsuarioRepo;
-import com.produtos.apirest.service.UsarioService;
+import com.produtos.apirest.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,8 +18,8 @@ public class CustomUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Usuario usuarioFind = usuarioRepo.findByUsername(username);
-        UsarioService.verificaUsuario(usuarioFind);
-        UsarioService.verificaId(usuarioFind);
+        UsuarioService.verificaUsuario(usuarioFind);
+        UsuarioService.verificaId(usuarioFind);
 
         return UserPrincipal.create(usuarioFind);
     }

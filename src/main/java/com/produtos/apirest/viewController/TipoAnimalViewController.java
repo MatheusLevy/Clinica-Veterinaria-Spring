@@ -43,9 +43,7 @@ public class TipoAnimalViewController {
     @PreAuthorize("hasRole('A')")
     @GetMapping("/tipoAnimal/atualizar/{id}")
     public ModelAndView tipoAnimalAtualizar(@PathVariable(value = "id", required = true) Long id){
-
-        TipoAnimal tipo = TipoAnimal.builder().tipoAnimalId(id).build();
-        TipoAnimal tipoFind = tipoService.buscarTipo_animalPorId(tipo);
+        TipoAnimal tipoFind = tipoService.buscarTipoAnimalPorId(id);
         ModelAndView mv = new ModelAndView("/tipoAnimal/tipoAnimalCadastro");
         mv.addObject("tipoAnimal", tipoFind);
         return mv;
@@ -54,9 +52,8 @@ public class TipoAnimalViewController {
     @PreAuthorize("hasRole('A')")
     @GetMapping("/tipoAnimal/remover/{id}")
     public String tipoAnimalRemover(@PathVariable(value = "id", required = true) Long id){
-        TipoAnimal tipo = TipoAnimal.builder().tipoAnimalId(id).build();
-        TipoAnimal tipoFind = tipoService.buscarTipo_animalPorId(tipo);
-        tipoService.removerPorId(tipoFind);
+        TipoAnimal tipoFind = tipoService.buscarTipoAnimalPorId(id);
+        tipoService.removerPorId(tipoFind.getTipoAnimalId());
         return "redirect:/tipoAnimal/tipoAnimalList";
     }
 

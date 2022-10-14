@@ -34,10 +34,11 @@ public class DonoService {
             throw new RegraNegocioRunTime("Dono deve ter um indentificador!");
     }
 
-    @Transactional
-    public List<Dono> buscarTodos(){
-        return repo.findAll();
+    public static void verificaId(Long id){
+        if(Long.valueOf(id) == null)
+            throw new RegraNegocioRunTime("Dono deve ter um indentificador!");
     }
+
     @Transactional
     public Dono salvar(Dono Dono){
         verificaDono(Dono);
@@ -59,25 +60,24 @@ public class DonoService {
     }
 
     @Transactional
-    public void removerPorId(Dono dono){
-        verificaId(dono);
-        repo.deleteById(dono.getDonoId());
+    public void removerPorId(Long id){
+        verificaId(id);
+        repo.deleteById(id);
     }
 
     @Transactional
-    public Dono removerFeedback(Dono Dono){
-        verificaDono(Dono);
-        verificaId(Dono);
-        Optional<Dono> DonoRemover = repo.findById(Dono.getDonoId());
+    public Dono removerFeedback(Long id){
+        verificaId(id);
+        Optional<Dono> DonoRemover = repo.findById(id);
         Dono DonoTemp = DonoRemover.get();
         repo.delete(DonoTemp);
         return DonoTemp;
     }
 
     @Transactional
-    public Dono buscarDonoPorId(Dono Dono){
-        verificaId(Dono);
-        return repo.findById(Dono.getDonoId()).get();
+    public Dono buscarDonoPorId(Long id){
+        verificaId(id);
+        return repo.findById(id).get();
     }
 
     @Transactional
@@ -88,6 +88,11 @@ public class DonoService {
                 .withIgnoreCase()
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
         return repo.findAll(example);
+    }
+
+    @Transactional
+    public List<Dono> buscarTodos(){
+        return repo.findAll();
     }
 
     @Transactional

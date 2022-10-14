@@ -61,7 +61,7 @@ public class EspecialidadeViewController {
     @GetMapping("/especialidade/atualizar/{id}")
     public ModelAndView especialidadeAtualizar(@PathVariable(value = "id", required = true) Long id){
         Especialidade especialidade = Especialidade.builder().especialidadeId(id).build();
-        Especialidade especialidadeFind = especialidadeService.buscarEspecialidadePorId(especialidade);
+        Especialidade especialidadeFind = especialidadeService.buscarEspecialidadePorId(especialidade.getEspecialidadeId());
 
         //EspecialidadeDTO
         EspecialidadeDTO dto = EspecialidadeDTO.builder()
@@ -80,7 +80,7 @@ public class EspecialidadeViewController {
     @GetMapping("/especialidade/remover/{id}")
     public String especialidadeRemover(@PathVariable(value = "id", required = true) Long id){
         Especialidade especialidade = Especialidade.builder().especialidadeId(id).build();
-        Especialidade especialidadeFind = especialidadeService.buscarEspecialidadePorId(especialidade);
+        Especialidade especialidadeFind = especialidadeService.buscarEspecialidadePorId(especialidade.getEspecialidadeId());
         especialidadeService.remover(especialidadeFind);
         return "redirect:/especialidade/especialidadeList";
     }

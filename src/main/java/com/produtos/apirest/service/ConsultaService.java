@@ -42,6 +42,11 @@ public class ConsultaService {
             throw new RegraNegocioRunTime("Consulta deve ter um identificador!");
     }
 
+    public static void verificaId(Long id){
+        if (Long.valueOf(id) == null)
+            throw new RegraNegocioRunTime("Consulta deve ter um identificador!");
+    }
+
     @Transactional
     public Consulta salvar(Consulta consulta){
         verificaConsulta(consulta);
@@ -56,9 +61,9 @@ public class ConsultaService {
     }
 
     @Transactional
-    public Consulta buscarComId(Consulta consulta){
-        verificaId(consulta);
-        return repo.findById(consulta.getConsultaId()).get();
+    public Consulta buscarComId(Long id){
+        verificaId(id);
+        return repo.findById(id).get();
     }
 
     @Transactional
@@ -128,7 +133,7 @@ public class ConsultaService {
 
     @Transactional
     public Consulta atualizarTipoConsulta(TipoConsulta tipo, Consulta consulta){
-        TipoConsultaService.verificaTipo_consulta(tipo);
+        TipoConsultaService.verificaTipoConsulta(tipo);
         TipoConsultaService.verificaId(tipo);
         verificaConsulta(consulta);
         verificaId(consulta);

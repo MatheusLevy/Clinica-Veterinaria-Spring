@@ -31,15 +31,8 @@ public class AnimalController {
     @PostMapping("/salvar")
     public ResponseEntity salvar(@RequestBody AnimalDTO animaldto){
         try{
-            Dono dono = donoService.buscarDonoPorId(
-                    Dono.builder().
-                            donoId(animaldto.getIdDono())
-                            .build()
-            );
-            TipoAnimal tipo = tipoAnimalService.buscarTipo_animalPorId(
-                    TipoAnimal.builder()
-                            .tipoAnimalId(animaldto.getIdTipoAnimal())
-                            .build());
+            Dono dono = donoService.buscarDonoPorId(animaldto.getIdDono());
+            TipoAnimal tipo = tipoAnimalService.buscarTipoAnimalPorId(animaldto.getIdTipoAnimal());
             Animal animal = Animal.builder()
                     .nome(animaldto.getNome())
                     .tipoAnimal(tipo)
@@ -158,10 +151,7 @@ public class AnimalController {
     @PutMapping("/atualizar/dono")
     public ResponseEntity atualizarDono(@RequestBody AnimalDTO animalDTO){
         try {
-            Dono dono = Dono.builder().
-                    donoId(animalDTO.getIdDono())
-                    .build();
-            Dono donoBuscado = donoService.buscarDonoPorId(dono);
+            Dono donoBuscado = donoService.buscarDonoPorId(animalDTO.getIdDono());
 
             Animal animal = Animal.builder()
                     .animalId(animalDTO.getId())

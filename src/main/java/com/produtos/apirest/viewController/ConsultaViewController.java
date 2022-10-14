@@ -79,7 +79,7 @@ public class ConsultaViewController {
     @GetMapping("/consulta/atualizar/{id}")
     public ModelAndView consultaAtualizar(@PathVariable(value = "id") Long id){
         Consulta consulta = Consulta.builder().consultaId(id).build();
-        Consulta consultaFind = consultaService.buscarComId(consulta);
+        Consulta consultaFind = consultaService.buscarComId(consulta.getConsultaId());
 
         //Lista Veterinarios
         List<Veterinario> veterinarios = veterinarioService.buscarTodos();
@@ -111,7 +111,7 @@ public class ConsultaViewController {
     @GetMapping("/consulta/remover/{id}")
     public String consultaRemover(@PathVariable(value = "id", required = true) Long id){
         Consulta consulta = Consulta.builder().consultaId(id).build();
-        Consulta consultaFind = consultaService.buscarComId(consulta);
+        Consulta consultaFind = consultaService.buscarComId(consulta.getConsultaId());
         consultaService.remover(consultaFind);
         return "redirect:/consulta/consultaList";
     }

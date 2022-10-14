@@ -49,8 +49,7 @@ public class DonoController {
     @DeleteMapping("/remover/{id}")
     public ResponseEntity remover(@PathVariable(value = "id", required = true) Long id){
         try{
-            Dono dono = Dono.builder().donoId(id).build();
-            donoService.removerPorId(dono);
+            donoService.removerPorId(id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -64,8 +63,7 @@ public class DonoController {
     @GetMapping("/buscar/{id}")
     public ResponseEntity buscarPorId(@PathVariable(value = "id", required = true) Long id){
         try{
-            Dono dono = Dono.builder().donoId(id).build();
-            Dono donoBuscado = donoService.buscarDonoPorId(dono);
+            Dono donoBuscado = donoService.buscarDonoPorId(id);
             return ResponseEntity.ok(donoBuscado);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -77,7 +75,7 @@ public class DonoController {
     @DeleteMapping("remover/feedback/")
     public ResponseEntity removerComFeedback(@RequestBody Dono dono){
         try{
-            Dono removido = donoService.removerFeedback(dono);
+            Dono removido = donoService.removerFeedback(dono.getDonoId());
             return  ResponseEntity.ok(removido);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());

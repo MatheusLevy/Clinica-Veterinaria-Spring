@@ -61,7 +61,7 @@ public class ConsultaController {
     public ResponseEntity removerPorId(@PathVariable(value = "id", required = true) Long id){
         try{
             Consulta consulta = Consulta.builder().consultaId(id).build();
-            Consulta consultaBuscada = consultaService.buscarComId(consulta);
+            Consulta consultaBuscada = consultaService.buscarComId(consulta.getConsultaId());
             consultaService.remover(consulta);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (Exception e){

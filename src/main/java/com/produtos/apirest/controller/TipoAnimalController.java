@@ -31,8 +31,7 @@ public class TipoAnimalController {
     @DeleteMapping("/remover/{id}")
     public ResponseEntity remover(@PathVariable(value = "id", required = true) Long id){
         try{
-            TipoAnimal tipo = TipoAnimal.builder().tipoAnimalId(id).build();
-            tipoService.removerPorId(tipo);
+            tipoService.removerPorId(id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -44,7 +43,7 @@ public class TipoAnimalController {
     @DeleteMapping("/remover/feedback")
     public ResponseEntity removerComFeedback(@RequestBody TipoAnimal tipo){
         try{
-            TipoAnimal tipoRemovido = tipoService.removerFeedback(tipo);
+            TipoAnimal tipoRemovido = tipoService.removerFeedback(tipo.getTipoAnimalId());
             return ResponseEntity.ok(tipoRemovido);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -67,8 +66,7 @@ public class TipoAnimalController {
     @GetMapping("/buscarPorId/{id}")
     public ResponseEntity buscar(@PathVariable(value = "id", required = true) Long id){
         try{
-            TipoAnimal tipo = TipoAnimal.builder().tipoAnimalId(id).build();
-            TipoAnimal tipoBuscado = tipoService.buscarTipo_animalPorId(tipo);
+            TipoAnimal tipoBuscado = tipoService.buscarTipoAnimalPorId(id);
             return ResponseEntity.ok(tipoBuscado);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());

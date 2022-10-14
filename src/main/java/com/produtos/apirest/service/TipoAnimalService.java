@@ -12,14 +12,13 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-//TODO: **Alterar Nome da Classe para CamelCase
 @Service
 public class TipoAnimalService {
 
     @Autowired
     public TipoAnimalRepo repo;
 
-    public static void verificaTipo_Animal(TipoAnimal tipo){
+    public static void verificaTipoAnimal(TipoAnimal tipo){
         if (tipo == null)
             throw new NullPointerException("Tipo de Animal não pode ser Nulo!");
         if (tipo.getNome() == null || tipo.getNome().equals(""))
@@ -31,46 +30,49 @@ public class TipoAnimalService {
             throw new RegraNegocioRunTime("Tipo de Animal deve ter um identificador!");
     }
 
+    public static void verificaId(Long id){
+        if(Long.valueOf(id) == null)
+            throw new RegraNegocioRunTime("Tipo de Animal deve ter um identificador!");
+    }
     @Transactional
     public TipoAnimal salvar(TipoAnimal tipo){
-        verificaTipo_Animal(tipo);
+        verificaTipoAnimal(tipo);
         return repo.save(tipo);
     }
 
     @Transactional
     public TipoAnimal atualizar(TipoAnimal tipo){
-        verificaTipo_Animal(tipo);
+        verificaTipoAnimal(tipo);
         verificaId(tipo);
         return repo.save(tipo);
     }
 
     @Transactional
     public void remover(TipoAnimal tipo){
-        verificaTipo_Animal(tipo);
+        verificaTipoAnimal(tipo);
         verificaId(tipo);
         repo.delete(tipo);
     }
 
     @Transactional
-    public TipoAnimal removerFeedback(TipoAnimal tipo){
-        verificaTipo_Animal(tipo);
-        verificaId(tipo);
-        Optional<TipoAnimal> tipoRemover = repo.findById(tipo.getTipoAnimalId());
+    public TipoAnimal removerFeedback(Long id){
+        verificaId(id);
+        Optional<TipoAnimal> tipoRemover = repo.findById(id);
         TipoAnimal tipoTemp = tipoRemover.get();
         repo.delete(tipoTemp);
         return tipoTemp;
     }
 
     @Transactional
-    public void removerPorId(TipoAnimal tipo){
-        verificaId(tipo);
-        repo.deleteById(tipo.getTipoAnimalId());
+    public void removerPorId(Long id){
+        verificaId(id);
+        repo.deleteById(id);
     }
 
     @Transactional
-    public TipoAnimal buscarTipo_animalPorId(TipoAnimal tipo){
-        verificaId(tipo);
-        return repo.findById(tipo.getTipoAnimalId()).get();
+    public TipoAnimal buscarTipoAnimalPorId(Long id){
+        verificaId(id);
+        return repo.findById(id).get();
     }
 
     @Transactional

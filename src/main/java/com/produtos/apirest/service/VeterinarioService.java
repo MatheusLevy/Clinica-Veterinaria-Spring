@@ -39,6 +39,11 @@ public class VeterinarioService {
             throw new RegraNegocioRunTime("Veterinario deve ter um identificador");
     }
 
+    public static void verificaId(Long id){
+        if (Long.valueOf(id) == null )
+            throw new RegraNegocioRunTime("Veterinario deve ter um identificador");
+    }
+
     @Transactional
     public Veterinario salvar(Veterinario veterinario){
         verificaVeterinario(veterinario);
@@ -69,11 +74,6 @@ public class VeterinarioService {
         return VeterinarioTemp;
     }
 
-    @Transactional
-    public Veterinario buscarDonoPorId(Veterinario veterinario){
-        verificaId(veterinario);
-        return repo.findById(veterinario.getVeterinarioId()).get();
-    }
 
     @Transactional
     public Veterinario buscarPorId(Veterinario veterinario){
@@ -124,4 +124,6 @@ public class VeterinarioService {
 
         return  repo.save(veterinarioAtualizar);
     }
+
+
 }

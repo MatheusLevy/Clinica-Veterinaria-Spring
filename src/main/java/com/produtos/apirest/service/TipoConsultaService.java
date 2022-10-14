@@ -12,14 +12,13 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-//TODO: **Alterar Nome da Classe para CamelCase
 @Service
 public class TipoConsultaService {
 
     @Autowired
     public TipoConsultaRepo repo;
 
-    public static void verificaTipo_consulta(TipoConsulta tipo){
+    public static void verificaTipoConsulta(TipoConsulta tipo){
         if (tipo == null)
             throw new NullPointerException("Tipo de Consulta não pode ser Nulo!");
         if (tipo.getNome() == null || tipo.getNome().equals(""))
@@ -31,40 +30,44 @@ public class TipoConsultaService {
             throw new RegraNegocioRunTime("Tipo de Consulta deve ter um identificador!");
     }
 
+    public static void verificaId(Long id){
+        if(Long.valueOf(id) == null)
+            throw new RegraNegocioRunTime("Tipo de Consulta deve ter um identificador!");
+    }
+
     @Transactional
     public TipoConsulta salvar(TipoConsulta tipo){
-        verificaTipo_consulta(tipo);
+        verificaTipoConsulta(tipo);
         return repo.save(tipo);
     }
 
     @Transactional
     public TipoConsulta atualizar(TipoConsulta tipo){
-        verificaTipo_consulta(tipo);
+        verificaTipoConsulta(tipo);
         verificaId(tipo);
         return repo.save(tipo);
     }
 
     @Transactional
     public void remover(TipoConsulta tipo){
-        verificaTipo_consulta(tipo);
+        verificaTipoConsulta(tipo);
         verificaId(tipo);
         repo.delete(tipo);
     }
 
     @Transactional
-    public TipoConsulta removerFeedback(TipoConsulta tipo){
-        verificaTipo_consulta(tipo);
-        verificaId(tipo);
-        Optional<TipoConsulta> tipoRemover = repo.findById(tipo.getTipoConsultaId());
+    public TipoConsulta removerFeedback(Long id){
+        verificaId(id);
+        Optional<TipoConsulta> tipoRemover = repo.findById(id);
         TipoConsulta tipoTemp = tipoRemover.get();
         repo.delete(tipoTemp);
         return tipoTemp;
     }
 
     @Transactional
-    public TipoConsulta buscarTipo_consultaPorId(TipoConsulta tipo){
-        verificaId(tipo);
-        return repo.findById(tipo.getTipoConsultaId()).get();
+    public TipoConsulta buscarTipoConsultaPorId(Long id){
+        verificaId(id);
+        return repo.findById(id).get();
     }
 
     @Transactional
