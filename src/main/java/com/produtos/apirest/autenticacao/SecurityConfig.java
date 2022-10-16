@@ -1,6 +1,7 @@
 package com.produtos.apirest.autenticacao;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,6 +14,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 // - [ ] Erro de Autenthicação sem Habilitar
 @EnableWebSecurity
 @EnableMethodSecurity
+@Configuration
+
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -29,8 +32,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     //TODO: Pesquisar csrf
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .authorizeRequests().antMatchers("/api/usuario/autenticar").permitAll()
-                .and().httpBasic();
+        http
+                .httpBasic()
+                .and()
+                .authorizeHttpRequests().antMatchers("/api/usuario/autenticar").permitAll()
+                .and()
+                .authorizeHttpRequests().anyRequest().authenticated()
+                .and()
+                .csrf().disable();
+        ;
     }
 }

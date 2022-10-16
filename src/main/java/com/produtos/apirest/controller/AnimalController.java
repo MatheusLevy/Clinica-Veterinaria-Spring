@@ -57,7 +57,6 @@ public class AnimalController {
     public ResponseEntity remover(@PathVariable(value = "id", required = true) Long id){
         try{
             animalService.removerPorId(id);
-
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -68,16 +67,13 @@ public class AnimalController {
     @DeleteMapping("/remover/feedback/{id}")
     public ResponseEntity removerComFeedback(@PathVariable(value = "id", required = true) Long id){
         try{
-
             Animal animalRemovido = animalService.removerFeedback(id);
-
             AnimalDTO dtoRetorno = AnimalDTO.builder()
                     .id(animalRemovido.getAnimalId())
                     .nome(animalRemovido.getNome())
                     .tipo(animalRemovido.getTipoAnimal())
                     .dono(animalRemovido.getDono())
                     .build();
-
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -88,15 +84,12 @@ public class AnimalController {
     @GetMapping("/buscarId/{id}")
     public ResponseEntity buscarPorId(@PathVariable(value = "id", required = true) Long id){
         try{
-
             Animal animalBuscado = animalService.buscarPorId(id);
-
             AnimalDTO animalDTO = AnimalDTO.builder()
                     .id(animalBuscado.getAnimalId())
                     .nomeTipoAnimal(animalBuscado.getTipoAnimal().getNome())
                     .nomeDono(animalBuscado.getDono().getNome())
                     .build();
-
         return ResponseEntity.ok(animalDTO);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -141,7 +134,6 @@ public class AnimalController {
                     .cpf(dono.getCpf())
                     .telefone(dono.getTelefone())
                     .build();
-
             return ResponseEntity.ok(dto);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -166,11 +158,9 @@ public class AnimalController {
                     .nomeDono(animaAtualizado.getDono().getNome())
                     .nomeTipoAnimal(animaAtualizado.getTipoAnimal().getNome())
                     .build();
-
             return ResponseEntity.ok(animalDTOAtualizado);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
 }
