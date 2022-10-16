@@ -125,7 +125,6 @@ public class AnimalController {
     @GetMapping("/buscarDono/{id}")
     public ResponseEntity buscarDono(@PathVariable(value = "id", required = true) Long id){
         try {
-            Animal animal = Animal.builder().animalId(id).build();
             Dono dono = animalService.buscarDono(id);
 
             DonoDTO dto = DonoDTO.builder()
@@ -144,11 +143,7 @@ public class AnimalController {
     public ResponseEntity atualizarDono(@RequestBody AnimalDTO animalDTO){
         try {
             Dono donoBuscado = donoService.buscarDonoPorId(animalDTO.getIdDono());
-
-            Animal animal = Animal.builder()
-                    .animalId(animalDTO.getId())
-                    .build();
-            Animal animalBuscado = animalService.buscarPorId(animal.getAnimalId());
+            Animal animalBuscado = animalService.buscarPorId(animalDTO.getId());
 
             Animal animaAtualizado = animalService.atualizarDono(donoBuscado, animalBuscado);
 
