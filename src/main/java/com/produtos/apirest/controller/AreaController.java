@@ -2,15 +2,16 @@ package com.produtos.apirest.controller;
 
 import com.produtos.apirest.models.Area;
 import com.produtos.apirest.models.DTO.AreaDTO;
+import com.produtos.apirest.models.DTO.EspecialidadeDTO;
 import com.produtos.apirest.models.Especialidade;
 import com.produtos.apirest.service.AreaService;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
-
+import org.modelmapper.ModelMapper;
 import java.util.List;
 
 @RestController
@@ -19,6 +20,8 @@ public class AreaController {
 
     @Autowired
     public AreaService areaService;
+
+    ModelMapper modelMapper = new ModelMapper();
 
     @PreAuthorize("hasRole('A')")
     @PostMapping("/salvar")
@@ -34,8 +37,7 @@ public class AreaController {
                     .id(areaSalva.getAreaId())
                     .nome(areaSalva.getNome())
                     .build();
-
-            return ResponseEntity.ok(areadtoRetorno);
+            return new ResponseEntity(areadtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -66,14 +68,12 @@ public class AreaController {
     public ResponseEntity remover(@PathVariable(value = "id", required = true) Long id){
         try {
             areaService.remover(id);
-
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    //TODO: ### ** Substituir Area por AreaDTO **
     @PreAuthorize("hasRole('A')")
     @DeleteMapping("/remover/feedback/{id}")
     public ResponseEntity removerComFeedback(@PathVariable(value = "id", required = true) Long id){
@@ -90,7 +90,7 @@ public class AreaController {
         }
     }
     @PreAuthorize("hasRole('A')")
-    @GetMapping("/buscar/{id}")
+    @GetMapping("/buscarId/{id}")
     public ResponseEntity buscarPorId(@PathVariable(value = "id", required = true) Long id){
         try {
             Area areaBuscada = areaService.buscarAreaPorId(id);
@@ -105,8 +105,6 @@ public class AreaController {
         }
     }
 
-
-    //TODO: Lista de DTOs ?
     @PreAuthorize("hasRole('A')")
     @GetMapping("/buscar/filtro")
     public ResponseEntity buscar(@RequestBody AreaDTO filtro){
@@ -117,33 +115,33 @@ public class AreaController {
                     .build();
 
             List<Area> areas = areaService.buscar(area);
-
-            return ResponseEntity.ok(areas);
+            List<AreaDTO> dtos = modelMapper.map(areas, new TypeToken<List<AreaDTO>>(){}.getType());
+            return ResponseEntity.ok(dtos);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    //TODO: Lista de DTO ?
     @PreAuthorize("hasRole('A')")
     @GetMapping("/buscarTodos")
     public ResponseEntity buscarTodos(){
         try {
             List<Area> areas = areaService.buscarTodos();
-            return ResponseEntity.ok(areas);
+            List<AreaDTO> dtos = modelMapper.map(areas, new TypeToken<List<AreaDTO>>(){}.getType());
+            return ResponseEntity.ok(dtos);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    // TODO: Lista de DTO ?
     @PreAuthorize("hasRole('A')")
     @GetMapping("/buscar/especialidades/{id}")
     public ResponseEntity buscarEspecialidades(@PathVariable(value = "id", required = true) Long id){
         try {
             Area areaBuscada = areaService.buscarAreaPorId(id);
             List<Especialidade> especialidades = areaService.buscarTodasEspecialidades(areaBuscada);
-            return ResponseEntity.ok(especialidades);
+            List<EspecialidadeDTO> dtos = modelMapper.map(especialidades, new TypeToken<List<EspecialidadeDTO>>(){}.getType());
+            return ResponseEntity.ok(dtos);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
