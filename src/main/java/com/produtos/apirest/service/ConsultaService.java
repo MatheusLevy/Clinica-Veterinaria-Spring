@@ -78,10 +78,9 @@ public class ConsultaService {
     }
 
     @Transactional
-    public Consulta removerFeedback(Consulta consulta){
-        verificaConsulta(consulta);
-        verificaId(consulta);
-        Optional<Consulta> ConsultaRemover = repo.findById(consulta.getConsultaId());
+    public Consulta removerFeedback(Long id){
+        verificaId(id);
+        Optional<Consulta> ConsultaRemover = repo.findById(id);
         Consulta ConsultaTemp = ConsultaRemover.get();
         repo.delete(ConsultaTemp);
         return ConsultaTemp;

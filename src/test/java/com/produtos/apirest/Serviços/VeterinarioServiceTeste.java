@@ -198,7 +198,7 @@ public class VeterinarioServiceTeste {
         Veterinario veterinarioRetorno = veterinarioRepo.save(veterinario);
 
         //Ação
-        Veterinario veterinarioBuscado = veterinarioService.buscarPorId(veterinarioRetorno);
+        Veterinario veterinarioBuscado = veterinarioService.buscarPorId(veterinarioRetorno.getVeterinarioId());
 
         //Verificação
         Assertions.assertNotNull(veterinarioBuscado);

@@ -71,8 +71,7 @@ public class VeterinarioViewController {
     @GetMapping("/veterinario/atualizar/{id}")
     public ModelAndView veterinarioAtualizar(@PathVariable(value = "id", required = true) Long id){
         //Veterinario
-        Veterinario veterinario = Veterinario.builder().veterinarioId(id).build();
-        Veterinario veterinarioBuscado = veterinarioService.buscarPorId(veterinario);
+        Veterinario veterinarioBuscado = veterinarioService.buscarPorId(id);
 
         //Especialidades
         List<Especialidade> especialidades = especialidadeService.buscarTodos();
@@ -94,9 +93,8 @@ public class VeterinarioViewController {
 
     @PreAuthorize("hasRole('S')")
     @GetMapping("/veterinario/remover/{id}")
-    public String veterinarioRemover(@PathVariable(value = "id", required = true) Long id){
-        Veterinario veterinario = Veterinario.builder().veterinarioId(id).build();
-        Veterinario veterinarioBuscado = veterinarioService.buscarPorId(veterinario);
+    public String veterinarioRemover(@PathVariable(value = "id", required = true) Long id){;
+        Veterinario veterinarioBuscado = veterinarioService.buscarPorId(id);
         veterinarioService.remover(veterinarioBuscado);
         return "redirect:/veterinario/veterinarioList";
     }

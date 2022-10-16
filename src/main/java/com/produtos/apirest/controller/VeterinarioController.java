@@ -34,8 +34,7 @@ public class VeterinarioController {
     @DeleteMapping("/remover/{id}")
     public ResponseEntity removerComId(@PathVariable(value = "id", required = true) Long id){
         try {
-            Veterinario veterinario = Veterinario.builder().veterinarioId(id).build();
-            Veterinario veterinarioBuscado = veterinarioService.buscarPorId(veterinario);
+            Veterinario veterinarioBuscado = veterinarioService.buscarPorId(id);
             veterinarioService.remover(veterinarioBuscado);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (Exception e){
@@ -59,8 +58,7 @@ public class VeterinarioController {
     @GetMapping("/buscar/{id}")
     public ResponseEntity buscarPorId(@PathVariable(value = "id", required = true) Long id){
         try{
-            Veterinario veterinario = Veterinario.builder().veterinarioId(id).build();
-            Veterinario vetBuscado = veterinarioService.buscarPorId(veterinario);
+            Veterinario vetBuscado = veterinarioService.buscarPorId(id);
             return ResponseEntity.ok(vetBuscado);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());

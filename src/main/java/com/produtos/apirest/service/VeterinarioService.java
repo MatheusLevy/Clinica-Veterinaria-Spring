@@ -76,9 +76,9 @@ public class VeterinarioService {
 
 
     @Transactional
-    public Veterinario buscarPorId(Veterinario veterinario){
-        verificaId(veterinario);
-        return  repo.findById(veterinario.getVeterinarioId()).get();
+    public Veterinario buscarPorId(Long id){
+        verificaId(id);
+        return  repo.findById(id).get();
     }
     @Transactional
     public List<Veterinario> buscar(Veterinario filtro){

@@ -20,12 +20,18 @@ public class ConsultaDTO {
 
     private Long id;
     private Veterinario veterinario;
+    private String veterinarioNome;
+    private Long veterinarioId;
     private List<Veterinario> veterinarios;
     private Animal animal;
+    private String animalNome;
+    private Long idAnimal;
     private List<Animal> animais;
     private String descricao;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate data;
     private TipoConsulta tipo;
+    private String tipoNome;
+    private Long tipoConsultaId;
     private List<TipoConsulta> tiposConsulta;
 }

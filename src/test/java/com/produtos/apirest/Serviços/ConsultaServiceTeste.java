@@ -327,7 +327,7 @@ public class ConsultaServiceTeste {
         Consulta consultaRetorno = consultaRepo.save(consulta);
 
         //Ação
-        Consulta consultaRemovida = consultaService.removerFeedback(consultaRetorno);
+        Consulta consultaRemovida = consultaService.removerFeedback(consultaRetorno.getConsultaId());
 
         //Verificação
         Assertions.assertNotNull(consultaRemovida);
