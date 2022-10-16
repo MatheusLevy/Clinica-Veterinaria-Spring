@@ -1,5 +1,9 @@
 package com.produtos.apirest.models.DTO;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.produtos.apirest.models.Animal;
 import com.produtos.apirest.models.TipoConsulta;
 import com.produtos.apirest.models.Veterinario;
@@ -7,8 +11,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.Convert;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -29,6 +35,9 @@ public class ConsultaDTO {
     private List<Animal> animais;
     private String descricao;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Convert(converter = Jsr310JpaConverters.LocalDateConverter.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDate data;
     private TipoConsulta tipo;
     private String tipoNome;

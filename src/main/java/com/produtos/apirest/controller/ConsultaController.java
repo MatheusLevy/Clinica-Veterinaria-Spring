@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -72,8 +73,7 @@ public class ConsultaController {
                     .descricao(consultaSalva.getDescricao())
                     .data(consultaSalva.getData())
                     .build();
-
-           return ResponseEntity.ok(consultaDTORetorno);
+            return new ResponseEntity(consultaDTORetorno, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -125,8 +125,7 @@ public class ConsultaController {
     @DeleteMapping("/remover/{id}")
     public ResponseEntity removerPorId(@PathVariable(value = "id", required = true) Long id){
         try{
-            Consulta consultaBuscada = consultaService.buscarComId(id);
-            consultaService.remover(consultaBuscada);
+            consultaService.removerPorId(id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());

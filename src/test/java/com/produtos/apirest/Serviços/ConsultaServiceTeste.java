@@ -272,6 +272,80 @@ public class ConsultaServiceTeste {
     }
 
     @Test
+    public void deveRemoverComId(){
+        //Cenário
+        Dono dono = Dono.builder()
+                .nome("Dono Teste")
+                .cpf(String.valueOf(random.nextInt(9999999)))
+                .telefone("Telefone Teste")
+                .build();
+        Dono donoRetorno = donoRepo.save(dono);
+
+        TipoAnimal tipoAnimal = TipoAnimal.builder()
+                .nome("Tipo Animal Teste")
+                .build();
+        TipoAnimal tipoAnimalRetorno =  tipoAnimalRepo.save(tipoAnimal);
+
+        Animal animal =  Animal.builder()
+                .tipoAnimal(tipoAnimalRetorno)
+                .dono(donoRetorno)
+                .nome("Animal Teste")
+                .build();
+        Animal animalRetorno = animalRepo.save(animal);
+
+        Area area = Area.builder()
+                .nome("Area Teste")
+                .build();
+        Area areaRetorno = areaRepo.save(area);
+
+        Especialidade especialidade = Especialidade.builder()
+                .nome("Especialidade Teste")
+                .area(areaRetorno)
+                .build();
+        Especialidade especialidadeRetorno = especialidadeRepo.save(especialidade);
+
+        Veterinario veterinario = Veterinario.builder()
+                .nome("Veterinario Teste")
+                .cpf(String.valueOf(random.nextInt(9999999)))
+                .telefone("telefone teste")
+                .especialidade(especialidadeRetorno)
+                .build();
+        Veterinario veterinarioRetorno = veterinarioRepo.save(veterinario);
+
+        TipoConsulta tipoConsulta = TipoConsulta.builder()
+                .nome("Tipo Consulta Teste")
+                .build();
+        TipoConsulta tipoConsultaRetorno = tipoConsultaRepo.save(tipoConsulta);
+
+        Consulta consulta = Consulta.builder()
+                .tipoConsulta(tipoConsultaRetorno)
+                .data(LocalDate.now())
+                .descricao("Descricao Teste")
+                .animal(animalRetorno)
+                .veterinario(veterinarioRetorno)
+                .build();
+        Consulta consultaRetorno = consultaRepo.save(consulta);
+
+        //Ação
+        consultaService.removerPorId(consultaRetorno.getConsultaId());
+
+        //Verificação
+        Optional<Consulta> consultaTemp = consultaRepo.findById(consultaRetorno.getConsultaId());
+        Assertions.assertFalse(consultaTemp.isPresent());
+
+        //Rollback
+        consultaRepo.delete(consultaRetorno);
+        animalRepo.delete(animalRetorno);
+        veterinarioRepo.delete(veterinarioRetorno);
+        animalRepo.delete(animalRetorno);
+        tipoAnimalRepo.delete(tipoAnimalRetorno);
+        tipoConsultaRepo.delete(tipoConsultaRetorno);
+        especialidadeRepo.delete(especialidadeRetorno);
+        areaRepo.delete(areaRetorno);
+        donoRepo.delete(donoRetorno);
+    }
+
+    @Test
     public void deveRemoverComFeedback(){
         //Cenário
         Dono dono = Dono.builder()

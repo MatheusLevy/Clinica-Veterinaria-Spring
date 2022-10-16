@@ -78,6 +78,12 @@ public class ConsultaService {
     }
 
     @Transactional
+    public void removerPorId(Long id){
+        verificaId(id);
+        repo.deleteById(id);
+    }
+
+    @Transactional
     public Consulta removerFeedback(Long id){
         verificaId(id);
         Optional<Consulta> ConsultaRemover = repo.findById(id);
