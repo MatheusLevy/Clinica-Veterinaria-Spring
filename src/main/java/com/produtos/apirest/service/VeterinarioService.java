@@ -58,17 +58,15 @@ public class VeterinarioService {
     }
 
     @Transactional
-    public void remover(Veterinario veterinario){
-        verificaVeterinario(veterinario);
-        verificaId(veterinario);
-        repo.delete(veterinario);
+    public void remover(Long id){
+        verificaId(id);
+        repo.deleteById(id);
     }
 
     @Transactional
-    public Veterinario removerFeedback(Veterinario veterinario){
-        verificaVeterinario(veterinario);
-        verificaId(veterinario);
-        Optional<Veterinario> VeterinarioRemover = repo.findById(veterinario.getVeterinarioId());
+    public Veterinario removerComFeedback(Long id){
+        verificaId(id);
+        Optional<Veterinario> VeterinarioRemover = repo.findById(id);
         Veterinario VeterinarioTemp = VeterinarioRemover.get();
         repo.delete(VeterinarioTemp);
         return VeterinarioTemp;

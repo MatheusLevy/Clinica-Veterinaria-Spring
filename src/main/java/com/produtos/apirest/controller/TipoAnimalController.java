@@ -47,8 +47,8 @@ public class TipoAnimalController {
     }
 
     @PreAuthorize("hasRole('A')")
-    @DeleteMapping("/remover/feedback")
-    public ResponseEntity removerComFeedback(Long id){
+    @DeleteMapping("/remover/feedback/{id}")
+    public ResponseEntity removerComFeedback(@PathVariable(value = "id", required = true) Long id){
         try{
             TipoAnimal tipoRemovido = tipoService.removerFeedback(id);
             TipoAnimalDTO dtoRetorno = TipoAnimalDTO.builder()

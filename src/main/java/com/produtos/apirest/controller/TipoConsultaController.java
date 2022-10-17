@@ -1,5 +1,6 @@
 package com.produtos.apirest.controller;
 
+import com.produtos.apirest.models.DTO.TipoConsultaDTO;
 import com.produtos.apirest.models.TipoConsulta;
 import com.produtos.apirest.service.TipoConsultaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +16,20 @@ public class TipoConsultaController {
     @Autowired
     public TipoConsultaService tipoService;
 
-
-    //TODO: ### ** Substituir TipoConsulta ppro TipoConsultaDTO **
     @PreAuthorize("hasRole('A')")
     @PostMapping("/salvar")
-    public ResponseEntity salvar(@RequestBody TipoConsulta tipo){
+    public ResponseEntity salvar(@RequestBody TipoConsultaDTO dto){
         try{
-            TipoConsulta tipoSalvo = tipoService.salvar(tipo);
-            return ResponseEntity.ok(tipoSalvo);
+            TipoConsulta tipoConsulta = TipoConsulta.builder()
+                    .nome(dto.getNome())
+                    .build();
+            TipoConsulta tipoSalvo = tipoService.salvar(tipoConsulta);
+
+            TipoConsultaDTO dtoRetorno = TipoConsultaDTO.builder()
+                    .id(tipoSalvo.getTipoConsultaId())
+                    .nome(tipoSalvo.getNome())
+                    .build();
+            return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -40,13 +47,16 @@ public class TipoConsultaController {
         }
     }
 
-    //TODO: ### ** Substituir TipoConsulta ppro TipoConsultaDTO **
     @PreAuthorize("hasRole('A')")
-    @DeleteMapping("/remover/feedback")
-    public ResponseEntity removerComFeedback(@RequestBody TipoConsulta tipo){
+    @DeleteMapping("/remover/feedback/{id}")
+    public ResponseEntity removerComFeedback(@PathVariable(value = "id", required = true) Long id){
         try{
-            TipoConsulta tipoRemovido = tipoService.removerFeedback(tipo.getTipoConsultaId());
-            return ResponseEntity.ok(tipoRemovido);
+            TipoConsulta tipoRemovido = tipoService.removerFeedback(id);
+            TipoConsultaDTO dtoRetorno = TipoConsultaDTO.builder()
+                    .id(tipoRemovido.getTipoConsultaId())
+                    .nome(tipoRemovido.getNome())
+                    .build();
+            return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -58,21 +68,33 @@ public class TipoConsultaController {
     public ResponseEntity buscarPorId(@PathVariable(value = "id", required = true) Long id){
         try{
             TipoConsulta tipoBuscado = tipoService.buscarTipoConsultaPorId(id);
-            return ResponseEntity.ok(tipoBuscado);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-    //TODO: ### ** Substituir TipoConsulta ppro TipoConsultaDTO **
-    @PreAuthorize("hasRole('A')")
-    @PutMapping("/atualizar")
-    public ResponseEntity atualizar(@RequestBody TipoConsulta tipo){
-        try{
-            TipoConsulta atualizado = tipoService.atualizar(tipo);
-            return ResponseEntity.ok(atualizado);
+            TipoConsultaDTO dtoRetorno = TipoConsultaDTO.builder()
+                    .id(tipoBuscado.getTipoConsultaId())
+                    .nome(tipoBuscado.getNome())
+                    .build();
+            return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
+    @PreAuthorize("hasRole('A')")
+    @PutMapping("/atualizar")
+    public ResponseEntity atualizar(@RequestBody TipoConsultaDTO dto){
+        try{
+            TipoConsulta tipoConsulta = TipoConsulta.builder()
+                    .tipoConsultaId(dto.getId())
+                    .nome(dto.getNome())
+                    .build();
+            TipoConsulta atualizado = tipoService.atualizar(tipoConsulta);
+
+            TipoConsultaDTO dtoRetorno = TipoConsultaDTO.builder()
+                    .id(atualizado.getTipoConsultaId())
+                    .nome(atualizado.getNome())
+                    .build();
+            return ResponseEntity.ok(dtoRetorno);
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
