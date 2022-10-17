@@ -220,7 +220,7 @@ public class DonoServiceTeste {
         Animal animal2Retorno = animalRepo.save(animal2);
 
         //Ação
-        List<Animal> animais = donoService.buscarTodosAnimais(donoRetorno);
+        List<Animal> animais = donoService.buscarTodosAnimais(donoRetorno.getDonoId());
 
         //Verificação
         Assertions.assertNotNull(animais);

@@ -96,11 +96,10 @@ public class DonoService {
     }
 
     @Transactional
-    public List<Animal> buscarTodosAnimais(Dono dono){
-        verificaDono(dono);
-        verificaId(dono);
+    public List<Animal> buscarTodosAnimais(Long id){
+        verificaId(id);
         try{
-            Optional<Dono> donoTemp = repo.findById(dono.getDonoId());
+            Optional<Dono> donoTemp = repo.findById(id);
             Dono donoBuscado = donoTemp.get();
             Hibernate.initialize(donoBuscado.getAnimais());
             return donoBuscado.getAnimais();
