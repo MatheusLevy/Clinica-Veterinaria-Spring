@@ -10,7 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/tipoconsulta")
+@RequestMapping("/api/tipoConsulta")
 public class TipoConsultaController {
 
     @Autowired
@@ -29,7 +29,7 @@ public class TipoConsultaController {
                     .id(tipoSalvo.getTipoConsultaId())
                     .nome(tipoSalvo.getNome())
                     .build();
-            return ResponseEntity.ok(dtoRetorno);
+            return new ResponseEntity(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
