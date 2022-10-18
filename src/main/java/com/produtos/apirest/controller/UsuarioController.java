@@ -47,7 +47,7 @@ public class UsuarioController {
                     .username(usarioSalvo.getUsername())
                     .nivel(usarioSalvo.getNivel())
                     .build();
-            return ResponseEntity.ok(dtoRetorno);
+            return new ResponseEntity(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
