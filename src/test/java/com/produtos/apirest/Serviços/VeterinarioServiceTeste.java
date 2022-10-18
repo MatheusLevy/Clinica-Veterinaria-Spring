@@ -129,7 +129,7 @@ public class VeterinarioServiceTeste {
         Veterinario veterinarioRetorno = veterinarioRepo.save(veterinario);
 
         //Ação
-        veterinarioService.remover(veterinarioRetorno);
+        veterinarioService.remover(veterinarioRetorno.getVeterinarioId());
 
         //Verificação
         Optional<Veterinario> veterinarios = veterinarioRepo.findById(veterinarioRetorno.getVeterinarioId());
@@ -164,7 +164,7 @@ public class VeterinarioServiceTeste {
         Veterinario veterinarioRetorno = veterinarioRepo.save(veterinario);
 
         //Ação
-        Veterinario veterinarioFeedback = veterinarioService.removerFeedback(veterinarioRetorno);
+        Veterinario veterinarioFeedback = veterinarioService.removerComFeedback(veterinarioRetorno.getVeterinarioId());
 
         //Verificação
         Assertions.assertNotNull(veterinarioFeedback);

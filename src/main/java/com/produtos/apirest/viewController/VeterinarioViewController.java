@@ -94,8 +94,7 @@ public class VeterinarioViewController {
     @PreAuthorize("hasRole('S')")
     @GetMapping("/veterinario/remover/{id}")
     public String veterinarioRemover(@PathVariable(value = "id", required = true) Long id){;
-        Veterinario veterinarioBuscado = veterinarioService.buscarPorId(id);
-        veterinarioService.remover(veterinarioBuscado);
+        veterinarioService.remover(id);
         return "redirect:/veterinario/veterinarioList";
     }
 }
