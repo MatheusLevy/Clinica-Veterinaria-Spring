@@ -53,7 +53,7 @@ public class EspecialidadeController {
                     .idArea(especialidadeSalva.getArea().getAreaId())
                     .nome(especialidadeSalva.getNome())
                     .build();
-            return ResponseEntity.ok(especialidadedtoRetorno);
+            return new ResponseEntity(especialidadeSalva, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -94,10 +94,10 @@ public class EspecialidadeController {
     }
 
     @PreAuthorize("hasRole('A')")
-    @DeleteMapping("/remover/feedback")
-    public ResponseEntity removerComFeedback(@RequestBody EspecialidadeDTO especialidadedto){
+    @DeleteMapping("/remover/feedback/{id}")
+    public ResponseEntity removerComFeedback(@PathVariable(value = "id", required = true) Long id){
         try {
-            Especialidade especialidadeRemovida = especialidadeService.removerFeedback(especialidadedto.getId());
+            Especialidade especialidadeRemovida = especialidadeService.removerFeedback(id);
             EspecialidadeDTO especialidadedtoRetorno = EspecialidadeDTO.builder()
                     .id(especialidadeRemovida.getEspecialidadeId())
                     .idArea(especialidadeRemovida.getArea().getAreaId())
