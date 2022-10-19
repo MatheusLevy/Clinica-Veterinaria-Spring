@@ -54,7 +54,7 @@ public class VeterinarioController {
                     .cpf(vetSalvo.getCpf())
                     .especialidade(vetSalvo.getEspecialidade())
                     .build();
-            return ResponseEntity.ok(dtoRetorno);
+            return new ResponseEntity(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }

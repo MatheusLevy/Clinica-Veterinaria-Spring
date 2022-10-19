@@ -1,10 +1,11 @@
 package com.produtos.apirest.Controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.produtos.apirest.models.DTO.TipoConsultaDTO;
-import com.produtos.apirest.models.TipoConsulta;
-import com.produtos.apirest.service.TipoConsultaService;
+import com.produtos.apirest.models.DTO.VeterinarioDTO;
+import com.produtos.apirest.models.Veterinario;
+import com.produtos.apirest.service.VeterinarioService;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -18,52 +19,59 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.produtos.apirest.Controller.EspecialidadeControllerTeste.getEspecialidadeInstance;
+
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest
-public class TipoConsultaControllerTeste {
+public class VeterinarioControllerTeste {
 
-    private final String API = "/api/tipoConsulta";
+    private final String API = "/api/veterinario";
+
     @MockBean
-    private TipoConsultaService tipoConsultaService;
+    private VeterinarioService veterinarioService;
 
     @Autowired
     MockMvc mvc;
 
-    public static TipoConsulta getTipoConsultaInstance(Boolean temId){
-        TipoConsulta tipoConsulta = TipoConsulta.builder()
+    public static Veterinario getVeterinarioInstance(){
+        return Veterinario.builder()
+                .veterinarioId(Long.valueOf(1))
                 .nome("nome")
+                .telefone("telefone")
+                .cpf("cpf")
+                .especialidade(getEspecialidadeInstance(true))
                 .build();
-        if (temId)
-            tipoConsulta.setTipoConsultaId(Long.valueOf(1));
-        return tipoConsulta;
     }
 
-    public static TipoConsultaDTO getTipoConsultaDTOInstance(Boolean temId){
-        TipoConsultaDTO tipoConsultaDTO = TipoConsultaDTO.builder()
+    public static VeterinarioDTO getVeterinarioDTOInstance(){
+        return VeterinarioDTO.builder()
+                .id(Long.valueOf(1))
                 .nome("nome")
+                .telefone("telefone")
+                .cpf("cpf")
+                .especialidade(getEspecialidadeInstance(true))
                 .build();
-        if (temId)
-            tipoConsultaDTO.setId(Long.valueOf(1));
-        return tipoConsultaDTO;
     }
-
 
 
     @WithUserDetails("Admin")
     @Test
     public void deveSalvarController() throws Exception{
         //Cenário
-        TipoConsultaDTO tipoConsultaDTO = getTipoConsultaDTOInstance(false);
+        VeterinarioDTO veterinarioDTO = getVeterinarioDTOInstance();
 
-        //Consulta Mockada
-        TipoConsulta tipoConsulta = getTipoConsultaInstance(true);
+        //Veterinario Mockado
+        Veterinario veterinario = getVeterinarioInstance();
 
-        //Mock do Serviço
-        Mockito.when(tipoConsultaService.salvar(Mockito.any(TipoConsulta.class))).thenReturn(tipoConsulta);
+        //Mock do serviço
+        Mockito.when(veterinarioService.salvar(Mockito.any(Veterinario.class))).thenReturn(veterinario);
 
-        // Serializar consultaDTO para Json
-        String json = new ObjectMapper().writeValueAsString(tipoConsultaDTO);
+        // Serializar veterinarioDTO para Json
+        String json = new ObjectMapper().writeValueAsString(veterinarioDTO);
 
         //Motando Requisição
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
@@ -83,12 +91,8 @@ public class TipoConsultaControllerTeste {
         //Cenário
         Long id = Long.valueOf(1);
 
-        //TipoConsulta Mockado
-        TipoConsulta tipoConsulta = getTipoConsultaInstance(true);
-
         //Mock do Serviço
-        Mockito.doNothing().when(tipoConsultaService).remover(Mockito.any(TipoConsulta.class));
-        Mockito.when(tipoConsultaService.buscarTipoConsultaPorId(Mockito.anyLong())).thenReturn(tipoConsulta);
+        Mockito.doNothing().when(veterinarioService).remover(Mockito.anyLong());
 
         //Motando Requisição
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
@@ -105,13 +109,13 @@ public class TipoConsultaControllerTeste {
         //Cenário
         Long id = Long.valueOf(1);
 
-        //TipoConsulta Mockada
-        TipoConsulta tipoConsulta = getTipoConsultaInstance(true);
+        //Veterinario Mockado
+        Veterinario veterinario = getVeterinarioInstance();
 
         //Mock do Serviço
-        Mockito.when(tipoConsultaService.removerFeedback(Mockito.anyLong())).thenReturn(tipoConsulta);
+        Mockito.when(veterinarioService.removerComFeedback(Mockito.anyLong())).thenReturn(veterinario);
 
-        //Montando Requisição
+        //Motando Requisição
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .delete(API.concat("/remover/feedback/").concat(String.valueOf(id)));
 
@@ -122,17 +126,17 @@ public class TipoConsultaControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveBuscarPorId() throws Exception {
+    public void deveBuscarPorId() throws Exception{
         //Cenário
         Long id = Long.valueOf(1);
 
-        //TipoConsulta Mocackada
-        TipoConsulta tipoConsulta = getTipoConsultaInstance(true);
+        //Veterinario Mockado
+        Veterinario veterinario = getVeterinarioInstance();
 
         //Mock do Serviço
-        Mockito.when(tipoConsultaService.buscarTipoConsultaPorId(Mockito.anyLong())).thenReturn(tipoConsulta);
+        Mockito.when(veterinarioService.buscarPorId(Mockito.anyLong())).thenReturn(veterinario);
 
-        //Montando Requisição
+        //Motando Requisição
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .get(API.concat("/buscar/").concat(String.valueOf(id)));
 
@@ -143,18 +147,37 @@ public class TipoConsultaControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
+    public void deveBuscarTodos() throws Exception{
+        //Mock da Lista
+        List<Veterinario> veterinarios = new ArrayList<>();
+        veterinarios.add(getVeterinarioInstance());
+
+        //Mock do Serviço
+        Mockito.when(veterinarioService.buscarTodos()).thenReturn(veterinarios);
+
+        //Motando Requisição
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .get(API.concat("/buscarTodos/"));
+
+        //Ação e Verificação
+        mvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @WithUserDetails("Admin")
+    @Test
     public void deveAtualizar() throws Exception{
         //Cenário
-        TipoConsultaDTO tipoConsultaDTO = getTipoConsultaDTOInstance(true);
+        VeterinarioDTO veterinarioDTO = getVeterinarioDTOInstance();
 
-        //Consulta Mockada
-        TipoConsulta tipoConsulta = getTipoConsultaInstance(true);
+        //Veterinario Mockado
+        Veterinario veterinario = getVeterinarioInstance();
 
-        //Mock do serviço
-        Mockito.when(tipoConsultaService.atualizar(Mockito.any(TipoConsulta.class))).thenReturn(tipoConsulta);
+        //Mock do Serviço
+        Mockito.when(veterinarioService.atualizar(Mockito.any(Veterinario.class))).thenReturn(veterinario);
 
-        // Serializar consultaDTO para Json
-        String json = new ObjectMapper().writeValueAsString(tipoConsultaDTO);
+        // Serializar veterinarioDTO para Json
+        String json = new ObjectMapper().writeValueAsString(veterinarioDTO);
 
         //Motando Requisição
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
@@ -166,5 +189,7 @@ public class TipoConsultaControllerTeste {
         //Ação e Verificação
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
+
     }
+
 }

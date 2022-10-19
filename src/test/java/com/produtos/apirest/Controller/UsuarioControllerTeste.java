@@ -32,7 +32,7 @@ public class UsuarioControllerTeste {
     @Autowired
     MockMvc mvc;
 
-    private static UsuarioDTO getUsuarioDTOInstance(Boolean temId){
+    public static UsuarioDTO getUsuarioDTOInstance(Boolean temId){
         UsuarioDTO usuarioDTO = UsuarioDTO.builder()
                 .username("username")
                 .senha("senha")
@@ -43,7 +43,7 @@ public class UsuarioControllerTeste {
         return usuarioDTO;
     }
 
-    private static Usuario getUsuarioInstance(Boolean temId){
+    public static Usuario getUsuarioInstance(Boolean temId){
         Usuario usuario = Usuario.builder()
                 .username("username")
                 .senha("senha")

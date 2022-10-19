@@ -42,7 +42,7 @@ public class EspecialidadeControllerTeste {
     @Autowired
     MockMvc mvc;
 
-    private static EspecialidadeDTO getEspecialidadeDTOInstance(Boolean temId){
+    public static EspecialidadeDTO getEspecialidadeDTOInstance(Boolean temId){
         EspecialidadeDTO especialidadeDTO = EspecialidadeDTO.builder()
                 .nome("nome")
                 .area(new Area())
@@ -52,7 +52,7 @@ public class EspecialidadeControllerTeste {
         return especialidadeDTO;
     }
 
-    private static Especialidade getEspecialidadeInstance(Boolean temId){
+    public static Especialidade getEspecialidadeInstance(Boolean temId){
         Especialidade especialidade = Especialidade.builder()
                 .nome("nome")
                 .area(new Area())
