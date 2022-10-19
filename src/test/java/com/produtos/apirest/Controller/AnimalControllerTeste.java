@@ -21,7 +21,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+
+import static com.produtos.apirest.Controller.DonoControllerTeste.getDonoInstance;
+import static com.produtos.apirest.Controller.TipoAnimalControllerTeste.getTipoAnimalInstance;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doNothing;
 
@@ -46,12 +52,24 @@ public class AnimalControllerTeste {
 
     Random random = new Random();
 
+    public static List<Animal> getListAnimalInstance(){
+        return new ArrayList<>(){{
+            add(getAnimalInstance());
+        }};
+    }
+
+    public static Animal getAnimalInstance(){
+        return Animal.builder()
+                .animalId(Long.valueOf(1))
+                .nome("nome")
+                .dono(getDonoInstance())
+                .tipoAnimal(getTipoAnimalInstance(true))
+                .build();
+    }
     @Test
     @WithUserDetails("Admin")
     public void deveSalvarController() throws Exception{
 
-        //# Cenário
-        //Criando um dono
         Dono dono = Dono.builder()
                 .nome("teste")
                 .cpf(String.valueOf(random.nextInt(9999999)))

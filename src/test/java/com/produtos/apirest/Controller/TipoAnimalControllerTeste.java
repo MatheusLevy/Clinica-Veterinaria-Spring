@@ -35,7 +35,7 @@ public class TipoAnimalControllerTeste {
     @Autowired
     MockMvc mvc;
 
-    public TipoAnimal getTipoAnimalInstance(Boolean temId){
+    public static TipoAnimal getTipoAnimalInstance(Boolean temId){
         TipoAnimal tipoAnimal = TipoAnimal.builder()
                 .nome("nome")
                 .build();
