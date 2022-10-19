@@ -21,7 +21,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import static com.produtos.apirest.Controller.DonoControllerTeste.getDonoInstance;
 import static com.produtos.apirest.Controller.TipoAnimalControllerTeste.getTipoAnimalInstance;
@@ -50,7 +49,7 @@ public class AnimalControllerTeste {
     @MockBean
     private TipoAnimalService tipoAnimalService;
 
-    public static List<Animal> getListAnimalInstance(){
+    public static List<Animal> getAnimalListInstance(){
         return new ArrayList<>(){{
             add(getAnimalInstance());
         }};

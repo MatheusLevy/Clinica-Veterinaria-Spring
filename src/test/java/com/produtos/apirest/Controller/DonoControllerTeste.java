@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.ArrayList;
 import java.util.List;
-import static com.produtos.apirest.Controller.AnimalControllerTeste.getListAnimalInstance;
+import static com.produtos.apirest.Controller.AnimalControllerTeste.getAnimalListInstance;
 import static com.produtos.apirest.Util.HttpMethods.*;
 import static com.produtos.apirest.Util.Util.request;
 import static com.produtos.apirest.Util.Util.toJson;
@@ -133,7 +133,7 @@ public class DonoControllerTeste {
     @Test
     public void deveBuscarTodosAnimaisController() throws Exception{
         Long id = Long.valueOf(1);
-        Mockito.when(donoService.buscarTodosAnimais(Mockito.anyLong())).thenReturn(getListAnimalInstance());
+        Mockito.when(donoService.buscarTodosAnimais(Mockito.anyLong())).thenReturn(getAnimalListInstance());
         MockHttpServletRequestBuilder request = request(Get, API.concat("/animais/".concat(String.valueOf(id))));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());

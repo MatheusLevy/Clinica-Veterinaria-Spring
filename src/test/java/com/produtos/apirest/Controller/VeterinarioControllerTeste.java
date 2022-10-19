@@ -43,7 +43,7 @@ public class VeterinarioControllerTeste {
                 .nome("nome")
                 .telefone("telefone")
                 .cpf("cpf")
-                .especialidade(getEspecialidadeInstance(true))
+                .especialidade(getEspecialidadeInstance())
                 .build();
     }
 
@@ -53,7 +53,7 @@ public class VeterinarioControllerTeste {
                 .nome("nome")
                 .telefone("telefone")
                 .cpf("cpf")
-                .especialidade(getEspecialidadeInstance(true))
+                .especialidade(getEspecialidadeInstance())
                 .build();
     }
 
