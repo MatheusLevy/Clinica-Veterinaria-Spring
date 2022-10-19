@@ -60,7 +60,7 @@ public class AnimalControllerTeste {
                 .animalId(Long.valueOf(1))
                 .nome("nome")
                 .dono(getDonoInstance())
-                .tipoAnimal(getTipoAnimalInstance(true))
+                .tipoAnimal(getTipoAnimalInstance())
                 .build();
     }
 
@@ -72,7 +72,7 @@ public class AnimalControllerTeste {
                 .idDono(Long.valueOf(1))
                 .idTipoAnimal(Long.valueOf(1))
                 .dono(getDonoInstance())
-                .tipo(getTipoAnimalInstance(true))
+                .tipo(getTipoAnimalInstance())
                 .build();
     }
     @Test
@@ -80,7 +80,7 @@ public class AnimalControllerTeste {
     public void deveSalvarController() throws Exception{
         Mockito.when(animalService.salvar(Mockito.any(Animal.class))).thenReturn(getAnimalInstance());
         Mockito.when(donoService.buscarDonoPorId(Mockito.anyLong())).thenReturn(getDonoInstance());
-        Mockito.when(tipoAnimalService.buscarTipoAnimalPorId(Mockito.anyLong())).thenReturn(getTipoAnimalInstance(true));
+        Mockito.when(tipoAnimalService.buscarTipoAnimalPorId(Mockito.anyLong())).thenReturn(getTipoAnimalInstance());
         String json = new ObjectMapper().writeValueAsString(getAnimalDTOInstance());
         MockHttpServletRequestBuilder request = request(Post, API.concat("/salvar"), json);
         mvc.perform(request)
