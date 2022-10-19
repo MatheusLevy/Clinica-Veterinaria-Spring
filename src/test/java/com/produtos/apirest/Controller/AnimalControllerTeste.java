@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.produtos.apirest.models.Animal;
 import com.produtos.apirest.models.DTO.AnimalDTO;
 import com.produtos.apirest.models.Dono;
-import com.produtos.apirest.models.TipoAnimal;
 import com.produtos.apirest.service.AnimalService;
 import com.produtos.apirest.service.DonoService;
 import com.produtos.apirest.service.TipoAnimalService;
@@ -14,12 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
@@ -28,6 +25,9 @@ import java.util.Random;
 
 import static com.produtos.apirest.Controller.DonoControllerTeste.getDonoInstance;
 import static com.produtos.apirest.Controller.TipoAnimalControllerTeste.getTipoAnimalInstance;
+import static com.produtos.apirest.Util.HttpMethods.*;
+import static com.produtos.apirest.Util.Util.request;
+import static com.produtos.apirest.Util.Util.toJson;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doNothing;
 
@@ -50,8 +50,6 @@ public class AnimalControllerTeste {
     @MockBean
     private TipoAnimalService tipoAnimalService;
 
-    Random random = new Random();
-
     public static List<Animal> getListAnimalInstance(){
         return new ArrayList<>(){{
             add(getAnimalInstance());
@@ -66,52 +64,26 @@ public class AnimalControllerTeste {
                 .tipoAnimal(getTipoAnimalInstance(true))
                 .build();
     }
-    @Test
-    @WithUserDetails("Admin")
-    public void deveSalvarController() throws Exception{
 
-        Dono dono = Dono.builder()
-                .nome("teste")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("123")
-                .build();
-
-        //Criando Tipo Animal
-        TipoAnimal tipo = TipoAnimal.builder()
-                .nome("Teste")
-                .build();
-
-        //## Request AnimalDTO
-        AnimalDTO animalDTORequest = AnimalDTO.builder()
+    public static AnimalDTO getAnimalDTOInstance(){
+        return AnimalDTO.builder()
+                .id(Long.valueOf(1))
+                .idTipoAnimal(Long.valueOf(1))
                 .nome("nome")
                 .idDono(Long.valueOf(1))
                 .idTipoAnimal(Long.valueOf(1))
+                .dono(getDonoInstance())
+                .tipo(getTipoAnimalInstance(true))
                 .build();
-
-        //## Animal mockado
-        Animal animal = Animal.builder()
-                .animalId(Long.valueOf(1))
-                .nome(animalDTORequest.getNome())
-                .dono(new Dono())
-                .tipoAnimal(new TipoAnimal())
-                .build();
-
-        //## Mock do Serviço dos serviços
-        Mockito.when(animalService.salvar(Mockito.any(Animal.class))).thenReturn(animal);
-        Mockito.when(donoService.buscarDonoPorId(Mockito.anyLong())).thenReturn(dono);
-        Mockito.when(tipoAnimalService.buscarTipoAnimalPorId(Mockito.anyLong())).thenReturn(tipo);
-
-        //## Serializar AnimalDTO para Json
-        String json = new ObjectMapper().writeValueAsString(animalDTORequest);
-
-        //## Motando Requisição para o Controlador
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .post(API.concat("/salvar"))
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json);
-
-        //# Ação e Verificação | Enviando o Request e checando a Resposta
+    }
+    @Test
+    @WithUserDetails("Admin")
+    public void deveSalvarController() throws Exception{
+        Mockito.when(animalService.salvar(Mockito.any(Animal.class))).thenReturn(getAnimalInstance());
+        Mockito.when(donoService.buscarDonoPorId(Mockito.anyLong())).thenReturn(getDonoInstance());
+        Mockito.when(tipoAnimalService.buscarTipoAnimalPorId(Mockito.anyLong())).thenReturn(getTipoAnimalInstance(true));
+        String json = new ObjectMapper().writeValueAsString(getAnimalDTOInstance());
+        MockHttpServletRequestBuilder request = request(Post, API.concat("/salvar"), json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
@@ -119,46 +91,20 @@ public class AnimalControllerTeste {
     @Test
     @WithUserDetails("Admin")
     public void deveRemoverController() throws Exception{
-        // Cenário
         Long id = Long.valueOf(1);
-
-        //Mock Serviço de RemoverPorId
         doNothing().when(animalService).removerPorId(isA(Long.class));
-
-        //Montando Requisição
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .delete(API.concat("/remover/").concat(String.valueOf(id)));
-
-        //Ação e Verificação
+        MockHttpServletRequestBuilder request = request(Delete, API.concat("/remover/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string("\"NO_CONTENT\""));
-
     }
 
     @Test
     @WithUserDetails("Admin")
     public void deveRemoverComFeedbackController() throws Exception{
-        //Cenário
         Long id = Long.valueOf(1);
-
-        // Animal Mockado
-        Animal animal = Animal.builder()
-                .animalId(Long.valueOf(1))
-                .nome("Nome")
-                .dono(new Dono())
-                .tipoAnimal(new TipoAnimal())
-                .build();
-
-        //Mockando Serviço de RemoverComFeedback
-        Mockito.when(animalService.removerFeedback(Mockito.anyLong())).thenReturn(animal);
-
-
-        // Motando Requisição para o Controlador
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .delete(API.concat("/remover/feedback/").concat(String.valueOf(id)));
-
-        //Ação e Verificação
+        Mockito.when(animalService.removerFeedback(Mockito.anyLong())).thenReturn(getAnimalInstance());
+        MockHttpServletRequestBuilder request = request(Delete, API.concat("/remover/feedback/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -166,25 +112,9 @@ public class AnimalControllerTeste {
     @Test
     @WithUserDetails("Admin")
     public void deveBuscarPorIdController() throws Exception{
-        //Cenário
         Long id = Long.valueOf(1);
-
-        //Animal Mockado
-        Animal animal = Animal.builder()
-                .animalId(Long.valueOf(1))
-                .nome("Nome")
-                .dono(new Dono())
-                .tipoAnimal(new TipoAnimal())
-                .build();
-
-        //Mockando Serviço de BuscarPorId
-        Mockito.when(animalService.buscarPorId(Mockito.anyLong())).thenReturn(animal);
-
-        // Motando Requisição para o Controlador
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .get(API.concat("/buscarId/").concat(String.valueOf(id)));
-
-        //Ação e Verificação
+        Mockito.when(animalService.buscarPorId(Mockito.anyLong())).thenReturn(getAnimalInstance());
+        MockHttpServletRequestBuilder request = request(Get, API.concat("/buscarId/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -192,35 +122,9 @@ public class AnimalControllerTeste {
     @Test
     @WithUserDetails("Admin")
     public void deveAtualizarController() throws Exception{
-        //Cenário
-        AnimalDTO animalDTORequest = AnimalDTO.builder()
-                .id(Long.valueOf(1))
-                .nome("nome")
-                .dono(new Dono())
-                .tipo(new TipoAnimal())
-                .build();
-
-        //Animal Mockado
-        Animal animal = Animal.builder()
-                .nome(animalDTORequest.getNome())
-                .dono(animalDTORequest.getDono())
-                .tipoAnimal(animalDTORequest.getTipo())
-                .build();
-
-        //Mockando Serviço de Atualizar
-        Mockito.when(animalService.atualizar(Mockito.any(Animal.class))).thenReturn(animal);
-
-        //## Serializar AnimalDTO para Json
-        String json = new ObjectMapper().writeValueAsString(animalDTORequest);
-
-        //Motando Requisição para o Controlador
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .put(API.concat("/atualizar"))
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json);
-
-        //Ação e Verificação
+        Mockito.when(animalService.atualizar(Mockito.any(Animal.class))).thenReturn(getAnimalInstance());
+        String json = toJson(getAnimalDTOInstance());
+        MockHttpServletRequestBuilder request = request(Put, API.concat("/atualizar"), json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -228,25 +132,9 @@ public class AnimalControllerTeste {
     @Test
     @WithUserDetails("Admin")
     public void deveBuscarDonoController() throws Exception{
-        //Cenário
         Long id = Long.valueOf(1);
-
-        //Dono mockado
-        Dono dono = Dono.builder()
-                .donoId(Long.valueOf(1))
-                .nome("nome")
-                .telefone("telefone")
-                .cpf("cpf")
-                .build();
-
-        //Mockand Serviço de Animal buscarDono
-        Mockito.when(animalService.buscarDono(Mockito.anyLong())).thenReturn(dono);
-
-        //Montando Requisição para o Controller
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .get(API.concat("/buscarDono/").concat(String.valueOf(id)));
-
-        //Ação e Verificação
+        Mockito.when(animalService.buscarDono(Mockito.anyLong())).thenReturn(getDonoInstance());
+        MockHttpServletRequestBuilder request = request(Get, API.concat("/buscarDono/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -254,47 +142,12 @@ public class AnimalControllerTeste {
     @Test
     @WithUserDetails("Admin")
     public void deveAtualizarDonoController() throws Exception{
-        //Cenário
-        Dono donoBuscado = Dono.builder()
-                .donoId(Long.valueOf(1))
-                .nome("dono")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("123")
-                .build();
-
-        Animal animalBuscado = Animal.builder()
-                .animalId(Long.valueOf(1))
-                .nome("nome")
-                .tipoAnimal(new TipoAnimal())
-                .dono(new Dono())
-                .build();
-
-
-        AnimalDTO animalDTORequest = AnimalDTO.builder()
-                .id(Long.valueOf(1))
-                .nome("nome")
-                .idDono(Long.valueOf(1))
-                .idTipoAnimal(Long.valueOf(1))
-                .build();
-
-        //Mock dos Serviços
-        Mockito.when(donoService.buscarDonoPorId(Mockito.anyLong())).thenReturn(donoBuscado);
-        Mockito.when(animalService.buscarPorId(Mockito.anyLong())).thenReturn(animalBuscado);
-        Mockito.when(animalService.atualizarDono(Mockito.any(Dono.class), Mockito.any(Animal.class))).thenReturn(animalBuscado);
-
-        //Serializar AnimalDTO para Json
-        String json = new ObjectMapper().writeValueAsString(animalDTORequest);
-
-        //Motando Requisição para o Controlador
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .put(API.concat("/atualizar/dono"))
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json);
-
-        //Ação e Verificação
+        Mockito.when(donoService.buscarDonoPorId(Mockito.anyLong())).thenReturn(getDonoInstance());
+        Mockito.when(animalService.buscarPorId(Mockito.anyLong())).thenReturn(getAnimalInstance());
+        Mockito.when(animalService.atualizarDono(Mockito.any(Dono.class), Mockito.any(Animal.class))).thenReturn(getAnimalInstance());
+        String json = toJson(getAnimalDTOInstance());
+        MockHttpServletRequestBuilder request = request(Put, API.concat("/atualizar/dono"), json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
-
 }

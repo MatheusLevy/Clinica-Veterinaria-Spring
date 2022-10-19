@@ -110,7 +110,7 @@ public class AnimalController {
             Animal atualizado = animalService.atualizar(animal);
 
             AnimalDTO atualizadoRetorno = AnimalDTO.builder()
-                    .idTipoAnimal(atualizado.getAnimalId())
+                    .id(atualizado.getAnimalId())
                     .nome(atualizado.getNome())
                     .tipo(atualizado.getTipoAnimal())
                     .nomeDono(atualizado.getDono().getNome())
