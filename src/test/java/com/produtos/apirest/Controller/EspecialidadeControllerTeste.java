@@ -1,32 +1,29 @@
 package com.produtos.apirest.Controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.produtos.apirest.models.Area;
-import com.produtos.apirest.models.Consulta;
 import com.produtos.apirest.models.DTO.EspecialidadeDTO;
 import com.produtos.apirest.models.Especialidade;
 import com.produtos.apirest.service.AreaService;
 import com.produtos.apirest.service.EspecialidadeService;
-import lombok.With;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.produtos.apirest.Controller.AreaControllerTeste.getAreaInstance;
+import static com.produtos.apirest.Util.HttpMethods.*;
+import static com.produtos.apirest.Util.Util.request;
+import static com.produtos.apirest.Util.Util.toJson;
 
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
@@ -72,149 +69,61 @@ public class EspecialidadeControllerTeste {
     @WithUserDetails("Admin")
     @Test
     public void deveSalvarController() throws Exception{
-        //Cenário
-        EspecialidadeDTO especialidadeDTO = getEspecialidadeDTOInstance();
-
-        //Especialidade Mockada
-        Especialidade especialidade = getEspecialidadeInstance();
-
-        //Area Mockada
-        Area area = getAreaInstance();
-
-        //Mock dos Serviços
-        Mockito.when(especialidadeService.salvar(Mockito.any(Especialidade.class))).thenReturn(especialidade);
-        Mockito.when(areaService.salvar(Mockito.any(Area.class))).thenReturn(area);
-
-        // Serializar especialidadeDTO para Json
-        String json = new ObjectMapper().writeValueAsString(especialidadeDTO);
-
-        //Motando Requisição
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .post(API.concat("/salvar"))
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json);
-
-        //Ação e Verificação
+        Mockito.when(especialidadeService.salvar(Mockito.any(Especialidade.class))).thenReturn(getEspecialidadeInstance());
+        Mockito.when(areaService.salvar(Mockito.any(Area.class))).thenReturn(getAreaInstance());
+        String json = toJson(getEspecialidadeDTOInstance());
+        MockHttpServletRequestBuilder request = request(Post, API.concat("/salvar"), json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
 
     @WithUserDetails("Admin")
     @Test
-    public void deveAtualizar() throws Exception{
-        //Cenário
-        EspecialidadeDTO especialidadeDTO = getEspecialidadeDTOInstance();
-
-        //Especialidade Mockado
-        Especialidade especialidade = getEspecialidadeInstance();
-
-        //Mock do Serviço
-        Mockito.when(especialidadeService.atualizar(Mockito.any(Especialidade.class))).thenReturn(especialidade);
-
-        // Serializar especialidadeDTO para Json
-        String json = new ObjectMapper().writeValueAsString(especialidadeDTO);
-
-        //Motando Requisição
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .put(API.concat("/atualizar"))
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json);
-
-        //Ação e Verificação
+    public void deveAtualizarController() throws Exception{
+        Mockito.when(especialidadeService.atualizar(Mockito.any(Especialidade.class))).thenReturn(getEspecialidadeInstance());
+        String json = toJson(getEspecialidadeDTOInstance());
+        MockHttpServletRequestBuilder request = request(Put, API.concat("/atualizar"), json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @WithUserDetails("Admin")
     @Test
-    public void deveRemover() throws Exception{
-        //Cenário
+    public void deveRemoverController() throws Exception{
         Long id = Long.valueOf(1);
-
-        //Especialidade Mockada
-        Especialidade especialidade = getEspecialidadeInstance();
-
-        //Mock dos Serviços
-        Mockito.when(especialidadeService.buscarEspecialidadePorId(Mockito.anyLong())).thenReturn(especialidade);
+        Mockito.when(especialidadeService.buscarEspecialidadePorId(Mockito.anyLong())).thenReturn(getEspecialidadeInstance());
         Mockito.doNothing().when(especialidadeService).remover(Mockito.any(Especialidade.class));
-
-        //Montando Requisição
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .delete(API.concat("/remover/").concat(String.valueOf(id)));
-
-        //Ação e Verificação
+        MockHttpServletRequestBuilder request = request(Delete, API.concat("/remover/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @WithUserDetails("Admin")
     @Test
-    public void deveRemoverComFeedback() throws Exception{
-        //Cenário
+    public void deveRemoverComFeedbackController() throws Exception{
         Long id = Long.valueOf(1);
-
-        //Especialidade Mockada
-        Especialidade especialidade = getEspecialidadeInstance();
-
-        //Mock dos Serviços
-        Mockito.when(especialidadeService.removerFeedback(Mockito.anyLong())).thenReturn(especialidade);
-
-        //Montando Requisição
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .delete(API.concat("/remover/feedback/").concat(String.valueOf(id)));
-
-        //Ação e Verificação
+        Mockito.when(especialidadeService.removerFeedback(Mockito.anyLong())).thenReturn(getEspecialidadeInstance());
+        MockHttpServletRequestBuilder request = request(Delete, API.concat("/remover/feedback/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @WithUserDetails("Admin")
     @Test
-    public void deveBuscarPorId() throws Exception{
-        //Cenário
+    public void deveBuscarPorFiltroController() throws Exception{
+        Mockito.when(especialidadeService.buscar(Mockito.any(Especialidade.class))).thenReturn(getEspecialidadeListInstance());
+        String json = toJson(getEspecialidadeDTOInstance());
+        MockHttpServletRequestBuilder request = request(Get, API.concat("/buscar/filtro"), json);
+        mvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @WithUserDetails("Admin")
+    @Test
+    public void deveBuscarPorIdController() throws Exception{
         Long id = Long.valueOf(1);
-
-        //Especialidade Mockada
-        Especialidade especialidade = getEspecialidadeInstance();
-
-        //Mock do Serviço
-        Mockito.when(especialidadeService.buscarEspecialidadePorId(Mockito.anyLong())).thenReturn(especialidade);
-
-        //Montando Requisição
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .get(API.concat("/buscar/").concat(String.valueOf(id)));
-
-        //Açao e Verificação
-        mvc.perform(request)
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    @WithUserDetails("Admin")
-    @Test
-    public void deveBuscarPorFiltro() throws Exception{
-        //Cenário
-        EspecialidadeDTO especialidadeDTO = getEspecialidadeDTOInstance();
-
-        //Especialidade Mockada
-        List<Especialidade> especialidades = new ArrayList<>();
-        especialidades.add(getEspecialidadeInstance());
-
-        //Mock do Serviço
-        Mockito.when(especialidadeService.buscar(Mockito.any(Especialidade.class))).thenReturn(especialidades);
-
-        // Serializar especialidadeDTO para Json
-        String json = new ObjectMapper().writeValueAsString(especialidadeDTO);
-
-        //Motando Requisição
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .get(API.concat("/buscar/filtro"))
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json);
-
-        //Ação e Verificação
+        Mockito.when(especialidadeService.buscarEspecialidadePorId(Mockito.anyLong())).thenReturn(getEspecialidadeInstance());
+        MockHttpServletRequestBuilder request = request(Get, API.concat("/buscar/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -222,23 +131,10 @@ public class EspecialidadeControllerTeste {
     @WithUserDetails("Admin")
     @Test
     public void deveBuscarTodos() throws Exception{
-        //Cenário
         Long id = Long.valueOf(1);
-
-        //Lista Mockada
-        List<Especialidade> especialidades = new ArrayList<>();
-        especialidades.add(getEspecialidadeInstance());
-
-        //Mock do Serviço
-        Mockito.when(especialidadeService.buscarTodos()).thenReturn(especialidades);
-
-        //Motando Requisição
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .get(API.concat("/buscarTodos"));
-
-        //Ação e Verificação
+        Mockito.when(especialidadeService.buscarTodos()).thenReturn(getEspecialidadeListInstance());
+        MockHttpServletRequestBuilder request = request(Get, API.concat("/buscarTodos"));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
-
 }
