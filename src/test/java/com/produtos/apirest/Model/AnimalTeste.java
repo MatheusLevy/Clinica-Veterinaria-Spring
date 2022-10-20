@@ -27,6 +27,7 @@ public class AnimalTeste {
 
     Random random = new Random();
 
+    //TODO: Refatorar
     @Test
     public void deveCriarAnimal(){
         //Cenário

@@ -7,75 +7,52 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Optional;
-
 @SpringBootTest
 public class TipoConsultaTeste {
     @Autowired
-    public TipoConsultaRepo repo;
+    public TipoConsultaRepo tipoConsultaRepo;
 
-    @Test
-    public void deveCriarTipoConsulta(){
-        //Cenário
-        TipoConsulta novo = TipoConsulta.builder().nome("Retorno").build();
-
-        //Ação
-        TipoConsulta retorno = repo.save(novo);
-
-        //Verificação
-        Assertions.assertNotNull(retorno);
-        Assertions.assertEquals(novo.getNome(), retorno.getNome());
-
-        //Rollback
-        repo.delete(retorno);
+    protected static TipoConsulta getTipoConsultaInstance(boolean temId){
+        TipoConsulta tipoConsulta = TipoConsulta.builder()
+                .nome("nome")
+                .build();
+        if (temId)
+            tipoConsulta.setTipoConsultaId(Long.valueOf(1));
+        return tipoConsulta;
     }
 
     @Test
-    public void deveRemoverTipoConsulta(){
-        //Cenário
-        TipoConsulta novo = TipoConsulta.builder().nome("Retorno").build();
-        TipoConsulta retorno = repo.save(novo);
-
-        //Ação
-        repo.delete(retorno);
-
-        //Verificação
-        Optional<TipoConsulta> temp = repo.findById(retorno.getTipoConsultaId());
-        Assertions.assertFalse(temp.isPresent());
+    public void deveSalvarModel(){
+        TipoConsulta tipoConsultaSalva = tipoConsultaRepo.save(getTipoConsultaInstance(false));
+        Assertions.assertNotNull(tipoConsultaSalva);
+        Assertions.assertEquals(getTipoConsultaInstance(false).getNome(), tipoConsultaSalva.getNome());
+        tipoConsultaRepo.delete(tipoConsultaSalva);
     }
 
     @Test
-    public void deveBuscarTipoConsulta(){
-        //Cenário
-        TipoConsulta novo = TipoConsulta.builder().nome("Retorno").build();
-        TipoConsulta retorno = repo.save(novo);
-
-        //Ação
-        Optional<TipoConsulta> temp = repo.findById(retorno.getTipoConsultaId());
-
-        //Verificação
-        Assertions.assertTrue(temp.isPresent());
-
-        //Rollback
-        repo.delete(retorno);
+    public void deveAtualizarModel(){
+        TipoConsulta tipoConsultaSalva = tipoConsultaRepo.save(getTipoConsultaInstance(false));
+        tipoConsultaSalva.setNome("Nome Novo");
+        TipoConsulta tipoConsultaAtualizada =  tipoConsultaRepo.save(tipoConsultaSalva);
+        Assertions.assertNotNull(tipoConsultaAtualizada);
+        Assertions.assertEquals(tipoConsultaAtualizada.getTipoConsultaId(), tipoConsultaSalva.getTipoConsultaId());
+        Assertions.assertEquals(tipoConsultaAtualizada.getNome(), "Nome Novo");
+        tipoConsultaRepo.delete(tipoConsultaAtualizada);
     }
 
     @Test
-    public void deveAtualizar(){
-        //Cenário
-        TipoConsulta novo = TipoConsulta.builder().nome("Retorno").build();
-        TipoConsulta retorno = repo.save(novo);
+    public void deveRemoverModel(){
+        TipoConsulta tipoConsultaSalva = tipoConsultaRepo.save(getTipoConsultaInstance(false));
+        Long id = tipoConsultaSalva.getTipoConsultaId();
+        tipoConsultaRepo.deleteById(id);
+        Assertions.assertFalse(tipoConsultaRepo.findById(id).isPresent());
+    }
 
-        //Ação
-        retorno.setNome("Nome Novo");
-        TipoConsulta atualizado =  repo.save(retorno);
-
-        //Verificação
-        Assertions.assertNotNull(atualizado);
-        Assertions.assertEquals(atualizado.getTipoConsultaId(), retorno.getTipoConsultaId());
-        Assertions.assertEquals(atualizado.getNome(), "Nome Novo");
-
-        //Rollback
-        repo.delete(atualizado);
+    @Test
+    public void deveBuscarModel(){
+        TipoConsulta tipoConsultaSalva = tipoConsultaRepo.save(getTipoConsultaInstance(false));
+        Long id = tipoConsultaSalva.getTipoConsultaId();
+        Assertions.assertTrue(tipoConsultaRepo.findById(id).isPresent());
+        tipoConsultaRepo.delete(tipoConsultaSalva);
     }
 }

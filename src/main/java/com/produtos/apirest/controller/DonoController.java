@@ -50,7 +50,7 @@ public class DonoController {
 
     ModelMapper modelMapperAnimal = customModelMapperAnimal();
 
-    @PreAuthorize("hasRole('S')")
+
     @PostMapping("/salvar")
     public ResponseEntity salvar(@RequestBody DonoDTO donodto){
         try{
@@ -75,7 +75,7 @@ public class DonoController {
         }
     }
 
-    @PreAuthorize("hasRole('S')")
+
     @PutMapping("/atualizar")
     public ResponseEntity atualizar(@RequestBody DonoDTO donodto){
         try{
@@ -100,7 +100,7 @@ public class DonoController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    @PreAuthorize("hasRole('S')")
+
     @DeleteMapping("/remover/{id}")
     public ResponseEntity remover(@PathVariable(value = "id", required = true) Long id){
         try{
@@ -110,7 +110,7 @@ public class DonoController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    @PreAuthorize("hasRole('S')")
+
     @GetMapping("/buscarTodos")
     public ResponseEntity buscarTodos(){
 
@@ -137,7 +137,6 @@ public class DonoController {
         }
     }
 
-    @PreAuthorize("hasRole('S')")
     @DeleteMapping("remover/feedback/{id}")
     public ResponseEntity removerComFeedback(@PathVariable(value = "id", required = true) Long id){
         try{
@@ -154,7 +153,6 @@ public class DonoController {
         }
     }
 
-    @PreAuthorize("hasRole('S')")
     @GetMapping("/buscar/filtro")
     public ResponseEntity buscarUtilizandoFiltro(@RequestBody DonoDTO dto){
         try{
@@ -170,7 +168,7 @@ public class DonoController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    @PreAuthorize("hasRole('S')")
+
     @GetMapping("/animais/{id}")
     public ResponseEntity buscarTodosAnimais(@PathVariable(value = "id", required = true) Long id){
         try{

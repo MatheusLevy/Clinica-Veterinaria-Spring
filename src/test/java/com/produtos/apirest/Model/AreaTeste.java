@@ -14,76 +14,46 @@ public class AreaTeste {
     @Autowired
     public AreaRepo repo;
 
-    @Test
-    public void deveCriarArea(){
-        //Cenário
-        Area novaArea = Area.builder()
-                .nome("Cirurgia Geral")
+    protected static Area getAreaInstance(Boolean temId){
+        Area area = Area.builder()
+                .nome("Nome")
                 .build();
-
-        //Ação
-        Area retornoArea = repo.save(novaArea);
-
-        //Testes
-        Assertions.assertNotNull(retornoArea);
-        Assertions.assertEquals(novaArea.getNome(), retornoArea.getNome());
-
-        //Rollback
-        repo.delete(retornoArea);
+        if (temId)
+            area.setAreaId(Long.valueOf(1));
+        return area;
     }
     @Test
-    public void deveRemoverArea(){
-        //Cenário
-        Area novaArea = Area.builder()
-                .nome("Cirurgia Geral")
-                .build();
-        Area retornoArea = repo.save(novaArea);
-
-        //Ação
-        Long id = retornoArea.getAreaId();
-        repo.deleteById(id);
-
-        //Verificação
-        Optional<Area> temp = repo.findById(id);
-        Assertions.assertFalse(temp.isPresent());
-    }
-
-    @Test
-    public void deveBuscarArea(){
-        //Cenário
-        Area novaArea = Area.builder()
-                .nome("Cirurgia Geral")
-                .build();
-        Area retornoArea = repo.save(novaArea);
-
-        //Ação
-        Optional<Area> temp = repo.findById(retornoArea.getAreaId());
-
-        //Verificação
-        Assertions.assertTrue(temp.isPresent());
-
-        //Rollback
-        repo.delete(retornoArea);
+    public void deveSalvarModel(){
+        Area areaSalva = repo.save(getAreaInstance(false));
+        Assertions.assertNotNull(areaSalva);
+        Assertions.assertEquals(getAreaInstance(false).getNome(), areaSalva.getNome());
+        repo.delete(areaSalva);
     }
 
     @Test
     public void deveAtualizarArea(){
-        //Cenário
-        Area novaArea = Area.builder()
-                .nome("Cirurgia Geral")
-                .build();
-        Area retornoArea = repo.save(novaArea);
+        Area areaSalva = repo.save(getAreaInstance(false));
+        areaSalva.setNome("Nome Novo");
+        Area areaAtualizado = repo.save(areaSalva);
+        Assertions.assertNotNull(areaAtualizado);
+        Assertions.assertEquals(areaAtualizado.getAreaId(), areaSalva.getAreaId());
+        Assertions.assertEquals(areaAtualizado.getNome(), "Nome Novo");
+        repo.delete(areaSalva);
+    }
 
-        //Ação
-        retornoArea.setNome("Nome Novo");
-        Area atualizado = repo.save(retornoArea);
+    @Test
+    public void deveRemoverModel(){
+        Area areaSalva = repo.save(getAreaInstance(false));
+        Long id = areaSalva.getAreaId();
+        repo.deleteById(id);
+        Assertions.assertFalse(repo.findById(id).isPresent());
+    }
 
-        //Verificação
-        Assertions.assertNotNull(atualizado);
-        Assertions.assertEquals(atualizado.getAreaId(), retornoArea.getAreaId());
-        Assertions.assertEquals(atualizado.getNome(), "Nome Novo");
-
-        //Rollback
-        repo.delete(retornoArea);
+    @Test
+    public void deveBuscarModel(){
+        Area areaSalva = repo.save(getAreaInstance(false));
+        Optional<Area> temp = repo.findById(areaSalva.getAreaId());
+        Assertions.assertTrue(temp.isPresent());
+        repo.delete(areaSalva);
     }
 }

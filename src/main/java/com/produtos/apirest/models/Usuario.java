@@ -4,8 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "usuarios")
@@ -13,7 +17,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Usuario {
+public class Usuario implements UserDetails{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,16 +30,50 @@ public class Usuario {
     @Column(name = "senha")
     private String senha;
 
-    //TODO: **Alterar o Nível para ser uma Lista
-    // - [ ] Criar Tabela de Roles no Banco
-    // - [ ] Adicionar Entity de Role
-    // - [ ] Alterar de String pra List<Role>
-    @Column(name = "nivel")
-    private String nivel;
+    @ManyToMany
+    @JoinTable(name="Users_Roles",
+            joinColumns= @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private List<Role> roles;
 
     @Override
     public String toString(){
         return getClass().getSimpleName() + "[id= " + usuarioId + ", username= " + username
-                + ", senha= " + senha + ", nivel= " + nivel +" ]";
+                + ", senha= " + senha + ", Roles= " + roles + "]";
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.roles;
+    }
+
+    @Override
+    public String getUsername(){
+        return this.username;
+    }
+    @Override
+    public String getPassword() {
+        return this.senha;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

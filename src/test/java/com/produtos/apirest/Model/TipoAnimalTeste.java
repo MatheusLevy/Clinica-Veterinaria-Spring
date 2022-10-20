@@ -6,78 +6,52 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.util.Assert;
-
-import java.util.Optional;
 
 @SpringBootTest
 public class TipoAnimalTeste {
     @Autowired
-    public TipoAnimalRepo repo;
+    public TipoAnimalRepo tipoAnimalRepo;
 
-    @Test
-    public void deveCriarTipoAnimal(){
-        //Cenário
-        TipoAnimal novo = TipoAnimal.builder().nome("Cão").build();
-
-        //Ação
-        TipoAnimal retorno = repo.save(novo);
-
-        //Verificaão
-        Assertions.assertNotNull(retorno);
-        Assertions.assertEquals(novo.getNome(), retorno.getNome());
-
-        //Rollback
-        repo.delete(retorno);
+    protected static TipoAnimal getTipoAnimalInstance(Boolean temId){
+        TipoAnimal tipoAnimal = TipoAnimal.builder()
+                .nome("nome")
+                .build();
+        if(temId)
+            tipoAnimal.setTipoAnimalId(Long.valueOf(1));
+        return tipoAnimal;
     }
-
     @Test
-    public void deveRemoverTipoAnimal(){
-        //Cenário
-        TipoAnimal novo = TipoAnimal.builder().nome("Cão").build();
-        TipoAnimal retorno = repo.save(novo);
-
-        //Ação
-        repo.delete(retorno);
-
-        //Verificação
-        Optional<TipoAnimal> temp = repo.findById(retorno.getTipoAnimalId());
-        Assertions.assertFalse(temp.isPresent());
-    }
-
-    @Test
-    public void deveBuscarTipoAnimal(){
-        //Cenário
-        TipoAnimal novo = TipoAnimal.builder().nome("Cão").build();
-        TipoAnimal retorno = repo.save(novo);
-
-        //Ação
-        Optional<TipoAnimal> temp = repo.findById(retorno.getTipoAnimalId());
-
-        //Verificação
-        Assertions.assertTrue(temp.isPresent());
-
-        //Rollback
-        repo.delete(retorno);
+    public void deveSalvarModel(){
+        TipoAnimal tipoAnimalSalvo = tipoAnimalRepo.save(getTipoAnimalInstance(false));
+        Assertions.assertNotNull(tipoAnimalSalvo);
+        Assertions.assertEquals(getTipoAnimalInstance(false).getNome(), tipoAnimalSalvo.getNome());
+        tipoAnimalRepo.delete(tipoAnimalSalvo);
     }
 
     @Test
     public void deveAtualizar(){
-        //Cenário
-        TipoAnimal novo = TipoAnimal.builder().nome("Cão").build();
-        TipoAnimal retorno = repo.save(novo);
+        TipoAnimal tipoAnimalSalvo = tipoAnimalRepo.save(getTipoAnimalInstance(false));
+        tipoAnimalSalvo.setNome("Novo nome");
+        TipoAnimal tipoAnimalAtualizado = tipoAnimalRepo.save(tipoAnimalSalvo);
+        Assertions.assertNotNull(tipoAnimalAtualizado);
+        Assertions.assertEquals(tipoAnimalAtualizado.getTipoAnimalId(), tipoAnimalSalvo.getTipoAnimalId());
+        Assertions.assertEquals(tipoAnimalAtualizado.getNome(), "Novo nome");
+        tipoAnimalRepo.delete(tipoAnimalAtualizado);
+    }
 
-        //Ação
-        retorno.setNome("Novo nome");
-        TipoAnimal atualizado = repo.save(retorno);
+    @Test
+    public void deveRemoverModel(){
+        TipoAnimal tipoAnimalSalvo = tipoAnimalRepo.save(getTipoAnimalInstance(false));
+        Long id = tipoAnimalSalvo.getTipoAnimalId();
+        tipoAnimalRepo.deleteById(id);
+        Assertions.assertFalse(tipoAnimalRepo.findById(id).isPresent());
+    }
 
-        //Verificação
-        Assertions.assertNotNull(atualizado);
-        Assertions.assertEquals(atualizado.getTipoAnimalId(), retorno.getTipoAnimalId());
-        Assertions.assertEquals(atualizado.getNome(), "Novo nome");
-
-        //Rollback
-        repo.delete(atualizado);
-
+    @Test
+    public void deveBuscarModel(){
+        TipoAnimal tipoAnimalSalvo = tipoAnimalRepo.save(getTipoAnimalInstance(false));
+        Long id = tipoAnimalSalvo.getTipoAnimalId();
+        Assertions.assertTrue(tipoAnimalRepo.findById(id).isPresent());
+        tipoAnimalRepo.delete(tipoAnimalSalvo);
     }
 }

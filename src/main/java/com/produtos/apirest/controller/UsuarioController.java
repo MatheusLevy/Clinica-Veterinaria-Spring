@@ -6,7 +6,6 @@ import com.produtos.apirest.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,7 +22,7 @@ public class UsuarioController {
             UsuarioDTO dtoRetorno = UsuarioDTO.builder()
                     .id(atuenticado.getUsuarioId())
                     .username(atuenticado.getUsername())
-                    .nivel(atuenticado.getNivel())
+                    //.nivel(atuenticado.getNivel())
                     .build();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
@@ -31,21 +30,20 @@ public class UsuarioController {
         }
     }
 
-    @PreAuthorize("hasRole('A')")
     @PostMapping("/salvar")
     public ResponseEntity salvar(@RequestBody UsuarioDTO dto){
         try{
             Usuario usuario =  Usuario.builder()
                     .username(dto.getUsername())
                     .senha(dto.getSenha())
-                    .nivel(dto.getNivel())
+                    .roles(dto.getRoles())
                     .build();
             Usuario usarioSalvo = usuarioService.salvar(usuario);
 
             UsuarioDTO dtoRetorno = UsuarioDTO.builder()
                     .id(usarioSalvo.getUsuarioId())
                     .username(usarioSalvo.getUsername())
-                    .nivel(usarioSalvo.getNivel())
+                    .roles(usarioSalvo.getRoles())
                     .build();
             return new ResponseEntity(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
@@ -53,7 +51,7 @@ public class UsuarioController {
         }
     }
 
-    @PreAuthorize("hasRole('A')")
+
     @DeleteMapping("/remover/{id}")
     public ResponseEntity removerComId(@PathVariable(value = "id", required = true) Long id){
         try{
@@ -65,7 +63,7 @@ public class UsuarioController {
         }
     }
 
-    @PreAuthorize("hasRole('A')")
+
     @DeleteMapping("/remover/feedback/{id}")
     public ResponseEntity removerComFeedback(@PathVariable(value = "id",required = true) Long id){
         try{
@@ -73,7 +71,7 @@ public class UsuarioController {
             UsuarioDTO dtoRetorno = UsuarioDTO.builder()
                     .id(usuarioRemovido.getUsuarioId())
                     .username(usuarioRemovido.getUsername())
-                    .nivel(usuarioRemovido.getNivel())
+                    .roles(usuarioRemovido.getRoles())
                     .build();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
@@ -81,7 +79,7 @@ public class UsuarioController {
         }
     }
 
-    @PreAuthorize("hasRole('A')")
+
     @GetMapping("/buscar/{id}")
     public ResponseEntity buscarPorId(@PathVariable(value = "id", required = true) Long id){
         try{
@@ -90,7 +88,7 @@ public class UsuarioController {
             UsuarioDTO dtoRetorno = UsuarioDTO.builder()
                     .id(usuarioBuscado.getUsuarioId())
                     .username(usuarioBuscado.getUsername())
-                    .nivel(usuarioBuscado.getNivel())
+                    .roles(usuarioBuscado.getRoles())
                     .build();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
@@ -98,7 +96,7 @@ public class UsuarioController {
         }
     }
 
-    @PreAuthorize("hasRole('A')")
+
     @GetMapping("/buscarPorUsername/{username}")
     public ResponseEntity buscarPorUsername(@PathVariable(value = "username", required = true) String username){
         try {
@@ -106,7 +104,7 @@ public class UsuarioController {
             UsuarioDTO dtoRetorno = UsuarioDTO.builder()
                     .id(usuario.getUsuarioId())
                     .username(usuario.getUsername())
-                    .nivel(usuario.getNivel())
+                    .roles(usuario.getRoles())
                     .build();
             return ResponseEntity.ok(dtoRetorno);
         }catch (Exception e){
@@ -114,7 +112,7 @@ public class UsuarioController {
         }
     }
 
-    @PreAuthorize("hasRole('A')")
+
     @PutMapping("/atualizar")
     public ResponseEntity atualizar(@RequestBody UsuarioDTO dto){
         try{
@@ -122,14 +120,14 @@ public class UsuarioController {
                     .usuarioId(dto.getId())
                     .username(dto.getUsername())
                     .senha(dto.getSenha())
-                    .nivel(dto.getNivel())
+                    .roles(dto.getRoles())
                     .build();
             Usuario atualizado = usuarioService.atualizar(usuario);
 
             UsuarioDTO dtoRetorno = UsuarioDTO.builder()
                     .id(atualizado.getUsuarioId())
                     .username(atualizado.getUsername())
-                    .nivel(atualizado.getNivel())
+                    .roles(atualizado.getRoles())
                     .build();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){

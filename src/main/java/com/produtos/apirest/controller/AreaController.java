@@ -122,7 +122,7 @@ public class AreaController {
         }
     }
 
-    @PreAuthorize("hasRole('A')")
+
     @GetMapping("/buscarTodos")
     public ResponseEntity buscarTodos(){
         try {
@@ -134,7 +134,6 @@ public class AreaController {
         }
     }
 
-    @PreAuthorize("hasRole('A')")
     @GetMapping("/buscar/especialidades/{id}")
     public ResponseEntity buscarEspecialidades(@PathVariable(value = "id", required = true) Long id){
         try {

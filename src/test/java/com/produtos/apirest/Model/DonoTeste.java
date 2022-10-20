@@ -13,88 +13,56 @@ import org.springframework.util.Assert;
 import java.util.Optional;
 import java.util.Random;
 
+import static com.produtos.apirest.Util.Util.random;
+
 @SpringBootTest
 public class DonoTeste {
 
     @Autowired
-    public DonoRepo repo;
+    public DonoRepo donoRepo;
 
-    Random random = new Random();
-    @Test
-    public void deveCriarDono(){
-        //Cenário
-        Dono novo = Dono.builder()
-                .nome("Marcos")
+    protected static  Dono getDonoInstance(Boolean temId){
+        Dono dono = Dono.builder()
+                .nome("nome")
                 .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("111111")
+                .telefone("telefone")
                 .build();
-
-        //Ação
-        Dono retorno = repo.save(novo);
-
-        //Verificação
-        Assertions.assertNotNull(retorno);
-        Assertions.assertEquals(novo.getNome(), retorno.getNome());
-
-        //Rollback
-        repo.delete(retorno);
+        if (temId)
+            dono.setDonoId(Long.valueOf(1));
+        return dono;
     }
 
     @Test
-    public void deveRemoverDono(){
-        //Cenário
-        Dono novo = Dono.builder()
-                .nome("Marcos")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("111111")
-                .build();
-        Dono retorno = repo.save(novo);
-
-        //Ação
-        repo.delete(retorno);
-
-        //Verificação
-        Optional<Dono> temp = repo.findById(retorno.getDonoId());
-        Assertions.assertFalse(temp.isPresent());
-    }
-
-    @Test
-    public void deveBuscarDono(){
-        //Cenário
-        Dono novo = Dono.builder()
-                .nome("Marcos")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("111111").build();
-        Dono retorno = repo.save(novo);
-
-        //Ação
-        Optional<Dono> temp = repo.findById(retorno.getDonoId());
-
-        //Verificação
-        Assertions.assertTrue(temp.isPresent());
-
-        //Rollback
-        repo.delete(retorno);
+    public void deveSalvarModel(){
+        Dono donoSalvo = donoRepo.save(getDonoInstance(false));
+        Assertions.assertNotNull(donoSalvo);
+        Assertions.assertEquals(getDonoInstance(false).getNome(), donoSalvo.getNome());
+        donoRepo.delete(donoSalvo);
     }
 
     @Test
     public void deveAtualizar(){
-        //Cenário
-        Dono novo = Dono.builder()
-                .nome("Marcos")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("111111").build();
-        Dono retorno = repo.save(novo);
+        Dono donoSalvo = donoRepo.save(getDonoInstance(false));
+        donoSalvo.setNome("Novo nome");
+        Dono donoAtualizado = donoRepo.save(donoSalvo);
+        Assertions.assertNotNull(donoAtualizado);
+        Assertions.assertEquals(donoAtualizado.getDonoId(), donoSalvo.getDonoId());
+        donoRepo.delete(donoSalvo);
+    }
 
-        //Ação
-        retorno.setNome("Novo nome");
-        Dono atualizado = repo.save(retorno);
+    @Test
+    public void deveRemoverModel(){
+        Dono donoSalvo = donoRepo.save(getDonoInstance(false));
+        Long id = donoSalvo.getDonoId();
+        donoRepo.deleteById(id);
+        Assertions.assertFalse(donoRepo.findById(id).isPresent());
+    }
 
-        //Verificação
-        Assertions.assertNotNull(atualizado);
-        Assertions.assertEquals(atualizado.getDonoId(), retorno.getDonoId());
-
-        //Rollback
-        repo.delete(retorno);
+    @Test
+    public void deveBuscarModel(){
+        Dono donoSalvo = donoRepo.save(getDonoInstance(false));
+        Long id = donoSalvo.getDonoId();
+        Assertions.assertTrue(donoRepo.findById(id).isPresent());
+        donoRepo.delete(donoSalvo);
     }
 }

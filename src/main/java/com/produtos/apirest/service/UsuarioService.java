@@ -29,8 +29,8 @@ public class UsuarioService {
             throw  new RegraNegocioRunTime("Nome de usuário não pode ser nulo!");
         if (usuario.getSenha() == null)
             throw new RegraNegocioRunTime("Senha não pode ser nula!");
-        if (usuario.getNivel() == null)
-            throw new RegraNegocioRunTime("Nivel de usuário não pode ser nulo!");
+        if (usuario.getRoles().isEmpty())
+            throw new RegraNegocioRunTime("As roles do usuário não podem ser nulas!");
     }
 
     public static void verificaId(Usuario usuario){
