@@ -81,7 +81,7 @@ public class AreaControllerTeste {
     @WithUserDetails("Admin")
     public void deveRemoverController() throws Exception{
         Long id = Long.valueOf(1);
-        doNothing().when(areaService).remover(isA(Long.class));
+        doNothing().when(areaService).removerPorId(isA(Long.class));
         MockHttpServletRequestBuilder request = request(HttpMethod.DELETE, API.concat("/remover/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk())

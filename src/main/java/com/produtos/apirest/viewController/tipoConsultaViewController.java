@@ -52,8 +52,7 @@ public class tipoConsultaViewController {
     @PreAuthorize("hasRole('A')")
     @GetMapping("/tipoConsulta/remover/{id}")
     public String tipoConsultaRemover(@PathVariable(value = "id", required = true) Long id){
-        TipoConsulta tipoFind = tipoService.buscarPorId(id);
-        tipoService.remover(tipoFind);
+        tipoService.removerPorId(id);
         return "redirect:/tipoConsulta/tipoConsultaList";
     }
 

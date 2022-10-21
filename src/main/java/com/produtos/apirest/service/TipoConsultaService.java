@@ -48,10 +48,9 @@ public class TipoConsultaService {
     }
 
     @Transactional
-    public void remover(TipoConsulta tipo){
-        verificaTipoConsulta(tipo);
-        verificaId(tipo);
-        repo.delete(tipo);
+    public void removerPorId(Long id){
+        verificaId(id);
+        repo.deleteById(id);
     }
 
     @Transactional

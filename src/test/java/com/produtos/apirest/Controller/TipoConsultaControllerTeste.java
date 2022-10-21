@@ -68,7 +68,7 @@ public class TipoConsultaControllerTeste {
     @Test
     public void deveRemoverPorIdController() throws Exception{
         Long id = Long.valueOf(1);
-        Mockito.doNothing().when(tipoConsultaService).remover(Mockito.any(TipoConsulta.class));
+        Mockito.doNothing().when(tipoConsultaService).removerPorId(Mockito.anyLong());
         Mockito.when(tipoConsultaService.buscarPorId(Mockito.anyLong())).thenReturn(getTipoConsultaInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.DELETE, API.concat("/remover/").concat(String.valueOf(id)));
         mvc.perform(request)

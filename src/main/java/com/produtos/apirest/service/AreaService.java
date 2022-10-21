@@ -5,6 +5,7 @@ import com.produtos.apirest.models.Especialidade;
 import com.produtos.apirest.repository.AreaRepo;
 import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
 import org.hibernate.Hibernate;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -48,9 +49,16 @@ public class AreaService {
     }
 
     @Transactional
-    public void remover(Long id){
+    public void removerPorId(Long id){
         verificaId(id);
         repo.deleteById(id);
+    }
+
+    @Transactional
+    public void remover(Area area){
+        verificaArea(area);
+        verificaId(area);
+        repo.delete(area);
     }
 
     @Transactional

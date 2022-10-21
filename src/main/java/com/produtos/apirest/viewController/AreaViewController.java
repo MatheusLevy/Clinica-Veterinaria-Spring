@@ -69,7 +69,7 @@ public class AreaViewController {
     @PreAuthorize("hasRole('A')")
     @GetMapping("/area/remover/{id}")
     public String areaRemover(@PathVariable(value = "id", required = true) Long id){
-        areaService.remover(id);
+        areaService.removerPorId(id);
         return "redirect:/area/areaList";
     }
 

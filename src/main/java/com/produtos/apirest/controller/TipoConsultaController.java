@@ -39,8 +39,7 @@ public class TipoConsultaController {
     @DeleteMapping("/remover/{id}")
     public ResponseEntity removerComId(@PathVariable(value = "id", required = true) Long id){
         try {
-            TipoConsulta tipoBuscado = tipoService.buscarPorId(id);
-            tipoService.remover(tipoBuscado);
+            tipoService.removerPorId(id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());

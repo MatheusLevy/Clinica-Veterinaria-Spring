@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-import java.util.Optional;
+
+import static com.produtos.apirest.Serviços.EspecialidadeServiceTeste.generateEspecialidade;
+import static com.produtos.apirest.Serviços.EspecialidadeServiceTeste.rollbackEspecialidade;
 
 @SpringBootTest
 public class AreaServiceTeste {
@@ -24,146 +26,94 @@ public class AreaServiceTeste {
     @Autowired
     public EspecialidadeRepo especialidadeRepo;
 
+
+    protected static Area generateArea(){
+        return Area.builder()
+                .nome("nome")
+                .build();
+    }
+
+    private void rollback(Area area){
+        areaRepo.delete(area);
+    }
+
+    protected static void rollbackArea(Area area, AreaRepo areaRepo){
+        areaRepo.delete(area);
+    }
+
     @Test
     public void deveSalvar(){
-        //Cenário
-        Area area = Area.builder()
-                .nome("Area Teste")
-                .build();
-
-        //Ação
-        Area arearetorno = areaService.salvar(area);
-
-        //Verificação
-        Assertions.assertNotNull(arearetorno);
-        Assertions.assertNotNull(arearetorno.getAreaId());
-
-        //Rollback
-        areaRepo.delete(arearetorno);
+        Area areaSalva = areaService.salvar(generateArea());
+        Assertions.assertNotNull(areaSalva);
+        Assertions.assertNotNull(areaSalva.getAreaId());
+        rollback(areaSalva);
     }
 
     @Test
     public void deveAtualizar(){
-        //Cenário
-        Area area = Area.builder()
-                .nome("Area Teste")
-                .build();
-        Area arearetorno = areaRepo.save(area);
-
-        //Ação
-        arearetorno.setNome("Area Atualizada");
-        Area areaAtualizada = areaService.atualizar(arearetorno);
-
-        //Verificação
+        Area areaSalva = areaRepo.save(generateArea());
+        areaSalva.setNome("Area Atualizada");
+        Area areaAtualizada = areaService.atualizar(areaSalva);
         Assertions.assertNotNull(areaAtualizada);
-        Assertions.assertEquals(arearetorno.getAreaId(), areaAtualizada.getAreaId());
-
-        //Rollback
-        areaRepo.delete(areaAtualizada);
+        Assertions.assertEquals(areaSalva.getAreaId(), areaAtualizada.getAreaId());
+        rollback(areaAtualizada);
     }
 
     @Test
     public void deveRemover(){
-        //Cenário
-        Area area = Area.builder()
-                .nome("Area Teste")
-                .build();
-        Area arearetorno = areaRepo.save(area);
+        Area areaSalva = areaRepo.save(generateArea());
+        Long id = areaSalva.getAreaId();
+        areaService.remover(areaSalva);
+        Assertions.assertFalse(areaRepo.findById(id).isPresent());
+    }
 
-        //Ação
-        areaService.remover(arearetorno.getAreaId());
-
-        //Verificação
-        Optional<Area> areaTemp = areaRepo.findById(arearetorno.getAreaId());
-        Assertions.assertFalse(areaTemp.isPresent());
+    @Test
+    public void deveRemoverPorId(){
+        Area areSalva = areaRepo.save(generateArea());
+        Long id = areSalva.getAreaId();
+        areaService.removerPorId(id);
+        Assertions.assertFalse(areaRepo.findById(id).isPresent());
     }
 
     @Test
     public void deveRemovercomFeedback(){
-        //Cenário
-        Area area = Area.builder()
-                .nome("Area Teste")
-                .build();
-        Area arearetorno = areaRepo.save(area);
-
-        //Ação
-        Area areaRemovida = areaService.removerFeedback(arearetorno.getAreaId());
-
-        //Verificação
-        Assertions.assertNotNull(areaRemovida);
-        Assertions.assertEquals(areaRemovida.getAreaId(), arearetorno.getAreaId());
+        Area areaSalva = areaRepo.save(generateArea());
+        Area areaFeedback = areaService.removerFeedback(areaSalva.getAreaId());
+        Assertions.assertNotNull(areaFeedback);
+        Assertions.assertEquals(areaFeedback.getAreaId(), areaSalva.getAreaId());
     }
 
 
     @Test
-    public void deveBuscarAreaPorId(){
-        //Cenário
-        Area area = Area.builder()
-                .nome("Area Teste")
-                .build();
-        Area arearetorno = areaRepo.save(area);
-
-        //Ação
-        Area areaBuscada = areaService.buscarPorId(arearetorno.getAreaId());
-
-        //Verificação
-        Assertions.assertNotNull(areaBuscada);
-        Assertions.assertEquals(arearetorno.getAreaId(), areaBuscada.getAreaId());
-        Assertions.assertEquals(arearetorno.getNome(), areaBuscada.getNome());
-
-        //Rollback
-        areaRepo.delete(areaBuscada);
+    public void deveBuscarPorId(){
+        Area areaSalva = areaRepo.save(generateArea());
+        Area AreaEncontrada = areaService.buscarPorId(areaSalva.getAreaId());
+        Assertions.assertNotNull(AreaEncontrada);
+        Assertions.assertEquals(areaSalva.getAreaId(), AreaEncontrada.getAreaId());
+        Assertions.assertEquals(areaSalva.getNome(), AreaEncontrada.getNome());
+        rollback(areaSalva);
     }
 
     @Test
     public void deveBuscar(){
-        //Cenário
-        Area area = Area.builder()
-                .nome("Area Teste")
-                .build();
-        Area arearetorno = areaRepo.save(area);
-
-        //Ação
+        Area areaSalva = areaRepo.save(generateArea());
         Area filtro = Area.builder()
-                .areaId(arearetorno.getAreaId())
-                .nome(arearetorno.getNome())
+                .areaId(areaSalva.getAreaId())
+                .nome(areaSalva.getNome())
                 .build();
-        List<Area> areas = areaService.buscar(filtro);
-
-        //Verificação
-        Assertions.assertFalse(areas.isEmpty());
-
-        //Rollback
-        areaRepo.delete(arearetorno);
+        Assertions.assertFalse(areaService.buscar(filtro).isEmpty());
+        rollback(areaSalva);
     }
 
     @Test
     public void deveBuscarTodasEspecialidades(){
-        //Cenário
-        Area area = Area.builder()
-                .nome("Area Teste")
-                .build();
-        Area areaRetorno = areaRepo.save(area);
-
-        Especialidade especialidade1 = Especialidade.builder()
-                .nome("Especialidade 1T")
-                .area(areaRetorno)
-                .build();
-        Especialidade especialidade2 = Especialidade.builder()
-                .nome("Especialidade 2T")
-                .area(areaRetorno)
-                .build();
-        Especialidade especialidade1retorno =  especialidadeRepo.save(especialidade1);
-        Especialidade especialidade2retorno =  especialidadeRepo.save(especialidade2);
-
-        //Ação
-        List<Especialidade> especialidades = areaService.buscarTodasEspecialidades(areaRetorno);
-
-        //Verificação
-        Assertions.assertFalse(especialidades.isEmpty());
-        especialidadeRepo.delete(especialidade1retorno);
-        especialidadeRepo.delete(especialidade2retorno);
-        areaRepo.delete(areaRetorno);
+        Area areaSalva = areaRepo.save(generateArea());
+        Especialidade especialidadeComAreaNaoSalva = generateEspecialidade(false, areaRepo);
+        especialidadeComAreaNaoSalva.setArea(areaSalva);
+        Especialidade especialidadeComAreaSalva = especialidadeComAreaNaoSalva;
+        especialidadeRepo.save(especialidadeComAreaSalva);
+        List<Especialidade> especialidadeList = areaService.buscarTodasEspecialidades(areaSalva);
+        Assertions.assertFalse(especialidadeList.isEmpty());
+        rollbackEspecialidade(especialidadeComAreaSalva, especialidadeRepo, areaRepo);
     }
 }
-
