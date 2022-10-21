@@ -39,7 +39,7 @@ public class TipoConsultaController {
     @DeleteMapping("/remover/{id}")
     public ResponseEntity removerComId(@PathVariable(value = "id", required = true) Long id){
         try {
-            TipoConsulta tipoBuscado = tipoService.buscarTipoConsultaPorId(id);
+            TipoConsulta tipoBuscado = tipoService.buscarPorId(id);
             tipoService.remover(tipoBuscado);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (Exception e){
@@ -51,7 +51,7 @@ public class TipoConsultaController {
     @DeleteMapping("/remover/feedback/{id}")
     public ResponseEntity removerComFeedback(@PathVariable(value = "id", required = true) Long id){
         try{
-            TipoConsulta tipoRemovido = tipoService.removerFeedback(id);
+            TipoConsulta tipoRemovido = tipoService.removerComFeedback(id);
             TipoConsultaDTO dtoRetorno = TipoConsultaDTO.builder()
                     .id(tipoRemovido.getTipoConsultaId())
                     .nome(tipoRemovido.getNome())
@@ -67,7 +67,7 @@ public class TipoConsultaController {
     @GetMapping("/buscar/{id}")
     public ResponseEntity buscarPorId(@PathVariable(value = "id", required = true) Long id){
         try{
-            TipoConsulta tipoBuscado = tipoService.buscarTipoConsultaPorId(id);
+            TipoConsulta tipoBuscado = tipoService.buscarPorId(id);
             TipoConsultaDTO dtoRetorno = TipoConsultaDTO.builder()
                     .id(tipoBuscado.getTipoConsultaId())
                     .nome(tipoBuscado.getNome())

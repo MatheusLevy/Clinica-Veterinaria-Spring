@@ -56,25 +56,25 @@ public class EspecialidadeService {
     }
 
     @Transactional
-    public Especialidade atualizarArea(Especialidade especialidade, Area area){
-        verificaEspecialidade(especialidade);
-        verificaId(especialidade);
-        AreaService.verificaArea(area);
-        AreaService.verificaId(area);
+    public Especialidade atualizarArea(Especialidade destino, Area areaNova){
+        verificaEspecialidade(destino);
+        verificaId(destino);
+        AreaService.verificaArea(areaNova);
+        AreaService.verificaId(areaNova);
 
-        Optional<Especialidade> especialidadeTemp = repo.findById(especialidade.getEspecialidadeId());
-        if (!especialidadeTemp.isPresent())
+        Optional<Especialidade> especialidadesOptional = repo.findById(destino.getEspecialidadeId());
+        if (!especialidadesOptional.isPresent())
             throw new RegraNegocioRunTime("Não foi possivel encontrar a Especialidade");
 
-        Optional<Area> areaTemp = areaRepo.findById(area.getAreaId());
-        if (!areaTemp.isPresent())
+        Optional<Area> areasOptional = areaRepo.findById(areaNova.getAreaId());
+        if (!areasOptional.isPresent())
             throw new RegraNegocioRunTime("Não foi possivel encontrar a Especialidade");
 
-        Especialidade especialidade1 = especialidadeTemp.get();
-        Area area1 = areaTemp.get();
+        Especialidade especialidadeDestinoEncontrada = especialidadesOptional.get();
+        Area areaNovaEncontrada = areasOptional.get();
 
-        especialidade1.setArea(area1);
-        return repo.save(especialidade1);
+        especialidadeDestinoEncontrada.setArea(areaNovaEncontrada);
+        return repo.save(especialidadeDestinoEncontrada);
     }
 
     @Transactional
@@ -87,10 +87,9 @@ public class EspecialidadeService {
     @Transactional
     public Especialidade removerFeedback(Long id){
         verificaId(id);
-        Optional<Especialidade> especialidadeRemover = repo.findById(id);
-        Especialidade especialidadeTemp = especialidadeRemover.get();
-        repo.delete(especialidadeTemp);
-        return especialidadeTemp;
+        Especialidade especialidadeFeedback = repo.findById(id).get();
+        repo.delete(especialidadeFeedback);
+        return especialidadeFeedback;
     }
 
     @Transactional
@@ -100,7 +99,7 @@ public class EspecialidadeService {
     }
 
     @Transactional
-    public Especialidade buscarEspecialidadePorId(Long id){
+    public Especialidade buscarPorId(Long id){
         verificaId(id);
         return repo.findById(id).get();
     }
@@ -119,5 +118,4 @@ public class EspecialidadeService {
     public List<Especialidade> buscarTodos(){
         return repo.findAll();
     }
-
 }

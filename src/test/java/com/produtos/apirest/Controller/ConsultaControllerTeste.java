@@ -92,7 +92,7 @@ public class ConsultaControllerTeste {
 
         //Mock dos Serviços
         Mockito.when(consultaService.salvar(Mockito.any(Consulta.class))).thenReturn(consulta);
-        Mockito.when(tipoConsultaService.buscarTipoConsultaPorId(Mockito.anyLong())).thenReturn(tipoConsulta);
+        Mockito.when(tipoConsultaService.buscarPorId(Mockito.anyLong())).thenReturn(tipoConsulta);
         Mockito.when(animalService.buscarPorId(Mockito.anyLong())).thenReturn(animal);
         Mockito.when(veterinarioService.buscarPorId(Mockito.anyLong())).thenReturn(veterinario);
 
@@ -211,7 +211,7 @@ public class ConsultaControllerTeste {
                 .build();
 
         //Mock Serviço
-        Mockito.when(consultaService.removerFeedback(Mockito.anyLong())).thenReturn(consulta);
+        Mockito.when(consultaService.removerComFeedback(Mockito.anyLong())).thenReturn(consulta);
 
         //Requisição
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders

@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.Optional;
@@ -104,7 +103,7 @@ public class DonoServiceTeste {
         Dono donoRetorno = donoRepo.save(dono);
 
         //Ação
-        Dono donoRemovido = donoService.removerFeedback(donoRetorno.getDonoId());
+        Dono donoRemovido = donoService.removerComFeedback(donoRetorno.getDonoId());
 
         //Verificação
         Assertions.assertNotNull(donoRemovido);
@@ -140,7 +139,7 @@ public class DonoServiceTeste {
         Dono donoRetorno = donoRepo.save(dono);
 
         //Ação
-        Dono donoBuscado = donoService.buscarDonoPorId(donoRetorno.getDonoId());
+        Dono donoBuscado = donoService.buscarPorId(donoRetorno.getDonoId());
 
         //Verificação
         Assertions.assertNotNull(donoBuscado);

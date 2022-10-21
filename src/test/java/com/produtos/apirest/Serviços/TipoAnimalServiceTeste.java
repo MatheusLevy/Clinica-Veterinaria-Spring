@@ -82,7 +82,7 @@ public class TipoAnimalServiceTeste {
         TipoAnimal tipoAnimalRetorno = tipoAnimalRepo.save(tipoAnimal);
 
         //Ação
-        TipoAnimal tipoRemovido = tipoAnimalService.removerFeedback(tipoAnimalRetorno.getTipoAnimalId());
+        TipoAnimal tipoRemovido = tipoAnimalService.removerComFeedback(tipoAnimalRetorno.getTipoAnimalId());
 
         //Verificação
         Assertions.assertNotNull(tipoRemovido);
@@ -114,7 +114,7 @@ public class TipoAnimalServiceTeste {
         TipoAnimal tipoAnimalRetorno = tipoAnimalRepo.save(tipoAnimal);
 
         //Ação
-        TipoAnimal TipoAnimalBuscado = tipoAnimalService.buscarTipoAnimalPorId(tipoAnimalRetorno.getTipoAnimalId());
+        TipoAnimal TipoAnimalBuscado = tipoAnimalService.buscarPorId(tipoAnimalRetorno.getTipoAnimalId());
 
         //Verificação
         Assertions.assertNotNull(TipoAnimalBuscado);

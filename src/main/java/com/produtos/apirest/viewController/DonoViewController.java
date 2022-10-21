@@ -5,7 +5,6 @@ import com.produtos.apirest.service.DonoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -52,7 +51,7 @@ public class DonoViewController {
     @PreAuthorize("hasRole('S')")
     @GetMapping("/dono/atualizar/{id}")
     public ModelAndView donoAtualizar(@PathVariable(value = "id", required = true) Long id){
-        Dono donoFind = donoService.buscarDonoPorId(id);
+        Dono donoFind = donoService.buscarPorId(id);
         ModelAndView mv = new ModelAndView("/dono/donoCadastro");
         mv.addObject("dono", donoFind);
         return mv;
@@ -61,7 +60,7 @@ public class DonoViewController {
     @PreAuthorize("hasRole('S')")
     @GetMapping("/dono/remover/{id}")
     public String donoRemover(@PathVariable(value = "id", required = true) Long id){
-        Dono donoFind = donoService.buscarDonoPorId(id);
+        Dono donoFind = donoService.buscarPorId(id);
         donoService.removerPorId(donoFind.getDonoId());
         return "redirect:/dono/donoList";
     }

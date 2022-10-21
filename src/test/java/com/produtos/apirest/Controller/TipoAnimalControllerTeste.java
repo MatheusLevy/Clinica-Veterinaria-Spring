@@ -80,7 +80,7 @@ public class TipoAnimalControllerTeste {
     @Test
     public void deveRemoverComFeedbackController() throws Exception{
         Long id = Long.valueOf(1);
-        Mockito.when(tipoAnimalService.removerFeedback(Mockito.anyLong())).thenReturn(getTipoAnimalInstance());
+        Mockito.when(tipoAnimalService.removerComFeedback(Mockito.anyLong())).thenReturn(getTipoAnimalInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.DELETE, API.concat("/remover/feedback/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -90,7 +90,7 @@ public class TipoAnimalControllerTeste {
     @Test
     public void deveBuscarPorIdController() throws Exception{
         Long id = Long.valueOf(1);
-        Mockito.when(tipoAnimalService.buscarTipoAnimalPorId(Mockito.anyLong())).thenReturn(getTipoAnimalInstance());
+        Mockito.when(tipoAnimalService.buscarPorId(Mockito.anyLong())).thenReturn(getTipoAnimalInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.GET, API.concat("/buscarPorId/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());

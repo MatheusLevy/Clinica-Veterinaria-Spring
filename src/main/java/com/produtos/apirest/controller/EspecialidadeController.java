@@ -1,9 +1,7 @@
 package com.produtos.apirest.controller;
 
 import com.produtos.apirest.models.Area;
-import com.produtos.apirest.models.DTO.DonoDTO;
 import com.produtos.apirest.models.DTO.EspecialidadeDTO;
-import com.produtos.apirest.models.Dono;
 import com.produtos.apirest.models.Especialidade;
 import com.produtos.apirest.service.AreaService;
 import com.produtos.apirest.service.EspecialidadeService;
@@ -40,7 +38,7 @@ public class EspecialidadeController {
     @PostMapping("/salvar")
     public ResponseEntity salvar(@RequestBody EspecialidadeDTO dto){
         try {
-            Area areaBuscada = areaService.buscarAreaPorId(dto.getIdArea());
+            Area areaBuscada = areaService.buscarPorId(dto.getIdArea());
 
             Especialidade especialidade = Especialidade.builder()
                     .nome(dto.getNome())
@@ -85,7 +83,7 @@ public class EspecialidadeController {
     @DeleteMapping("/remover/{id}")
     public ResponseEntity remover(@PathVariable(value = "id", required = true) Long id){
         try {
-            Especialidade especialidadeBuscada = especialidadeService.buscarEspecialidadePorId(id);
+            Especialidade especialidadeBuscada = especialidadeService.buscarPorId(id);
             especialidadeService.remover(especialidadeBuscada);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (Exception e){
@@ -114,7 +112,7 @@ public class EspecialidadeController {
     @GetMapping("/buscar/{id}")
     public ResponseEntity buscarPorId(@PathVariable(value = "id", required = true) Long id){
         try {
-            Especialidade especialidadeBuscada = especialidadeService.buscarEspecialidadePorId(id);
+            Especialidade especialidadeBuscada = especialidadeService.buscarPorId(id);
 
             EspecialidadeDTO especialidadeDTO = EspecialidadeDTO.builder()
                     .nome(especialidadeBuscada.getNome())

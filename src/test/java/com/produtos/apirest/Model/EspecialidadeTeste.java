@@ -1,7 +1,6 @@
 package com.produtos.apirest.Model;
 
 import com.produtos.apirest.models.Area;
-import com.produtos.apirest.models.Dono;
 import com.produtos.apirest.models.Especialidade;
 import com.produtos.apirest.repository.AreaRepo;
 import com.produtos.apirest.repository.EspecialidadeRepo;
@@ -9,152 +8,96 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.util.Assert;
 
-import java.util.Optional;
+import static com.produtos.apirest.Model.AreaTeste.generateArea;
+import static com.produtos.apirest.Model.AreaTeste.rollbackArea;
 
 @SpringBootTest
 public class EspecialidadeTeste {
     @Autowired
-    public EspecialidadeRepo repoEspecialidade;
+    public EspecialidadeRepo especialidadeRepo;
 
     @Autowired
-    public AreaRepo repoArea;
+    public AreaRepo areaRepo;
 
-    @Test
-    public void deveCriarEspecialidade(){
-        //Cenário
-        Area novaArea = Area.builder()
-                .nome("Cirurgia Geral")
+    private Especialidade generateEspecialidade(Boolean inicializeArea){
+         Especialidade especialidade =  Especialidade.builder()
+                .nome("nome")
+                .area(generateArea())
                 .build();
-        Area retornoArea = repoArea.save(novaArea);
+         if (inicializeArea)
+             especialidade.setArea(areaRepo.save(especialidade.getArea()));
+         return especialidade;
+    }
 
-        Especialidade novaEspecialidade = Especialidade.builder()
-                .nome("Ortopedia")
-                .area(retornoArea)
+    protected static Especialidade generateEspecialidade(Boolean inicializeArea, AreaRepo areaRepo){
+        Especialidade especialidade =  Especialidade.builder()
+                .nome("nome")
+                .area(generateArea())
                 .build();
+        if (inicializeArea)
+            especialidade.setArea(areaRepo.save(especialidade.getArea()));
+        return especialidade;
+    }
 
-        //Ação
-        Especialidade retornoEspecialidade = repoEspecialidade.save(novaEspecialidade);
+    private void rollback(Especialidade especialidade){
+        especialidadeRepo.delete(especialidade);
+        areaRepo.delete(especialidade.getArea());
+    }
 
-        //Verificação
-        Assertions.assertNotNull(retornoEspecialidade);
-        Assertions.assertEquals(retornoEspecialidade.getNome(), novaEspecialidade.getNome());
-
-        //RollBack
-        repoEspecialidade.delete(retornoEspecialidade);
-        repoArea.delete(retornoArea);
+    protected static void rollbackEspecialidade(Especialidade especialidade,
+                                                EspecialidadeRepo especialidadeRepo,
+                                                AreaRepo areaRepo){
+        especialidadeRepo.delete(especialidade);
+        areaRepo.delete(especialidade.getArea());
     }
 
     @Test
-    public void deveRemoverEspecialidade() {
-        //Cenário
-        Area novaArea = Area.builder()
-                .nome("Cirurgia Geral")
-                .build();
-        Area retornoArea = repoArea.save(novaArea);
-
-        Especialidade novaEspecialidade = Especialidade.builder()
-                .nome("Ortopedia")
-                .area(retornoArea)
-                .build();
-        Especialidade retornoEspecialidade = repoEspecialidade.save(novaEspecialidade);
-
-        //Ação
-        repoEspecialidade.delete(retornoEspecialidade);
-
-        //Verificação
-        Optional<Especialidade> temp = repoEspecialidade.findById(retornoEspecialidade.getEspecialidadeId());
-        Assertions.assertFalse(temp.isPresent());
-
-        //RollBack
-        repoArea.delete(retornoArea);
-    }
-
-
-    @Test
-    public void deveBuscar(){
-        //Cenário
-        Area novaArea = Area.builder()
-                .nome("Cirurgia Geral")
-                .build();
-        Area retornoArea = repoArea.save(novaArea);
-
-        Especialidade novaEspecialidade = Especialidade.builder()
-                .nome("Ortopedia")
-                .area(retornoArea)
-                .build();
-        Especialidade retornoEspecialidade = repoEspecialidade.save(novaEspecialidade);
-
-        //Ação
-        Optional<Especialidade> temp = repoEspecialidade.findById(retornoEspecialidade.getEspecialidadeId());
-
-        //Verificação
-        Assertions.assertTrue(temp.isPresent());
-
-        //Rollback
-        repoEspecialidade.delete(retornoEspecialidade);
-        repoArea.delete(retornoArea);
-    }
-    @Test
-    public void deveAtualizar(){
-        //Cenário
-        Area novaArea = Area.builder()
-                .nome("Cirurgia Geral")
-                .build();
-        Area retornoArea = repoArea.save(novaArea);
-
-        Especialidade novaEspecialidade = Especialidade.builder()
-                .nome("Ortopedia")
-                .area(retornoArea)
-                .build();
-        Especialidade retornoEspecialidade = repoEspecialidade.save(novaEspecialidade);
-
-        //Ação
-        retornoEspecialidade.setNome("Nome Atualizado");
-        Especialidade atualizado = repoEspecialidade.save(retornoEspecialidade);
-
-        //Verificação
-        Assertions.assertNotNull(atualizado);
-        Assertions.assertEquals(retornoEspecialidade.getEspecialidadeId(), atualizado.getEspecialidadeId());
-        Assertions.assertEquals(atualizado.getNome(),  "Nome Atualizado");
-
-        //Rollback
-        repoEspecialidade.delete(atualizado);
-        repoArea.delete(retornoArea);
+    public void deveSalvarModel(){
+        Especialidade especialidadeSalva = especialidadeRepo.save(generateEspecialidade(true));
+        Assertions.assertNotNull(especialidadeSalva);
+        Assertions.assertEquals(especialidadeSalva.getNome(), generateEspecialidade(false).getNome());
+        rollback(especialidadeSalva);
     }
 
     @Test
-    public void deveAtualizarArea(){
-        //Cenário
-        Area novaArea = Area.builder()
-                .nome("Cirurgia Geral")
-                .build();
-        Area retornoArea = repoArea.save(novaArea);
+    public void deveAtualizarModel(){
+        Especialidade especialidadeSalva = especialidadeRepo.save(generateEspecialidade(true));
+        especialidadeSalva.setNome("Nome Atualizado");
+        Especialidade especialidadeAtualizada = especialidadeRepo.save(especialidadeSalva);
+        Assertions.assertNotNull(especialidadeAtualizada);
+        Assertions.assertEquals(especialidadeSalva.getEspecialidadeId(), especialidadeAtualizada.getEspecialidadeId());
+        Assertions.assertEquals(especialidadeAtualizada.getNome(),  "Nome Atualizado");
+        rollback(especialidadeAtualizada);
+    }
 
-        Area outraArea = Area.builder()
-                .nome("Outra Area")
-                .build();
-        Area retornoOutraArea = repoArea.save(outraArea);
+    @Test
+    public void deveAtualizarAreaModel(){
+        Especialidade especialidadeSalva = especialidadeRepo.save(generateEspecialidade(true));
+        Area areaAntiga = especialidadeSalva.getArea();
+        especialidadeSalva.setArea(areaRepo.save(generateArea()));
+        Especialidade especialiadeAtualizada = especialidadeRepo.save(especialidadeSalva);
+        Assertions.assertNotNull(especialiadeAtualizada);
+        Assertions.assertEquals(especialiadeAtualizada.getEspecialidadeId(), especialidadeSalva.getEspecialidadeId());
+        Assertions.assertEquals(especialiadeAtualizada.getArea().getAreaId(), especialidadeSalva.getArea().getAreaId());
+        rollback(especialiadeAtualizada);
+        rollbackArea(areaAntiga, areaRepo);
+    }
 
-        Especialidade novaEspecialidade = Especialidade.builder()
-                .nome("Ortopedia")
-                .area(retornoArea)
-                .build();
-        Especialidade retornoEspecialidade = repoEspecialidade.save(novaEspecialidade);
+    @Test
+    public void deveRemoverModel() {
+        Especialidade especialidadeSalva = especialidadeRepo.save(generateEspecialidade(true));
+        Long id = especialidadeSalva.getEspecialidadeId();
+        especialidadeRepo.deleteById(id);
+        Assertions.assertFalse(especialidadeRepo.findById(id).isPresent());
+        rollbackArea(especialidadeSalva.getArea(), areaRepo);
+    }
 
-        //Ação
-        retornoEspecialidade.setArea(retornoOutraArea);
-        Especialidade atualizado = repoEspecialidade.save(retornoEspecialidade);
-
-        //Verificação
-        Assertions.assertNotNull(atualizado);
-        Assertions.assertEquals(atualizado.getEspecialidadeId(), retornoEspecialidade.getEspecialidadeId());
-        Assertions.assertEquals(atualizado.getArea().getAreaId(), retornoOutraArea.getAreaId());
-
-        //Rollback
-        repoEspecialidade.delete(atualizado);
-        repoArea.delete(retornoArea);
-        repoArea.delete(retornoOutraArea);
+    @Test
+    public void deveBuscarModel(){
+        Especialidade especialidadeSalva = especialidadeRepo.save(generateEspecialidade(true));
+        Long id = especialidadeSalva.getEspecialidadeId();
+        Assertions.assertTrue(especialidadeRepo.findById(id).isPresent());
+        rollback(especialidadeSalva);
     }
 }

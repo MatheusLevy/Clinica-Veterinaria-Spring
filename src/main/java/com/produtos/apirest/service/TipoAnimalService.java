@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TipoAnimalService {
@@ -34,6 +33,7 @@ public class TipoAnimalService {
         if(Long.valueOf(id) == null)
             throw new RegraNegocioRunTime("Tipo de Animal deve ter um identificador!");
     }
+
     @Transactional
     public TipoAnimal salvar(TipoAnimal tipo){
         verificaTipoAnimal(tipo);
@@ -55,12 +55,11 @@ public class TipoAnimalService {
     }
 
     @Transactional
-    public TipoAnimal removerFeedback(Long id){
+    public TipoAnimal removerComFeedback(Long id){
         verificaId(id);
-        Optional<TipoAnimal> tipoRemover = repo.findById(id);
-        TipoAnimal tipoTemp = tipoRemover.get();
-        repo.delete(tipoTemp);
-        return tipoTemp;
+        TipoAnimal tipoAnimalFeedback = repo.findById(id).get();
+        repo.delete(tipoAnimalFeedback);
+        return tipoAnimalFeedback;
     }
 
     @Transactional
@@ -70,7 +69,7 @@ public class TipoAnimalService {
     }
 
     @Transactional
-    public TipoAnimal buscarTipoAnimalPorId(Long id){
+    public TipoAnimal buscarPorId(Long id){
         verificaId(id);
         return repo.findById(id).get();
     }

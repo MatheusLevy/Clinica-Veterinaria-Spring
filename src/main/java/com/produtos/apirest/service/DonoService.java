@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DonoService {
@@ -66,16 +65,15 @@ public class DonoService {
     }
 
     @Transactional
-    public Dono removerFeedback(Long id){
+    public Dono removerComFeedback(Long id){
         verificaId(id);
-        Optional<Dono> DonoRemover = repo.findById(id);
-        Dono DonoTemp = DonoRemover.get();
-        repo.delete(DonoTemp);
-        return DonoTemp;
+        Dono donoFeedback = repo.findById(id).get();
+        repo.delete(donoFeedback);
+        return donoFeedback;
     }
 
     @Transactional
-    public Dono buscarDonoPorId(Long id){
+    public Dono buscarPorId(Long id){
         verificaId(id);
         return repo.findById(id).get();
     }
@@ -99,14 +97,12 @@ public class DonoService {
     public List<Animal> buscarTodosAnimais(Long id){
         verificaId(id);
         try{
-            Optional<Dono> donoTemp = repo.findById(id);
-            Dono donoBuscado = donoTemp.get();
-            Hibernate.initialize(donoBuscado.getAnimais());
-            return donoBuscado.getAnimais();
+            Dono donoEncontrado = repo.findById(id).get();
+            Hibernate.initialize(donoEncontrado.getAnimais());
+            return donoEncontrado.getAnimais();
         } catch (Exception e){
             System.out.println(e);
             throw e;
         }
     }
-
 }

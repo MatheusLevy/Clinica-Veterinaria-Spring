@@ -1,11 +1,7 @@
 package com.produtos.apirest.viewController;
 
-import com.produtos.apirest.models.Animal;
 import com.produtos.apirest.models.Area;
-import com.produtos.apirest.models.DTO.AnimalDTO;
 import com.produtos.apirest.models.DTO.AreaDTO;
-import com.produtos.apirest.models.Dono;
-import com.produtos.apirest.models.TipoAnimal;
 import com.produtos.apirest.service.AreaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -58,7 +54,7 @@ public class AreaViewController {
     @PreAuthorize("hasRole('A')")
     @GetMapping("/area/atualizar/{id}")
     public ModelAndView animalAtualizar(@PathVariable(value = "id", required = true) Long id){
-        Area areaFind = areaService.buscarAreaPorId(id);
+        Area areaFind = areaService.buscarPorId(id);
 
         //AreaDTO
         AreaDTO dto = AreaDTO.builder()

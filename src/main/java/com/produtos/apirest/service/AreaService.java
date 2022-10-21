@@ -6,14 +6,12 @@ import com.produtos.apirest.repository.AreaRepo;
 import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AreaService {
@@ -58,14 +56,13 @@ public class AreaService {
     @Transactional
     public Area removerFeedback(Long id){
         verificaId(id);
-        Optional<Area> areaRemover = repo.findById(id);
-        Area areaTemp = areaRemover.get();
-        repo.delete(areaTemp);
-        return areaTemp;
+        Area areaFeedback = repo.findById(id).get();
+        repo.delete(areaFeedback);
+        return areaFeedback;
     }
 
     @Transactional
-    public Area buscarAreaPorId(Long id){
+    public Area buscarPorId(Long id){
         verificaId(id);
         return repo.findById(id).get();
     }
@@ -90,12 +87,11 @@ public class AreaService {
         verificaArea(area);
         verificaId(area);
         try {
-            Optional<Area> areaTemp = repo.findById(area.getAreaId());
-            Area areaBuscada = areaTemp.get();
-            Hibernate.initialize(areaBuscada.getEspecialidades());
-            verificaArea(areaBuscada);
-            verificaId(areaBuscada);
-            return areaBuscada.getEspecialidades();
+            Area areaEncontrada = repo.findById(area.getAreaId()).get();
+            Hibernate.initialize(areaEncontrada.getEspecialidades());
+            verificaArea(areaEncontrada);
+            verificaId(areaEncontrada);
+            return areaEncontrada.getEspecialidades();
         } catch (Exception e){
             System.out.println(e);
             throw e;

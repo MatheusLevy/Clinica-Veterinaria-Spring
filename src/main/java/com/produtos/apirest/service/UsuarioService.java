@@ -4,14 +4,11 @@ import com.produtos.apirest.models.Usuario;
 import com.produtos.apirest.repository.UsuarioRepo;
 import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UsuarioService {
@@ -22,6 +19,7 @@ public class UsuarioService {
     private BCryptPasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
     public static void verificaUsuario(Usuario usuario){
         if(usuario == null)
             throw new NullPointerException("Usuario não pode ser nulo!");
@@ -83,10 +81,9 @@ public class UsuarioService {
     @Transactional
     public Usuario removerComFeedback(Long id){
         verificaId(id);
-        Optional<Usuario> usariosList = usuarioRepo.findById(id);
-        Usuario usuarioRemovido = usariosList.get();
-        usuarioRepo.delete(usuarioRemovido);
-        return usuarioRemovido;
+        Usuario usuarioFeedback = usuarioRepo.findById(id).get();
+        usuarioRepo.delete(usuarioFeedback);
+        return usuarioFeedback;
     }
 
     @Transactional
@@ -99,5 +96,4 @@ public class UsuarioService {
     public List<Usuario> buscarTodos(){
         return usuarioRepo.findAll();
     }
-
 }

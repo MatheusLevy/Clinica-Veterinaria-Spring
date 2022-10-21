@@ -104,7 +104,7 @@ public class AreaServiceTeste {
         Area arearetorno = areaRepo.save(area);
 
         //Ação
-        Area areaBuscada = areaService.buscarAreaPorId(arearetorno.getAreaId());
+        Area areaBuscada = areaService.buscarPorId(arearetorno.getAreaId());
 
         //Verificação
         Assertions.assertNotNull(areaBuscada);

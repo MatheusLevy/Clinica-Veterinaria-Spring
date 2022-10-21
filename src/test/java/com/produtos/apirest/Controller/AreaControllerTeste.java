@@ -112,7 +112,7 @@ public class AreaControllerTeste {
     @WithUserDetails("Admin")
     public void deveBuscarPorIdController() throws Exception{
         Long id = Long.valueOf(1);
-        Mockito.when(areaService.buscarAreaPorId(Mockito.anyLong())).thenReturn(getAreaInstance());
+        Mockito.when(areaService.buscarPorId(Mockito.anyLong())).thenReturn(getAreaInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.GET, API.concat("/buscarId/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -122,7 +122,7 @@ public class AreaControllerTeste {
     @Test
     public void deveBuscarEspecialidadeController() throws Exception{
         Long id = Long.valueOf(1);
-        Mockito.when(areaService.buscarAreaPorId(Mockito.anyLong())).thenReturn(getAreaInstance());
+        Mockito.when(areaService.buscarPorId(Mockito.anyLong())).thenReturn(getAreaInstance());
         Mockito.when(areaService.buscarTodasEspecialidades(Mockito.any(Area.class))).thenReturn(getEspecialidadeListInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.GET, API.concat("/buscar/especialidades/").concat(String.valueOf(id)));
         mvc.perform(request)

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TipoConsultaService {
@@ -56,16 +55,15 @@ public class TipoConsultaService {
     }
 
     @Transactional
-    public TipoConsulta removerFeedback(Long id){
+    public TipoConsulta removerComFeedback(Long id){
         verificaId(id);
-        Optional<TipoConsulta> tipoRemover = repo.findById(id);
-        TipoConsulta tipoTemp = tipoRemover.get();
-        repo.delete(tipoTemp);
-        return tipoTemp;
+        TipoConsulta tipoConsultaFeedback = repo.findById(id).get();
+        repo.delete(tipoConsultaFeedback);
+        return tipoConsultaFeedback;
     }
 
     @Transactional
-    public TipoConsulta buscarTipoConsultaPorId(Long id){
+    public TipoConsulta buscarPorId(Long id){
         verificaId(id);
         return repo.findById(id).get();
     }
@@ -84,5 +82,4 @@ public class TipoConsultaService {
     public List<TipoConsulta> buscarTodos(){
         return repo.findAll();
     }
-
 }

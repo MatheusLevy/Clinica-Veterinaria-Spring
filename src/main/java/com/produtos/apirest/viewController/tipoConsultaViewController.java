@@ -43,7 +43,7 @@ public class tipoConsultaViewController {
     @GetMapping("/tipoConsulta/atualizar/{id}")
     public ModelAndView tipoConsultaAtualizar(@PathVariable(value = "id", required = true) Long id){
 
-        TipoConsulta tipoFind = tipoService.buscarTipoConsultaPorId(id);
+        TipoConsulta tipoFind = tipoService.buscarPorId(id);
         ModelAndView mv = new ModelAndView("/tipoConsulta/tipoConsultaCadastro");
         mv.addObject("tipoConsulta", tipoFind);
         return mv;
@@ -52,7 +52,7 @@ public class tipoConsultaViewController {
     @PreAuthorize("hasRole('A')")
     @GetMapping("/tipoConsulta/remover/{id}")
     public String tipoConsultaRemover(@PathVariable(value = "id", required = true) Long id){
-        TipoConsulta tipoFind = tipoService.buscarTipoConsultaPorId(id);
+        TipoConsulta tipoFind = tipoService.buscarPorId(id);
         tipoService.remover(tipoFind);
         return "redirect:/tipoConsulta/tipoConsultaList";
     }

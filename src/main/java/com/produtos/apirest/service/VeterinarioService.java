@@ -66,18 +66,17 @@ public class VeterinarioService {
     @Transactional
     public Veterinario removerComFeedback(Long id){
         verificaId(id);
-        Optional<Veterinario> VeterinarioRemover = repo.findById(id);
-        Veterinario VeterinarioTemp = VeterinarioRemover.get();
-        repo.delete(VeterinarioTemp);
-        return VeterinarioTemp;
+        Veterinario veterinarioFeedback = repo.findById(id).get();
+        repo.delete(veterinarioFeedback);
+        return veterinarioFeedback;
     }
-
 
     @Transactional
     public Veterinario buscarPorId(Long id){
         verificaId(id);
         return  repo.findById(id).get();
     }
+
     @Transactional
     public List<Veterinario> buscar(Veterinario filtro){
         if (filtro == null)
@@ -97,8 +96,9 @@ public class VeterinarioService {
     public Especialidade buscarEspecialidade(Veterinario veterinario){
         verificaVeterinario(veterinario);
         verificaId(veterinario);
-        Optional<Veterinario> veterinarioTemp = repo.findById(veterinario.getVeterinarioId());
-        return veterinarioTemp.get().getEspecialidade();
+        Long id = veterinario.getVeterinarioId();
+        Veterinario veterinarioAchado = repo.findById(veterinario.getVeterinarioId()).get();
+        return veterinarioAchado.getEspecialidade();
     }
 
     @Transactional
@@ -119,9 +119,6 @@ public class VeterinarioService {
         Veterinario veterinarioAtualizar = veterinarioTemp.get();
         Especialidade novaEspecialidade = especialidadeTemp.get();
         veterinarioAtualizar.setEspecialidade(novaEspecialidade);
-
         return  repo.save(veterinarioAtualizar);
     }
-
-
 }

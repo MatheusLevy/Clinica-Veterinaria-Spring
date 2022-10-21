@@ -200,7 +200,7 @@ public class EspecialidadeServiceTeste {
         Especialidade especialidadeRetorno = especialidadeRepo.save(especialidade);
 
         //Ação
-        Especialidade especialidadeBuscada = especialidadeService.buscarEspecialidadePorId(especialidadeRetorno.getEspecialidadeId());
+        Especialidade especialidadeBuscada = especialidadeService.buscarPorId(especialidadeRetorno.getEspecialidadeId());
 
         //Verificação
         Assertions.assertNotNull(especialidadeBuscada);

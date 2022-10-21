@@ -13,6 +13,14 @@ public class Util {
 
     public static Random random = new Random();
 
+    public static String generateCPF(){
+        return String.valueOf(random.nextInt(9999999));
+    }
+
+    public static String generateTelefone(){
+        return String.valueOf(random.nextInt(9999999));
+    }
+
     public static <T> String toJson(T object) throws Exception{
         return new ObjectMapper().writeValueAsString(object);
     }

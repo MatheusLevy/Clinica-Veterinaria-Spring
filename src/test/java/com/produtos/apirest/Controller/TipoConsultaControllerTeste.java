@@ -69,7 +69,7 @@ public class TipoConsultaControllerTeste {
     public void deveRemoverPorIdController() throws Exception{
         Long id = Long.valueOf(1);
         Mockito.doNothing().when(tipoConsultaService).remover(Mockito.any(TipoConsulta.class));
-        Mockito.when(tipoConsultaService.buscarTipoConsultaPorId(Mockito.anyLong())).thenReturn(getTipoConsultaInstance());
+        Mockito.when(tipoConsultaService.buscarPorId(Mockito.anyLong())).thenReturn(getTipoConsultaInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.DELETE, API.concat("/remover/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -79,7 +79,7 @@ public class TipoConsultaControllerTeste {
     @Test
     public void deveRemoverComFeedbackController() throws Exception{
         Long id = Long.valueOf(1);
-        Mockito.when(tipoConsultaService.removerFeedback(Mockito.anyLong())).thenReturn(getTipoConsultaInstance());
+        Mockito.when(tipoConsultaService.removerComFeedback(Mockito.anyLong())).thenReturn(getTipoConsultaInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.DELETE, API.concat("/remover/feedback/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -89,7 +89,7 @@ public class TipoConsultaControllerTeste {
     @Test
     public void deveBuscarPorIdController() throws Exception {
         Long id = Long.valueOf(1);
-        Mockito.when(tipoConsultaService.buscarTipoConsultaPorId(Mockito.anyLong())).thenReturn(getTipoConsultaInstance());
+        Mockito.when(tipoConsultaService.buscarPorId(Mockito.anyLong())).thenReturn(getTipoConsultaInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.GET, API.concat("/buscar/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());

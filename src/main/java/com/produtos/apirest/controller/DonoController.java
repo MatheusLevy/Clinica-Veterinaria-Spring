@@ -1,9 +1,7 @@
 package com.produtos.apirest.controller;
 
 import com.produtos.apirest.models.Animal;
-import com.produtos.apirest.models.Consulta;
 import com.produtos.apirest.models.DTO.AnimalDTO;
-import com.produtos.apirest.models.DTO.ConsultaDTO;
 import com.produtos.apirest.models.DTO.DonoDTO;
 import com.produtos.apirest.models.Dono;
 import com.produtos.apirest.service.DonoService;
@@ -11,12 +9,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.ws.Response;
-import java.security.interfaces.RSAKey;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -125,7 +119,7 @@ public class DonoController {
     @GetMapping("/buscar/{id}")
     public ResponseEntity buscarPorId(@PathVariable(value = "id", required = true) Long id){
         try{
-            Dono donoBuscado = donoService.buscarDonoPorId(id);
+            Dono donoBuscado = donoService.buscarPorId(id);
             DonoDTO donodtoRetorno = DonoDTO.builder()
                     .id(donoBuscado.getDonoId())
                     .cpf(donoBuscado.getCpf())
@@ -140,7 +134,7 @@ public class DonoController {
     @DeleteMapping("remover/feedback/{id}")
     public ResponseEntity removerComFeedback(@PathVariable(value = "id", required = true) Long id){
         try{
-            Dono removido = donoService.removerFeedback(id);
+            Dono removido = donoService.removerComFeedback(id);
             DonoDTO donodtoRetorno = DonoDTO.builder()
                     .id(removido.getDonoId())
                     .nome(removido.getNome())

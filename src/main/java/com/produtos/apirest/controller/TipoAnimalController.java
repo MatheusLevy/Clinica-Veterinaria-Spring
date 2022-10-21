@@ -50,7 +50,7 @@ public class TipoAnimalController {
     @DeleteMapping("/remover/feedback/{id}")
     public ResponseEntity removerComFeedback(@PathVariable(value = "id", required = true) Long id){
         try{
-            TipoAnimal tipoRemovido = tipoService.removerFeedback(id);
+            TipoAnimal tipoRemovido = tipoService.removerComFeedback(id);
             TipoAnimalDTO dtoRetorno = TipoAnimalDTO.builder()
                     .id(tipoRemovido.getTipoAnimalId())
                     .nome(tipoRemovido.getNome())
@@ -85,7 +85,7 @@ public class TipoAnimalController {
     @GetMapping("/buscarPorId/{id}")
     public ResponseEntity buscar(@PathVariable(value = "id", required = true) Long id){
         try{
-            TipoAnimal tipoBuscado = tipoService.buscarTipoAnimalPorId(id);
+            TipoAnimal tipoBuscado = tipoService.buscarPorId(id);
 
             TipoAnimalDTO dtoRetorno = TipoAnimalDTO.builder()
                     .id(tipoBuscado.getTipoAnimalId())

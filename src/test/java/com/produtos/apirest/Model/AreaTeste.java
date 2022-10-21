@@ -12,48 +12,54 @@ import java.util.Optional;
 @SpringBootTest
 public class AreaTeste {
     @Autowired
-    public AreaRepo repo;
+    public AreaRepo areaRepo;
 
-    protected static Area getAreaInstance(Boolean temId){
-        Area area = Area.builder()
+    protected static Area generateArea(){
+        return Area.builder()
                 .nome("Nome")
                 .build();
-        if (temId)
-            area.setAreaId(Long.valueOf(1));
-        return area;
     }
+
+    private void rollback(Area area){
+        areaRepo.delete(area);
+    }
+
+    protected static void rollbackArea(Area area, AreaRepo areaRepo){
+        areaRepo.delete(area);
+    }
+
     @Test
     public void deveSalvarModel(){
-        Area areaSalva = repo.save(getAreaInstance(false));
+        Area areaSalva = areaRepo.save(generateArea());
         Assertions.assertNotNull(areaSalva);
-        Assertions.assertEquals(getAreaInstance(false).getNome(), areaSalva.getNome());
-        repo.delete(areaSalva);
+        Assertions.assertEquals(generateArea().getNome(), areaSalva.getNome());
+        rollback(areaSalva);
     }
 
     @Test
     public void deveAtualizarArea(){
-        Area areaSalva = repo.save(getAreaInstance(false));
+        Area areaSalva = areaRepo.save(generateArea());
         areaSalva.setNome("Nome Novo");
-        Area areaAtualizado = repo.save(areaSalva);
+        Area areaAtualizado = areaRepo.save(areaSalva);
         Assertions.assertNotNull(areaAtualizado);
         Assertions.assertEquals(areaAtualizado.getAreaId(), areaSalva.getAreaId());
         Assertions.assertEquals(areaAtualizado.getNome(), "Nome Novo");
-        repo.delete(areaSalva);
+        rollback(areaAtualizado);
     }
 
     @Test
     public void deveRemoverModel(){
-        Area areaSalva = repo.save(getAreaInstance(false));
+        Area areaSalva = areaRepo.save(generateArea());
         Long id = areaSalva.getAreaId();
-        repo.deleteById(id);
-        Assertions.assertFalse(repo.findById(id).isPresent());
+        areaRepo.deleteById(id);
+        Assertions.assertFalse(areaRepo.findById(id).isPresent());
     }
 
     @Test
     public void deveBuscarModel(){
-        Area areaSalva = repo.save(getAreaInstance(false));
-        Optional<Area> temp = repo.findById(areaSalva.getAreaId());
+        Area areaSalva = areaRepo.save(generateArea());
+        Optional<Area> temp = areaRepo.findById(areaSalva.getAreaId());
         Assertions.assertTrue(temp.isPresent());
-        repo.delete(areaSalva);
+        rollback(areaSalva);
     }
 }

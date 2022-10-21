@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.util.Assert;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -401,7 +400,7 @@ public class ConsultaServiceTeste {
         Consulta consultaRetorno = consultaRepo.save(consulta);
 
         //Ação
-        Consulta consultaRemovida = consultaService.removerFeedback(consultaRetorno.getConsultaId());
+        Consulta consultaRemovida = consultaService.removerComFeedback(consultaRetorno.getConsultaId());
 
         //Verificação
         Assertions.assertNotNull(consultaRemovida);
@@ -483,7 +482,7 @@ public class ConsultaServiceTeste {
         Veterinario veterinarioNovoRetorno = veterinarioRepo.save(veterinarioNovo);
 
         //Ação
-        Consulta consultaAtualizada = consultaService.atualizarVeterinario(veterinarioNovoRetorno, consultaRetorno);
+        Consulta consultaAtualizada = consultaService.atualizarVeterinario(consultaRetorno, veterinarioNovoRetorno);
 
         //Verificação
         Assertions.assertNotNull(consultaAtualizada);
@@ -564,7 +563,7 @@ public class ConsultaServiceTeste {
         Animal animalNovoRetorno = animalRepo.save(animalNovo);
 
         //Ação
-        Consulta consultaAtualizada = consultaService.atualizarAnimal(animalNovoRetorno, consultaRetorno);
+        Consulta consultaAtualizada = consultaService.atualizarAnimal(consultaRetorno, animalNovoRetorno);
 
         //Verificação
         Assertions.assertNotNull(consultaAtualizada);
@@ -644,7 +643,7 @@ public class ConsultaServiceTeste {
         TipoConsulta tipoConsultaNovaRetorno = tipoConsultaRepo.save(tipoConsultaNova);
 
         //Ação
-        Consulta consultaAtualizada = consultaService.atualizarTipoConsulta(tipoConsultaNovaRetorno, consultaRetorno);
+        Consulta consultaAtualizada = consultaService.atualizarTipoConsulta(consultaRetorno, tipoConsultaNovaRetorno);
 
         //Verificação
         Assertions.assertNotNull(consultaAtualizada);
@@ -720,7 +719,7 @@ public class ConsultaServiceTeste {
         Consulta consultaRetorno = consultaService.salvar(consulta);
 
         //Ação
-        Consulta consutaBuscada = consultaService.buscarComId(consultaRetorno.getConsultaId());
+        Consulta consutaBuscada = consultaService.buscarPorId(consultaRetorno.getConsultaId());
 
         //Verificação
         Assertions.assertNotNull(consutaBuscada);

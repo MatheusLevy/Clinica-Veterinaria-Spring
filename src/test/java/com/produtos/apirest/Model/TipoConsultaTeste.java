@@ -12,37 +12,42 @@ public class TipoConsultaTeste {
     @Autowired
     public TipoConsultaRepo tipoConsultaRepo;
 
-    protected static TipoConsulta getTipoConsultaInstance(boolean temId){
-        TipoConsulta tipoConsulta = TipoConsulta.builder()
+    protected static TipoConsulta generateTipoConsulta(){
+       return TipoConsulta.builder()
                 .nome("nome")
                 .build();
-        if (temId)
-            tipoConsulta.setTipoConsultaId(Long.valueOf(1));
-        return tipoConsulta;
+    }
+
+    private void rollback(TipoConsulta tipoConsulta){
+        tipoConsultaRepo.delete(tipoConsulta);
+    }
+
+    protected static void rollbackTipoConsulta(TipoConsulta tipoConsulta, TipoConsultaRepo tipoConsultaRepo){
+        tipoConsultaRepo.delete(tipoConsulta);
     }
 
     @Test
     public void deveSalvarModel(){
-        TipoConsulta tipoConsultaSalva = tipoConsultaRepo.save(getTipoConsultaInstance(false));
+        TipoConsulta tipoConsultaSalva = tipoConsultaRepo.save(generateTipoConsulta());
         Assertions.assertNotNull(tipoConsultaSalva);
-        Assertions.assertEquals(getTipoConsultaInstance(false).getNome(), tipoConsultaSalva.getNome());
-        tipoConsultaRepo.delete(tipoConsultaSalva);
+        Assertions.assertEquals(generateTipoConsulta().getNome(), tipoConsultaSalva.getNome());
+        rollback(tipoConsultaSalva);
     }
 
     @Test
     public void deveAtualizarModel(){
-        TipoConsulta tipoConsultaSalva = tipoConsultaRepo.save(getTipoConsultaInstance(false));
+        TipoConsulta tipoConsultaSalva = tipoConsultaRepo.save(generateTipoConsulta());
         tipoConsultaSalva.setNome("Nome Novo");
         TipoConsulta tipoConsultaAtualizada =  tipoConsultaRepo.save(tipoConsultaSalva);
         Assertions.assertNotNull(tipoConsultaAtualizada);
         Assertions.assertEquals(tipoConsultaAtualizada.getTipoConsultaId(), tipoConsultaSalva.getTipoConsultaId());
         Assertions.assertEquals(tipoConsultaAtualizada.getNome(), "Nome Novo");
-        tipoConsultaRepo.delete(tipoConsultaAtualizada);
+        rollback(tipoConsultaAtualizada);
     }
 
     @Test
     public void deveRemoverModel(){
-        TipoConsulta tipoConsultaSalva = tipoConsultaRepo.save(getTipoConsultaInstance(false));
+        TipoConsulta tipoConsultaSalva = tipoConsultaRepo.save(generateTipoConsulta());
         Long id = tipoConsultaSalva.getTipoConsultaId();
         tipoConsultaRepo.deleteById(id);
         Assertions.assertFalse(tipoConsultaRepo.findById(id).isPresent());
@@ -50,9 +55,9 @@ public class TipoConsultaTeste {
 
     @Test
     public void deveBuscarModel(){
-        TipoConsulta tipoConsultaSalva = tipoConsultaRepo.save(getTipoConsultaInstance(false));
+        TipoConsulta tipoConsultaSalva = tipoConsultaRepo.save(generateTipoConsulta());
         Long id = tipoConsultaSalva.getTipoConsultaId();
         Assertions.assertTrue(tipoConsultaRepo.findById(id).isPresent());
-        tipoConsultaRepo.delete(tipoConsultaSalva);
+        rollback(tipoConsultaSalva);
     }
 }

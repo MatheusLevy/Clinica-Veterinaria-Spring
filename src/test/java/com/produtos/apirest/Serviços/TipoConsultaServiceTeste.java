@@ -84,7 +84,7 @@ public class TipoConsultaServiceTeste {
         TipoConsulta tipoRetorno = tipoConsultaRepo.save(tipo);
 
         //Ação
-        TipoConsulta tipoFeedback = tipoConsultaService.removerFeedback(tipoRetorno.getTipoConsultaId());
+        TipoConsulta tipoFeedback = tipoConsultaService.removerComFeedback(tipoRetorno.getTipoConsultaId());
 
         //Verificação
         Assertions.assertNotNull(tipoFeedback);
@@ -99,7 +99,7 @@ public class TipoConsultaServiceTeste {
         TipoConsulta tipoRetorno = tipoConsultaRepo.save(tipo);
 
         //Ação
-        TipoConsulta tipoBuscado = tipoConsultaService.buscarTipoConsultaPorId(tipoRetorno.getTipoConsultaId());
+        TipoConsulta tipoBuscado = tipoConsultaService.buscarPorId(tipoRetorno.getTipoConsultaId());
 
         //Verificação
         Assertions.assertNotNull(tipoBuscado);

@@ -93,7 +93,7 @@ public class AreaController {
     @GetMapping("/buscarId/{id}")
     public ResponseEntity buscarPorId(@PathVariable(value = "id", required = true) Long id){
         try {
-            Area areaBuscada = areaService.buscarAreaPorId(id);
+            Area areaBuscada = areaService.buscarPorId(id);
             AreaDTO areaDTO = AreaDTO.builder()
                     .id(areaBuscada.getAreaId())
                     .nome(areaBuscada.getNome())
@@ -137,7 +137,7 @@ public class AreaController {
     @GetMapping("/buscar/especialidades/{id}")
     public ResponseEntity buscarEspecialidades(@PathVariable(value = "id", required = true) Long id){
         try {
-            Area areaBuscada = areaService.buscarAreaPorId(id);
+            Area areaBuscada = areaService.buscarPorId(id);
             List<Especialidade> especialidades = areaService.buscarTodasEspecialidades(areaBuscada);
             List<EspecialidadeDTO> dtos = modelMapper.map(especialidades, new TypeToken<List<EspecialidadeDTO>>(){}.getType());
             return ResponseEntity.ok(dtos);

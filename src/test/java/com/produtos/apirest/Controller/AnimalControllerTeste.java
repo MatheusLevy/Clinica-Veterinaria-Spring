@@ -79,8 +79,8 @@ public class AnimalControllerTeste {
     @WithUserDetails("Admin")
     public void deveSalvarController() throws Exception{
         Mockito.when(animalService.salvar(Mockito.any(Animal.class))).thenReturn(getAnimalInstance());
-        Mockito.when(donoService.buscarDonoPorId(Mockito.anyLong())).thenReturn(getDonoInstance());
-        Mockito.when(tipoAnimalService.buscarTipoAnimalPorId(Mockito.anyLong())).thenReturn(getTipoAnimalInstance());
+        Mockito.when(donoService.buscarPorId(Mockito.anyLong())).thenReturn(getDonoInstance());
+        Mockito.when(tipoAnimalService.buscarPorId(Mockito.anyLong())).thenReturn(getTipoAnimalInstance());
         String json = new ObjectMapper().writeValueAsString(getAnimalDTOInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.POST, API.concat("/salvar"), json);
         mvc.perform(request)
@@ -100,9 +100,9 @@ public class AnimalControllerTeste {
     @Test
     @WithUserDetails("Admin")
     public void deveAtualizarDonoController() throws Exception{
-        Mockito.when(donoService.buscarDonoPorId(Mockito.anyLong())).thenReturn(getDonoInstance());
+        Mockito.when(donoService.buscarPorId(Mockito.anyLong())).thenReturn(getDonoInstance());
         Mockito.when(animalService.buscarPorId(Mockito.anyLong())).thenReturn(getAnimalInstance());
-        Mockito.when(animalService.atualizarDono(Mockito.any(Dono.class), Mockito.any(Animal.class))).thenReturn(getAnimalInstance());
+        Mockito.when(animalService.atualizarDono(Mockito.any(Animal.class), Mockito.any(Dono.class))).thenReturn(getAnimalInstance());
         String json = toJson(getAnimalDTOInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.PUT, API.concat("/atualizar/dono"), json);
         mvc.perform(request)
@@ -124,7 +124,7 @@ public class AnimalControllerTeste {
     @WithUserDetails("Admin")
     public void deveRemoverComFeedbackController() throws Exception{
         Long id = Long.valueOf(1);
-        Mockito.when(animalService.removerFeedback(Mockito.anyLong())).thenReturn(getAnimalInstance());
+        Mockito.when(animalService.removerComFeedback(Mockito.anyLong())).thenReturn(getAnimalInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.DELETE, API.concat("/remover/feedback/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -144,7 +144,7 @@ public class AnimalControllerTeste {
     @WithUserDetails("Admin")
     public void deveBuscarDonoController() throws Exception{
         Long id = Long.valueOf(1);
-        Mockito.when(animalService.buscarDono(Mockito.anyLong())).thenReturn(getDonoInstance());
+        Mockito.when(animalService.buscarDonoPorId(Mockito.anyLong())).thenReturn(getDonoInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.GET, API.concat("/buscarDono/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());

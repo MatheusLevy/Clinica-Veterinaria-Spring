@@ -66,18 +66,17 @@ public class AnimalService {
     }
 
     @Transactional
-    public Animal removerFeedback(Long id){
+    public Animal removerComFeedback(Long id){
         verificaId(id);
-        Optional<Animal> AnimalRemover = repo.findById(id);
-        Animal AnimalTemp = AnimalRemover.get();
-        repo.delete(AnimalTemp);
-        return AnimalTemp;
+        Animal animalFeedback = repo.findById(id).get();
+        repo.delete(animalFeedback);
+        return animalFeedback;
     }
 
     @Transactional
-    public Animal buscarDonoPorId(Animal animal){
-        verificaId(animal);
-        return repo.findById(animal.getAnimalId()).get();
+    public Animal buscarPorId(Long id){
+        verificaId(id);
+        return repo.findById(id).get();
     }
 
     @Transactional
@@ -91,42 +90,36 @@ public class AnimalService {
     }
 
     @Transactional
-    public Animal buscarPorId(Long id){
-        verificaId(id);
-        Optional<Animal> animalTemp = repo.findById(id);
-        return animalTemp.get();
-    }
-
-    @Transactional
     public List<Animal> buscarTodos(){
         return repo.findAll();
     }
+
     @Transactional
-    public Dono buscarDono(Long id){
+    public Dono buscarDonoPorId(Long id){
         verificaId(id);
-        Optional<Animal> animals = repo.findById(id);
-        return animals.get().getDono();
+        Animal animalEncontrado = repo.findById(id).get();
+        return animalEncontrado.getDono();
     }
 
     @Transactional
-    public Animal atualizarDono(Dono dono, Animal animal){
-        DonoService.verificaDono(dono);
-        DonoService.verificaId(dono);
-        verificaAnimal(animal);
-        verificaId(animal);
+    public Animal atualizarDono(Animal destino, Dono donoNovo){
+        DonoService.verificaDono(donoNovo);
+        DonoService.verificaId(donoNovo);
+        verificaAnimal(destino);
+        verificaId(destino);
 
-        Optional<Dono> donoTemp = donoRepo.findById(dono.getDonoId());
-        if (!donoTemp.isPresent())
+        Optional<Dono> donoOptional = donoRepo.findById(donoNovo.getDonoId());
+        if (!donoOptional.isPresent())
             throw new RegraNegocioRunTime("Não foi possivel encontrar o Dono");
 
-        Optional<Animal> animalTemp = repo.findById(animal.getAnimalId());
-        if(!animalTemp.isPresent())
+        Optional<Animal> animalOptional = repo.findById(destino.getAnimalId());
+        if(!animalOptional.isPresent())
             throw new RegraNegocioRunTime("Não foi possivel encontrar o Animal");
 
-        Animal animalAtualizar = animalTemp.get();
-        Dono novoDono = donoTemp.get();
-        animalAtualizar.setDono(novoDono);
+        Animal animalDestinoEncontrado = animalOptional.get();
+        Dono donoNovoEncontrado = donoOptional.get();
+        animalDestinoEncontrado.setDono(donoNovoEncontrado);
 
-        return repo.save(animalAtualizar);
+        return repo.save(animalDestinoEncontrado);
     }
 }

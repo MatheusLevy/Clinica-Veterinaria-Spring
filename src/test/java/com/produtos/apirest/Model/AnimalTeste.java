@@ -11,13 +11,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Optional;
-import java.util.Random;
+import static com.produtos.apirest.Model.DonoTeste.generateDono;
+import static com.produtos.apirest.Model.DonoTeste.rollbackDono;
+import static com.produtos.apirest.Model.TipoAnimalTeste.generateTipoAnimal;
+import static com.produtos.apirest.Model.TipoAnimalTeste.rollbackTipoAnimal;
 
 @SpringBootTest
 public class AnimalTeste {
     @Autowired
-    public AnimalRepo repo;
+    public AnimalRepo animalRepo;
 
     @Autowired
     public TipoAnimalRepo tipoAnimalRepo;
@@ -25,232 +27,94 @@ public class AnimalTeste {
     @Autowired
     public DonoRepo donoRepo;
 
-    Random random = new Random();
-
-    //TODO: Refatorar
-    @Test
-    public void deveCriarAnimal(){
-        //Cenário
-        TipoAnimal novoTipoAnimal = TipoAnimal.builder()
-                .nome("Gato")
+    protected Animal generateAnimal(){
+        return Animal.builder()
+                .nome("nome")
+                .tipoAnimal(tipoAnimalRepo.save(generateTipoAnimal()))
+                .dono(donoRepo.save(generateDono()))
                 .build();
-        TipoAnimal retornoTipoAnimal = tipoAnimalRepo.save(novoTipoAnimal);
+    }
 
-        Dono novoDono = Dono.builder()
-                .nome("Marcos")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("111111")
+    protected static Animal generateAnimal(TipoAnimalRepo tipoAnimalRepo, DonoRepo donoRepo){
+        return Animal.builder()
+                .nome("nome")
+                .tipoAnimal(tipoAnimalRepo.save(generateTipoAnimal()))
+                .dono(donoRepo.save(generateDono()))
                 .build();
-        Dono retornoDono = donoRepo.save(novoDono);
+    }
 
-        Animal novo = Animal.builder()
-                .nome("Pepper")
-                .tipoAnimal(retornoTipoAnimal).
-                dono(retornoDono)
-                .build();
+    private void rollback(Animal animal){
+        animalRepo.delete(animal);
+        tipoAnimalRepo.delete(animal.getTipoAnimal());
+        donoRepo.delete(animal.getDono());
+    }
 
-        //Ação
-        Animal retorno = repo.save(novo);
-
-        //Verificação
-        Assertions.assertNotNull(retorno);
-        Assertions.assertEquals(novo.getNome(), retorno.getNome());
-
-        //Rollback
-        repo.delete(retorno);
-        tipoAnimalRepo.delete(retornoTipoAnimal);
-        donoRepo.delete(retornoDono);
+    protected static void rollbackAnimal(Animal animal, AnimalRepo animalRepo,
+                                         TipoAnimalRepo tipoAnimalRepo, DonoRepo donoRepo){
+        animalRepo.delete(animal);
+        tipoAnimalRepo.delete(animal.getTipoAnimal());
+        donoRepo.delete(animal.getDono());
     }
 
     @Test
-    public void deveRemoverAnimal(){
-        //Cenário
-        TipoAnimal novoTipoAnimal = TipoAnimal.builder()
-                .nome("Gato")
-                .build();
-        TipoAnimal retornoTipoAnimal = tipoAnimalRepo.save(novoTipoAnimal);
+    public void deveSalvarModel(){
+        Animal animalSalvo = animalRepo.save(generateAnimal());
+        Assertions.assertNotNull(animalSalvo);
+        rollback(animalSalvo);
+    }
 
-        Dono novoDono = Dono.builder()
-                .nome("Marcos")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("111111")
-                .build();
-        Dono retornoDono = donoRepo.save(novoDono);
+    @Test
+    public void deveAlterarDonoModel(){
+        Animal animalSalvo = animalRepo.save(generateAnimal());
+        Dono donoAntigo = animalSalvo.getDono();
+        animalSalvo.setDono(donoRepo.save(generateDono()));
+        Animal animalAtualizado = animalRepo.save(animalSalvo);
+        Assertions.assertNotNull(animalAtualizado);
+        Assertions.assertEquals(animalSalvo.getAnimalId(), animalAtualizado.getAnimalId());
+        rollback(animalAtualizado);
+        rollbackDono(donoAntigo, donoRepo);
+    }
 
-        Animal novo = Animal.builder()
-                .nome("Pepper")
-                .tipoAnimal(retornoTipoAnimal)
-                .dono(retornoDono)
-                .build();
-        Animal retorno = repo.save(novo);
+    @Test
+    public void deveAtualizarModel(){
+        Animal animalSalvo = animalRepo.save(generateAnimal());
+        animalSalvo.setNome("Nome alterado");
+        Animal animalAtualizado = animalRepo.save(animalSalvo);
+        Assertions.assertNotNull(animalAtualizado);
+        Assertions.assertEquals(animalAtualizado.getAnimalId(), animalSalvo.getAnimalId());
+        Assertions.assertEquals(animalAtualizado.getNome(), "Nome alterado");
+        rollback(animalAtualizado);
+    }
 
-        //Ação
-        repo.delete(retorno);
+    @Test
+    public void deveAtualizarTipoAnimalModel(){
+        Animal animalSalvo = animalRepo.save(generateAnimal());
+        TipoAnimal tipoAnimalAntigo = animalSalvo.getTipoAnimal();
+        animalSalvo.setTipoAnimal(tipoAnimalRepo.save(generateTipoAnimal()));
+        Animal animalAtualizado = animalRepo.save(animalSalvo);
+        Assertions.assertNotNull(animalAtualizado);
+        Assertions.assertEquals(animalAtualizado.getAnimalId(), animalSalvo.getAnimalId());
+        Assertions.assertEquals(animalAtualizado.getTipoAnimal().getTipoAnimalId(), animalSalvo.getTipoAnimal().getTipoAnimalId());
+        rollback(animalAtualizado);
+        rollbackTipoAnimal(tipoAnimalAntigo, tipoAnimalRepo);
+    }
 
-        //Verificação
-        Optional<Animal> temp = repo.findById(retorno.getAnimalId());
-        Assertions.assertFalse(temp.isPresent());
-
-        //Rollback
-        tipoAnimalRepo.delete(retornoTipoAnimal);
-        donoRepo.delete(retornoDono);
+    @Test
+    public void deveRemoverModel(){
+        Animal animalSalvo = animalRepo.save(generateAnimal());
+        Long id = animalSalvo.getAnimalId();
+        animalRepo.delete(animalSalvo);
+        Assertions.assertFalse(animalRepo.findById(id).isPresent());
+        rollbackTipoAnimal(animalSalvo.getTipoAnimal(), tipoAnimalRepo);
+        rollbackDono(animalSalvo.getDono(), donoRepo);
 
     }
 
     @Test
-    public void deveBuscarAnimal(){
-        //Cenário
-        TipoAnimal novoTipoAnimal = TipoAnimal.builder().nome("Gato").build();
-        TipoAnimal retornoTipoAnimal = tipoAnimalRepo.save(novoTipoAnimal);
-        Dono novoDono = Dono.builder()
-                .nome("Marcos")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("111111").build();
-        Dono retornoDono = donoRepo.save(novoDono);
-
-        Animal novo = Animal.builder()
-                .nome("Pepper")
-                .tipoAnimal(retornoTipoAnimal)
-                .dono(retornoDono)
-                .build();
-        Animal retorno = repo.save(novo);
-
-        //Ação
-        Optional<Animal> temp = repo.findById(retorno.getAnimalId());
-
-        //Verificação
-        Assertions.assertTrue(temp.isPresent());
-
-        //Rollback
-        repo.delete(retorno);
-        donoRepo.delete(retornoDono);
-        tipoAnimalRepo.delete(retornoTipoAnimal);
+    public void deveBuscarModel(){
+        Animal animalSalvo = animalRepo.save(generateAnimal());
+        Long id = animalSalvo.getAnimalId();
+        Assertions.assertTrue(animalRepo.findById(id).isPresent());
+        rollback(animalSalvo);
     }
-
-    @Test
-    public void deveAlterarDonodoAnimal(){
-        //Cenário
-        TipoAnimal novoTipoAnimal = TipoAnimal.builder()
-                .nome("Gato")
-                .build();
-        TipoAnimal retornoTipoAnimal = tipoAnimalRepo.save(novoTipoAnimal);
-
-        Dono novoDono = Dono.builder()
-                .nome("Marcos")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("111111")
-                .build();
-        Dono retornoDono = donoRepo.save(novoDono);
-
-        Animal novo = Animal.builder()
-                .nome("Pepper")
-                .tipoAnimal(retornoTipoAnimal)
-                .dono(retornoDono)
-                .build();
-        Animal retorno = repo.save(novo);
-
-        Dono novoOutroDono = Dono.builder()
-                .nome("João")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("1111111")
-                .build();
-        Dono retornoOutroDono = donoRepo.save(novoOutroDono);
-
-        //Ação
-        retorno.setDono(retornoOutroDono);
-        Animal alteradoAnimal = repo.save(retorno);
-
-        //Verificação
-        Assertions.assertNotNull(alteradoAnimal);
-        Assertions.assertEquals(retorno.getAnimalId(), alteradoAnimal.getAnimalId());
-
-        //Rollback
-        repo.delete(alteradoAnimal);
-        tipoAnimalRepo.delete(retornoTipoAnimal);
-        donoRepo.delete(retornoDono);
-        donoRepo.delete(retornoOutroDono);
-    }
-
-    @Test
-    public void deveAtualizarAnimal(){
-        //Cenário
-        TipoAnimal novoTipoAnimal = TipoAnimal.builder()
-                .nome("Gato")
-                .build();
-        TipoAnimal retornoTipoAnimal = tipoAnimalRepo.save(novoTipoAnimal);
-
-        Dono novoDono = Dono.builder()
-                .nome("Marcos")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("111111")
-                .build();
-        Dono retornoDono = donoRepo.save(novoDono);
-
-        Animal novo = Animal.builder()
-                .nome("Pepper")
-                .tipoAnimal(retornoTipoAnimal)
-                .dono(retornoDono)
-                .build();
-        Animal retorno = repo.save(novo);
-
-        //Ação
-        retorno.setNome("Nome alterado");
-        Animal atualizado = repo.save(retorno);
-
-        //Verificação
-        Assertions.assertNotNull(atualizado);
-        Assertions.assertEquals(atualizado.getAnimalId(), retorno.getAnimalId());
-        Assertions.assertEquals(atualizado.getNome(), "Nome alterado");
-
-        //Rollback
-        repo.delete(atualizado);
-        tipoAnimalRepo.delete(retornoTipoAnimal);
-        donoRepo.delete(retornoDono);
-    }
-
-    @Test
-    public void deveAtualizarTipoAnimal(){
-        //Cenário
-        TipoAnimal novoTipoAnimal = TipoAnimal.builder()
-                .nome("Gato")
-                .build();
-        TipoAnimal retornoTipoAnimal = tipoAnimalRepo.save(novoTipoAnimal);
-
-        TipoAnimal outroTipoAnimal = TipoAnimal.builder()
-                .nome("Novo Tipo Animal")
-                .build();
-        TipoAnimal retornoOutroTipoAnimal = tipoAnimalRepo.save(outroTipoAnimal);
-
-        Dono novoDono = Dono.builder()
-                .nome("Marcos")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("111111")
-                .build();
-        Dono retornoDono = donoRepo.save(novoDono);
-
-        Animal novo = Animal.builder()
-                .nome("Pepper")
-                .tipoAnimal(retornoTipoAnimal)
-                .dono(retornoDono)
-                .build();
-        Animal retorno = repo.save(novo);
-
-        //Ação
-        retorno.setTipoAnimal(retornoOutroTipoAnimal);
-        Animal atualizado = repo.save(retorno);
-
-        //Verificação
-        Assertions.assertNotNull(atualizado);
-        Assertions.assertEquals(atualizado.getAnimalId(), retorno.getAnimalId());
-        Assertions.assertEquals(atualizado.getTipoAnimal().getTipoAnimalId(), retornoOutroTipoAnimal.getTipoAnimalId());
-
-        //Rollback
-        repo.delete(atualizado);
-        tipoAnimalRepo.delete(retornoTipoAnimal);
-        tipoAnimalRepo.delete(retornoOutroTipoAnimal);
-        donoRepo.delete(retornoDono);
-    }
-
-
-
 }

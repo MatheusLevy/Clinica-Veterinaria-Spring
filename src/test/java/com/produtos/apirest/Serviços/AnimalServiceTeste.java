@@ -191,7 +191,7 @@ public class AnimalServiceTeste {
         Animal animalRetorno = animalRepo.save(animal);
 
         //Ação
-        Animal feedback = animalService.removerFeedback(animalRetorno.getAnimalId());
+        Animal feedback = animalService.removerComFeedback(animalRetorno.getAnimalId());
 
         //Verificação
         Optional<Animal> animalTemp = animalRepo.findById(animalRetorno.getAnimalId());
@@ -229,7 +229,7 @@ public class AnimalServiceTeste {
         Animal animalRetorno = animalRepo.save(animal);
 
         //Ação
-        Animal animalBuscado = animalService.buscarDonoPorId(animalRetorno);
+        Animal animalBuscado = animalService.buscarPorId(animalRetorno.getAnimalId());
 
         //Verificação
         Assertions.assertNotNull(animalBuscado);
@@ -349,7 +349,7 @@ public class AnimalServiceTeste {
         Animal animalRetorno = animalRepo.save(animal);
 
         //Ação
-        Dono donoBuscado = animalService.buscarDono(animalRetorno.getAnimalId());
+        Dono donoBuscado = animalService.buscarDonoPorId(animalRetorno.getAnimalId());
 
         //Verificação
         Assertions.assertNotNull(donoBuscado);
@@ -392,7 +392,7 @@ public class AnimalServiceTeste {
         Dono novoDonoRetorno = donoRepo.save(novoDono);
 
         //Ação
-        Animal animalAtualizado = animalService.atualizarDono(novoDonoRetorno, animalRetorno);
+        Animal animalAtualizado = animalService.atualizarDono(animalRetorno, novoDonoRetorno);
 
         //Verificação
         Assertions.assertNotNull(animalAtualizado);

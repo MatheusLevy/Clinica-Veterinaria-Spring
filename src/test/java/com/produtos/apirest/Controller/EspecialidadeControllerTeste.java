@@ -91,7 +91,7 @@ public class EspecialidadeControllerTeste {
     @Test
     public void deveRemoverController() throws Exception{
         Long id = Long.valueOf(1);
-        Mockito.when(especialidadeService.buscarEspecialidadePorId(Mockito.anyLong())).thenReturn(getEspecialidadeInstance());
+        Mockito.when(especialidadeService.buscarPorId(Mockito.anyLong())).thenReturn(getEspecialidadeInstance());
         Mockito.doNothing().when(especialidadeService).remover(Mockito.any(Especialidade.class));
         MockHttpServletRequestBuilder request = request(HttpMethod.DELETE, API.concat("/remover/").concat(String.valueOf(id)));
         mvc.perform(request)
@@ -122,7 +122,7 @@ public class EspecialidadeControllerTeste {
     @Test
     public void deveBuscarPorIdController() throws Exception{
         Long id = Long.valueOf(1);
-        Mockito.when(especialidadeService.buscarEspecialidadePorId(Mockito.anyLong())).thenReturn(getEspecialidadeInstance());
+        Mockito.when(especialidadeService.buscarPorId(Mockito.anyLong())).thenReturn(getEspecialidadeInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.GET, API.concat("/buscar/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());

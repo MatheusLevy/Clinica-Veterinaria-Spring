@@ -52,7 +52,7 @@ public class ConsultaController {
     @PostMapping("/salvar")
     public ResponseEntity salvar(@RequestBody ConsultaDTO consultadto){
         try {
-            TipoConsulta tipoCosulta = tipoConsultaService.buscarTipoConsultaPorId(consultadto.getTipoConsultaId());
+            TipoConsulta tipoCosulta = tipoConsultaService.buscarPorId(consultadto.getTipoConsultaId());
             Veterinario veterinario = veterinarioService.buscarPorId(consultadto.getVeterinarioId());
             Animal animal = animalService.buscarPorId(consultadto.getIdAnimal());
 
@@ -135,7 +135,7 @@ public class ConsultaController {
     @DeleteMapping("/remover/feedback/{id}")
     public ResponseEntity removerComFeedback(@PathVariable(value = "id", required = true) Long id){
         try{
-            Consulta consultaRemovida = consultaService.removerFeedback(id);
+            Consulta consultaRemovida = consultaService.removerComFeedback(id);
             ConsultaDTO dto = ConsultaDTO.builder()
                     .id(consultaRemovida.getConsultaId())
                     .veterinarioNome(consultaRemovida.getVeterinario().getNome())

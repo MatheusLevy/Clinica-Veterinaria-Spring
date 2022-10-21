@@ -31,8 +31,8 @@ public class AnimalController {
     @PostMapping("/salvar")
     public ResponseEntity salvar(@RequestBody AnimalDTO animaldto){
         try{
-            Dono dono = donoService.buscarDonoPorId(animaldto.getIdDono());
-            TipoAnimal tipo = tipoAnimalService.buscarTipoAnimalPorId(animaldto.getIdTipoAnimal());
+            Dono dono = donoService.buscarPorId(animaldto.getIdDono());
+            TipoAnimal tipo = tipoAnimalService.buscarPorId(animaldto.getIdTipoAnimal());
             Animal animal = Animal.builder()
                     .nome(animaldto.getNome())
                     .tipoAnimal(tipo)
@@ -67,7 +67,7 @@ public class AnimalController {
     @DeleteMapping("/remover/feedback/{id}")
     public ResponseEntity removerComFeedback(@PathVariable(value = "id", required = true) Long id){
         try{
-            Animal animalRemovido = animalService.removerFeedback(id);
+            Animal animalRemovido = animalService.removerComFeedback(id);
             AnimalDTO dtoRetorno = AnimalDTO.builder()
                     .id(animalRemovido.getAnimalId())
                     .nome(animalRemovido.getNome())
@@ -125,7 +125,7 @@ public class AnimalController {
     @GetMapping("/buscarDono/{id}")
     public ResponseEntity buscarDono(@PathVariable(value = "id", required = true) Long id){
         try {
-            Dono dono = animalService.buscarDono(id);
+            Dono dono = animalService.buscarDonoPorId(id);
 
             DonoDTO dto = DonoDTO.builder()
                     .id(dono.getDonoId())
@@ -142,10 +142,10 @@ public class AnimalController {
     @PutMapping("/atualizar/dono")
     public ResponseEntity atualizarDono(@RequestBody AnimalDTO animalDTO){
         try {
-            Dono donoBuscado = donoService.buscarDonoPorId(animalDTO.getIdDono());
+            Dono donoBuscado = donoService.buscarPorId(animalDTO.getIdDono());
             Animal animalBuscado = animalService.buscarPorId(animalDTO.getId());
 
-            Animal animaAtualizado = animalService.atualizarDono(donoBuscado, animalBuscado);
+            Animal animaAtualizado = animalService.atualizarDono(animalBuscado, donoBuscado);
 
             AnimalDTO animalDTOAtualizado = AnimalDTO.builder()
                     .id(animaAtualizado.getAnimalId())

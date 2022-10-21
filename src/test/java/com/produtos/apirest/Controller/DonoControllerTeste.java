@@ -94,7 +94,7 @@ public class DonoControllerTeste {
     @Test
     public void deveRemoverComFeedbackController() throws Exception{
         Long id = Long.valueOf(1);
-        Mockito.when(donoService.removerFeedback(Mockito.anyLong())).thenReturn(getDonoInstance());
+        Mockito.when(donoService.removerComFeedback(Mockito.anyLong())).thenReturn(getDonoInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.DELETE, API.concat("/remover/feedback/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -114,7 +114,7 @@ public class DonoControllerTeste {
     @Test
     public void deveBuscarPorIdController() throws Exception{
         Long id = Long.valueOf(1);
-        Mockito.when(donoService.buscarDonoPorId(Mockito.anyLong())).thenReturn(getDonoInstance());
+        Mockito.when(donoService.buscarPorId(Mockito.anyLong())).thenReturn(getDonoInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.GET, API.concat("/buscar/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());

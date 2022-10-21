@@ -15,7 +15,6 @@ import java.util.Optional;
 
 @Service
 public class ConsultaService {
-
     @Autowired
     public ConsultaRepo repo;
     @Autowired
@@ -23,7 +22,8 @@ public class ConsultaService {
     @Autowired
     public AnimalRepo animalRepo;
     @Autowired
-    public TipoConsultaRepo tipo_consultaRepo;
+    public TipoConsultaRepo tipoConsultaRepo;
+
     public static void verificaConsulta(Consulta consulta){
         if(consulta == null)
             throw new NullPointerException("A Consulta não pode ser Nula!");
@@ -61,7 +61,7 @@ public class ConsultaService {
     }
 
     @Transactional
-    public Consulta buscarComId(Long id){
+    public Consulta buscarPorId(Long id){
         verificaId(id);
         return repo.findById(id).get();
     }
@@ -70,6 +70,7 @@ public class ConsultaService {
     public List<Consulta> buscarTodos(){
         return repo.findAll();
     }
+
     @Transactional
     public void remover(Consulta consulta){
         verificaConsulta(consulta);
@@ -84,78 +85,76 @@ public class ConsultaService {
     }
 
     @Transactional
-    public Consulta removerFeedback(Long id){
+    public Consulta removerComFeedback(Long id){
         verificaId(id);
-        Optional<Consulta> ConsultaRemover = repo.findById(id);
-        Consulta ConsultaTemp = ConsultaRemover.get();
-        repo.delete(ConsultaTemp);
-        return ConsultaTemp;
+        Consulta consultaFeedback = repo.findById(id).get();
+        repo.delete(consultaFeedback);
+        return consultaFeedback;
     }
 
     @Transactional
-    public Consulta atualizarVeterinario(Veterinario veterinario, Consulta consulta){
-        VeterinarioService.verificaVeterinario(veterinario);
-        VeterinarioService.verificaId(veterinario);
-        verificaConsulta(consulta);
-        verificaId(consulta);
+    public Consulta atualizarVeterinario(Consulta destino, Veterinario veterinarioNovo){
+        VeterinarioService.verificaVeterinario(veterinarioNovo);
+        VeterinarioService.verificaId(veterinarioNovo);
+        verificaConsulta(destino);
+        verificaId(destino);
 
-        Optional<Veterinario> veterinarioTemp = veterinarioRepo.findById(veterinario.getVeterinarioId());
-        if(!veterinarioTemp.isPresent())
+        Optional<Veterinario> veterinarioOptional = veterinarioRepo.findById(veterinarioNovo.getVeterinarioId());
+        if(!veterinarioOptional.isPresent())
             throw new RegraNegocioRunTime("Não foi possivel achar o Veterinário!");
 
-        Optional<Consulta> consultaTemp = repo.findById(consulta.getConsultaId());
-        if(!consultaTemp.isPresent())
+        Optional<Consulta> consultaOptional = repo.findById(destino.getConsultaId());
+        if(!consultaOptional.isPresent())
             throw new RegraNegocioRunTime("Não foi possivel achar a Consulta!");
 
-        Consulta consultaAtualizar = consultaTemp.get();
-        Veterinario novoVeterinario = veterinarioTemp.get();
-        consultaAtualizar.setVeterinario(novoVeterinario);
+        Consulta consultaDestinoEncontrada = consultaOptional.get();
+        Veterinario novoVeterinario = veterinarioOptional.get();
+        consultaDestinoEncontrada.setVeterinario(novoVeterinario);
 
-        return repo.save(consultaAtualizar);
+        return repo.save(consultaDestinoEncontrada);
     }
 
     @Transactional
-    public Consulta atualizarAnimal(Animal animal, Consulta consulta){
-        AnimalService.verificaAnimal(animal);
-        AnimalService.verificaId(animal);
-        verificaConsulta(consulta);
-        verificaId(consulta);
+    public Consulta atualizarAnimal(Consulta destino, Animal animalNovo){
+        AnimalService.verificaAnimal(animalNovo);
+        AnimalService.verificaId(animalNovo);
+        verificaConsulta(destino);
+        verificaId(destino);
 
-        Optional<Animal> animalTemp = animalRepo.findById(animal.getAnimalId());
-        if(!animalTemp.isPresent())
+        Optional<Animal> animalOptional = animalRepo.findById(animalNovo.getAnimalId());
+        if(!animalOptional.isPresent())
             throw new RegraNegocioRunTime("Não foi possivel achar o Animal!");
 
-        Optional<Consulta> consultaTemp = repo.findById(consulta.getConsultaId());
-        if(!consultaTemp.isPresent())
+        Optional<Consulta> consultaOptional = repo.findById(destino.getConsultaId());
+        if(!consultaOptional.isPresent())
             throw new RegraNegocioRunTime("Não foi possivel achar a Consulta");
 
-        Consulta consultaAtualizar = consultaTemp.get();
-        Animal novoAnimal = animalTemp.get();
-        consultaAtualizar.setAnimal(novoAnimal);
+        Consulta consultaDestinoEncontrada = consultaOptional.get();
+        Animal novoAnimalEncontrado = animalOptional.get();
+        consultaDestinoEncontrada.setAnimal(novoAnimalEncontrado);
 
-        return repo.save(consultaAtualizar);
+        return repo.save(consultaDestinoEncontrada);
     }
 
     @Transactional
-    public Consulta atualizarTipoConsulta(TipoConsulta tipo, Consulta consulta){
-        TipoConsultaService.verificaTipoConsulta(tipo);
-        TipoConsultaService.verificaId(tipo);
-        verificaConsulta(consulta);
-        verificaId(consulta);
+    public Consulta atualizarTipoConsulta(Consulta destino, TipoConsulta tipoConsultaNovo){
+        TipoConsultaService.verificaTipoConsulta(tipoConsultaNovo);
+        TipoConsultaService.verificaId(tipoConsultaNovo);
+        verificaConsulta(destino);
+        verificaId(destino);
 
-        Optional<TipoConsulta> tipo_consultaTemp = tipo_consultaRepo.findById(tipo.getTipoConsultaId());
-        if (!tipo_consultaTemp.isPresent())
+        Optional<TipoConsulta> tipoConsultaOptional = tipoConsultaRepo.findById(tipoConsultaNovo.getTipoConsultaId());
+        if (!tipoConsultaOptional.isPresent())
             throw new RegraNegocioRunTime("Não foi possivel achar o Tipo de Consulta!");
 
-        Optional<Consulta> consultaTemp = repo.findById(consulta.getConsultaId());
-        if(!consultaTemp.isPresent())
+        Optional<Consulta> consultaOptional = repo.findById(destino.getConsultaId());
+        if(!consultaOptional.isPresent())
             throw new RegraNegocioRunTime("Não foi possivel achar a Consulta!");
 
-        Consulta consultaAtualizar = consultaTemp.get();
-        TipoConsulta novoTipo = tipo_consultaTemp.get();
-        consultaAtualizar.setTipoConsulta(novoTipo);
+        Consulta consultaDestinoEncontrada = consultaOptional.get();
+        TipoConsulta tipoConsultaNovoEncontrado = tipoConsultaOptional.get();
+        consultaDestinoEncontrada.setTipoConsulta(tipoConsultaNovoEncontrado);
 
-        return repo.save(consultaAtualizar);
+        return repo.save(consultaDestinoEncontrada);
     }
-
 }
