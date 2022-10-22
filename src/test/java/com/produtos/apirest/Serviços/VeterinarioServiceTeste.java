@@ -1,6 +1,5 @@
 package com.produtos.apirest.Serviços;
 
-import com.produtos.apirest.models.Area;
 import com.produtos.apirest.models.Especialidade;
 import com.produtos.apirest.models.Veterinario;
 import com.produtos.apirest.repository.AreaRepo;
@@ -13,10 +12,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+
+import static com.produtos.apirest.Serviços.EspecialidadeServiceTeste.generateEspecialidade;
+import static com.produtos.apirest.Serviços.EspecialidadeServiceTeste.rollbackEspecialidade;
+import static com.produtos.apirest.Util.Util.generateCPF;
+import static com.produtos.apirest.Util.Util.generateTelefone;
 
 @SpringBootTest
 public class VeterinarioServiceTeste {
@@ -33,328 +34,127 @@ public class VeterinarioServiceTeste {
     @Autowired
     public EspecialidadeRepo especialidadeRepo;
 
-    Random random = new Random();
+
+    private Veterinario generateVeterinario(Boolean initalizeFields){
+        Veterinario veterinario = Veterinario.builder()
+                .nome("teste")
+                .telefone(generateTelefone())
+                .cpf(generateCPF())
+                .especialidade(generateEspecialidade(false, areaRepo))
+                .build();
+        if (initalizeFields) {
+            Especialidade especialidade = generateEspecialidade(true, areaRepo);
+            veterinario.setEspecialidade(especialidadeRepo.save(especialidade));
+        }
+        return veterinario;
+    }
+
+    protected static Veterinario generateVeterinario(Boolean initalizeFields, AreaRepo areaRepo,
+                                                     EspecialidadeRepo especialidadeRepo){
+        Veterinario veterinario = Veterinario.builder()
+                .nome("teste")
+                .telefone(generateTelefone())
+                .cpf(generateCPF())
+                .especialidade(generateEspecialidade(false, areaRepo))
+                .build();
+        if (initalizeFields) {
+            Especialidade especialidade = generateEspecialidade(true, areaRepo);
+            veterinario.setEspecialidade(especialidadeRepo.save(especialidade));
+        }
+        return veterinario;
+    }
+
+    private void rollback(Veterinario veterinario, Boolean skipVeterinario){
+        if (!skipVeterinario)
+            veterinarioRepo.delete(veterinario);
+        especialidadeRepo.delete(veterinario.getEspecialidade());
+        areaRepo.delete(veterinario.getEspecialidade().getArea());
+    }
 
     @Test
     public void deveSalvar(){
-        //Cenário
-        Area area = Area.builder()
-                .nome("Area Teste")
-                .build();
-        Area areaRetorno = areaRepo.save(area);
-
-        Especialidade especialidade = Especialidade.builder()
-                .nome("Especidalidade Teste")
-                .area(areaRetorno)
-                .build();
-        Especialidade especialidadeRetorno = especialidadeRepo.save(especialidade);
-
-        Veterinario veterinario = Veterinario.builder()
-                .nome("Veterinário Teste")
-                .telefone("Telefone Teste")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .especialidade(especialidadeRetorno)
-                .build();
-
-        //Ação
-        Veterinario veterinarioRetorno = veterinarioService.salvar(veterinario);
-
-        //Verificação
-        Assertions.assertNotNull(veterinarioRetorno);
-        Assertions.assertNotNull(veterinarioRetorno.getVeterinarioId());
-
-        //Rollback
-        veterinarioRepo.delete(veterinarioRetorno);
-        especialidadeRepo.delete(especialidadeRetorno);
-        areaRepo.delete(areaRetorno);
+        Veterinario veterinarioSalvo = veterinarioService.salvar(generateVeterinario(true));
+        Assertions.assertNotNull(veterinarioSalvo);
+        Assertions.assertNotNull(veterinarioSalvo.getVeterinarioId());
+        rollback(veterinarioSalvo, false);
     }
 
     @Test
     public void deveAtualizar(){
-        //Cenário
-        Area area = Area.builder()
-                .nome("Area Teste")
-                .build();
-        Area areaRetorno = areaRepo.save(area);
-
-        Especialidade especialidade = Especialidade.builder()
-                .nome("Especidalidade Teste")
-                .area(areaRetorno)
-                .build();
-        Especialidade especialidadeRetorno = especialidadeRepo.save(especialidade);
-
-        Veterinario veterinario = Veterinario.builder()
-                .nome("Veterinário Teste")
-                .telefone("Telefone Teste")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .especialidade(especialidadeRetorno)
-                .build();
-        Veterinario veterinarioRetorno = veterinarioRepo.save(veterinario);
-
-        //Ação
-        veterinarioRetorno.setNome("Veterinario Atualizado");
-        Veterinario veterinarioAtualizado = veterinarioService.atualizar(veterinarioRetorno);
-
-        //Verificação
+        Veterinario veterinarioSalvo = veterinarioRepo.save(generateVeterinario(true));
+        veterinarioSalvo.setNome("Veterinario Atualizado");
+        Veterinario veterinarioAtualizado = veterinarioService.atualizar(veterinarioSalvo);
         Assertions.assertNotNull(veterinarioAtualizado);
-        Assertions.assertEquals(veterinarioAtualizado.getVeterinarioId(), veterinarioRetorno.getVeterinarioId());
+        Assertions.assertEquals(veterinarioAtualizado.getVeterinarioId(), veterinarioSalvo.getVeterinarioId());
         Assertions.assertEquals(veterinarioAtualizado.getNome(), "Veterinario Atualizado");
-
-        //Rollback
-        veterinarioRepo.delete(veterinarioRetorno);
-        especialidadeRepo.delete(especialidadeRetorno);
-        areaRepo.delete(areaRetorno);
+        rollback(veterinarioAtualizado, false);
     }
 
     @Test
     public void deveRemover(){
-        //Cenário
-        Area area = Area.builder()
-                .nome("Area Teste")
-                .build();
-        Area areaRetorno = areaRepo.save(area);
-
-        Especialidade especialidade = Especialidade.builder()
-                .nome("Especidalidade Teste")
-                .area(areaRetorno)
-                .build();
-        Especialidade especialidadeRetorno = especialidadeRepo.save(especialidade);
-
-        Veterinario veterinario = Veterinario.builder()
-                .nome("Veterinário Teste")
-                .telefone("Telefone Teste")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .especialidade(especialidadeRetorno)
-                .build();
-        Veterinario veterinarioRetorno = veterinarioRepo.save(veterinario);
-
-        //Ação
-        veterinarioService.remover(veterinarioRetorno.getVeterinarioId());
-
-        //Verificação
-        Optional<Veterinario> veterinarios = veterinarioRepo.findById(veterinarioRetorno.getVeterinarioId());
-        Assertions.assertNotNull(veterinarios);
-        Assertions.assertFalse(veterinarios.isPresent());
-
-        //Rollback
-        especialidadeRepo.delete(especialidadeRetorno);
-        areaRepo.delete(areaRetorno);
+        Veterinario veterinarioSalvo = veterinarioRepo.save(generateVeterinario(true));
+        Long id = veterinarioSalvo.getVeterinarioId();
+        veterinarioService.remover(veterinarioSalvo.getVeterinarioId());
+        Assertions.assertFalse(veterinarioRepo.findById(id).isPresent());
+        rollback(veterinarioSalvo, true);
     }
 
     @Test
     public void deveRemoverComFeedback(){
-        //Cenário
-        Area area = Area.builder()
-                .nome("Area Teste")
-                .build();
-        Area areaRetorno = areaRepo.save(area);
-
-        Especialidade especialidade = Especialidade.builder()
-                .nome("Especidalidade Teste")
-                .area(areaRetorno)
-                .build();
-        Especialidade especialidadeRetorno = especialidadeRepo.save(especialidade);
-
-        Veterinario veterinario = Veterinario.builder()
-                .nome("Veterinário Teste")
-                .telefone("Telefone Teste")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .especialidade(especialidadeRetorno)
-                .build();
-        Veterinario veterinarioRetorno = veterinarioRepo.save(veterinario);
-
-        //Ação
-        Veterinario veterinarioFeedback = veterinarioService.removerComFeedback(veterinarioRetorno.getVeterinarioId());
-
-        //Verificação
+        Veterinario veterinarioSalvo = veterinarioRepo.save(generateVeterinario(true));
+        Veterinario veterinarioFeedback = veterinarioService.removerComFeedback(veterinarioSalvo.getVeterinarioId());
         Assertions.assertNotNull(veterinarioFeedback);
-        Assertions.assertEquals(veterinarioRetorno.getVeterinarioId(), veterinarioFeedback.getVeterinarioId());
-
-        //Rollback
-        especialidadeRepo.delete(especialidadeRetorno);
-        areaRepo.delete(areaRetorno);
+        Assertions.assertEquals(veterinarioSalvo.getVeterinarioId(), veterinarioFeedback.getVeterinarioId());
+        rollback(veterinarioFeedback, true);
     }
 
     @Test
     public void deveBuscarPorId(){
-        //Cenário
-        Area area = Area.builder()
-                .nome("Area Teste")
-                .build();
-        Area areaRetorno = areaRepo.save(area);
-
-        Especialidade especialidade = Especialidade.builder()
-                .nome("Especidalidade Teste")
-                .area(areaRetorno)
-                .build();
-        Especialidade especialidadeRetorno = especialidadeRepo.save(especialidade);
-
-        Veterinario veterinario = Veterinario.builder()
-                .nome("Veterinário Teste")
-                .telefone("Telefone Teste")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .especialidade(especialidadeRetorno)
-                .build();
-        Veterinario veterinarioRetorno = veterinarioRepo.save(veterinario);
-
-        //Ação
-        Veterinario veterinarioBuscado = veterinarioService.buscarPorId(veterinarioRetorno.getVeterinarioId());
-
-        //Verificação
-        Assertions.assertNotNull(veterinarioBuscado);
-        Assertions.assertEquals(veterinarioRetorno.getVeterinarioId(), veterinarioBuscado.getVeterinarioId());
-
-        //Ação
-        veterinarioRepo.delete(veterinarioRetorno);
-        especialidadeRepo.delete(especialidadeRetorno);
-        areaRepo.delete(areaRetorno);
+        Veterinario veterinarioSalvo = veterinarioRepo.save(generateVeterinario(true));
+        Long id = veterinarioSalvo.getVeterinarioId();
+        Veterinario veterinarioEncontrado = veterinarioService.buscarPorId(id);
+        Assertions.assertNotNull(veterinarioEncontrado);
+        Assertions.assertEquals(veterinarioSalvo.getVeterinarioId(), veterinarioEncontrado.getVeterinarioId());
+        rollback(veterinarioSalvo, false);
     }
 
     @Test
     public void deveBuscarComFiltro(){
-        //Cenário
-        Area area = Area.builder()
-                .nome("Area Teste")
-                .build();
-        Area areaRetorno = areaRepo.save(area);
-
-        Especialidade especialidade = Especialidade.builder()
-                .nome("Especidalidade Teste")
-                .area(areaRetorno)
-                .build();
-        Especialidade especialidadeRetorno = especialidadeRepo.save(especialidade);
-
-        Veterinario veterinario = Veterinario.builder()
-                .nome("Veterinário Teste")
-                .telefone("Telefone Teste")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .especialidade(especialidadeRetorno)
-                .build();
-        Veterinario veterinarioRetorno = veterinarioRepo.save(veterinario);
-
-        //Ação
-        List<Veterinario> veterinarios = veterinarioService.buscar(veterinarioRetorno);
-
-        //Verificação
-        Assertions.assertNotNull(veterinarios);
-        Assertions.assertFalse(veterinarios.isEmpty());
-
-        //Rollback
-        veterinarioRepo.delete(veterinarioRetorno);
-        especialidadeRepo.delete(especialidadeRetorno);
-        areaRepo.delete(areaRetorno);
+        Veterinario veterinarioSalvo = veterinarioRepo.save(generateVeterinario(true));
+        List<Veterinario> veterinarioEncontradosList = veterinarioService.buscar(veterinarioSalvo);
+        Assertions.assertNotNull(veterinarioEncontradosList);
+        Assertions.assertFalse(veterinarioEncontradosList.isEmpty());
+        rollback(veterinarioSalvo, false);
     }
 
     @Test
     public void deveBuscarEspecialidade(){
-        //Cenário
-        Area area = Area.builder()
-                .nome("Area Teste")
-                .build();
-        Area areaRetorno = areaRepo.save(area);
-
-        Especialidade especialidade = Especialidade.builder()
-                .nome("Especidalidade Teste")
-                .area(areaRetorno)
-                .build();
-        Especialidade especialidadeRetorno = especialidadeRepo.save(especialidade);
-
-        Veterinario veterinario = Veterinario.builder()
-                .nome("Veterinário Teste")
-                .telefone("Telefone Teste")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .especialidade(especialidadeRetorno)
-                .build();
-        Veterinario veterinarioRetorno = veterinarioRepo.save(veterinario);
-
-        //Ação
-        Especialidade especialidadeBuscada = veterinarioService.buscarEspecialidade(veterinarioRetorno);
-
-        //Verificação
-        Assertions.assertNotNull(especialidadeBuscada);
-        Assertions.assertEquals(especialidadeRetorno.getEspecialidadeId(), especialidadeBuscada.getEspecialidadeId());
-
-        //Rollback
-        veterinarioRepo.delete(veterinarioRetorno);
-        especialidadeRepo.delete(especialidadeRetorno);
-        areaRepo.delete(areaRetorno);
+        Veterinario veterinarioSalvo = veterinarioRepo.save(generateVeterinario(true));
+        Especialidade especialidadeEncontrada = veterinarioService.buscarEspecialidade(veterinarioSalvo);
+        Assertions.assertNotNull(especialidadeEncontrada);
+        Assertions.assertEquals(veterinarioSalvo.getEspecialidade().getEspecialidadeId(), especialidadeEncontrada.getEspecialidadeId());
+        rollback(veterinarioSalvo, false);
     }
 
     @Test
     public void deveAtualizarEspecialidade(){
-        //Cenário
-        Area area = Area.builder()
-                .nome("Area Teste")
-                .build();
-        Area areaRetorno = areaRepo.save(area);
-
-        Especialidade especialidade = Especialidade.builder()
-                .nome("Especidalidade Teste")
-                .area(areaRetorno)
-                .build();
-        Especialidade especialidadeRetorno = especialidadeRepo.save(especialidade);
-
-        Veterinario veterinario = Veterinario.builder()
-                .nome("Veterinário Teste")
-                .telefone("Telefone Teste")
-                .cpf("CPF Teste")
-                .especialidade(especialidadeRetorno)
-                .build();
-        Veterinario veterinarioRetorno = veterinarioRepo.save(veterinario);
-
-        Especialidade especialidadeNova = Especialidade.builder()
-                .nome("Especidalidade Nova")
-                .area(areaRetorno)
-                .build();
-        Especialidade especialidadeNovaRetorno = especialidadeRepo.save(especialidadeNova);
-
-        //Ação
-        Veterinario veterinarioAtualizado = veterinarioService.atualizarEspecialidade(especialidadeNovaRetorno, veterinarioRetorno);
-
-        //Verificação
+        Veterinario veterinarioSalvo = veterinarioRepo.save(generateVeterinario(true));
+        Especialidade especialidadeAntiga = veterinarioSalvo.getEspecialidade();
+        Especialidade especialidadeNova = especialidadeRepo.save(generateEspecialidade(true, areaRepo));
+        Veterinario veterinarioAtualizado = veterinarioService.atualizarEspecialidade(especialidadeNova, veterinarioSalvo);
         Assertions.assertNotNull(veterinarioAtualizado);
         Assertions.assertNotNull(veterinarioAtualizado.getVeterinarioId());
-        Assertions.assertEquals(veterinarioRetorno.getVeterinarioId(), veterinarioAtualizado.getVeterinarioId());
-
-        //Rollback
-        veterinarioRepo.delete(veterinarioRetorno);
-        especialidadeRepo.delete(especialidadeRetorno);
-        especialidadeRepo.delete(especialidadeNovaRetorno);
-        areaRepo.delete(areaRetorno);
+        Assertions.assertEquals(veterinarioSalvo.getVeterinarioId(), veterinarioAtualizado.getVeterinarioId());
+        rollback(veterinarioAtualizado, false);
+        rollbackEspecialidade(especialidadeAntiga, especialidadeRepo, areaRepo);
     }
+
     @Test
     public void deveBuscarTodos(){
-        //Cenário
-        Area area = Area.builder()
-                .nome("Area Teste")
-                .build();
-        Area areaRetorno = areaRepo.save(area);
-
-        Especialidade especialidade = Especialidade.builder()
-                .nome("Especidalidade Teste")
-                .area(areaRetorno)
-                .build();
-        Especialidade especialidadeRetorno = especialidadeRepo.save(especialidade);
-
-        Veterinario veterinario = Veterinario.builder()
-                .nome("Veterinário Teste")
-                .telefone("Telefone Teste")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .especialidade(especialidadeRetorno)
-                .build();
-        Veterinario veterinarioRetorno = veterinarioService.salvar(veterinario);
-
-        //Ação
-        List<Veterinario> veterinarios = veterinarioService.buscarTodos();
-
-        //Verificação
-        Assertions.assertNotNull(veterinarios);
-        Assertions.assertFalse(veterinarios.isEmpty());
-
-        //Rollback
-        veterinarioRepo.delete(veterinarioRetorno);
-        especialidadeRepo.delete(especialidadeRetorno);
-        areaRepo.delete(areaRetorno);
+        Veterinario veterinarioSalvo = veterinarioService.salvar(generateVeterinario(true));
+        List<Veterinario> veterinarioList = veterinarioService.buscarTodos();
+        Assertions.assertNotNull(veterinarioList);
+        Assertions.assertFalse(veterinarioList.isEmpty());
+        rollback(veterinarioSalvo, false);
     }
-
 }

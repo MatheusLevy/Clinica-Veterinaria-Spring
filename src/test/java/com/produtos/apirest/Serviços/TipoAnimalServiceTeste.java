@@ -19,7 +19,7 @@ public class TipoAnimalServiceTeste {
     @Autowired
     public TipoAnimalRepo tipoAnimalRepo;
 
-    protected TipoAnimal generateTipoAnimal(){
+    protected static TipoAnimal generateTipoAnimal(){
         return TipoAnimal.builder()
                 .nome("teste")
                 .build();
