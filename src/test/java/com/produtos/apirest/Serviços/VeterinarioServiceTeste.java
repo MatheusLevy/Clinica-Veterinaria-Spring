@@ -71,6 +71,15 @@ public class VeterinarioServiceTeste {
         areaRepo.delete(veterinario.getEspecialidade().getArea());
     }
 
+    protected static void rollbackVeterinario(Veterinario veterinario, VeterinarioRepo veterinarioRepo,
+                                   AreaRepo areaRepo, EspecialidadeRepo especialidadeRepo,
+                                   Boolean skipVeterinario){
+        if (!skipVeterinario)
+            veterinarioRepo.delete(veterinario);
+        especialidadeRepo.delete(veterinario.getEspecialidade());
+        areaRepo.delete(veterinario.getEspecialidade().getArea());
+    }
+
     @Test
     public void deveSalvar(){
         Veterinario veterinarioSalvo = veterinarioService.salvar(generateVeterinario(true));

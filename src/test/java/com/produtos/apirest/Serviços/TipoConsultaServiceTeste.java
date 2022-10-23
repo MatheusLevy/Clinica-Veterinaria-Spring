@@ -19,7 +19,7 @@ public class TipoConsultaServiceTeste {
     @Autowired
     public TipoConsultaRepo tipoConsultaRepo;
 
-    protected TipoConsulta generateTipoConsulta(){
+    protected static TipoConsulta generateTipoConsulta(){
         return TipoConsulta.builder()
                 .nome("Teste")
                 .build();
@@ -29,7 +29,7 @@ public class TipoConsultaServiceTeste {
         tipoConsultaRepo.delete(tipoConsulta);
     }
 
-    protected void rollbackTipoConsulta(TipoConsulta tipoConsulta, TipoConsultaRepo tipoConsultaRepo){
+    protected static void rollbackTipoConsulta(TipoConsulta tipoConsulta, TipoConsultaRepo tipoConsultaRepo){
         tipoConsultaRepo.delete(tipoConsulta);
     }
 

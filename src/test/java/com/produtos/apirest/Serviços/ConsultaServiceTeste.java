@@ -10,8 +10,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+
+import static com.produtos.apirest.Serviços.AnimalServiceTeste.generateAnimal;
+import static com.produtos.apirest.Serviços.AnimalServiceTeste.rollbackAnimal;
+import static com.produtos.apirest.Serviços.TipoConsultaServiceTeste.generateTipoConsulta;
+import static com.produtos.apirest.Serviços.TipoConsultaServiceTeste.rollbackTipoConsulta;
+import static com.produtos.apirest.Serviços.VeterinarioServiceTeste.generateVeterinario;
+import static com.produtos.apirest.Serviços.VeterinarioServiceTeste.rollbackVeterinario;
+
 
 @SpringBootTest
 public class ConsultaServiceTeste {
@@ -43,773 +49,166 @@ public class ConsultaServiceTeste {
     @Autowired
     public TipoConsultaRepo tipoConsultaRepo;
 
-    Random random = new Random();
+    private Consulta generateConsulta(Boolean initializeFields){
+        Consulta consulta = Consulta.builder()
+                .descricao("desc")
+                .data(LocalDate.now())
+                .tipoConsulta(generateTipoConsulta())
+                .veterinario(generateVeterinario(false, areaRepo, especialidadeRepo))
+                .animal(generateAnimal(tipoAnimalRepo, donoRepo, false))
+                .build();
+        if (initializeFields){
+            consulta.setTipoConsulta(tipoConsultaRepo.save(generateTipoConsulta()));
+            consulta.setVeterinario(veterinarioRepo.save(generateVeterinario(true, areaRepo, especialidadeRepo)));
+            consulta.setAnimal(animalRepo.save(generateAnimal(tipoAnimalRepo, donoRepo, true)));
+        }
+        return consulta;
+    }
+
+    protected static Consulta generateConsulta(AreaRepo areaRepo, EspecialidadeRepo especialidadeRepo,
+                                               TipoAnimalRepo tipoAnimalRepo, DonoRepo donoRepo,
+                                               TipoConsultaRepo tipoConsultaRepo, VeterinarioRepo veterinarioRepo,
+                                               AnimalRepo animalRepo, Boolean initializeFields){
+        Consulta consulta = Consulta.builder()
+                .descricao("desc")
+                .data(LocalDate.now())
+                .tipoConsulta(generateTipoConsulta())
+                .veterinario(generateVeterinario(false, areaRepo, especialidadeRepo))
+                .animal(generateAnimal(tipoAnimalRepo, donoRepo, false))
+                .build();
+        if (initializeFields){
+            consulta.setTipoConsulta(tipoConsultaRepo.save(consulta.getTipoConsulta()));
+            consulta.setVeterinario(veterinarioRepo.save(consulta.getVeterinario()));
+            consulta.setAnimal(animalRepo.save(consulta.getAnimal()));
+        }
+        return consulta;
+    }
+
+    private void rollback(Consulta consulta, Boolean skipConsulta){
+        if (!skipConsulta)
+            consultaRepo.delete(consulta);
+        animalRepo.delete(consulta.getAnimal());
+        veterinarioRepo.deleteById(consulta.getVeterinario().getVeterinarioId());
+        tipoAnimalRepo.delete(consulta.getAnimal().getTipoAnimal());
+        tipoConsultaRepo.delete(consulta.getTipoConsulta());
+        especialidadeRepo.delete(consulta.getVeterinario().getEspecialidade());
+        areaRepo.delete(consulta.getVeterinario().getEspecialidade().getArea());
+        donoRepo.delete(consulta.getAnimal().getDono());
+    }
+
+    protected static void rollbackConsulta(Consulta consulta, ConsultaRepo consultaRepo,
+                                           AnimalRepo animalRepo, VeterinarioRepo veterinarioRepo,
+                                           TipoAnimalRepo tipoAnimalRepo, TipoConsultaRepo tipoConsultaRepo,
+                                           EspecialidadeRepo especialidadeRepo, AreaRepo areaRepo,
+                                           DonoRepo donoRepo, Boolean skipConsulta){
+        if (!skipConsulta)
+            consultaRepo.delete(consulta);
+        animalRepo.delete(consulta.getAnimal());
+        veterinarioRepo.deleteById(consulta.getVeterinario().getVeterinarioId());
+        tipoAnimalRepo.delete(consulta.getAnimal().getTipoAnimal());
+        tipoConsultaRepo.delete(consulta.getTipoConsulta());
+        especialidadeRepo.delete(consulta.getVeterinario().getEspecialidade());
+        areaRepo.delete(consulta.getVeterinario().getEspecialidade().getArea());
+        donoRepo.delete(consulta.getAnimal().getDono());
+    }
 
     @Test
     public void deveSalvar(){
-        //Cenário
-        Dono dono = Dono.builder()
-                .nome("Dono Teste")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("Telefone Teste")
-                .build();
-        Dono donoRetorno = donoRepo.save(dono);
-
-        TipoAnimal tipoAnimal = TipoAnimal.builder()
-                .nome("Tipo Animal Teste")
-                .build();
-        TipoAnimal tipoAnimalRetorno =  tipoAnimalRepo.save(tipoAnimal);
-
-        Animal animal =  Animal.builder(
-
-        ).tipoAnimal(tipoAnimalRetorno)
-                .dono(donoRetorno)
-                .nome("Animal Teste")
-                .build();
-        Animal animalRetorno = animalRepo.save(animal);
-
-        Area area = Area.builder()
-                .nome("Area Teste")
-                .build();
-        Area areaRetorno = areaRepo.save(area);
-
-        Especialidade especialidade = Especialidade.builder()
-                .nome("Especialidade Teste")
-                .area(areaRetorno)
-                .build();
-        Especialidade especialidadeRetorno = especialidadeRepo.save(especialidade);
-
-        Veterinario veterinario = Veterinario.builder()
-                .nome("Veterinario Teste")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("telefone teste")
-                .especialidade(especialidadeRetorno)
-                .build();
-        Veterinario veterinarioRetorno = veterinarioRepo.save(veterinario);
-
-        TipoConsulta tipoConsulta = TipoConsulta.builder()
-                .nome("Tipo Consulta Teste")
-                .build();
-        TipoConsulta tipoConsultaRetorno = tipoConsultaRepo.save(tipoConsulta);
-
-        Consulta consulta = Consulta.builder()
-                .tipoConsulta(tipoConsultaRetorno)
-                .data(LocalDate.now())
-                .descricao("Descricao Teste")
-                .animal(animalRetorno)
-                .veterinario(veterinarioRetorno)
-                .build();
-
-        //Ação
-        Consulta consultaRetorno = consultaService.salvar(consulta);
-
-        //Verificação
-        Assertions.assertNotNull(consultaRetorno);
-        Assertions.assertNotNull(consultaRetorno.getConsultaId());
-
-        //Rollback
-        consultaRepo.delete(consultaRetorno);
-        animalRepo.delete(animalRetorno);
-        veterinarioRepo.delete(veterinarioRetorno);
-        animalRepo.delete(animalRetorno);
-        tipoAnimalRepo.delete(tipoAnimalRetorno);
-        tipoConsultaRepo.delete(tipoConsultaRetorno);
-        especialidadeRepo.delete(especialidadeRetorno);
-        areaRepo.delete(areaRetorno);
-        donoRepo.delete(donoRetorno);
+        Consulta consultaSalva = consultaService.salvar(generateConsulta(true));
+        Assertions.assertNotNull(consultaSalva);
+        Assertions.assertNotNull(consultaSalva.getConsultaId());
+        rollback(consultaSalva, false);
     }
 
     @Test
     public void deveAtualizar(){
-        Dono dono = Dono.builder()
-                .nome("Dono Teste")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("Telefone Teste")
-                .build();
-        Dono donoRetorno = donoRepo.save(dono);
-
-        TipoAnimal tipoAnimal = TipoAnimal.builder()
-                .nome("Tipo Animal Teste")
-                .build();
-        TipoAnimal tipoAnimalRetorno =  tipoAnimalRepo.save(tipoAnimal);
-
-        Animal animal =  Animal.builder()
-                .tipoAnimal(tipoAnimalRetorno)
-                .dono(donoRetorno)
-                .nome("Animal Teste")
-                .build();
-        Animal animalRetorno = animalRepo.save(animal);
-
-        Area area = Area.builder()
-                .nome("Area Teste")
-                .build();
-        Area areaRetorno = areaRepo.save(area);
-
-        Especialidade especialidade = Especialidade
-                .builder()
-                .nome("Especialidade Teste")
-                .area(areaRetorno)
-                .build();
-        Especialidade especialidadeRetorno = especialidadeRepo.save(especialidade);
-
-        Veterinario veterinario = Veterinario.builder()
-                .nome("Veterinario Teste")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("telefone teste")
-                .especialidade(especialidadeRetorno)
-                .build();
-
-        Veterinario veterinarioRetorno = veterinarioRepo.save(veterinario);
-
-        TipoConsulta tipoConsulta = TipoConsulta.builder()
-                .nome("Tipo Consulta Teste")
-                .build();
-        TipoConsulta tipoConsultaRetorno = tipoConsultaRepo.save(tipoConsulta);
-
-        Consulta consulta = Consulta.builder()
-                .tipoConsulta(tipoConsultaRetorno)
-                .data(LocalDate.now())
-                .descricao("Descricao Teste")
-                .animal(animalRetorno)
-                .veterinario(veterinarioRetorno)
-                .build();
-        Consulta consultaRetorno = consultaRepo.save(consulta);
-
-        //Ação
-        consultaRetorno.setDescricao("Nova Descrição");
-        Consulta consultaAtualizada = consultaService.atualizar(consultaRetorno);
-
-        //Verificação
+        Consulta consultaSalva = consultaRepo.save(generateConsulta(true));
+        consultaSalva.setDescricao("Nova Descrição");
+        Consulta consultaAtualizada = consultaService.atualizar(consultaSalva);
         Assertions.assertNotNull(consultaAtualizada);
-        Assertions.assertEquals(consultaRetorno.getConsultaId(), consultaAtualizada.getConsultaId());
+        Assertions.assertEquals(consultaSalva.getConsultaId(), consultaAtualizada.getConsultaId());
         Assertions.assertEquals(consultaAtualizada.getDescricao(), "Nova Descrição");
-
-        //Rollback
-        consultaRepo.delete(consultaRetorno);
-        animalRepo.delete(animalRetorno);
-        veterinarioRepo.delete(veterinarioRetorno);
-        animalRepo.delete(animalRetorno);
-        tipoAnimalRepo.delete(tipoAnimalRetorno);
-        tipoConsultaRepo.delete(tipoConsultaRetorno);
-        especialidadeRepo.delete(especialidadeRetorno);
-        areaRepo.delete(areaRetorno);
-        donoRepo.delete(donoRetorno);
+        rollback(consultaSalva, false);
     }
 
     @Test
     public void deveRemover(){
-        //Cenário
-        Dono dono = Dono.builder()
-                .nome("Dono Teste")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("Telefone Teste")
-                .build();
-        Dono donoRetorno = donoRepo.save(dono);
-
-        TipoAnimal tipoAnimal = TipoAnimal.builder()
-                .nome("Tipo Animal Teste")
-                .build();
-        TipoAnimal tipoAnimalRetorno =  tipoAnimalRepo.save(tipoAnimal);
-
-        Animal animal =  Animal.builder()
-                .tipoAnimal(tipoAnimalRetorno)
-                .dono(donoRetorno)
-                .nome("Animal Teste")
-                .build();
-        Animal animalRetorno = animalRepo.save(animal);
-
-        Area area = Area.builder()
-                .nome("Area Teste")
-                .build();
-        Area areaRetorno = areaRepo.save(area);
-
-        Especialidade especialidade = Especialidade.builder()
-                .nome("Especialidade Teste")
-                .area(areaRetorno)
-                .build();
-        Especialidade especialidadeRetorno = especialidadeRepo.save(especialidade);
-
-        Veterinario veterinario = Veterinario.builder()
-                .nome("Veterinario Teste")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("telefone teste")
-                .especialidade(especialidadeRetorno)
-                .build();
-        Veterinario veterinarioRetorno = veterinarioRepo.save(veterinario);
-
-        TipoConsulta tipoConsulta = TipoConsulta.builder()
-                .nome("Tipo Consulta Teste")
-                .build();
-        TipoConsulta tipoConsultaRetorno = tipoConsultaRepo.save(tipoConsulta);
-
-        Consulta consulta = Consulta.builder()
-                .tipoConsulta(tipoConsultaRetorno)
-                .data(LocalDate.now())
-                .descricao("Descricao Teste")
-                .animal(animalRetorno)
-                .veterinario(veterinarioRetorno)
-                .build();
-        Consulta consultaRetorno = consultaRepo.save(consulta);
-
-        //Ação
-        consultaService.remover(consultaRetorno);
-
-        //Verificação
-        Optional<Consulta> consultaTemp = consultaRepo.findById(consultaRetorno.getConsultaId());
-        Assertions.assertFalse(consultaTemp.isPresent());
-
-        //Rollback
-        consultaRepo.delete(consultaRetorno);
-        animalRepo.delete(animalRetorno);
-        veterinarioRepo.delete(veterinarioRetorno);
-        animalRepo.delete(animalRetorno);
-        tipoAnimalRepo.delete(tipoAnimalRetorno);
-        tipoConsultaRepo.delete(tipoConsultaRetorno);
-        especialidadeRepo.delete(especialidadeRetorno);
-        areaRepo.delete(areaRetorno);
-        donoRepo.delete(donoRetorno);
+        Consulta consultaSalva = consultaRepo.save(generateConsulta(true));
+        Long id = consultaSalva.getConsultaId();
+        consultaService.remover(consultaSalva);
+        Assertions.assertFalse(consultaRepo.findById(id).isPresent());
+        rollback(consultaSalva, true);
     }
 
     @Test
     public void deveRemoverComId(){
-        //Cenário
-        Dono dono = Dono.builder()
-                .nome("Dono Teste")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("Telefone Teste")
-                .build();
-        Dono donoRetorno = donoRepo.save(dono);
-
-        TipoAnimal tipoAnimal = TipoAnimal.builder()
-                .nome("Tipo Animal Teste")
-                .build();
-        TipoAnimal tipoAnimalRetorno =  tipoAnimalRepo.save(tipoAnimal);
-
-        Animal animal =  Animal.builder()
-                .tipoAnimal(tipoAnimalRetorno)
-                .dono(donoRetorno)
-                .nome("Animal Teste")
-                .build();
-        Animal animalRetorno = animalRepo.save(animal);
-
-        Area area = Area.builder()
-                .nome("Area Teste")
-                .build();
-        Area areaRetorno = areaRepo.save(area);
-
-        Especialidade especialidade = Especialidade.builder()
-                .nome("Especialidade Teste")
-                .area(areaRetorno)
-                .build();
-        Especialidade especialidadeRetorno = especialidadeRepo.save(especialidade);
-
-        Veterinario veterinario = Veterinario.builder()
-                .nome("Veterinario Teste")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("telefone teste")
-                .especialidade(especialidadeRetorno)
-                .build();
-        Veterinario veterinarioRetorno = veterinarioRepo.save(veterinario);
-
-        TipoConsulta tipoConsulta = TipoConsulta.builder()
-                .nome("Tipo Consulta Teste")
-                .build();
-        TipoConsulta tipoConsultaRetorno = tipoConsultaRepo.save(tipoConsulta);
-
-        Consulta consulta = Consulta.builder()
-                .tipoConsulta(tipoConsultaRetorno)
-                .data(LocalDate.now())
-                .descricao("Descricao Teste")
-                .animal(animalRetorno)
-                .veterinario(veterinarioRetorno)
-                .build();
-        Consulta consultaRetorno = consultaRepo.save(consulta);
-
-        //Ação
-        consultaService.removerPorId(consultaRetorno.getConsultaId());
-
-        //Verificação
-        Optional<Consulta> consultaTemp = consultaRepo.findById(consultaRetorno.getConsultaId());
-        Assertions.assertFalse(consultaTemp.isPresent());
-
-        //Rollback
-        consultaRepo.delete(consultaRetorno);
-        animalRepo.delete(animalRetorno);
-        veterinarioRepo.delete(veterinarioRetorno);
-        animalRepo.delete(animalRetorno);
-        tipoAnimalRepo.delete(tipoAnimalRetorno);
-        tipoConsultaRepo.delete(tipoConsultaRetorno);
-        especialidadeRepo.delete(especialidadeRetorno);
-        areaRepo.delete(areaRetorno);
-        donoRepo.delete(donoRetorno);
+        Consulta consultaSalva = consultaRepo.save(generateConsulta(true));
+        Long id = consultaSalva.getConsultaId();
+        consultaService.removerPorId(consultaSalva.getConsultaId());
+        Assertions.assertFalse(consultaRepo.findById(id).isPresent());
+        rollback(consultaSalva, true);
     }
 
     @Test
     public void deveRemoverComFeedback(){
-        //Cenário
-        Dono dono = Dono.builder()
-                .nome("Dono Teste")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("Telefone Teste")
-                .build();
-        Dono donoRetorno = donoRepo.save(dono);
-
-        TipoAnimal tipoAnimal = TipoAnimal.builder()
-                .nome("Tipo Animal Teste")
-                .build();
-        TipoAnimal tipoAnimalRetorno =  tipoAnimalRepo.save(tipoAnimal);
-
-        Animal animal =  Animal.builder()
-                .tipoAnimal(tipoAnimalRetorno)
-                .dono(donoRetorno)
-                .nome("Animal Teste")
-                .build();
-        Animal animalRetorno = animalRepo.save(animal);
-
-        Area area = Area.builder()
-                .nome("Area Teste")
-                .build();
-        Area areaRetorno = areaRepo.save(area);
-
-        Especialidade especialidade = Especialidade.builder()
-                .nome("Especialidade Teste")
-                .area(areaRetorno)
-                .build();
-        Especialidade especialidadeRetorno = especialidadeRepo.save(especialidade);
-
-        Veterinario veterinario = Veterinario.builder()
-                .nome("Veterinario Teste")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("telefone teste")
-                .especialidade(especialidadeRetorno)
-                .build();
-        Veterinario veterinarioRetorno = veterinarioRepo.save(veterinario);
-
-        TipoConsulta tipoConsulta = TipoConsulta.builder()
-                .nome("Tipo Consulta Teste")
-                .build();
-        TipoConsulta tipoConsultaRetorno = tipoConsultaRepo.save(tipoConsulta);
-
-        Consulta consulta = Consulta.builder()
-                .tipoConsulta(tipoConsultaRetorno)
-                .data(LocalDate.now())
-                .descricao("Descricao Teste")
-                .animal(animalRetorno)
-                .veterinario(veterinarioRetorno)
-                .build();
-        Consulta consultaRetorno = consultaRepo.save(consulta);
-
-        //Ação
-        Consulta consultaRemovida = consultaService.removerComFeedback(consultaRetorno.getConsultaId());
-
-        //Verificação
-        Assertions.assertNotNull(consultaRemovida);
-        Assertions.assertEquals(consultaRemovida.getConsultaId(), consultaRetorno.getConsultaId());
-
-        //Rollback
-        consultaRepo.delete(consultaRetorno);
-        animalRepo.delete(animalRetorno);
-        veterinarioRepo.delete(veterinarioRetorno);
-        animalRepo.delete(animalRetorno);
-        tipoAnimalRepo.delete(tipoAnimalRetorno);
-        tipoConsultaRepo.delete(tipoConsultaRetorno);
-        especialidadeRepo.delete(especialidadeRetorno);
-        areaRepo.delete(areaRetorno);
-        donoRepo.delete(donoRetorno);
+        Consulta consultaSalva = consultaRepo.save(generateConsulta(true));
+        Consulta consultaFeedback = consultaService.removerComFeedback(consultaSalva.getConsultaId());
+        Assertions.assertNotNull(consultaFeedback);
+        Assertions.assertEquals(consultaFeedback.getConsultaId(), consultaSalva.getConsultaId());
+        rollback(consultaSalva, true);
     }
 
     @Test
     public void deveAtualizarVeterinario(){
-
-        Dono dono = Dono.builder()
-                .nome("Dono Teste")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("Telefone Teste")
-                .build();
-        Dono donoRetorno = donoRepo.save(dono);
-
-        TipoAnimal tipoAnimal = TipoAnimal.builder()
-                .nome("Tipo Animal Teste")
-                .build();
-        TipoAnimal tipoAnimalRetorno =  tipoAnimalRepo.save(tipoAnimal);
-
-        Animal animal =  Animal.builder()
-                .tipoAnimal(tipoAnimalRetorno)
-                .dono(donoRetorno)
-                .nome("Animal Teste")
-                .build();
-        Animal animalRetorno = animalRepo.save(animal);
-
-        Area area = Area.builder()
-                .nome("Area Teste")
-                .build();
-        Area areaRetorno = areaRepo.save(area);
-
-        Especialidade especialidade = Especialidade.builder()
-                .nome("Especialidade Teste")
-                .area(areaRetorno)
-                .build();
-        Especialidade especialidadeRetorno = especialidadeRepo.save(especialidade);
-
-        Veterinario veterinario = Veterinario.builder()
-                .nome("Veterinario Teste")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("telefone teste")
-                .especialidade(especialidadeRetorno)
-                .build();
-        Veterinario veterinarioRetorno = veterinarioRepo.save(veterinario);
-
-        TipoConsulta tipoConsulta = TipoConsulta.builder()
-                .nome("Tipo Consulta Teste")
-                .build();
-        TipoConsulta tipoConsultaRetorno = tipoConsultaRepo.save(tipoConsulta);
-
-        Consulta consulta = Consulta.builder()
-                .tipoConsulta(tipoConsultaRetorno)
-                .data(LocalDate.now())
-                .descricao("Descricao Teste")
-                .animal(animalRetorno)
-                .veterinario(veterinarioRetorno)
-                .build();
-        Consulta consultaRetorno = consultaRepo.save(consulta);
-
-        Veterinario veterinarioNovo = Veterinario.builder()
-                .nome("Veterinario Novo")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("telefone teste")
-                .especialidade(especialidadeRetorno)
-                .build();
-        Veterinario veterinarioNovoRetorno = veterinarioRepo.save(veterinarioNovo);
-
-        //Ação
-        Consulta consultaAtualizada = consultaService.atualizarVeterinario(consultaRetorno, veterinarioNovoRetorno);
-
-        //Verificação
+        Consulta consultaSalva = consultaRepo.save(generateConsulta(true));
+        Veterinario veterinarioAntigo = consultaSalva.getVeterinario();
+        Veterinario veterinarioNovo = veterinarioRepo.save(generateVeterinario(true, areaRepo, especialidadeRepo));
+        Consulta consultaAtualizada = consultaService.atualizarVeterinario(consultaSalva, veterinarioNovo);
         Assertions.assertNotNull(consultaAtualizada);
-        Assertions.assertEquals(consultaAtualizada.getVeterinario().getVeterinarioId(), veterinarioNovoRetorno.getVeterinarioId());
-
-        //Rollback
-        consultaRepo.delete(consultaRetorno);
-        animalRepo.delete(animalRetorno);
-        veterinarioRepo.delete(veterinarioRetorno);
-        veterinarioRepo.delete(veterinarioNovoRetorno);
-        animalRepo.delete(animalRetorno);
-        tipoAnimalRepo.delete(tipoAnimalRetorno);
-        tipoConsultaRepo.delete(tipoConsultaRetorno);
-        especialidadeRepo.delete(especialidadeRetorno);
-        areaRepo.delete(areaRetorno);
-        donoRepo.delete(donoRetorno);
+        Assertions.assertEquals(consultaAtualizada.getVeterinario().getVeterinarioId(), veterinarioNovo.getVeterinarioId());
+        rollback(consultaAtualizada, false);
+        rollbackVeterinario(veterinarioAntigo, veterinarioRepo, areaRepo, especialidadeRepo, false);
     }
 
     @Test
     public void deveAtualizarAnimal(){
-        Dono dono = Dono.builder()
-                .nome("Dono Teste")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("Telefone Teste")
-                .build();
-        Dono donoRetorno = donoRepo.save(dono);
-
-        TipoAnimal tipoAnimal = TipoAnimal.builder()
-                .nome("Tipo Animal Teste")
-                .build();
-        TipoAnimal tipoAnimalRetorno =  tipoAnimalRepo.save(tipoAnimal);
-
-        Animal animal =  Animal.builder()
-                .tipoAnimal(tipoAnimalRetorno)
-                .dono(donoRetorno)
-                .nome("Animal Teste")
-                .build();
-        Animal animalRetorno = animalRepo.save(animal);
-
-        Area area = Area.builder()
-                .nome("Area Teste")
-                .build();
-        Area areaRetorno = areaRepo.save(area);
-
-        Especialidade especialidade = Especialidade.builder()
-                .nome("Especialidade Teste")
-                .area(areaRetorno)
-                .build();
-        Especialidade especialidadeRetorno = especialidadeRepo.save(especialidade);
-
-        Veterinario veterinario = Veterinario.builder()
-                .nome("Veterinario Teste")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("telefone teste")
-                .especialidade(especialidadeRetorno)
-                .build();
-        Veterinario veterinarioRetorno = veterinarioRepo.save(veterinario);
-
-        TipoConsulta tipoConsulta = TipoConsulta.builder()
-                .nome("Tipo Consulta Teste")
-                .build();
-        TipoConsulta tipoConsultaRetorno = tipoConsultaRepo.save(tipoConsulta);
-
-        Consulta consulta = Consulta.builder()
-                .tipoConsulta(tipoConsultaRetorno)
-                .data(LocalDate.now())
-                .descricao("Descricao Teste")
-                .animal(animalRetorno)
-                .veterinario(veterinarioRetorno)
-                .build();
-        Consulta consultaRetorno = consultaRepo.save(consulta);
-
-        Animal animalNovo = Animal.builder()
-                .tipoAnimal(tipoAnimalRetorno)
-                .dono(donoRetorno)
-                .nome("Animal Novo")
-                .build();
-        Animal animalNovoRetorno = animalRepo.save(animalNovo);
-
-        //Ação
-        Consulta consultaAtualizada = consultaService.atualizarAnimal(consultaRetorno, animalNovoRetorno);
-
-        //Verificação
+        Consulta consultaSalva = consultaRepo.save(generateConsulta(true));
+        Animal animalAntigo = consultaSalva.getAnimal();
+        Animal animalNovo = animalRepo.save(generateAnimal(tipoAnimalRepo, donoRepo, true));
+        Consulta consultaAtualizada = consultaService.atualizarAnimal(consultaSalva, animalNovo);
         Assertions.assertNotNull(consultaAtualizada);
-        Assertions.assertEquals(consultaAtualizada.getAnimal().getAnimalId(), animalNovoRetorno.getAnimalId());
-
-        //Rollback
-        consultaRepo.delete(consultaRetorno);
-        animalRepo.delete(animalRetorno);
-        animalRepo.delete(animalNovoRetorno);
-        veterinarioRepo.delete(veterinarioRetorno);
-        animalRepo.delete(animalRetorno);
-        tipoAnimalRepo.delete(tipoAnimalRetorno);
-        tipoConsultaRepo.delete(tipoConsultaRetorno);
-        especialidadeRepo.delete(especialidadeRetorno);
-        areaRepo.delete(areaRetorno);
-        donoRepo.delete(donoRetorno);
+        Assertions.assertEquals(consultaAtualizada.getAnimal().getAnimalId(), animalNovo.getAnimalId());
+        rollback(consultaAtualizada, false);
+        rollbackAnimal(animalAntigo, animalRepo, donoRepo, tipoAnimalRepo);
     }
 
     @Test
     public void deveAtualizarTipoConsulta(){
-        //Cenário
-        Dono dono = Dono.builder()
-                .nome("Dono Teste")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("Telefone Teste")
-                .build();
-        Dono donoRetorno = donoRepo.save(dono);
-
-        TipoAnimal tipoAnimal = TipoAnimal.builder()
-                .nome("Tipo Animal Teste")
-                .build();
-        TipoAnimal tipoAnimalRetorno =  tipoAnimalRepo.save(tipoAnimal);
-
-        Animal animal =  Animal.builder()
-                .tipoAnimal(tipoAnimalRetorno)
-                .dono(donoRetorno)
-                .nome("Animal Teste")
-                .build();
-        Animal animalRetorno = animalRepo.save(animal);
-
-        Area area = Area.builder()
-                .nome("Area Teste")
-                .build();
-        Area areaRetorno = areaRepo.save(area);
-
-        Especialidade especialidade = Especialidade.builder()
-                .nome("Especialidade Teste")
-                .area(areaRetorno)
-                .build();
-        Especialidade especialidadeRetorno = especialidadeRepo.save(especialidade);
-
-        Veterinario veterinario = Veterinario.builder()
-                .nome("Veterinario Teste")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("telefone teste")
-                .especialidade(especialidadeRetorno)
-                .build();
-        Veterinario veterinarioRetorno = veterinarioRepo.save(veterinario);
-
-        TipoConsulta tipoConsulta = TipoConsulta.builder()
-                .nome("Tipo Consulta Teste")
-                .build();
-        TipoConsulta tipoConsultaRetorno = tipoConsultaRepo.save(tipoConsulta);
-
-        Consulta consulta = Consulta.builder()
-                .tipoConsulta(tipoConsultaRetorno)
-                .data(LocalDate.now())
-                .descricao("Descricao Teste")
-                .animal(animalRetorno)
-                .veterinario(veterinarioRetorno)
-                .build();
-        Consulta consultaRetorno = consultaRepo.save(consulta);
-
-        TipoConsulta tipoConsultaNova = TipoConsulta.builder()
-                .nome("Tipo Consulta Nova")
-                .build();
-        TipoConsulta tipoConsultaNovaRetorno = tipoConsultaRepo.save(tipoConsultaNova);
-
-        //Ação
-        Consulta consultaAtualizada = consultaService.atualizarTipoConsulta(consultaRetorno, tipoConsultaNovaRetorno);
-
-        //Verificação
+        Consulta consultaSalva = consultaRepo.save(generateConsulta(true));
+        TipoConsulta tipoConsultaAntiga = consultaSalva.getTipoConsulta();
+        TipoConsulta tipoConsultaNovo = tipoConsultaRepo.save(generateTipoConsulta());
+        Consulta consultaAtualizada = consultaService.atualizarTipoConsulta(consultaSalva, tipoConsultaNovo);
         Assertions.assertNotNull(consultaAtualizada);
-        Assertions.assertEquals(consultaAtualizada.getTipoConsulta().getTipoConsultaId(), tipoConsultaNovaRetorno.getTipoConsultaId());
-
-        //Rollback
-        consultaRepo.delete(consultaRetorno);
-        animalRepo.delete(animalRetorno);
-        veterinarioRepo.delete(veterinarioRetorno);
-        animalRepo.delete(animalRetorno);
-        tipoAnimalRepo.delete(tipoAnimalRetorno);
-        tipoConsultaRepo.delete(tipoConsultaRetorno);
-        tipoConsultaRepo.delete(tipoConsultaNovaRetorno);
-        especialidadeRepo.delete(especialidadeRetorno);
-        areaRepo.delete(areaRetorno);
-        donoRepo.delete(donoRetorno);
+        Assertions.assertEquals(consultaAtualizada.getTipoConsulta().getTipoConsultaId(), tipoConsultaNovo.getTipoConsultaId());
+        rollback(consultaSalva, false);
+        rollbackTipoConsulta(tipoConsultaAntiga, tipoConsultaRepo);
     }
 
     @Test
     public void deveBuscarPorId(){
-        //Cenário
-        Dono dono = Dono.builder()
-                .nome("Dono Teste")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("Telefone Teste")
-                .build();
-        Dono donoRetorno = donoRepo.save(dono);
-
-        TipoAnimal tipoAnimal = TipoAnimal.builder()
-                .nome("Tipo Animal Teste")
-                .build();
-        TipoAnimal tipoAnimalRetorno =  tipoAnimalRepo.save(tipoAnimal);
-
-        Animal animal =  Animal.builder(
-
-                ).tipoAnimal(tipoAnimalRetorno)
-                .dono(donoRetorno)
-                .nome("Animal Teste")
-                .build();
-        Animal animalRetorno = animalRepo.save(animal);
-
-        Area area = Area.builder()
-                .nome("Area Teste")
-                .build();
-        Area areaRetorno = areaRepo.save(area);
-
-        Especialidade especialidade = Especialidade.builder()
-                .nome("Especialidade Teste")
-                .area(areaRetorno)
-                .build();
-        Especialidade especialidadeRetorno = especialidadeRepo.save(especialidade);
-
-        Veterinario veterinario = Veterinario.builder()
-                .nome("Veterinario Teste")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("telefone teste")
-                .especialidade(especialidadeRetorno)
-                .build();
-        Veterinario veterinarioRetorno = veterinarioRepo.save(veterinario);
-
-        TipoConsulta tipoConsulta = TipoConsulta.builder()
-                .nome("Tipo Consulta Teste")
-                .build();
-        TipoConsulta tipoConsultaRetorno = tipoConsultaRepo.save(tipoConsulta);
-
-        Consulta consulta = Consulta.builder()
-                .tipoConsulta(tipoConsultaRetorno)
-                .data(LocalDate.now())
-                .descricao("Descricao Teste")
-                .animal(animalRetorno)
-                .veterinario(veterinarioRetorno)
-                .build();
-        Consulta consultaRetorno = consultaService.salvar(consulta);
-
-        //Ação
-        Consulta consutaBuscada = consultaService.buscarPorId(consultaRetorno.getConsultaId());
-
-        //Verificação
-        Assertions.assertNotNull(consutaBuscada);
-        Assertions.assertEquals(consutaBuscada.getConsultaId(), consultaRetorno.getConsultaId());
-
-        //Rollback
-        consultaRepo.delete(consultaRetorno);
-        animalRepo.delete(animalRetorno);
-        veterinarioRepo.delete(veterinarioRetorno);
-        animalRepo.delete(animalRetorno);
-        tipoAnimalRepo.delete(tipoAnimalRetorno);
-        tipoConsultaRepo.delete(tipoConsultaRetorno);
-        especialidadeRepo.delete(especialidadeRetorno);
-        areaRepo.delete(areaRetorno);
-        donoRepo.delete(donoRetorno);
+        Consulta consultaSalva = consultaService.salvar(generateConsulta(true));
+        Consulta consultaEncontrada = consultaService.buscarPorId(consultaSalva.getConsultaId());
+        Assertions.assertNotNull(consultaEncontrada);
+        Assertions.assertEquals(consultaEncontrada.getConsultaId(), consultaSalva.getConsultaId());
+        rollback(consultaSalva, false);
     }
 
     @Test
     public void deveBuscarTodos(){
-        //Cenário
-        Dono dono = Dono.builder()
-                .nome("Dono Teste")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("Telefone Teste")
-                .build();
-        Dono donoRetorno = donoRepo.save(dono);
-
-        TipoAnimal tipoAnimal = TipoAnimal.builder()
-                .nome("Tipo Animal Teste")
-                .build();
-        TipoAnimal tipoAnimalRetorno =  tipoAnimalRepo.save(tipoAnimal);
-
-        Animal animal =  Animal.builder(
-
-                ).tipoAnimal(tipoAnimalRetorno)
-                .dono(donoRetorno)
-                .nome("Animal Teste")
-                .build();
-        Animal animalRetorno = animalRepo.save(animal);
-
-        Area area = Area.builder()
-                .nome("Area Teste")
-                .build();
-        Area areaRetorno = areaRepo.save(area);
-
-        Especialidade especialidade = Especialidade.builder()
-                .nome("Especialidade Teste")
-                .area(areaRetorno)
-                .build();
-        Especialidade especialidadeRetorno = especialidadeRepo.save(especialidade);
-
-        Veterinario veterinario = Veterinario.builder()
-                .nome("Veterinario Teste")
-                .cpf(String.valueOf(random.nextInt(9999999)))
-                .telefone("telefone teste")
-                .especialidade(especialidadeRetorno)
-                .build();
-        Veterinario veterinarioRetorno = veterinarioRepo.save(veterinario);
-
-        TipoConsulta tipoConsulta = TipoConsulta.builder()
-                .nome("Tipo Consulta Teste")
-                .build();
-        TipoConsulta tipoConsultaRetorno = tipoConsultaRepo.save(tipoConsulta);
-
-        Consulta consulta = Consulta.builder()
-                .tipoConsulta(tipoConsultaRetorno)
-                .data(LocalDate.now())
-                .descricao("Descricao Teste")
-                .animal(animalRetorno)
-                .veterinario(veterinarioRetorno)
-                .build();
-        Consulta consultaRetorno = consultaService.salvar(consulta);
-
-        //Ação
-        List<Consulta> consultas = consultaService.buscarTodos();
-
-        //Verificação
-        Assertions.assertNotNull(consultas);
-        Assertions.assertFalse(consultas.isEmpty());
-
-        //Rollback
-        consultaRepo.delete(consultaRetorno);
-        animalRepo.delete(animalRetorno);
-        veterinarioRepo.delete(veterinarioRetorno);
-        animalRepo.delete(animalRetorno);
-        tipoAnimalRepo.delete(tipoAnimalRetorno);
-        tipoConsultaRepo.delete(tipoConsultaRetorno);
-        especialidadeRepo.delete(especialidadeRetorno);
-        areaRepo.delete(areaRetorno);
-        donoRepo.delete(donoRetorno);
+        Consulta consultaSalva = consultaService.salvar(generateConsulta(true));
+        List<Consulta> consultasList = consultaService.buscarTodos();
+        Assertions.assertNotNull(consultasList);
+        Assertions.assertFalse(consultasList.isEmpty());
+        rollback(consultaSalva, false);
     }
-
 }

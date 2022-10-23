@@ -61,38 +61,6 @@ public class ConsultaService {
     }
 
     @Transactional
-    public Consulta buscarPorId(Long id){
-        verificaId(id);
-        return repo.findById(id).get();
-    }
-
-    @Transactional
-    public List<Consulta> buscarTodos(){
-        return repo.findAll();
-    }
-
-    @Transactional
-    public void remover(Consulta consulta){
-        verificaConsulta(consulta);
-        verificaId(consulta);
-        repo.delete(consulta);
-    }
-
-    @Transactional
-    public void removerPorId(Long id){
-        verificaId(id);
-        repo.deleteById(id);
-    }
-
-    @Transactional
-    public Consulta removerComFeedback(Long id){
-        verificaId(id);
-        Consulta consultaFeedback = repo.findById(id).get();
-        repo.delete(consultaFeedback);
-        return consultaFeedback;
-    }
-
-    @Transactional
     public Consulta atualizarVeterinario(Consulta destino, Veterinario veterinarioNovo){
         VeterinarioService.verificaVeterinario(veterinarioNovo);
         VeterinarioService.verificaId(veterinarioNovo);
@@ -156,5 +124,37 @@ public class ConsultaService {
         consultaDestinoEncontrada.setTipoConsulta(tipoConsultaNovoEncontrado);
 
         return repo.save(consultaDestinoEncontrada);
+    }
+
+    @Transactional
+    public void remover(Consulta consulta){
+        verificaConsulta(consulta);
+        verificaId(consulta);
+        repo.delete(consulta);
+    }
+
+    @Transactional
+    public void removerPorId(Long id){
+        verificaId(id);
+        repo.deleteById(id);
+    }
+
+    @Transactional
+    public Consulta removerComFeedback(Long id){
+        verificaId(id);
+        Consulta consultaFeedback = repo.findById(id).get();
+        repo.delete(consultaFeedback);
+        return consultaFeedback;
+    }
+
+    @Transactional
+    public Consulta buscarPorId(Long id){
+        verificaId(id);
+        return repo.findById(id).get();
+    }
+
+    @Transactional
+    public List<Consulta> buscarTodos(){
+        return repo.findAll();
     }
 }
