@@ -5,7 +5,6 @@ import com.produtos.apirest.models.DTO.EspecialidadeDTO;
 import com.produtos.apirest.models.Especialidade;
 import com.produtos.apirest.service.AreaService;
 import com.produtos.apirest.service.EspecialidadeService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,65 +24,37 @@ public class EspecialidadeController {
     @Autowired
     public AreaService areaService;
 
-    private static ModelMapper customModelMapperEspecialidade(){
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.emptyTypeMap(Especialidade.class, EspecialidadeDTO.class)
-                .addMappings(m -> m.skip(EspecialidadeDTO::setAreas))
-                .implicitMappings();
-        return modelMapper;
-    }
-
-    ModelMapper modelMapperEspecialidade = customModelMapperEspecialidade();
-    @PreAuthorize("hasRole('A')")
     @PostMapping("/salvar")
-    public ResponseEntity salvar(@RequestBody EspecialidadeDTO dto){
+    public ResponseEntity<?> salvar(@RequestBody EspecialidadeDTO dto){
         try {
             Area areaBuscada = areaService.buscarPorId(dto.getIdArea());
 
-            Especialidade especialidade = Especialidade.builder()
-                    .nome(dto.getNome())
-                    .area(areaBuscada)
-                    .build();
+            Especialidade especialidade = dto.toEspecialidade();
             Especialidade especialidadeSalva = especialidadeService.salvar(especialidade);
-
-            EspecialidadeDTO especialidadedtoRetorno = EspecialidadeDTO.builder()
-                    .id(especialidadeSalva.getEspecialidadeId())
-                    .idArea(especialidadeSalva.getArea().getAreaId())
-                    .nome(especialidadeSalva.getNome())
-                    .build();
-            return new ResponseEntity(especialidadeSalva, HttpStatus.CREATED);
+            EspecialidadeDTO dtoRetorno = especialidadeSalva.toDTO();
+            return new ResponseEntity(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PreAuthorize("hasRole('A')")
     @PutMapping("/atualizar")
-    public ResponseEntity atualizar(@RequestBody EspecialidadeDTO dto){
+    public ResponseEntity<?> atualizar(@RequestBody EspecialidadeDTO dto){
         try{
-            Especialidade especialidade = Especialidade.builder()
-                    .especialidadeId(dto.getId())
-                    .area(dto.getArea())
-                    .nome(dto.getNome())
-                    .build();
-            Especialidade especialidadeRetorno = especialidadeService.atualizar(especialidade);
-
-            EspecialidadeDTO especialidadedtoRetorono = EspecialidadeDTO.builder()
-                    .id(especialidadeRetorno.getEspecialidadeId())
-                    .nome(especialidadeRetorno.getNome())
-                    .idArea(especialidadeRetorno.getArea().getAreaId())
-                    .build();
-            return ResponseEntity.ok(especialidadedtoRetorono);
+            Especialidade especialidade = dto.toEspecialidade();
+            Especialidade especialidadeAtualizada = especialidadeService.atualizar(especialidade);
+            EspecialidadeDTO dtoRetorno = especialidadeAtualizada.toDTO();
+            return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PreAuthorize("hasRole('A')")
     @DeleteMapping("/remover/{id}")
-    public ResponseEntity remover(@PathVariable(value = "id", required = true) Long id){
+    public ResponseEntity<?> remover(@PathVariable(value = "id", required = true) Long id){
         try {
             Especialidade especialidadeBuscada = especialidadeService.buscarPorId(id);
+            EspecialidadeDTO dtoRetorno = especialidadeBuscada.toDTO();
             especialidadeService.remover(especialidadeBuscada);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (Exception e){
@@ -91,54 +62,36 @@ public class EspecialidadeController {
         }
     }
 
-    @PreAuthorize("hasRole('A')")
     @DeleteMapping("/remover/feedback/{id}")
-    public ResponseEntity removerComFeedback(@PathVariable(value = "id", required = true) Long id){
+    public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id", required = true) Long id){
         try {
             Especialidade especialidadeRemovida = especialidadeService.removerFeedback(id);
-            EspecialidadeDTO especialidadedtoRetorno = EspecialidadeDTO.builder()
-                    .id(especialidadeRemovida.getEspecialidadeId())
-                    .idArea(especialidadeRemovida.getArea().getAreaId())
-                    .nome(especialidadeRemovida.getNome())
-                    .build();
-
-            return ResponseEntity.ok(especialidadedtoRetorno);
+            EspecialidadeDTO dtoRetorno = especialidadeRemovida.toDTO();
+            return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PreAuthorize("hasRole('A')")
     @GetMapping("/buscar/{id}")
-    public ResponseEntity buscarPorId(@PathVariable(value = "id", required = true) Long id){
+    public ResponseEntity<?> buscarPorId(@PathVariable(value = "id", required = true) Long id){
         try {
             Especialidade especialidadeBuscada = especialidadeService.buscarPorId(id);
-
-            EspecialidadeDTO especialidadeDTO = EspecialidadeDTO.builder()
-                    .nome(especialidadeBuscada.getNome())
-                    .id(especialidadeBuscada.getEspecialidadeId())
-                    .idArea(especialidadeBuscada.getArea().getAreaId())
-                    .build();
-
-            return ResponseEntity.ok(especialidadeDTO);
+            EspecialidadeDTO dtoRetorno = especialidadeBuscada.toDTO();
+            return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PreAuthorize("hasRole('A')")
     @GetMapping("/buscar/filtro")
-    public ResponseEntity buscar(@RequestBody EspecialidadeDTO dto){
+    public ResponseEntity<?> buscar(@RequestBody EspecialidadeDTO dto){
         try{
-            Especialidade filtro = Especialidade.builder()
-                    .especialidadeId(dto.getId())
-                    .area(dto.getArea())
-                    .nome(dto.getNome())
-                    .build();
+            Especialidade filtro = dto.toEspecialidade();
             List<Especialidade> especialidades = especialidadeService.buscar(filtro);
             List<EspecialidadeDTO> dtos = especialidades
                     .stream()
-                    .map(especialidade -> modelMapperEspecialidade.map(especialidade, EspecialidadeDTO.class))
+                    .map(Especialidade::toDTO)
                     .collect(Collectors.toList());
             return ResponseEntity.ok(dtos);
         } catch (Exception e){
@@ -148,12 +101,12 @@ public class EspecialidadeController {
 
     @PreAuthorize("hasRole('A')")
     @GetMapping("/buscarTodos")
-    public ResponseEntity buscarTodos(){
+    public ResponseEntity<?> buscarTodos(){
         try{
             List<Especialidade> especialidadeList = especialidadeService.buscarTodos();
             List<EspecialidadeDTO> dtos = especialidadeList
                     .stream()
-                    .map(especialidade -> modelMapperEspecialidade.map(especialidade, EspecialidadeDTO.class))
+                    .map(Especialidade::toDTO)
                     .collect(Collectors.toList());
             return ResponseEntity.ok(dtos);
         } catch (Exception e){

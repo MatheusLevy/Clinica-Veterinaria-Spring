@@ -3,19 +3,22 @@ package com.produtos.apirest.service;
 import com.produtos.apirest.models.TipoAnimal;
 import com.produtos.apirest.repository.TipoAnimalRepo;
 import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TipoAnimalService {
 
-    @Autowired
-    public TipoAnimalRepo repo;
+    private final TipoAnimalRepo repo;
+
+    public TipoAnimalService(TipoAnimalRepo tipoAnimalRepo){
+        this.repo = tipoAnimalRepo;
+    }
 
     public static void verificaTipoAnimal(TipoAnimal tipo){
         if (tipo == null)
@@ -25,12 +28,12 @@ public class TipoAnimalService {
     }
 
     public static void verificaId(TipoAnimal tipo){
-        if(tipo == null || Long.valueOf(tipo.getTipoAnimalId()) == null)
+        if(tipo == null || tipo.getTipoAnimalId() <= 0)
             throw new RegraNegocioRunTime("Tipo de Animal deve ter um identificador!");
     }
 
     public static void verificaId(Long id){
-        if(Long.valueOf(id) == null)
+        if(id <= 0)
             throw new RegraNegocioRunTime("Tipo de Animal deve ter um identificador!");
     }
 
@@ -57,9 +60,13 @@ public class TipoAnimalService {
     @Transactional
     public TipoAnimal removerComFeedback(Long id){
         verificaId(id);
-        TipoAnimal tipoAnimalFeedback = repo.findById(id).get();
-        repo.delete(tipoAnimalFeedback);
-        return tipoAnimalFeedback;
+        Optional<TipoAnimal> tipoAnimalEncontrados = repo.findById(id);
+        if (tipoAnimalEncontrados.isPresent()) {
+            TipoAnimal tipoAnimalFeedback = tipoAnimalEncontrados.get();
+            repo.delete(tipoAnimalFeedback);
+            return tipoAnimalFeedback;
+        }
+        return null;
     }
 
     @Transactional
@@ -71,7 +78,8 @@ public class TipoAnimalService {
     @Transactional
     public TipoAnimal buscarPorId(Long id){
         verificaId(id);
-        return repo.findById(id).get();
+        Optional<TipoAnimal> tipoAnimalEncontrados = repo.findById(id);
+        return tipoAnimalEncontrados.orElse(null);
     }
 
     @Transactional

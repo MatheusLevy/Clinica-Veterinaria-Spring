@@ -5,7 +5,6 @@ import com.produtos.apirest.models.Especialidade;
 import com.produtos.apirest.repository.AreaRepo;
 import com.produtos.apirest.repository.EspecialidadeRepo;
 import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
@@ -17,28 +16,30 @@ import java.util.Optional;
 @Service
 public class EspecialidadeService {
 
-    @Autowired
-    public EspecialidadeRepo repo;
+    private final EspecialidadeRepo repo;
+    private final AreaRepo areaRepo;
 
-    @Autowired
-    public AreaRepo areaRepo;
+    public EspecialidadeService(EspecialidadeRepo especialidadeRepo, AreaRepo areaRepo){
+        this.repo = especialidadeRepo;
+        this.areaRepo = areaRepo;
+    }
 
     public static void verificaEspecialidade(Especialidade especialidade){
-        if(especialidade == null)
+        if (especialidade == null)
             throw new NullPointerException("Especialidade não pode ser Nula!");
-        if(especialidade.getNome() == null || especialidade.getNome().equals(""))
+        if (especialidade.getNome() == null || especialidade.getNome().equals(""))
             throw new RegraNegocioRunTime("Especialidade deve ter um nome");
-        if(especialidade.getArea() == null)
+        if (especialidade.getArea() == null)
             throw new RegraNegocioRunTime("Especialidade deve ter uma Area!");
     }
 
     public static void verificaId(Especialidade especialidade){
-        if(especialidade == null || Long.valueOf(especialidade.getEspecialidadeId()) == null)
+        if (especialidade == null || especialidade.getEspecialidadeId() <= 0)
             throw new RegraNegocioRunTime("Especialidade deve ter um identificador!s");
     }
 
     public static void verificaId(Long id){
-        if(Long.valueOf(id) == null)
+        if (id <= 0)
             throw new RegraNegocioRunTime("Especialidade deve ter um identificador!s");
     }
 
@@ -63,11 +64,11 @@ public class EspecialidadeService {
         AreaService.verificaId(areaNova);
 
         Optional<Especialidade> especialidadesOptional = repo.findById(destino.getEspecialidadeId());
-        if (!especialidadesOptional.isPresent())
+        if (especialidadesOptional.isEmpty())
             throw new RegraNegocioRunTime("Não foi possivel encontrar a Especialidade");
 
         Optional<Area> areasOptional = areaRepo.findById(areaNova.getAreaId());
-        if (!areasOptional.isPresent())
+        if (areasOptional.isEmpty())
             throw new RegraNegocioRunTime("Não foi possivel encontrar a Especialidade");
 
         Especialidade especialidadeDestinoEncontrada = especialidadesOptional.get();
@@ -87,9 +88,13 @@ public class EspecialidadeService {
     @Transactional
     public Especialidade removerFeedback(Long id){
         verificaId(id);
-        Especialidade especialidadeFeedback = repo.findById(id).get();
-        repo.delete(especialidadeFeedback);
-        return especialidadeFeedback;
+        Optional<Especialidade> especialidadesEncotradas = repo.findById(id);
+        if (especialidadesEncotradas.isPresent()) {
+            Especialidade especialidadeFeedback = especialidadesEncotradas.get();
+            repo.delete(especialidadeFeedback);
+            return especialidadeFeedback;
+        }
+        return null;
     }
 
     @Transactional
@@ -101,7 +106,8 @@ public class EspecialidadeService {
     @Transactional
     public Especialidade buscarPorId(Long id){
         verificaId(id);
-        return repo.findById(id).get();
+        Optional<Especialidade> especialidadeEncontradas = repo.findById(id);
+        return especialidadeEncontradas.orElse(null);
     }
 
     @Transactional

@@ -6,7 +6,6 @@ import com.produtos.apirest.repository.ConsultaRepo;
 import com.produtos.apirest.repository.TipoConsultaRepo;
 import com.produtos.apirest.repository.VeterinarioRepo;
 import com.produtos.apirest.service.excecoes.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -15,14 +14,19 @@ import java.util.Optional;
 
 @Service
 public class ConsultaService {
-    @Autowired
-    public ConsultaRepo repo;
-    @Autowired
-    public VeterinarioRepo veterinarioRepo;
-    @Autowired
-    public AnimalRepo animalRepo;
-    @Autowired
-    public TipoConsultaRepo tipoConsultaRepo;
+
+    private final ConsultaRepo repo;
+    private final  VeterinarioRepo veterinarioRepo;
+    private final  AnimalRepo animalRepo;
+    private final  TipoConsultaRepo tipoConsultaRepo;
+
+    public ConsultaService(ConsultaRepo consultaRepo, VeterinarioRepo veterinarioRepo, AnimalRepo animalRepo,
+                           TipoConsultaRepo tipoConsultaRepo){
+        this.repo = consultaRepo;
+        this.veterinarioRepo = veterinarioRepo;
+        this.animalRepo = animalRepo;
+        this.tipoConsultaRepo = tipoConsultaRepo;
+    }
 
     public static void verificaConsulta(Consulta consulta){
         if(consulta == null)
@@ -38,12 +42,12 @@ public class ConsultaService {
     }
 
     public static void verificaId(Consulta consulta){
-        if (consulta == null || Long.valueOf(consulta.getConsultaId()) == null)
+        if (consulta == null || consulta.getConsultaId() <= 0)
             throw new RegraNegocioRunTime("Consulta deve ter um identificador!");
     }
 
     public static void verificaId(Long id){
-        if (Long.valueOf(id) == null)
+        if (id <= 0)
             throw new RegraNegocioRunTime("Consulta deve ter um identificador!");
     }
 
@@ -68,11 +72,11 @@ public class ConsultaService {
         verificaId(destino);
 
         Optional<Veterinario> veterinarioOptional = veterinarioRepo.findById(veterinarioNovo.getVeterinarioId());
-        if(!veterinarioOptional.isPresent())
+        if(veterinarioOptional.isEmpty())
             throw new RegraNegocioRunTime("Não foi possivel achar o Veterinário!");
 
         Optional<Consulta> consultaOptional = repo.findById(destino.getConsultaId());
-        if(!consultaOptional.isPresent())
+        if(consultaOptional.isEmpty())
             throw new RegraNegocioRunTime("Não foi possivel achar a Consulta!");
 
         Consulta consultaDestinoEncontrada = consultaOptional.get();
@@ -90,11 +94,11 @@ public class ConsultaService {
         verificaId(destino);
 
         Optional<Animal> animalOptional = animalRepo.findById(animalNovo.getAnimalId());
-        if(!animalOptional.isPresent())
+        if(animalOptional.isEmpty())
             throw new RegraNegocioRunTime("Não foi possivel achar o Animal!");
 
         Optional<Consulta> consultaOptional = repo.findById(destino.getConsultaId());
-        if(!consultaOptional.isPresent())
+        if(consultaOptional.isEmpty())
             throw new RegraNegocioRunTime("Não foi possivel achar a Consulta");
 
         Consulta consultaDestinoEncontrada = consultaOptional.get();
@@ -112,11 +116,11 @@ public class ConsultaService {
         verificaId(destino);
 
         Optional<TipoConsulta> tipoConsultaOptional = tipoConsultaRepo.findById(tipoConsultaNovo.getTipoConsultaId());
-        if (!tipoConsultaOptional.isPresent())
+        if (tipoConsultaOptional.isEmpty())
             throw new RegraNegocioRunTime("Não foi possivel achar o Tipo de Consulta!");
 
         Optional<Consulta> consultaOptional = repo.findById(destino.getConsultaId());
-        if(!consultaOptional.isPresent())
+        if(consultaOptional.isEmpty())
             throw new RegraNegocioRunTime("Não foi possivel achar a Consulta!");
 
         Consulta consultaDestinoEncontrada = consultaOptional.get();
@@ -142,15 +146,20 @@ public class ConsultaService {
     @Transactional
     public Consulta removerComFeedback(Long id){
         verificaId(id);
-        Consulta consultaFeedback = repo.findById(id).get();
-        repo.delete(consultaFeedback);
-        return consultaFeedback;
+        Optional<Consulta> consultasEncontradas = repo.findById(id);
+        if (consultasEncontradas.isPresent()) {
+            Consulta consultaFeedback = consultasEncontradas.get();
+            repo.delete(consultaFeedback);
+            return consultaFeedback;
+        }
+        return null;
     }
 
     @Transactional
     public Consulta buscarPorId(Long id){
         verificaId(id);
-        return repo.findById(id).get();
+        Optional<Consulta> consultasEncotradas = repo.findById(id);
+        return consultasEncotradas.orElse(null);
     }
 
     @Transactional

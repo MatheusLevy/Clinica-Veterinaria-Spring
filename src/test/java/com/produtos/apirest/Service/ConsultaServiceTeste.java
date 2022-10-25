@@ -1,4 +1,4 @@
-package com.produtos.apirest.Serviços;
+package com.produtos.apirest.Service;
 
 import com.produtos.apirest.models.*;
 import com.produtos.apirest.repository.*;
@@ -11,12 +11,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.produtos.apirest.Serviços.AnimalServiceTeste.generateAnimal;
-import static com.produtos.apirest.Serviços.AnimalServiceTeste.rollbackAnimal;
-import static com.produtos.apirest.Serviços.TipoConsultaServiceTeste.generateTipoConsulta;
-import static com.produtos.apirest.Serviços.TipoConsultaServiceTeste.rollbackTipoConsulta;
-import static com.produtos.apirest.Serviços.VeterinarioServiceTeste.generateVeterinario;
-import static com.produtos.apirest.Serviços.VeterinarioServiceTeste.rollbackVeterinario;
+import static com.produtos.apirest.Service.AnimalServiceTeste.generateAnimal;
+import static com.produtos.apirest.Service.AnimalServiceTeste.rollbackAnimal;
+import static com.produtos.apirest.Service.TipoConsultaServiceTeste.generateTipoConsulta;
+import static com.produtos.apirest.Service.TipoConsultaServiceTeste.rollbackTipoConsulta;
+import static com.produtos.apirest.Service.VeterinarioServiceTeste.generateVeterinario;
+import static com.produtos.apirest.Service.VeterinarioServiceTeste.rollbackVeterinario;
 
 
 @SpringBootTest

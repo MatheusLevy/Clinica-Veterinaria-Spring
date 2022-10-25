@@ -1,4 +1,4 @@
-package com.produtos.apirest.Serviços;
+package com.produtos.apirest.Service;
 
 import com.produtos.apirest.models.Animal;
 import com.produtos.apirest.models.Dono;
@@ -13,8 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-import static com.produtos.apirest.Serviços.DonoServiceTeste.generateDono;
-import static com.produtos.apirest.Serviços.TipoAnimalServiceTeste.generateTipoAnimal;
+import static com.produtos.apirest.Service.DonoServiceTeste.generateDono;
+import static com.produtos.apirest.Service.TipoAnimalServiceTeste.generateTipoAnimal;
 
 @SpringBootTest
 public class AnimalServiceTeste {

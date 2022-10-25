@@ -1,4 +1,4 @@
-package com.produtos.apirest.Serviços;
+package com.produtos.apirest.Service;
 
 import com.produtos.apirest.enums.RoleName;
 import com.produtos.apirest.models.Role;

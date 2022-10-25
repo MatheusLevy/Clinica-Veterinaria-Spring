@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.modelmapper.ModelMapper;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,7 +57,7 @@ public class AreaController {
     @DeleteMapping("/remover/feedback/{id}")
     public ResponseEntity removerComFeedback(@PathVariable(value = "id", required = true) Long id){
         try {
-            Area areaRemovida = areaService.removerFeedback(id);
+            Area areaRemovida = areaService.removerComFeedback(id);
             AreaDTO retornoDTO = areaRemovida.toDTO();
             return ResponseEntity.ok(retornoDTO);
         } catch (Exception e){

@@ -5,7 +5,6 @@ import com.produtos.apirest.models.Veterinario;
 import com.produtos.apirest.repository.EspecialidadeRepo;
 import com.produtos.apirest.repository.VeterinarioRepo;
 import com.produtos.apirest.service.excecoes.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
@@ -17,11 +16,13 @@ import java.util.Optional;
 @Service
 public class VeterinarioService {
 
-    @Autowired
-    public VeterinarioRepo repo;
+    private final VeterinarioRepo repo;
+    private final EspecialidadeRepo especialidadeRepo;
 
-    @Autowired
-    public EspecialidadeRepo especialidadeRepo;
+    public VeterinarioService(VeterinarioRepo veterinarioRepo, EspecialidadeRepo especialidadeRepo){
+        this.repo = veterinarioRepo;
+        this.especialidadeRepo = especialidadeRepo;
+    }
 
     public static void verificaVeterinario(Veterinario veterinario){
         if (veterinario == null)
@@ -35,12 +36,12 @@ public class VeterinarioService {
     }
 
     public static void verificaId(Veterinario veterinario){
-        if (Long.valueOf(veterinario.getVeterinarioId()) == null || veterinario == null)
+        if (veterinario.getVeterinarioId() <= 0)
             throw new RegraNegocioRunTime("Veterinario deve ter um identificador");
     }
 
     public static void verificaId(Long id){
-        if (Long.valueOf(id) == null )
+        if (id <= 0)
             throw new RegraNegocioRunTime("Veterinario deve ter um identificador");
     }
 
@@ -66,15 +67,20 @@ public class VeterinarioService {
     @Transactional
     public Veterinario removerComFeedback(Long id){
         verificaId(id);
-        Veterinario veterinarioFeedback = repo.findById(id).get();
-        repo.delete(veterinarioFeedback);
-        return veterinarioFeedback;
+        Optional<Veterinario> veterinariosEncontrados = repo.findById(id);
+        if (veterinariosEncontrados.isPresent()) {
+            Veterinario veterinarioFeedback = veterinariosEncontrados.get();
+            repo.delete(veterinarioFeedback);
+            return veterinarioFeedback;
+        }
+        return null;
     }
 
     @Transactional
     public Veterinario buscarPorId(Long id){
         verificaId(id);
-        return  repo.findById(id).get();
+        Optional<Veterinario> veterinariosEncontrados = repo.findById(id);
+        return veterinariosEncontrados.orElse(null);
     }
 
     @Transactional
@@ -97,8 +103,8 @@ public class VeterinarioService {
         verificaVeterinario(veterinario);
         verificaId(veterinario);
         Long id = veterinario.getVeterinarioId();
-        Veterinario veterinarioAchado = repo.findById(veterinario.getVeterinarioId()).get();
-        return veterinarioAchado.getEspecialidade();
+        Optional<Veterinario> veterinariosEncontrados = repo.findById(id);
+        return veterinariosEncontrados.map(Veterinario::getEspecialidade).orElse(null);
     }
 
     @Transactional
@@ -109,11 +115,11 @@ public class VeterinarioService {
         verificaId(veterinario);
 
         Optional<Veterinario> veterinarioTemp = repo.findById(veterinario.getVeterinarioId());
-        if (!veterinarioTemp.isPresent())
+        if (veterinarioTemp.isEmpty())
             throw new RegraNegocioRunTime("Veterinario não encontrado!");
 
         Optional<Especialidade> especialidadeTemp = especialidadeRepo.findById(especialidade.getEspecialidadeId());
-        if(!especialidadeTemp.isPresent())
+        if(especialidadeTemp.isEmpty())
             throw new RegraNegocioRunTime("Especialidade não encontrada!");
 
         Veterinario veterinarioAtualizar = veterinarioTemp.get();

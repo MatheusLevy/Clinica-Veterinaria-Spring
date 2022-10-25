@@ -1,4 +1,4 @@
-package com.produtos.apirest.Serviços;
+package com.produtos.apirest.Service;
 
 import com.produtos.apirest.models.TipoAnimal;
 import com.produtos.apirest.repository.TipoAnimalRepo;
@@ -37,7 +37,6 @@ public class TipoAnimalServiceTeste {
     public void deveSalvar(){
         TipoAnimal tipoAnimalSalvo = tipoAnimalService.salvar(generateTipoAnimal());
         Assertions.assertNotNull(tipoAnimalSalvo);
-        Assertions.assertNotNull(tipoAnimalSalvo.getTipoAnimalId());
         rollback(tipoAnimalSalvo);
     }
 

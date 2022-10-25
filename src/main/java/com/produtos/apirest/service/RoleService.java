@@ -3,19 +3,22 @@ package com.produtos.apirest.service;
 import com.produtos.apirest.models.Role;
 import com.produtos.apirest.repository.RoleRepo;
 import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RoleService {
 
-    @Autowired
-    public RoleRepo roleRepo;
+    private final RoleRepo roleRepo;
+
+    public RoleService(RoleRepo roleRepo){
+        this.roleRepo = roleRepo;
+    }
 
     public static void verificaRole(Role role){
         if (role == null)
@@ -30,7 +33,7 @@ public class RoleService {
     }
 
     public static void verificaId(Long id){
-        if (id == null || id < 0)
+        if (id == null || id <= 0)
             throw new RegraNegocioRunTime("Role deve ter um identificador!");
     }
 
@@ -63,9 +66,13 @@ public class RoleService {
     @Transactional
     public Role RemoverComFeedback(Long id){
         verificaId(id);
-        Role roleFeedback = roleRepo.findById(id).get();
-        roleRepo.deleteById(id);
-        return roleFeedback;
+        Optional<Role> rolesEncontradas = roleRepo .findById(id);
+        if (rolesEncontradas.isPresent()) {
+            Role roleFeedback = rolesEncontradas.get();
+            roleRepo.deleteById(id);
+            return roleFeedback;
+        }
+        return null;
     }
 
     @Transactional
@@ -81,7 +88,8 @@ public class RoleService {
     @Transactional
     public Role buscarPorId(Long id){
         verificaId(id);
-        return roleRepo.findById(id).get();
+        Optional<Role> rolesEncontradas = roleRepo.findById(id);
+        return rolesEncontradas.orElse(null);
     }
 
     @Transactional

@@ -5,36 +5,39 @@ import com.produtos.apirest.models.Dono;
 import com.produtos.apirest.repository.DonoRepo;
 import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
 import org.hibernate.Hibernate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DonoService {
 
-    @Autowired
-    public DonoRepo repo;
+    private final DonoRepo repo;
+
+    public DonoService(DonoRepo donoRepo){
+        this.repo = donoRepo;
+    }
 
     public static void verificaDono(Dono dono){
-        if(dono == null)
+        if (dono == null)
             throw new NullPointerException("Dono não pode ser Nulo!");
-        if(dono.getNome() == null || dono.getNome().equals(""))
+        if (dono.getNome() == null || dono.getNome().equals(""))
             throw new RegraNegocioRunTime("Dono deve ter um nome!");
-        if(dono.getCpf() == null || dono.getCpf().equals(""))
+        if (dono.getCpf() == null || dono.getCpf().equals(""))
             throw new RegraNegocioRunTime("Dono deve ter um CPF!");
     }
 
     public static void verificaId(Dono dono){
-        if(dono == null || Long.valueOf(dono.getDonoId()) == null)
+        if (dono == null || dono.getDonoId() <= 0)
             throw new RegraNegocioRunTime("Dono deve ter um indentificador!");
     }
 
     public static void verificaId(Long id){
-        if(Long.valueOf(id) == null)
+        if (id <= 0)
             throw new RegraNegocioRunTime("Dono deve ter um indentificador!");
     }
 
@@ -67,15 +70,20 @@ public class DonoService {
     @Transactional
     public Dono removerComFeedback(Long id){
         verificaId(id);
-        Dono donoFeedback = repo.findById(id).get();
-        repo.delete(donoFeedback);
-        return donoFeedback;
+        Optional<Dono> donosEncontrados = repo.findById(id);
+        if (donosEncontrados.isPresent()) {
+            Dono donoFeedback = donosEncontrados.get();
+            repo.delete(donoFeedback);
+            return donoFeedback;
+        }
+        return null;
     }
 
     @Transactional
     public Dono buscarPorId(Long id){
         verificaId(id);
-        return repo.findById(id).get();
+        Optional<Dono> donosEncontrados = repo.findById(id);
+        return donosEncontrados.orElse(null);
     }
 
     @Transactional
@@ -96,13 +104,12 @@ public class DonoService {
     @Transactional
     public List<Animal> buscarTodosAnimais(Long id){
         verificaId(id);
-        try{
-            Dono donoEncontrado = repo.findById(id).get();
+        Optional<Dono> donosEncontrados = repo.findById(id);
+        if (donosEncontrados.isPresent()) {
+            Dono donoEncontrado = donosEncontrados.get();
             Hibernate.initialize(donoEncontrado.getAnimais());
             return donoEncontrado.getAnimais();
-        } catch (Exception e){
-            System.out.println(e);
-            throw e;
         }
+        return null;
     }
 }

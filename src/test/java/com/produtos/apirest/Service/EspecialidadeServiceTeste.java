@@ -1,4 +1,4 @@
-package com.produtos.apirest.Serviços;
+package com.produtos.apirest.Service;
 
 import com.produtos.apirest.models.Area;
 import com.produtos.apirest.models.Especialidade;
@@ -12,8 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-import static com.produtos.apirest.Serviços.AreaServiceTeste.generateArea;
-import static com.produtos.apirest.Serviços.AreaServiceTeste.rollbackArea;
+import static com.produtos.apirest.Service.AreaServiceTeste.generateArea;
+import static com.produtos.apirest.Service.AreaServiceTeste.rollbackArea;
 
 
 @SpringBootTest

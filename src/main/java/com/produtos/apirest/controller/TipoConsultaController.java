@@ -16,7 +16,7 @@ public class TipoConsultaController {
     public TipoConsultaService tipoService;
 
     @PostMapping("/salvar")
-    public ResponseEntity salvar(@RequestBody TipoConsultaDTO dto){
+    public ResponseEntity<?> salvar(@RequestBody TipoConsultaDTO dto){
         try{
             TipoConsulta tipoConsulta = dto.toTipoConsulta();
             TipoConsulta tipoSalvo = tipoService.salvar(tipoConsulta);
@@ -28,7 +28,7 @@ public class TipoConsultaController {
     }
 
     @DeleteMapping("/remover/{id}")
-    public ResponseEntity removerComId(@PathVariable(value = "id", required = true) Long id){
+    public ResponseEntity<?> removerComId(@PathVariable(value = "id", required = true) Long id){
         try {
             tipoService.removerPorId(id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
@@ -38,7 +38,7 @@ public class TipoConsultaController {
     }
 
     @DeleteMapping("/remover/feedback/{id}")
-    public ResponseEntity removerComFeedback(@PathVariable(value = "id", required = true) Long id){
+    public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id", required = true) Long id){
         try{
             TipoConsulta tipoRemovido = tipoService.removerComFeedback(id);
             TipoConsultaDTO dtoRetorno = tipoRemovido.toDTO();
@@ -49,7 +49,7 @@ public class TipoConsultaController {
     }
 
     @GetMapping("/buscar/{id}")
-    public ResponseEntity buscarPorId(@PathVariable(value = "id", required = true) Long id){
+    public ResponseEntity<?> buscarPorId(@PathVariable(value = "id", required = true) Long id){
         try{
             TipoConsulta tipoBuscado = tipoService.buscarPorId(id);
             TipoConsultaDTO dtoRetorno = tipoBuscado.toDTO();
@@ -60,7 +60,7 @@ public class TipoConsultaController {
     }
 
     @PutMapping("/atualizar")
-    public ResponseEntity atualizar(@RequestBody TipoConsultaDTO dto){
+    public ResponseEntity<?> atualizar(@RequestBody TipoConsultaDTO dto){
         try{
             TipoConsulta tipoConsulta = dto.toTipoConsulta();
             TipoConsulta tipoConsultaAtualizado = tipoService.atualizar(tipoConsulta);

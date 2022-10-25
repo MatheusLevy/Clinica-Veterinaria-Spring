@@ -1,4 +1,4 @@
-package com.produtos.apirest.Serviços;
+package com.produtos.apirest.Service;
 
 import com.produtos.apirest.models.Usuario;
 import com.produtos.apirest.repository.RoleRepo;
@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static com.produtos.apirest.Serviços.RoleServiceTeste.genereteRolesList;
-import static com.produtos.apirest.Serviços.RoleServiceTeste.rollbackRolesList;
+import static com.produtos.apirest.Service.RoleServiceTeste.genereteRolesList;
+import static com.produtos.apirest.Service.RoleServiceTeste.rollbackRolesList;
 
 @SpringBootTest
 public class UsarioServiceTeste {

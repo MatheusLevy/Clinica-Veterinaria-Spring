@@ -1,23 +1,27 @@
 package com.produtos.apirest.service;
 
+import com.produtos.apirest.models.Animal;
 import com.produtos.apirest.models.Area;
 import com.produtos.apirest.models.Especialidade;
 import com.produtos.apirest.repository.AreaRepo;
 import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
 import org.hibernate.Hibernate;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AreaService {
-    @Autowired
-    public AreaRepo repo;
+
+    private final AreaRepo repo;
+
+    public AreaService(AreaRepo areaRepo){
+        this.repo = areaRepo;
+    }
 
     public static void verificaArea(Area area){
         if (area == null)
@@ -27,14 +31,15 @@ public class AreaService {
     }
 
     public static void verificaId(Area area){
-        if (Long.valueOf(area.getAreaId()) == null || area == null)
+        if (area.getAreaId() <= 0)
             throw new RegraNegocioRunTime("A Area deve possuir um identificador!");
     }
 
     public static void verificaId(Long id){
-        if (Long.valueOf(id) == null || id < 0)
+        if (id <= 0)
             throw new RegraNegocioRunTime("A Area deve possuir um identificador!");
     }
+
     @Transactional
     public Area salvar(Area area){
         verificaArea(area);
@@ -62,17 +67,22 @@ public class AreaService {
     }
 
     @Transactional
-    public Area removerFeedback(Long id){
+    public Area removerComFeedback(Long id){
         verificaId(id);
-        Area areaFeedback = repo.findById(id).get();
-        repo.delete(areaFeedback);
-        return areaFeedback;
+        Optional<Area> areasEncontradas = repo.findById(id);
+        if (areasEncontradas.isPresent()) {
+            Area areaFeedback = areasEncontradas.get();
+            repo.delete(areaFeedback);
+            return areaFeedback;
+        }
+        return null;
     }
 
     @Transactional
     public Area buscarPorId(Long id){
         verificaId(id);
-        return repo.findById(id).get();
+        Optional<Area> areasEncontradas = repo.findById(id);
+        return areasEncontradas.orElse(null);
     }
 
     @Transactional
@@ -95,11 +105,15 @@ public class AreaService {
         verificaArea(area);
         verificaId(area);
         try {
-            Area areaEncontrada = repo.findById(area.getAreaId()).get();
-            Hibernate.initialize(areaEncontrada.getEspecialidades());
-            verificaArea(areaEncontrada);
-            verificaId(areaEncontrada);
-            return areaEncontrada.getEspecialidades();
+            Optional<Area> areasEncontradas = repo.findById(area.getAreaId());
+            if(areasEncontradas.isPresent()) {
+                Area areaEncontrada = areasEncontradas.get();
+                Hibernate.initialize(areaEncontrada.getEspecialidades());
+                verificaArea(areaEncontrada);
+                verificaId(areaEncontrada);
+                return areaEncontrada.getEspecialidades();
+            }
+            return null;
         } catch (Exception e){
             System.out.println(e);
             throw e;

@@ -1,4 +1,4 @@
-package com.produtos.apirest.Serviços;
+package com.produtos.apirest.Service;
 
 import com.produtos.apirest.models.TipoConsulta;
 import com.produtos.apirest.repository.TipoConsultaRepo;
@@ -37,7 +37,6 @@ public class TipoConsultaServiceTeste {
     public void deveSalvar(){
         TipoConsulta tipoConsultaSalva = tipoConsultaService.salvar(generateTipoConsulta());
         Assertions.assertNotNull(tipoConsultaSalva);
-        Assertions.assertNotNull(tipoConsultaSalva.getTipoConsultaId());
         rollback(tipoConsultaSalva);
     }
 

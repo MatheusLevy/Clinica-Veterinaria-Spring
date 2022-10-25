@@ -5,7 +5,6 @@ import com.produtos.apirest.models.Dono;
 import com.produtos.apirest.repository.AnimalRepo;
 import com.produtos.apirest.repository.DonoRepo;
 import com.produtos.apirest.service.excecoes.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
@@ -17,11 +16,14 @@ import java.util.Optional;
 @Service
 public class AnimalService {
 
-    @Autowired
-    public AnimalRepo repo;
+    private final AnimalRepo repo;
+    private final DonoRepo donoRepo;
 
-    @Autowired
-    public DonoRepo donoRepo;
+    public AnimalService(AnimalRepo animalRepo, DonoRepo donoRepo){
+        this.repo = animalRepo;
+        this.donoRepo = donoRepo;
+    }
+
     public static void verificaAnimal(Animal animal){
         if (animal == null)
             throw new NullPointerException("O Animal não pode ser Nulo!");
@@ -30,12 +32,12 @@ public class AnimalService {
     }
 
     public static void verificaId(Animal animal){
-        if (Long.valueOf(animal.getAnimalId()) == null || animal == null)
+        if (animal.getAnimalId() <= 0)
             throw new RegraNegocioRunTime("O Animal deve possuir um identificador!");
     }
 
     public static void verificaId(Long id){
-        if (Long.valueOf(id) == null || id < 0)
+        if (id <= 0)
             throw new RegraNegocioRunTime("O Animal deve possuir um identificador!");
     }
 
@@ -50,6 +52,28 @@ public class AnimalService {
         verificaAnimal(animal);
         verificaId(animal);
         return repo.save(animal);
+    }
+
+    @Transactional
+    public Animal atualizarDono(Animal destino, Dono donoNovo){
+        DonoService.verificaDono(donoNovo);
+        DonoService.verificaId(donoNovo);
+        verificaAnimal(destino);
+        verificaId(destino);
+
+        Optional<Dono> donoOptional = donoRepo.findById(donoNovo.getDonoId());
+        if (donoOptional.isEmpty())
+            throw new RegraNegocioRunTime("Não foi possivel encontrar o Dono");
+
+        Optional<Animal> animalOptional = repo.findById(destino.getAnimalId());
+        if(animalOptional.isEmpty())
+            throw new RegraNegocioRunTime("Não foi possivel encontrar o Animal");
+
+        Animal animalDestinoEncontrado = animalOptional.get();
+        Dono donoNovoEncontrado = donoOptional.get();
+        animalDestinoEncontrado.setDono(donoNovoEncontrado);
+
+        return repo.save(animalDestinoEncontrado);
     }
 
     @Transactional
@@ -68,15 +92,20 @@ public class AnimalService {
     @Transactional
     public Animal removerComFeedback(Long id){
         verificaId(id);
-        Animal animalFeedback = repo.findById(id).get();
-        repo.delete(animalFeedback);
-        return animalFeedback;
+        Optional<Animal> animaisEncontrados = repo.findById(id);
+        if (animaisEncontrados.isPresent()) {
+            Animal animalFeedback = animaisEncontrados.get();
+            repo.delete(animalFeedback);
+            return animalFeedback;
+        }
+        return null;
     }
 
     @Transactional
     public Animal buscarPorId(Long id){
         verificaId(id);
-        return repo.findById(id).get();
+        Optional<Animal> animaisEncontrados = repo.findById(id);
+        return animaisEncontrados.orElse(null);
     }
 
     @Transactional
@@ -97,29 +126,7 @@ public class AnimalService {
     @Transactional
     public Dono buscarDonoPorId(Long id){
         verificaId(id);
-        Animal animalEncontrado = repo.findById(id).get();
-        return animalEncontrado.getDono();
-    }
-
-    @Transactional
-    public Animal atualizarDono(Animal destino, Dono donoNovo){
-        DonoService.verificaDono(donoNovo);
-        DonoService.verificaId(donoNovo);
-        verificaAnimal(destino);
-        verificaId(destino);
-
-        Optional<Dono> donoOptional = donoRepo.findById(donoNovo.getDonoId());
-        if (!donoOptional.isPresent())
-            throw new RegraNegocioRunTime("Não foi possivel encontrar o Dono");
-
-        Optional<Animal> animalOptional = repo.findById(destino.getAnimalId());
-        if(!animalOptional.isPresent())
-            throw new RegraNegocioRunTime("Não foi possivel encontrar o Animal");
-
-        Animal animalDestinoEncontrado = animalOptional.get();
-        Dono donoNovoEncontrado = donoOptional.get();
-        animalDestinoEncontrado.setDono(donoNovoEncontrado);
-
-        return repo.save(animalDestinoEncontrado);
+        Optional<Animal> animaisEncontrados = repo.findById(id);
+        return animaisEncontrados.map(Animal::getDono).orElse(null);
     }
 }

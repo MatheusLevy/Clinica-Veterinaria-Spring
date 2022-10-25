@@ -1,4 +1,4 @@
-package com.produtos.apirest.Serviços;
+package com.produtos.apirest.Service;
 
 import com.produtos.apirest.models.Animal;
 import com.produtos.apirest.models.Dono;
@@ -13,8 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-import static com.produtos.apirest.Serviços.AnimalServiceTeste.generateAnimal;
-import static com.produtos.apirest.Serviços.AnimalServiceTeste.rollbackAnimal;
+import static com.produtos.apirest.Service.AnimalServiceTeste.generateAnimal;
+import static com.produtos.apirest.Service.AnimalServiceTeste.rollbackAnimal;
 import static com.produtos.apirest.Util.Util.generateCPF;
 import static com.produtos.apirest.Util.Util.generateTelefone;
 
@@ -53,7 +53,6 @@ public class DonoServiceTeste {
     public void deveSalvar(){
         Dono donoSalvo = donoService.salvar(generateDono());
         Assertions.assertNotNull(donoSalvo);
-        Assertions.assertNotNull(donoSalvo.getDonoId());
         rollback(donoSalvo);
     }
 

@@ -3,19 +3,22 @@ package com.produtos.apirest.service;
 import com.produtos.apirest.models.TipoConsulta;
 import com.produtos.apirest.repository.TipoConsultaRepo;
 import com.produtos.apirest.service.excecoes.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TipoConsultaService {
 
-    @Autowired
-    public TipoConsultaRepo repo;
+    private final TipoConsultaRepo repo;
+
+    public TipoConsultaService(TipoConsultaRepo tipoConsultaRepo){
+        this.repo = tipoConsultaRepo;
+    }
 
     public static void verificaTipoConsulta(TipoConsulta tipo){
         if (tipo == null)
@@ -25,12 +28,12 @@ public class TipoConsultaService {
     }
 
     public static void verificaId(TipoConsulta tipo){
-        if(tipo == null || Long.valueOf(tipo.getTipoConsultaId()) == null)
+        if(tipo == null || tipo.getTipoConsultaId() <= 0)
             throw new RegraNegocioRunTime("Tipo de Consulta deve ter um identificador!");
     }
 
     public static void verificaId(Long id){
-        if(Long.valueOf(id) == null)
+        if(id <= 0)
             throw new RegraNegocioRunTime("Tipo de Consulta deve ter um identificador!");
     }
 
@@ -56,15 +59,20 @@ public class TipoConsultaService {
     @Transactional
     public TipoConsulta removerComFeedback(Long id){
         verificaId(id);
-        TipoConsulta tipoConsultaFeedback = repo.findById(id).get();
-        repo.delete(tipoConsultaFeedback);
-        return tipoConsultaFeedback;
+        Optional<TipoConsulta> tipoConsultaEncontradas = repo.findById(id);
+        if (tipoConsultaEncontradas.isPresent()) {
+            TipoConsulta tipoConsultaFeedback = tipoConsultaEncontradas.get();
+            repo.delete(tipoConsultaFeedback);
+            return tipoConsultaFeedback;
+        }
+        return null;
     }
 
     @Transactional
     public TipoConsulta buscarPorId(Long id){
         verificaId(id);
-        return repo.findById(id).get();
+        Optional<TipoConsulta> tipoConsultaEncontradas = repo.findById(id);
+        return tipoConsultaEncontradas.orElse(null);
     }
 
     @Transactional

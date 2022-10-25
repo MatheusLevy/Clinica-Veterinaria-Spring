@@ -1,4 +1,4 @@
-package com.produtos.apirest.Serviços;
+package com.produtos.apirest.Service;
 
 import com.produtos.apirest.models.Area;
 import com.produtos.apirest.models.Especialidade;
@@ -12,8 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-import static com.produtos.apirest.Serviços.EspecialidadeServiceTeste.generateEspecialidade;
-import static com.produtos.apirest.Serviços.EspecialidadeServiceTeste.rollbackEspecialidade;
+import static com.produtos.apirest.Service.EspecialidadeServiceTeste.generateEspecialidade;
+import static com.produtos.apirest.Service.EspecialidadeServiceTeste.rollbackEspecialidade;
 
 @SpringBootTest
 public class AreaServiceTeste {
@@ -45,7 +45,6 @@ public class AreaServiceTeste {
     public void deveSalvar(){
         Area areaSalva = areaService.salvar(generateArea());
         Assertions.assertNotNull(areaSalva);
-        Assertions.assertNotNull(areaSalva.getAreaId());
         rollback(areaSalva);
     }
 
@@ -78,7 +77,7 @@ public class AreaServiceTeste {
     @Test
     public void deveRemovercomFeedback(){
         Area areaSalva = areaRepo.save(generateArea());
-        Area areaFeedback = areaService.removerFeedback(areaSalva.getAreaId());
+        Area areaFeedback = areaService.removerComFeedback(areaSalva.getAreaId());
         Assertions.assertNotNull(areaFeedback);
         Assertions.assertEquals(areaFeedback.getAreaId(), areaSalva.getAreaId());
     }

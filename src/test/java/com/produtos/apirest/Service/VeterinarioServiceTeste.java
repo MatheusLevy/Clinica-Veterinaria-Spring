@@ -1,4 +1,4 @@
-package com.produtos.apirest.Serviços;
+package com.produtos.apirest.Service;
 
 import com.produtos.apirest.models.Especialidade;
 import com.produtos.apirest.models.Veterinario;
@@ -14,8 +14,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-import static com.produtos.apirest.Serviços.EspecialidadeServiceTeste.generateEspecialidade;
-import static com.produtos.apirest.Serviços.EspecialidadeServiceTeste.rollbackEspecialidade;
+import static com.produtos.apirest.Service.EspecialidadeServiceTeste.generateEspecialidade;
+import static com.produtos.apirest.Service.EspecialidadeServiceTeste.rollbackEspecialidade;
 import static com.produtos.apirest.Util.Util.generateCPF;
 import static com.produtos.apirest.Util.Util.generateTelefone;
 

@@ -92,7 +92,7 @@ public class AreaControllerTeste {
     @WithUserDetails("Admin")
     public void deveRemoverComFeedbackController() throws Exception{
         Long id = Long.valueOf(1);
-        Mockito.when(areaService.removerFeedback(Mockito.anyLong())).thenReturn(getAreaInstance());
+        Mockito.when(areaService.removerComFeedback(Mockito.anyLong())).thenReturn(getAreaInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.DELETE, API.concat("/remover/feedback/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
