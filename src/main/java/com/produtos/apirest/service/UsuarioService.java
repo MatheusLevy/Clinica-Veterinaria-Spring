@@ -53,11 +53,6 @@ public class UsuarioService {
     }
 
     @Transactional
-    public Usuario buscarPorUsername(String username){
-        return usuarioRepo.findByUsername(username);
-    }
-
-    @Transactional
     public Usuario salvar(Usuario usuario){
         verificaUsuario(usuario);
         usuario.setSenha(passwordEncoder().encode(usuario.getSenha()));
@@ -90,6 +85,11 @@ public class UsuarioService {
     public Usuario buscarPorId(Long id){
         verificaId(id);
         return usuarioRepo.findById(id).get();
+    }
+
+    @Transactional
+    public Usuario buscarPorUsername(String username){
+        return usuarioRepo.findByUsername(username);
     }
 
     @Transactional

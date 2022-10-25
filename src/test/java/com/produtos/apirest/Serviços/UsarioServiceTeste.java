@@ -1,19 +1,22 @@
 package com.produtos.apirest.Serviços;
 
 import com.produtos.apirest.models.Usuario;
+import com.produtos.apirest.repository.RoleRepo;
 import com.produtos.apirest.repository.UsuarioRepo;
 import com.produtos.apirest.service.UsuarioService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.util.Assert;
 
-import javax.swing.text.html.Option;
-import java.util.Optional;
+import static com.produtos.apirest.Serviços.RoleServiceTeste.genereteRolesList;
+import static com.produtos.apirest.Serviços.RoleServiceTeste.rollbackRolesList;
 
 @SpringBootTest
 public class UsarioServiceTeste {
+
+    @Autowired
+    public RoleRepo roleRepo;
 
     @Autowired
     public UsuarioRepo usuarioRepo;
@@ -21,145 +24,99 @@ public class UsarioServiceTeste {
     @Autowired
     public UsuarioService usuarioService;
 
+    protected static Usuario generateUsuario(Boolean initializeRole, RoleRepo roleRepo){
+        return Usuario.builder()
+                .username("teste")
+                .senha("senha")
+                .roles(genereteRolesList(initializeRole, roleRepo))
+                .build();
+    }
 
-//    @Test
-//    public void deveSalvar(){
-//        //Cenário
-//        Usuario usuario = Usuario.builder()
-//                .username("User")
-//                .senha("senha")
-//                .nivel("SA")
-//                .build();
-//        //Ação
-//        Usuario usuarioRetorno = usuarioRepo.save(usuario);
-//
-//        //Verificação
-//        Assertions.assertNotNull(usuarioRetorno);
-//        Assertions.assertNotNull(usuarioRetorno.getUsuarioId());
-//
-//        //Rollback
-//        usuarioRepo.delete(usuarioRetorno);
-//    }
-//
-//    @Test
-//    public void deveAutenticar(){
-//        //Cenário
-//        Usuario usuario = Usuario.builder()
-//                .username("User")
-//                .senha("senha")
-//                .nivel("SA")
-//                .build();
-//        Usuario usuarioRetorno = usuarioService.salvar(usuario);
-//
-//        //Ação
-//        Usuario autenticado = usuarioService.autenticar(usuario.getUsername(), "senha");
-//
-//        //Verificação
-//        Assertions.assertNotNull(autenticado.getUsuarioId());
-//
-//        //Rollback
-//        usuarioRepo.delete(usuarioRetorno);
-//    }
-//
-//    @Test
-//    public void deveBuscarPorUsername(){
-//        //Cenário
-//        Usuario usuario = Usuario.builder()
-//                .username("User")
-//                .senha("senha")
-//                .nivel("SA")
-//                .build();
-//        Usuario usuarioRetorno = usuarioService.salvar(usuario);
-//
-//        //Cenário
-//        Usuario buscado = usuarioService.buscarPorUsername(usuarioRetorno.getUsername());
-//
-//        //Verificação
-//        Assertions.assertNotNull(buscado);
-//        Assertions.assertEquals(buscado.getUsuarioId(), usuarioRetorno.getUsuarioId());
-//
-//        //Rollback
-//        usuarioRepo.delete(usuarioRetorno);
-//    }
-//
-//    @Test
-//    public void deveAtualizar(){
-//        //Cenário
-//        Usuario usuario = Usuario.builder()
-//                .username("User")
-//                .senha("senha")
-//                .nivel("SA")
-//                .build();
-//        Usuario usuarioRetorno = usuarioService.salvar(usuario);
-//
-//        //Ação
-//        usuarioRetorno.setUsername("Novo Username");
-//        Usuario atualizado = usuarioService.atualizar(usuarioRetorno);
-//
-//        //Verificação
-//        Assertions.assertNotNull(atualizado);
-//        Assertions.assertEquals(atualizado.getUsuarioId(), usuarioRetorno.getUsuarioId());
-//
-//        //Rollback
-//        usuarioRepo.delete(atualizado);
-//    }
-//
-//    @Test
-//    public void deveRemover(){
-//        //Cenário
-//        Usuario usuario = Usuario.builder()
-//                .username("User")
-//                .senha("senha")
-//                .nivel("SA")
-//                .build();
-//        Usuario usuarioRetorno = usuarioService.salvar(usuario);
-//
-//        //Ação
-//        usuarioService.remover(usuarioRetorno);
-//
-//        //Verificação
-//        Optional<Usuario> usuarioTemp = usuarioRepo.findById(usuarioRetorno.getUsuarioId());
-//        Assertions.assertNotNull(usuarioTemp);
-//        Assertions.assertFalse(usuarioTemp.isPresent());
-//    }
-//
-//    @Test
-//    public void deveRemoverComFeedback(){
-//        //Cenário
-//        Usuario usuario = Usuario.builder()
-//                .username("User")
-//                .senha("senha")
-//                .nivel("SA")
-//                .build();
-//        Usuario usuarioRetorno = usuarioService.salvar(usuario);
-//
-//        //Ação
-//        Usuario feedback = usuarioService.removerComFeedback(usuarioRetorno.getUsuarioId());
-//
-//        //Verificação
-//        Assertions.assertNotNull(feedback);
-//        Assertions.assertEquals(feedback.getUsuarioId(), usuarioRetorno.getUsuarioId());
-//    }
-//
-//    @Test
-//    public void deveBuscarPorId(){
-//        //Cenário
-//        Usuario usuario = Usuario.builder()
-//                .username("User")
-//                .senha("senha")
-//                .nivel("SA")
-//                .build();
-//        Usuario usuarioRetorno = usuarioService.salvar(usuario);
-//
-//        //Ação
-//        Usuario usuarioBuscado = usuarioService.buscarPorId(usuarioRetorno.getUsuarioId());
-//
-//        //Verificação
-//        Assertions.assertNotNull(usuarioBuscado);
-//        Assertions.assertEquals(usuarioBuscado.getUsuarioId(), usuarioRetorno.getUsuarioId());
-//
-//        //Rollback
-//        usuarioRepo.delete(usuarioRetorno);
-//    }
+    private Usuario generateUsuario(Boolean initializeRole){
+        return Usuario.builder()
+                .username("teste")
+                .senha("senha")
+                .roles(genereteRolesList(initializeRole, roleRepo))
+                .build();
+    }
 
+    private void rollback(Usuario usuario){
+        usuarioRepo.delete(usuario);
+        rollbackRolesList(usuario.getRoles(), roleRepo);
+    }
+
+    protected void rollbackUsuario(Usuario usuario, RoleRepo roleRepo){
+        usuarioRepo.delete(usuario);
+        rollbackRolesList(usuario.getRoles(), roleRepo);
+    }
+
+    @Test
+    public void deveSalvar(){
+        Usuario usuarioSalvo = usuarioService.salvar(generateUsuario(true));
+        Assertions.assertNotNull(usuarioSalvo);
+        Assertions.assertNotNull(usuarioSalvo.getUsuarioId());
+        rollback(usuarioSalvo);
+    }
+
+    @Test
+    public void deveAtualizar(){
+        Usuario usuarioSalvo = usuarioService.salvar(generateUsuario(true));
+        usuarioSalvo.setUsername("Novo Username");
+        Usuario usuarioAtualizado = usuarioService.atualizar(usuarioSalvo);
+        Assertions.assertNotNull(usuarioAtualizado);
+        Assertions.assertEquals(usuarioAtualizado.getUsuarioId(), usuarioSalvo.getUsuarioId());
+        rollback(usuarioSalvo);
+    }
+
+    @Test
+    public void deveAutenticar(){
+        Usuario usuarioSalvo = usuarioService.salvar(generateUsuario(true));
+        Usuario autenticado = usuarioService.autenticar(usuarioSalvo.getUsername(), "senha");
+        Assertions.assertNotNull(autenticado.getUsuarioId());
+        rollback(usuarioSalvo);
+    }
+
+    @Test
+    public void deveRemover(){
+        Usuario usuarioSalvo = usuarioService.salvar(generateUsuario(true));
+        Long id = usuarioSalvo.getUsuarioId();
+        usuarioService.remover(usuarioSalvo);
+        Assertions.assertFalse(usuarioRepo.findById(id).isPresent());
+        rollbackRolesList(usuarioSalvo.getRoles(), roleRepo);
+    }
+
+    @Test
+    public void deveRemoverComFeedback(){
+        Usuario usuarioSalvo = usuarioService.salvar(generateUsuario(true));
+        Usuario usuarioFeeback = usuarioService.removerComFeedback(usuarioSalvo.getUsuarioId());
+        Assertions.assertNotNull(usuarioFeeback);
+        Assertions.assertEquals(usuarioFeeback.getUsuarioId(), usuarioSalvo.getUsuarioId());
+        rollbackRolesList(usuarioSalvo.getRoles(), roleRepo);
+    }
+
+    @Test
+    public void deveBuscarPorUsername(){
+        Usuario usuarioSalvo = usuarioService.salvar(generateUsuario(true));
+        Usuario usuarioBuscado = usuarioService.buscarPorUsername(usuarioSalvo.getUsername());
+        Assertions.assertNotNull(usuarioBuscado);
+        Assertions.assertEquals(usuarioBuscado.getUsuarioId(), usuarioSalvo.getUsuarioId());
+        rollback(usuarioSalvo);
+    }
+
+    @Test
+    public void deveBuscarPorId(){
+        Usuario usuarioSalvo = usuarioService.salvar(generateUsuario(true));
+        Long id = usuarioSalvo.getUsuarioId();
+        Usuario usuarioBuscado = usuarioService.buscarPorId(id);
+        Assertions.assertNotNull(usuarioBuscado);
+        Assertions.assertEquals(usuarioBuscado.getUsuarioId(), usuarioSalvo.getUsuarioId());
+        rollback(usuarioSalvo);
+    }
+
+    @Test
+    public void deveBuscarTodos(){
+        Usuario usuarioSalvo = usuarioService.salvar(generateUsuario(true));
+        Assertions.assertFalse(usuarioService.buscarTodos().isEmpty());
+        rollback(usuarioSalvo);
+    }
 }
