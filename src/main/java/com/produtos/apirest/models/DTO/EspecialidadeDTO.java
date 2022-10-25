@@ -1,6 +1,7 @@
 package com.produtos.apirest.models.DTO;
 
 import com.produtos.apirest.models.Area;
+import com.produtos.apirest.models.Especialidade;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,4 +20,11 @@ public class EspecialidadeDTO {
     private Long idArea;
     private Area area;
     private List<Area> areas;
+
+    public Especialidade toEspecialidade(){
+        return Especialidade.builder()
+                .especialidadeId(this.id)
+                .nome(this.nome)
+                .build();
+    }
 }

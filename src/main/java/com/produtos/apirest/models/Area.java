@@ -1,6 +1,7 @@
 package com.produtos.apirest.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.produtos.apirest.models.DTO.AreaDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,7 +26,14 @@ public class Area {
     @Column(name = "nome")
     private String nome;
 
-    @OneToMany(mappedBy = "area")
+    @OneToMany(mappedBy = "area", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Especialidade> especialidades;
+
+    public AreaDTO toDTO(){
+        return AreaDTO.builder()
+                .id(this.areaId)
+                .nome(this.nome)
+                .build();
+    }
 }

@@ -19,4 +19,12 @@ public class TipoConsultaDTO {
     private String nome;
     private List<Consulta> consultas;
     private List<TipoConsulta> tipoConsultaList;
+
+    public TipoConsulta toTipoConsulta(){
+        return TipoConsulta.builder()
+                .tipoConsultaId(this.id)
+                .nome(this.nome)
+                .consultas(this.consultas)
+                .build();
+    }
 }

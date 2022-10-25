@@ -26,7 +26,7 @@ public class TipoAnimal {
     @Column(name = "nome")
     private String nome;
 
-    @OneToMany(mappedBy = "tipoAnimal")
+    @OneToMany(mappedBy = "tipoAnimal", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Animal> animais;
 

@@ -18,4 +18,10 @@ public class AreaDTO {
     private String nome;
     private List<Area> areas;
 
+    public Area toArea(){
+        return Area.builder()
+                .areaId(this.id)
+                .nome(this.nome)
+                .build();
+    }
 }
