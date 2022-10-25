@@ -20,4 +20,11 @@ public class TipoAnimalDTO {
     private List<Animal> animais;
     private List<TipoAnimal> tipoAnimalList;
 
+    public TipoAnimal toTipoAnimal(){
+        return TipoAnimal.builder()
+                .tipoAnimalId(this.id)
+                .nome(this.nome)
+                .animais(this.animais)
+                .build();
+    }
 }

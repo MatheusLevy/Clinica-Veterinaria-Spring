@@ -6,7 +6,6 @@ import com.produtos.apirest.service.TipoAnimalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,26 +15,18 @@ public class TipoAnimalController {
     @Autowired
     public TipoAnimalService tipoService;
 
-    @PreAuthorize("hasRole('A')")
     @PostMapping("/salvar")
-    public ResponseEntity salvar(@RequestBody TipoAnimalDTO dto){
+    public ResponseEntity salvar(@RequestBody TipoAnimalDTO tipoAnimalDTO){
         try{
-            TipoAnimal tipoAnimal = TipoAnimal.builder()
-                    .nome(dto.getNome())
-                    .build();
+            TipoAnimal tipoAnimal = tipoAnimalDTO.toTipoAnimal();
             TipoAnimal tipoSalvo = tipoService.salvar(tipoAnimal);
-
-            TipoAnimalDTO dtoRetorno = TipoAnimalDTO.builder()
-                    .id(tipoSalvo.getTipoAnimalId())
-                    .nome(tipoSalvo.getNome())
-                    .build();
+            TipoAnimalDTO dtoRetorno = tipoSalvo.toDTO();
             return new ResponseEntity(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PreAuthorize("hasRole('A')")
     @DeleteMapping("/remover/{id}")
     public ResponseEntity remover(@PathVariable(value = "id", required = true) Long id){
         try{
@@ -46,51 +37,34 @@ public class TipoAnimalController {
         }
     }
 
-    @PreAuthorize("hasRole('A')")
     @DeleteMapping("/remover/feedback/{id}")
     public ResponseEntity removerComFeedback(@PathVariable(value = "id", required = true) Long id){
         try{
             TipoAnimal tipoRemovido = tipoService.removerComFeedback(id);
-            TipoAnimalDTO dtoRetorno = TipoAnimalDTO.builder()
-                    .id(tipoRemovido.getTipoAnimalId())
-                    .nome(tipoRemovido.getNome())
-                    .build();
+            TipoAnimalDTO dtoRetorno = tipoRemovido.toDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PreAuthorize("hasRole('A')")
     @PutMapping("/atualizar")
-    public ResponseEntity atualizar(@RequestBody TipoAnimalDTO dto){
+    public ResponseEntity atualizar(@RequestBody TipoAnimalDTO tipoAnimalDTO){
         try{
-            TipoAnimal tipoAnimal = TipoAnimal.builder()
-                    .tipoAnimalId(dto.getId())
-                    .nome(dto.getNome())
-                    .build();
-            TipoAnimal atualizado = tipoService.atualizar(tipoAnimal);
-
-            TipoAnimalDTO dtoRetorno = TipoAnimalDTO.builder()
-                    .id(atualizado.getTipoAnimalId())
-                    .nome(atualizado.getNome())
-                    .build();
+            TipoAnimal tipoAnimal = tipoAnimalDTO.toTipoAnimal();
+            TipoAnimal tipoAnimalAtualizado = tipoService.atualizar(tipoAnimal);
+            TipoAnimalDTO dtoRetorno = tipoAnimalAtualizado.toDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PreAuthorize("hasRole('A')")
     @GetMapping("/buscarPorId/{id}")
     public ResponseEntity buscar(@PathVariable(value = "id", required = true) Long id){
         try{
             TipoAnimal tipoBuscado = tipoService.buscarPorId(id);
-
-            TipoAnimalDTO dtoRetorno = TipoAnimalDTO.builder()
-                    .id(tipoBuscado.getTipoAnimalId())
-                    .nome(tipoBuscado.getNome())
-                    .build();
+            TipoAnimalDTO dtoRetorno = tipoBuscado.toDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());

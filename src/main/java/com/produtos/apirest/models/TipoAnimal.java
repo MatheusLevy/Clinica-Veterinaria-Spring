@@ -1,6 +1,7 @@
 package com.produtos.apirest.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.produtos.apirest.models.DTO.TipoAnimalDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,5 +33,12 @@ public class TipoAnimal {
     @Override
     public String toString(){
         return getClass().getSimpleName() + "[id= " + tipoAnimalId + ", nome= " + nome + "]";
+    }
+
+    public TipoAnimalDTO toDTO(){
+        return TipoAnimalDTO.builder()
+                .id(this.tipoAnimalId)
+                .nome(this.nome)
+                .build();
     }
 }
