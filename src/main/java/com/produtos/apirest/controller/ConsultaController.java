@@ -9,11 +9,8 @@ import com.produtos.apirest.service.AnimalService;
 import com.produtos.apirest.service.ConsultaService;
 import com.produtos.apirest.service.TipoConsultaService;
 import com.produtos.apirest.service.VeterinarioService;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,107 +19,66 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/consulta")
 public class ConsultaController {
 
-    @Autowired
-    public ConsultaService consultaService;
+    private final ConsultaService consultaService;
+    private final VeterinarioService veterinarioService;
+    private final AnimalService animalService;
+    private final TipoConsultaService tipoConsultaService;
 
-    @Autowired
-    public VeterinarioService veterinarioService;
-
-    @Autowired
-    public AnimalService animalService;
-
-    @Autowired
-    public TipoConsultaService tipoConsultaService;
-
-
-    private static ModelMapper customModelMapper(){
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.emptyTypeMap(Consulta.class, ConsultaDTO.class)
-                .addMappings(m -> m.skip(ConsultaDTO::setVeterinario))
-                .addMappings(m -> m.skip(ConsultaDTO::setVeterinarios))
-                .addMappings(m -> m.skip(ConsultaDTO::setAnimal))
-                .addMappings(m -> m.skip(ConsultaDTO::setTiposConsulta))
-                .implicitMappings();
-        return modelMapper;
+    public ConsultaController(ConsultaService consultaService, VeterinarioService veterinarioService,
+                              AnimalService animalService, TipoConsultaService tipoConsultaService){
+        this.consultaService = consultaService;
+        this.veterinarioService = veterinarioService;
+        this.animalService = animalService;
+        this.tipoConsultaService = tipoConsultaService;
     }
 
-    ModelMapper modelMapper = customModelMapper();
-
-    @PreAuthorize("hasRole('S')")
     @PostMapping("/salvar")
-    public ResponseEntity salvar(@RequestBody ConsultaDTO consultadto){
+    public ResponseEntity<?> salvar(@RequestBody ConsultaDTO consultadto){
         try {
-            TipoConsulta tipoCosulta = tipoConsultaService.buscarPorId(consultadto.getTipoConsultaId());
-            Veterinario veterinario = veterinarioService.buscarPorId(consultadto.getVeterinarioId());
-            Animal animal = animalService.buscarPorId(consultadto.getIdAnimal());
-
-            Consulta consulta = Consulta.builder()
-                    .tipoConsulta(tipoCosulta)
-                    .veterinario(veterinario)
-                    .data(consultadto.getData())
-                    .descricao(consultadto.getDescricao())
-                    .animal(animal)
-                    .build();
+            TipoConsulta tipoConsultaEncontrada = tipoConsultaService.buscarPorId(consultadto.getTipoConsultaId());
+            Veterinario veterinarioEncontrado = veterinarioService.buscarPorId(consultadto.getVeterinarioId());
+            Animal AnimalEncontrado = animalService.buscarPorId(consultadto.getAnimalId());
+            Consulta consulta = consultadto.toConsulta(AnimalEncontrado, veterinarioEncontrado, tipoConsultaEncontrada);
             Consulta consultaSalva = consultaService.salvar(consulta);
-
-            ConsultaDTO consultaDTORetorno = ConsultaDTO.builder()
-                    .veterinarioNome(consultaSalva.getVeterinario().getNome())
-                    .tipoNome(consultaSalva.getTipoConsulta().getNome())
-                    .animalNome(consultaSalva.getAnimal().getNome())
-                    .descricao(consultaSalva.getDescricao())
-                    .data(consultaSalva.getData())
-                    .build();
-            return new ResponseEntity(consultaDTORetorno, HttpStatus.CREATED);
+            ConsultaDTO dtoRetorno = consultaSalva.toDTO();
+            return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PreAuthorize("hasRole('S')")
     @PutMapping("/atualizar")
-    public ResponseEntity atualizar(@RequestBody ConsultaDTO consultadto){
+    public ResponseEntity<?> atualizar(@RequestBody ConsultaDTO consultadto){
         try {
-            Consulta consulta = Consulta.builder()
-                    .consultaId(consultadto.getTipoConsultaId())
-                    .tipoConsulta(consultadto.getTipo())
-                    .veterinario(consultadto.getVeterinario())
-                    .animal(consultadto.getAnimal())
-                    .data(consultadto.getData())
-                    .descricao(consultadto.getDescricao())
-                    .build();
+            TipoConsulta tipoConsultaEncontrada = tipoConsultaService.buscarPorId(consultadto.getTipoConsultaId());
+            Veterinario veterinarioEncontrado = veterinarioService.buscarPorId(consultadto.getVeterinarioId());
+            Animal AnimalEncontrado = animalService.buscarPorId(consultadto.getAnimalId());
+            Consulta consulta = consultadto.toConsulta(AnimalEncontrado, veterinarioEncontrado, tipoConsultaEncontrada);
             Consulta consultaAtualizada = consultaService.atualizar(consulta);
-
-            ConsultaDTO consultaDTORetorno = ConsultaDTO.builder()
-                    .id(consultaAtualizada.getConsultaId())
-                    .tipo(consultaAtualizada.getTipoConsulta())
-                    .veterinario(consultaAtualizada.getVeterinario())
-                    .animal(consultaAtualizada.getAnimal())
-                    .data(consultaAtualizada.getData())
-                    .descricao(consultaAtualizada.getDescricao())
-                    .build();
-
-            return ResponseEntity.ok(consultaDTORetorno);
+            ConsultaDTO dtoRetorno = consultaAtualizada.toDTO();
+            return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    @PreAuthorize("hasRole('S')")
+
     @GetMapping("/buscarTodos")
-    public ResponseEntity buscarTodos(){
+    public ResponseEntity<?> buscarTodos(){
         try{
             List<Consulta> consultas = consultaService.buscarTodos();
             List<ConsultaDTO> dtos = consultas
                     .stream()
-                    .map(consulta -> modelMapper.map(consulta, ConsultaDTO.class))
+                    .map(Consulta::toDTO)
                     .collect(Collectors.toList());
             return ResponseEntity.ok(dtos);
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    @PreAuthorize("hasRole('S')")
+
+
     @DeleteMapping("/remover/{id}")
-    public ResponseEntity removerPorId(@PathVariable(value = "id", required = true) Long id){
+    public ResponseEntity<?> removerPorId(@PathVariable(value = "id") Long id){
         try{
             consultaService.removerPorId(id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
@@ -131,23 +87,14 @@ public class ConsultaController {
         }
     }
 
-    @PreAuthorize("hasRole('S')")
     @DeleteMapping("/remover/feedback/{id}")
-    public ResponseEntity removerComFeedback(@PathVariable(value = "id", required = true) Long id){
+    public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
         try{
             Consulta consultaRemovida = consultaService.removerComFeedback(id);
-            ConsultaDTO dto = ConsultaDTO.builder()
-                    .id(consultaRemovida.getConsultaId())
-                    .veterinarioNome(consultaRemovida.getVeterinario().getNome())
-                    .animalNome(consultaRemovida.getAnimal().getNome())
-                    .tipo(consultaRemovida.getTipoConsulta())
-                    .data(consultaRemovida.getData())
-                    .descricao(consultaRemovida.getDescricao())
-                    .build();
-            return ResponseEntity.ok(dto);
+            ConsultaDTO dtoRetorno = consultaRemovida.toDTO();
+            return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
 }

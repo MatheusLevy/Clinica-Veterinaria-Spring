@@ -50,7 +50,7 @@ public class ConsultaControllerTeste {
 
     @Test
     @WithUserDetails("Admin")
-    public void deveSalvarController() throws Exception{
+    public void deveSalvar() throws Exception{
         //Cenário
         ConsultaDTO consultadto = ConsultaDTO.builder()
                 .animal(new Animal())
@@ -116,7 +116,7 @@ public class ConsultaControllerTeste {
     public void deveAtualizarController() throws Exception{
         //Cenário
         ConsultaDTO consultaDTORequest = ConsultaDTO.builder()
-                .idAnimal(Long.valueOf(1))
+                .animalId(Long.valueOf(1))
                 .tipoConsultaId(Long.valueOf(1))
                 .veterinarioId(Long.valueOf(1))
                 .descricao("desc")

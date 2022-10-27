@@ -5,8 +5,6 @@ import com.produtos.apirest.models.DTO.AnimalDTO;
 import com.produtos.apirest.models.DTO.DonoDTO;
 import com.produtos.apirest.models.Dono;
 import com.produtos.apirest.service.DonoService;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,85 +16,38 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/dono")
 public class DonoController {
 
-    @Autowired
-    public DonoService donoService;
+    private final DonoService donoService;
 
-    private static ModelMapper customModelMapperDono(){
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.emptyTypeMap(Dono.class, DonoDTO.class)
-                .addMappings(m -> m.skip(DonoDTO::setDonosList))
-                .implicitMappings();
-        return modelMapper;
+    public DonoController(DonoService donoService){
+        this.donoService = donoService;
     }
-
-    ModelMapper modelMapperDono = customModelMapperDono();
-
-    private static ModelMapper customModelMapperAnimal(){
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.emptyTypeMap(Animal.class, AnimalDTO.class)
-                .addMappings(m -> m.skip(AnimalDTO::setDonos))
-                .addMappings(m -> m.skip(AnimalDTO::setDono))
-                .addMappings(m -> m.skip(AnimalDTO::setTipos))
-                .addMappings(m -> m.skip(AnimalDTO::setTipo))
-                .implicitMappings();
-        return modelMapper;
-    }
-
-    ModelMapper modelMapperAnimal = customModelMapperAnimal();
-
 
     @PostMapping("/salvar")
-    public ResponseEntity salvar(@RequestBody DonoDTO donodto){
+    public ResponseEntity<?> salvar(@RequestBody DonoDTO donodto){
         try{
-            Dono dono = Dono.builder()
-                    .nome(donodto.getNome())
-                    .cpf(donodto.getCpf())
-                    .telefone(donodto.getTelefone())
-                    .build();
-
+            Dono dono = donodto.toDono();
             Dono donoSalvo = donoService.salvar(dono);
-
-            DonoDTO donodtoRetorno = DonoDTO.builder()
-                    .id(donoSalvo.getDonoId())
-                    .nome(donoSalvo.getNome())
-                    .cpf(donoSalvo.getCpf())
-                    .telefone(donoSalvo.getTelefone())
-                    .build();
-
-            return new ResponseEntity(donodtoRetorno, HttpStatus.CREATED);
+            DonoDTO dtoRetorno = donoSalvo.toDTO();
+            return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-
     @PutMapping("/atualizar")
-    public ResponseEntity atualizar(@RequestBody DonoDTO donodto){
+    public ResponseEntity<?> atualizar(@RequestBody DonoDTO donodto){
         try{
-            Dono dono = Dono.builder()
-                    .donoId(donodto.getId())
-                    .nome(donodto.getNome())
-                    .telefone(donodto.getTelefone())
-                    .cpf(donodto.getCpf())
-                    .build();
-
+            Dono dono = donodto.toDono();
             Dono donoAtualizado = donoService.atualizar(dono);
-
-            DonoDTO donodtoRetorno = DonoDTO.builder()
-                    .id(donoAtualizado.getDonoId())
-                    .nome(donoAtualizado.getNome())
-                    .cpf(donoAtualizado.getCpf())
-                    .telefone(donoAtualizado.getTelefone())
-                    .build();
-
-            return ResponseEntity.ok(donodtoRetorno);
+            DonoDTO dtoRetorno = donoAtualizado.toDTO();
+            return ResponseEntity.ok(dtoRetorno);
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @DeleteMapping("/remover/{id}")
-    public ResponseEntity remover(@PathVariable(value = "id", required = true) Long id){
+    public ResponseEntity<?> remover(@PathVariable(value = "id") Long id){
         try{
             donoService.removerPorId(id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
@@ -106,72 +57,61 @@ public class DonoController {
     }
 
     @GetMapping("/buscarTodos")
-    public ResponseEntity buscarTodos(){
-
+    public ResponseEntity<?> buscarTodos(){
         List<Dono> donos = donoService.buscarTodos();
         List<DonoDTO> donosDTOS = donos
                 .stream()
-                .map(dono -> modelMapperDono.map(dono, DonoDTO.class))
+                .map(Dono::toDTO)
                 .collect(Collectors.toList());
-
         return ResponseEntity.ok(donosDTOS);
     }
+
     @GetMapping("/buscar/{id}")
-    public ResponseEntity buscarPorId(@PathVariable(value = "id", required = true) Long id){
+    public ResponseEntity<?> buscarPorId(@PathVariable(value = "id") Long id){
         try{
             Dono donoBuscado = donoService.buscarPorId(id);
-            DonoDTO donodtoRetorno = DonoDTO.builder()
-                    .id(donoBuscado.getDonoId())
-                    .cpf(donoBuscado.getCpf())
-                    .telefone(donoBuscado.getTelefone())
-                    .build();
-            return ResponseEntity.ok(donodtoRetorno);
+            DonoDTO dtoRetorno = donoBuscado.toDTO();
+            return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @DeleteMapping("remover/feedback/{id}")
-    public ResponseEntity removerComFeedback(@PathVariable(value = "id", required = true) Long id){
+    public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
         try{
             Dono removido = donoService.removerComFeedback(id);
-            DonoDTO donodtoRetorno = DonoDTO.builder()
-                    .id(removido.getDonoId())
-                    .nome(removido.getNome())
-                    .cpf(removido.getCpf())
-                    .telefone(removido.getTelefone())
-                    .build();
-            return  ResponseEntity.ok(donodtoRetorno);
+            DonoDTO dtoRetorno = removido.toDTO();
+            return  ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @GetMapping("/buscar/filtro")
-    public ResponseEntity buscarUtilizandoFiltro(@RequestBody DonoDTO dto){
+    public ResponseEntity<?> buscarUtilizandoFiltro(@RequestBody DonoDTO dto){
         try{
-            Dono filtro = Dono.builder()
-                    .donoId(dto.getId())
-                    .cpf(dto.getCpf())
-                    .telefone(dto.getTelefone())
-                    .nome(dto.getNome())
-                    .build();
-            List<Dono> buscado = donoService.buscar(filtro);
-            return ResponseEntity.ok(buscado);
+            Dono filtro = dto.toDono();
+            List<Dono> donosEncontrados = donoService.buscar(filtro);
+            List<DonoDTO> dtosRetorno = donosEncontrados
+                    .stream()
+                    .map(Dono::toDTO)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(dtosRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @GetMapping("/animais/{id}")
-    public ResponseEntity buscarTodosAnimais(@PathVariable(value = "id", required = true) Long id){
+    public ResponseEntity<?> buscarTodosAnimais(@PathVariable(value = "id") Long id){
         try{
             List<Animal> animais  =  donoService.buscarTodosAnimais(id);
-            List<AnimalDTO> dtos = animais
+            List<AnimalDTO> dtosRetorno = animais
                     .stream()
-                    .map(animal -> modelMapperAnimal.map(animal, AnimalDTO.class))
+                    .map(Animal::toDTO)
                     .collect(Collectors.toList());
-            return ResponseEntity.ok(dtos);
+            return ResponseEntity.ok(dtosRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }

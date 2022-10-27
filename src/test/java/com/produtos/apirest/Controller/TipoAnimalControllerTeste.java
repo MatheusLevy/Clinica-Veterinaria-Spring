@@ -34,21 +34,21 @@ public class TipoAnimalControllerTeste {
 
     public static TipoAnimal getTipoAnimalInstance(){
         return TipoAnimal.builder()
-                .tipoAnimalId(Long.valueOf(1))
+                .tipoAnimalId(1L)
                 .nome("nome")
                 .build();
     }
 
     public TipoAnimalDTO getTipoAnimalDTOInstance(){
         return TipoAnimalDTO.builder()
-                .id(Long.valueOf(1))
+                .id(1L)
                 .nome("nome")
                 .build();
     }
 
     @WithUserDetails("Admin")
     @Test
-    public void deveSalvarController() throws Exception{
+    public void deveSalvar() throws Exception{
         Mockito.when(tipoAnimalService.salvar(Mockito.any(TipoAnimal.class))).thenReturn(getTipoAnimalInstance());
         String json = toJson(getTipoAnimalDTOInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.POST, API.concat("/salvar"), json);
@@ -58,7 +58,7 @@ public class TipoAnimalControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveAtualizarController() throws Exception{
+    public void deveAtualizar() throws Exception{
         Mockito.when(tipoAnimalService.atualizar(Mockito.any(TipoAnimal.class))).thenReturn(getTipoAnimalInstance());
         String json = toJson(getTipoAnimalDTOInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.PUT, API.concat("/atualizar"), json);
@@ -68,8 +68,8 @@ public class TipoAnimalControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveRemoverController() throws Exception{
-        Long id = Long.valueOf(1);
+    public void deveRemover() throws Exception{
+        Long id = 1L;
         Mockito.doNothing().when(tipoAnimalService).removerPorId(Mockito.anyLong());
         MockHttpServletRequestBuilder request = request(HttpMethod.DELETE, API.concat("/remover/").concat(String.valueOf(id)));
         mvc.perform(request)
@@ -78,8 +78,8 @@ public class TipoAnimalControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveRemoverComFeedbackController() throws Exception{
-        Long id = Long.valueOf(1);
+    public void deveRemoverComFeedback() throws Exception{
+        Long id = 1L;
         Mockito.when(tipoAnimalService.removerComFeedback(Mockito.anyLong())).thenReturn(getTipoAnimalInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.DELETE, API.concat("/remover/feedback/").concat(String.valueOf(id)));
         mvc.perform(request)
@@ -88,8 +88,8 @@ public class TipoAnimalControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveBuscarPorIdController() throws Exception{
-        Long id = Long.valueOf(1);
+    public void deveBuscarPorId() throws Exception{
+        Long id = 1L;
         Mockito.when(tipoAnimalService.buscarPorId(Mockito.anyLong())).thenReturn(getTipoAnimalInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.GET, API.concat("/buscarPorId/").concat(String.valueOf(id)));
         mvc.perform(request)

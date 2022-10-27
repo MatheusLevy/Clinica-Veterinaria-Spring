@@ -1,5 +1,6 @@
 package com.produtos.apirest.models.DTO;
 
+import com.produtos.apirest.models.Animal;
 import com.produtos.apirest.models.Dono;
 import com.produtos.apirest.models.TipoAnimal;
 import lombok.AllArgsConstructor;
@@ -26,4 +27,22 @@ public class AnimalDTO {
     private Long idTipoAnimal;
     private String nomeTipoAnimal;
     private List<TipoAnimal> tipos;
+
+    public Animal toAnimal(){
+        return Animal.builder()
+                .animalId(this.id)
+                .nome(this.nome)
+                .dono(this.dono)
+                .tipoAnimal(this.tipo)
+                .build();
+    }
+
+    public Animal toAnimal(Dono dono, TipoAnimal tipo){
+        return Animal.builder()
+                .animalId(this.id)
+                .nome(this.nome)
+                .dono(dono)
+                .tipoAnimal(tipo)
+                .build();
+    }
 }

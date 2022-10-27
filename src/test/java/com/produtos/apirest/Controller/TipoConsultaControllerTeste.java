@@ -32,21 +32,21 @@ public class TipoConsultaControllerTeste {
 
     public static TipoConsulta getTipoConsultaInstance(){
         return TipoConsulta.builder()
-                .tipoConsultaId(Long.valueOf(1))
+                .tipoConsultaId(1L)
                 .nome("nome")
                 .build();
     }
 
     public static TipoConsultaDTO getTipoConsultaDTOInstance(){
         return TipoConsultaDTO.builder()
-                .id(Long.valueOf(1))
+                .id(1L)
                 .nome("nome")
                 .build();
     }
 
     @WithUserDetails("Admin")
     @Test
-    public void deveSalvarController() throws Exception{
+    public void deveSalvar() throws Exception{
         Mockito.when(tipoConsultaService.salvar(Mockito.any(TipoConsulta.class))).thenReturn(getTipoConsultaInstance());
         String json = toJson(getTipoConsultaDTOInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.POST, API.concat("/salvar"), json);
@@ -56,7 +56,7 @@ public class TipoConsultaControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveAtualizarController() throws Exception{
+    public void deveAtualizar() throws Exception{
         Mockito.when(tipoConsultaService.atualizar(Mockito.any(TipoConsulta.class))).thenReturn(getTipoConsultaInstance());
         String json = toJson(getTipoConsultaDTOInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.PUT, API.concat("/atualizar"), json);
@@ -66,8 +66,8 @@ public class TipoConsultaControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveRemoverPorIdController() throws Exception{
-        Long id = Long.valueOf(1);
+    public void deveRemoverPorId() throws Exception{
+        Long id = 1L;
         Mockito.doNothing().when(tipoConsultaService).removerPorId(Mockito.anyLong());
         Mockito.when(tipoConsultaService.buscarPorId(Mockito.anyLong())).thenReturn(getTipoConsultaInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.DELETE, API.concat("/remover/").concat(String.valueOf(id)));
@@ -77,8 +77,8 @@ public class TipoConsultaControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveRemoverComFeedbackController() throws Exception{
-        Long id = Long.valueOf(1);
+    public void deveRemoverComFeedback() throws Exception{
+        Long id = 1L;
         Mockito.when(tipoConsultaService.removerComFeedback(Mockito.anyLong())).thenReturn(getTipoConsultaInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.DELETE, API.concat("/remover/feedback/").concat(String.valueOf(id)));
         mvc.perform(request)
@@ -87,8 +87,8 @@ public class TipoConsultaControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveBuscarPorIdController() throws Exception {
-        Long id = Long.valueOf(1);
+    public void deveBuscarPorId() throws Exception {
+        Long id = 1L;
         Mockito.when(tipoConsultaService.buscarPorId(Mockito.anyLong())).thenReturn(getTipoConsultaInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.GET, API.concat("/buscar/").concat(String.valueOf(id)));
         mvc.perform(request)

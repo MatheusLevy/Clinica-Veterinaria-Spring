@@ -3,7 +3,6 @@ package com.produtos.apirest.controller;
 import com.produtos.apirest.models.DTO.UsuarioDTO;
 import com.produtos.apirest.models.Usuario;
 import com.produtos.apirest.service.UsuarioService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,18 +11,17 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/usuario")
 public class UsuarioController {
 
-    @Autowired
-    private UsuarioService usuarioService;
+    private final UsuarioService usuarioService;
+
+    public UsuarioController(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
+    }
 
     @GetMapping("/autenticar")
-    public ResponseEntity autenticar(@RequestBody UsuarioDTO dto){
+    public ResponseEntity<?> autenticar(@RequestBody UsuarioDTO dto){
         try{
-            Usuario atuenticado = usuarioService.autenticar(dto.getUsername(), dto.getSenha());
-            UsuarioDTO dtoRetorno = UsuarioDTO.builder()
-                    .id(atuenticado.getUsuarioId())
-                    .username(atuenticado.getUsername())
-                    //.nivel(atuenticado.getNivel())
-                    .build();
+            Usuario usuarioAutenticado = usuarioService.autenticar(dto.getUsername(), dto.getSenha());
+            UsuarioDTO dtoRetorno = usuarioAutenticado.toDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -31,21 +29,12 @@ public class UsuarioController {
     }
 
     @PostMapping("/salvar")
-    public ResponseEntity salvar(@RequestBody UsuarioDTO dto){
+    public ResponseEntity<?> salvar(@RequestBody UsuarioDTO dto){
         try{
-            Usuario usuario =  Usuario.builder()
-                    .username(dto.getUsername())
-                    .senha(dto.getSenha())
-                    .roles(dto.getRoles())
-                    .build();
-            Usuario usarioSalvo = usuarioService.salvar(usuario);
-
-            UsuarioDTO dtoRetorno = UsuarioDTO.builder()
-                    .id(usarioSalvo.getUsuarioId())
-                    .username(usarioSalvo.getUsername())
-                    .roles(usarioSalvo.getRoles())
-                    .build();
-            return new ResponseEntity(dtoRetorno, HttpStatus.CREATED);
+            Usuario usuario =  dto.toUsuario();
+            Usuario usuarioSalvo = usuarioService.salvar(usuario);
+            UsuarioDTO dtoRetorno = usuarioSalvo.toDTO();
+            return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -53,7 +42,7 @@ public class UsuarioController {
 
 
     @DeleteMapping("/remover/{id}")
-    public ResponseEntity removerComId(@PathVariable(value = "id", required = true) Long id){
+    public ResponseEntity<?> removerComId(@PathVariable(value = "id") Long id){
         try{
             Usuario usuarioBuscado = usuarioService.buscarPorId(id);
             usuarioService.remover(usuarioBuscado);
@@ -65,14 +54,10 @@ public class UsuarioController {
 
 
     @DeleteMapping("/remover/feedback/{id}")
-    public ResponseEntity removerComFeedback(@PathVariable(value = "id",required = true) Long id){
+    public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
         try{
             Usuario usuarioRemovido = usuarioService.removerComFeedback(id);
-            UsuarioDTO dtoRetorno = UsuarioDTO.builder()
-                    .id(usuarioRemovido.getUsuarioId())
-                    .username(usuarioRemovido.getUsername())
-                    .roles(usuarioRemovido.getRoles())
-                    .build();
+            UsuarioDTO dtoRetorno = usuarioRemovido.toDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -81,15 +66,10 @@ public class UsuarioController {
 
 
     @GetMapping("/buscar/{id}")
-    public ResponseEntity buscarPorId(@PathVariable(value = "id", required = true) Long id){
+    public ResponseEntity<?> buscarPorId(@PathVariable(value = "id") Long id){
         try{
             Usuario usuarioBuscado = usuarioService.buscarPorId(id);
-
-            UsuarioDTO dtoRetorno = UsuarioDTO.builder()
-                    .id(usuarioBuscado.getUsuarioId())
-                    .username(usuarioBuscado.getUsername())
-                    .roles(usuarioBuscado.getRoles())
-                    .build();
+            UsuarioDTO dtoRetorno = usuarioBuscado.toDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -98,14 +78,10 @@ public class UsuarioController {
 
 
     @GetMapping("/buscarPorUsername/{username}")
-    public ResponseEntity buscarPorUsername(@PathVariable(value = "username", required = true) String username){
+    public ResponseEntity<?> buscarPorUsername(@PathVariable(value = "username") String username){
         try {
-            Usuario usuario = usuarioService.buscarPorUsername(username);
-            UsuarioDTO dtoRetorno = UsuarioDTO.builder()
-                    .id(usuario.getUsuarioId())
-                    .username(usuario.getUsername())
-                    .roles(usuario.getRoles())
-                    .build();
+            Usuario usuarioEncontrado = usuarioService.buscarPorUsername(username);
+            UsuarioDTO dtoRetorno = usuarioEncontrado.toDTO();
             return ResponseEntity.ok(dtoRetorno);
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -114,21 +90,11 @@ public class UsuarioController {
 
 
     @PutMapping("/atualizar")
-    public ResponseEntity atualizar(@RequestBody UsuarioDTO dto){
+    public ResponseEntity<?> atualizar(@RequestBody UsuarioDTO dto){
         try{
-            Usuario usuario = Usuario.builder()
-                    .usuarioId(dto.getId())
-                    .username(dto.getUsername())
-                    .senha(dto.getSenha())
-                    .roles(dto.getRoles())
-                    .build();
+            Usuario usuario = dto.toUsuario();
             Usuario atualizado = usuarioService.atualizar(usuario);
-
-            UsuarioDTO dtoRetorno = UsuarioDTO.builder()
-                    .id(atualizado.getUsuarioId())
-                    .username(atualizado.getUsername())
-                    .roles(atualizado.getRoles())
-                    .build();
+            UsuarioDTO dtoRetorno = atualizado.toDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());

@@ -38,7 +38,7 @@ public class VeterinarioControllerTeste {
 
     public static Veterinario getVeterinarioInstance(){
         return Veterinario.builder()
-                .veterinarioId(Long.valueOf(1))
+                .veterinarioId(1L)
                 .nome("nome")
                 .telefone("telefone")
                 .cpf("cpf")
@@ -48,7 +48,7 @@ public class VeterinarioControllerTeste {
 
     public static VeterinarioDTO getVeterinarioDTOInstance(){
         return VeterinarioDTO.builder()
-                .id(Long.valueOf(1))
+                .id(1L)
                 .nome("nome")
                 .telefone("telefone")
                 .cpf("cpf")
@@ -64,7 +64,7 @@ public class VeterinarioControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveSalvarController() throws Exception{
+    public void deveSalvar() throws Exception{
         Mockito.when(veterinarioService.salvar(Mockito.any(Veterinario.class))).thenReturn(getVeterinarioInstance());
         String json = toJson(getVeterinarioDTOInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.POST, API.concat("/salvar"), json);
@@ -74,7 +74,7 @@ public class VeterinarioControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveAtualizarController() throws Exception{
+    public void deveAtualizar() throws Exception{
         Mockito.when(veterinarioService.atualizar(Mockito.any(Veterinario.class))).thenReturn(getVeterinarioInstance());
         String json = toJson(getVeterinarioDTOInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.PUT, API.concat("/atualizar"), json);
@@ -85,7 +85,7 @@ public class VeterinarioControllerTeste {
     @WithUserDetails("Admin")
     @Test
     public void deveRemoverPorId() throws Exception{
-        Long id = Long.valueOf(1);
+        Long id = 1L;
         Mockito.doNothing().when(veterinarioService).remover(Mockito.anyLong());
         MockHttpServletRequestBuilder request = request(HttpMethod.DELETE, API.concat("/remover/").concat(String.valueOf(id)));
         mvc.perform(request)
@@ -95,7 +95,7 @@ public class VeterinarioControllerTeste {
     @WithUserDetails("Admin")
     @Test
     public void deveRemoverComFeedback() throws Exception{
-        Long id = Long.valueOf(1);
+        Long id = 1L;
         Mockito.when(veterinarioService.removerComFeedback(Mockito.anyLong())).thenReturn(getVeterinarioInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.DELETE, API.concat("/remover/feedback/").concat(String.valueOf(id)));
         mvc.perform(request)
@@ -105,7 +105,7 @@ public class VeterinarioControllerTeste {
     @WithUserDetails("Admin")
     @Test
     public void deveBuscarPorId() throws Exception{
-        Long id = Long.valueOf(1);
+        Long id = 1L;
         Mockito.when(veterinarioService.buscarPorId(Mockito.anyLong())).thenReturn(getVeterinarioInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.GET, API.concat("/buscar/").concat(String.valueOf(id)));
         mvc.perform(request)

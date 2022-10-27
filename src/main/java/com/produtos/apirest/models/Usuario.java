@@ -1,5 +1,6 @@
 package com.produtos.apirest.models;
 
+import com.produtos.apirest.models.DTO.UsuarioDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -75,5 +76,13 @@ public class Usuario implements UserDetails{
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public UsuarioDTO toDTO(){
+        return UsuarioDTO.builder()
+                .id(this.usuarioId)
+                .username(this.username)
+                .roles(this.roles)
+                .build();
     }
 }

@@ -1,6 +1,7 @@
 package com.produtos.apirest.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.produtos.apirest.models.DTO.VeterinarioDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -42,5 +43,15 @@ public class Veterinario {
     public String toString(){
         return getClass().getSimpleName() + "[id= " + veterinarioId + ", nome = " + nome
         + ", telefone= " + telefone + ", cpf= " + cpf + "especialidade= " + especialidade + " ]";
+    }
+
+    public VeterinarioDTO toDTO(){
+        return VeterinarioDTO.builder()
+                .id(this.veterinarioId)
+                .nome(this.nome)
+                .telefone(this.telefone)
+                .especialidadeId(this.especialidade.getEspecialidadeId())
+                .especialidadeNome(this.especialidade.getNome())
+                .build();
     }
 }

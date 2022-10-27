@@ -5,7 +5,6 @@ import com.produtos.apirest.models.DTO.EspecialidadeDTO;
 import com.produtos.apirest.models.Especialidade;
 import com.produtos.apirest.service.AreaService;
 import com.produtos.apirest.service.EspecialidadeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,21 +17,22 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/especialidade")
 public class EspecialidadeController {
 
-    @Autowired
-    public EspecialidadeService especialidadeService;
+    private final EspecialidadeService especialidadeService;
+    private final AreaService areaService;
 
-    @Autowired
-    public AreaService areaService;
+    public EspecialidadeController(EspecialidadeService especialidadeService, AreaService areaService){
+        this.especialidadeService = especialidadeService;
+        this.areaService = areaService;
+    }
 
     @PostMapping("/salvar")
     public ResponseEntity<?> salvar(@RequestBody EspecialidadeDTO dto){
         try {
             Area areaBuscada = areaService.buscarPorId(dto.getIdArea());
-
-            Especialidade especialidade = dto.toEspecialidade();
+            Especialidade especialidade = dto.toEspecialidade(areaBuscada);
             Especialidade especialidadeSalva = especialidadeService.salvar(especialidade);
             EspecialidadeDTO dtoRetorno = especialidadeSalva.toDTO();
-            return new ResponseEntity(dtoRetorno, HttpStatus.CREATED);
+            return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -41,7 +41,8 @@ public class EspecialidadeController {
     @PutMapping("/atualizar")
     public ResponseEntity<?> atualizar(@RequestBody EspecialidadeDTO dto){
         try{
-            Especialidade especialidade = dto.toEspecialidade();
+            Area areaBuscada = areaService.buscarPorId(dto.getIdArea());
+            Especialidade especialidade = dto.toEspecialidade(areaBuscada);
             Especialidade especialidadeAtualizada = especialidadeService.atualizar(especialidade);
             EspecialidadeDTO dtoRetorno = especialidadeAtualizada.toDTO();
             return ResponseEntity.ok(dtoRetorno);
@@ -51,10 +52,9 @@ public class EspecialidadeController {
     }
 
     @DeleteMapping("/remover/{id}")
-    public ResponseEntity<?> remover(@PathVariable(value = "id", required = true) Long id){
+    public ResponseEntity<?> remover(@PathVariable(value = "id") Long id){
         try {
             Especialidade especialidadeBuscada = especialidadeService.buscarPorId(id);
-            EspecialidadeDTO dtoRetorno = especialidadeBuscada.toDTO();
             especialidadeService.remover(especialidadeBuscada);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (Exception e){
@@ -63,7 +63,7 @@ public class EspecialidadeController {
     }
 
     @DeleteMapping("/remover/feedback/{id}")
-    public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id", required = true) Long id){
+    public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
         try {
             Especialidade especialidadeRemovida = especialidadeService.removerFeedback(id);
             EspecialidadeDTO dtoRetorno = especialidadeRemovida.toDTO();
@@ -74,7 +74,7 @@ public class EspecialidadeController {
     }
 
     @GetMapping("/buscar/{id}")
-    public ResponseEntity<?> buscarPorId(@PathVariable(value = "id", required = true) Long id){
+    public ResponseEntity<?> buscarPorId(@PathVariable(value = "id") Long id){
         try {
             Especialidade especialidadeBuscada = especialidadeService.buscarPorId(id);
             EspecialidadeDTO dtoRetorno = especialidadeBuscada.toDTO();

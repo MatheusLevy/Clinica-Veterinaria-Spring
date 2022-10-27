@@ -26,46 +26,38 @@ public class Util {
     }
 
     public static MockHttpServletRequestBuilder request(HttpMethod method, String url, String content){
-        switch(method){
-            case GET:
-                return MockMvcRequestBuilders
-                        .get(url)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(content);
-            case POST:
-                return MockMvcRequestBuilders
-                        .post(url)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(content);
-            case PUT:
-                return MockMvcRequestBuilders
-                        .put(url)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(content);
-            case DELETE:
-                return MockMvcRequestBuilders
-                        .delete(url)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(content);
-        }
-        return null;
+        return switch (method) {
+            case GET -> MockMvcRequestBuilders
+                    .get(url)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(content);
+            case POST -> MockMvcRequestBuilders
+                    .post(url)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(content);
+            case PUT -> MockMvcRequestBuilders
+                    .put(url)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(content);
+            case DELETE -> MockMvcRequestBuilders
+                    .delete(url)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(content);
+            default -> null;
+        };
     }
 
     public static MockHttpServletRequestBuilder request(HttpMethod method, String url){
-        switch(method){
-            case GET:
-                return MockMvcRequestBuilders.get(url);
-            case POST:
-                return MockMvcRequestBuilders.post(url);
-            case PUT:
-                return MockMvcRequestBuilders.put(url);
-            case DELETE:
-                return MockMvcRequestBuilders.delete(url);
-        }
-        return null;
+        return switch (method) {
+            case GET -> MockMvcRequestBuilders.get(url);
+            case POST -> MockMvcRequestBuilders.post(url);
+            case PUT -> MockMvcRequestBuilders.put(url);
+            case DELETE -> MockMvcRequestBuilders.delete(url);
+            default -> null;
+        };
     }
 }

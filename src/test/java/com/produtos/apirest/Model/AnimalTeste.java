@@ -56,6 +56,7 @@ public class AnimalTeste {
         donoRepo.delete(animal.getDono());
     }
 
+    //TODO:Renomear Testes de Modelo
     @Test
     public void deveSalvarModel(){
         Animal animalSalvo = animalRepo.save(generateAnimal());

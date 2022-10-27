@@ -22,4 +22,11 @@ public class DonoDTO {
     private List<Animal> animais;
     private List<Dono> donosList;
 
+    public Dono toDono(){
+        return Dono.builder()
+                .donoId(this.id)
+                .nome(this.nome)
+                .cpf(this.cpf)
+                .build();
+    }
 }

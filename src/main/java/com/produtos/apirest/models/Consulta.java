@@ -1,7 +1,7 @@
 package com.produtos.apirest.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sun.istack.NotNull;
+import com.produtos.apirest.models.DTO.ConsultaDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -55,4 +55,17 @@ public class Consulta {
                 + ", descrição= " + descricao + ", data= " + data + " ]";
     }
 
+    public ConsultaDTO toDTO(){
+        return ConsultaDTO.builder()
+                .id(this.consultaId)
+                .data(this.data)
+                .descricao(this.descricao)
+                .veterinarioId(this.veterinario.getVeterinarioId())
+                .veterinarioNome(this.veterinario.getNome())
+                .animalId(this.animal.getAnimalId())
+                .animalNome(this.animal.getNome())
+                .tipoConsultaId(this.tipoConsulta.getTipoConsultaId())
+                .tipoNome(this.tipoConsulta.getNome())
+                .build();
+    }
 }

@@ -34,7 +34,7 @@ public class UsuarioControllerTeste {
 
     public static UsuarioDTO getUsuarioDTOInstance(){
         return UsuarioDTO.builder()
-                .id(Long.valueOf(1))
+                .id(1L)
                 .username("username")
                 .senha("senha")
                 .build();
@@ -42,14 +42,14 @@ public class UsuarioControllerTeste {
 
     public static Usuario getUsuarioInstance(){
         return Usuario.builder()
-                .usuarioId(Long.valueOf(1))
+                .usuarioId(1L)
                 .username("username")
                 .senha("senha")
                 .build();
     }
 
     @Test
-    public void deveAutenticarController() throws Exception{
+    public void deveAutenticar() throws Exception{
         Mockito.when(usuarioService.autenticar(Mockito.anyString(), Mockito.anyString())).thenReturn(getUsuarioInstance());
         String json = toJson(getUsuarioDTOInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.GET, API.concat("/autenticar"), json);
@@ -59,7 +59,7 @@ public class UsuarioControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveSalvarController() throws Exception{
+    public void deveSalvar() throws Exception{
         Mockito.when(usuarioService.salvar(Mockito.any(Usuario.class))).thenReturn(getUsuarioInstance());
         String json = toJson(getUsuarioDTOInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.POST, API.concat("/salvar"), json);
@@ -69,7 +69,7 @@ public class UsuarioControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveAtualizarController() throws Exception{
+    public void deveAtualizar() throws Exception{
         Mockito.when(usuarioService.atualizar(Mockito.any(Usuario.class))).thenReturn(getUsuarioInstance());
         String json = toJson(getUsuarioDTOInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.PUT, API.concat("/atualizar"), json);
@@ -79,8 +79,8 @@ public class UsuarioControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveRemoverComIdController() throws Exception{
-        Long id = Long.valueOf(1);
+    public void deveRemoverComId() throws Exception{
+        Long id = 1L;
         Mockito.when(usuarioService.buscarPorId(Mockito.anyLong())).thenReturn(getUsuarioInstance());
         Mockito.doNothing().when(usuarioService).remover(Mockito.any(Usuario.class));
         MockHttpServletRequestBuilder request = request(HttpMethod.DELETE, API.concat("/remover/").concat(String.valueOf(id)));
@@ -91,7 +91,7 @@ public class UsuarioControllerTeste {
     @WithUserDetails("Admin")
     @Test
     public void deveRemoverComFeedback() throws Exception{
-        Long id = Long.valueOf(1);
+        Long id = 1L;
         Mockito.when(usuarioService.removerComFeedback(Mockito.anyLong())).thenReturn(getUsuarioInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.DELETE, API.concat("/remover/feedback/").concat(String.valueOf(id)));
         mvc.perform(request)
@@ -100,8 +100,8 @@ public class UsuarioControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveBuscarPorIdController() throws Exception{
-        Long id = Long.valueOf(1);
+    public void deveBuscarPorId() throws Exception{
+        Long id = 1L;
         Mockito.when(usuarioService.buscarPorId(Mockito.anyLong())).thenReturn(getUsuarioInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.GET, API.concat("/buscar/").concat(String.valueOf(id)));
         mvc.perform(request)
@@ -110,7 +110,7 @@ public class UsuarioControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveBuscarPorUsernameController() throws Exception{
+    public void deveBuscarPorUsername() throws Exception{
         String username = "username";
         Mockito.when(usuarioService.buscarPorUsername(Mockito.anyString())).thenReturn(getUsuarioInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.GET, API.concat("/buscarPorUsername/").concat(username));

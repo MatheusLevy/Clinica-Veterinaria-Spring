@@ -3,7 +3,6 @@ package com.produtos.apirest.controller;
 import com.produtos.apirest.models.DTO.TipoConsultaDTO;
 import com.produtos.apirest.models.TipoConsulta;
 import com.produtos.apirest.service.TipoConsultaService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,8 +11,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/tipoConsulta")
 public class TipoConsultaController {
 
-    @Autowired
-    public TipoConsultaService tipoService;
+    private final TipoConsultaService tipoService;
+
+    public TipoConsultaController(TipoConsultaService tipoService) {
+        this.tipoService = tipoService;
+    }
 
     @PostMapping("/salvar")
     public ResponseEntity<?> salvar(@RequestBody TipoConsultaDTO dto){
@@ -21,14 +23,14 @@ public class TipoConsultaController {
             TipoConsulta tipoConsulta = dto.toTipoConsulta();
             TipoConsulta tipoSalvo = tipoService.salvar(tipoConsulta);
             TipoConsultaDTO dtoRetorno = tipoSalvo.toDTO();
-            return new ResponseEntity(dtoRetorno, HttpStatus.CREATED);
+            return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @DeleteMapping("/remover/{id}")
-    public ResponseEntity<?> removerComId(@PathVariable(value = "id", required = true) Long id){
+    public ResponseEntity<?> removerComId(@PathVariable(value = "id") Long id){
         try {
             tipoService.removerPorId(id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
@@ -38,7 +40,7 @@ public class TipoConsultaController {
     }
 
     @DeleteMapping("/remover/feedback/{id}")
-    public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id", required = true) Long id){
+    public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
         try{
             TipoConsulta tipoRemovido = tipoService.removerComFeedback(id);
             TipoConsultaDTO dtoRetorno = tipoRemovido.toDTO();
@@ -49,7 +51,7 @@ public class TipoConsultaController {
     }
 
     @GetMapping("/buscar/{id}")
-    public ResponseEntity<?> buscarPorId(@PathVariable(value = "id", required = true) Long id){
+    public ResponseEntity<?> buscarPorId(@PathVariable(value = "id") Long id){
         try{
             TipoConsulta tipoBuscado = tipoService.buscarPorId(id);
             TipoConsultaDTO dtoRetorno = tipoBuscado.toDTO();

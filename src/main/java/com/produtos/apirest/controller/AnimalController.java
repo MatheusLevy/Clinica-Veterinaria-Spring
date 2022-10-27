@@ -8,53 +8,40 @@ import com.produtos.apirest.models.TipoAnimal;
 import com.produtos.apirest.service.AnimalService;
 import com.produtos.apirest.service.DonoService;
 import com.produtos.apirest.service.TipoAnimalService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/animal")
 public class AnimalController {
 
-    @Autowired
-    public AnimalService animalService;
+    private final AnimalService animalService;
+    private final DonoService donoService;
+    private final TipoAnimalService tipoAnimalService;
 
-    @Autowired
-    public DonoService donoService;
+    public AnimalController(AnimalService animalService, DonoService donoService, TipoAnimalService tipoAnimalService){
+        this.animalService = animalService;
+        this.donoService = donoService;
+        this.tipoAnimalService = tipoAnimalService;
+    }
 
-    @Autowired
-    public TipoAnimalService tipoAnimalService;
-
-    @PreAuthorize("hasRole('S')")
     @PostMapping("/salvar")
-    public ResponseEntity salvar(@RequestBody AnimalDTO animaldto){
+    public ResponseEntity<?> salvar(@RequestBody AnimalDTO animaldto){
         try{
-            Dono dono = donoService.buscarPorId(animaldto.getIdDono());
-            TipoAnimal tipo = tipoAnimalService.buscarPorId(animaldto.getIdTipoAnimal());
-            Animal animal = Animal.builder()
-                    .nome(animaldto.getNome())
-                    .tipoAnimal(tipo)
-                    .dono(dono).
-                    build();
+            Dono donoEncontrado = donoService.buscarPorId(animaldto.getIdDono());
+            TipoAnimal tipoEncontrado = tipoAnimalService.buscarPorId(animaldto.getIdTipoAnimal());
+            Animal animal = animaldto.toAnimal(donoEncontrado, tipoEncontrado);
             Animal animalSalvo = animalService.salvar(animal);
-
-            AnimalDTO animalSalvoDTO = AnimalDTO.builder()
-                    .id(animalSalvo.getAnimalId())
-                    .nome(animalSalvo.getNome())
-                    .nomeDono(animalSalvo.getDono().getNome())
-                    .nomeTipoAnimal(animalSalvo.getTipoAnimal().getNome())
-                    .build();
-
-            return new ResponseEntity(animalSalvoDTO, HttpStatus.CREATED);
+            AnimalDTO dtoRetorno = animalSalvo.toDTO();
+            return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    @PreAuthorize("hasRole('S')")
+
     @DeleteMapping("/remover/{id}")
-    public ResponseEntity remover(@PathVariable(value = "id", required = true) Long id){
+    public ResponseEntity<?> remover(@PathVariable(value = "id") Long id){
         try{
             animalService.removerPorId(id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
@@ -63,97 +50,61 @@ public class AnimalController {
         }
     }
 
-    @PreAuthorize("hasRole('S')")
     @DeleteMapping("/remover/feedback/{id}")
-    public ResponseEntity removerComFeedback(@PathVariable(value = "id", required = true) Long id){
+    public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
         try{
             Animal animalRemovido = animalService.removerComFeedback(id);
-            AnimalDTO dtoRetorno = AnimalDTO.builder()
-                    .id(animalRemovido.getAnimalId())
-                    .nome(animalRemovido.getNome())
-                    .tipo(animalRemovido.getTipoAnimal())
-                    .dono(animalRemovido.getDono())
-                    .build();
+            AnimalDTO dtoRetorno = animalRemovido.toDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PreAuthorize("hasRole('S')")
     @GetMapping("/buscarId/{id}")
-    public ResponseEntity buscarPorId(@PathVariable(value = "id", required = true) Long id){
+    public ResponseEntity<?> buscarPorId(@PathVariable(value = "id") Long id){
         try{
             Animal animalBuscado = animalService.buscarPorId(id);
-            AnimalDTO animalDTO = AnimalDTO.builder()
-                    .id(animalBuscado.getAnimalId())
-                    .nomeTipoAnimal(animalBuscado.getTipoAnimal().getNome())
-                    .nomeDono(animalBuscado.getDono().getNome())
-                    .build();
-        return ResponseEntity.ok(animalDTO);
+            AnimalDTO dtoRetorno = animalBuscado.toDTO();
+        return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PreAuthorize("hasRole('S')")
     @PutMapping("/atualizar")
-    public ResponseEntity atualizar(@RequestBody  AnimalDTO animalDTO){
+    public ResponseEntity<?> atualizar(@RequestBody  AnimalDTO animalDTO){
         try{
-            Animal animal = Animal.builder()
-                    .animalId(animalDTO.getId())
-                    .nome(animalDTO.getNome())
-                    .dono(animalDTO.getDono())
-                    .tipoAnimal(animalDTO.getTipo())
-                    .build();
-
+            Dono donoEncontrado = donoService.buscarPorId(animalDTO.getIdDono());
+            TipoAnimal tipoEncontrado = tipoAnimalService.buscarPorId(animalDTO.getIdTipoAnimal());
+            Animal animal = animalDTO.toAnimal(donoEncontrado, tipoEncontrado);
             Animal atualizado = animalService.atualizar(animal);
-
-            AnimalDTO atualizadoRetorno = AnimalDTO.builder()
-                    .id(atualizado.getAnimalId())
-                    .nome(atualizado.getNome())
-                    .tipo(atualizado.getTipoAnimal())
-                    .nomeDono(atualizado.getDono().getNome())
-                    .build();
-
-            return ResponseEntity.ok(atualizadoRetorno);
+            AnimalDTO dtoRetorno = atualizado.toDTO();
+            return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    @PreAuthorize("hasRole('S')")
+
     @GetMapping("/buscarDono/{id}")
-    public ResponseEntity buscarDono(@PathVariable(value = "id", required = true) Long id){
+    public ResponseEntity<?> buscarDono(@PathVariable(value = "id") Long id){
         try {
-            Dono dono = animalService.buscarDonoPorId(id);
-
-            DonoDTO dto = DonoDTO.builder()
-                    .id(dono.getDonoId())
-                    .nome(dono.getNome())
-                    .cpf(dono.getCpf())
-                    .telefone(dono.getTelefone())
-                    .build();
-            return ResponseEntity.ok(dto);
+            Dono donoEncontrado = animalService.buscarDonoPorId(id);
+            DonoDTO dtoRetorno = donoEncontrado.toDTO();
+            return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    @PreAuthorize("hasRole('S')")
+
     @PutMapping("/atualizar/dono")
-    public ResponseEntity atualizarDono(@RequestBody AnimalDTO animalDTO){
+    public ResponseEntity<?> atualizarDono(@RequestBody AnimalDTO animalDTO){
         try {
             Dono donoBuscado = donoService.buscarPorId(animalDTO.getIdDono());
             Animal animalBuscado = animalService.buscarPorId(animalDTO.getId());
-
             Animal animaAtualizado = animalService.atualizarDono(animalBuscado, donoBuscado);
-
-            AnimalDTO animalDTOAtualizado = AnimalDTO.builder()
-                    .id(animaAtualizado.getAnimalId())
-                    .nome(animaAtualizado.getNome())
-                    .nomeDono(animaAtualizado.getDono().getNome())
-                    .nomeTipoAnimal(animaAtualizado.getTipoAnimal().getNome())
-                    .build();
-            return ResponseEntity.ok(animalDTOAtualizado);
+            AnimalDTO dtoRetorno = animaAtualizado.toDTO();
+            return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }

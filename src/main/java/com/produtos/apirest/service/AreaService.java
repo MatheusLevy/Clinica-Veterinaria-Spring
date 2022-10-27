@@ -1,6 +1,5 @@
 package com.produtos.apirest.service;
 
-import com.produtos.apirest.models.Animal;
 import com.produtos.apirest.models.Area;
 import com.produtos.apirest.models.Especialidade;
 import com.produtos.apirest.repository.AreaRepo;

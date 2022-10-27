@@ -37,7 +37,7 @@ public class DonoControllerTeste {
 
     public static Dono getDonoInstance(){
         return Dono.builder()
-                .donoId(Long.valueOf(1))
+                .donoId(1L)
                 .nome("nome")
                 .cpf("cpf")
                 .telefone("telefone")
@@ -46,7 +46,7 @@ public class DonoControllerTeste {
 
     public static DonoDTO getDonoDTOInstance(){
         return DonoDTO.builder()
-                .id(Long.valueOf(1))
+                .id(1L)
                 .nome("nome")
                 .cpf("cpf")
                 .telefone("telefone")
@@ -61,7 +61,7 @@ public class DonoControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveSalvarController() throws Exception{
+    public void deveSalvar() throws Exception{
         Mockito.when(donoService.salvar(Mockito.any(Dono.class))).thenReturn(getDonoInstance());
         String json = toJson(getDonoDTOInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.POST, API.concat("/salvar"), json);
@@ -71,7 +71,7 @@ public class DonoControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveAtualizarController() throws Exception{
+    public void deveAtualizar() throws Exception{
         Mockito.when(donoService.atualizar(Mockito.any(Dono.class))).thenReturn(getDonoInstance());
         String json = toJson(getDonoDTOInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.PUT, API.concat("/atualizar"), json);
@@ -81,8 +81,8 @@ public class DonoControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveRemoverPorIdController() throws Exception{
-        Long id = Long.valueOf(1);
+    public void deveRemoverPorId() throws Exception{
+        Long id = 1L;
         Mockito.doNothing().when(donoService).removerPorId(isA(Long.class));
         MockHttpServletRequestBuilder request = request(HttpMethod.DELETE, API.concat("/remover/").concat(String.valueOf(id)));
         mvc.perform(request)
@@ -92,8 +92,8 @@ public class DonoControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveRemoverComFeedbackController() throws Exception{
-        Long id = Long.valueOf(1);
+    public void deveRemoverComFeedback() throws Exception{
+        Long id = 1L;
         Mockito.when(donoService.removerComFeedback(Mockito.anyLong())).thenReturn(getDonoInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.DELETE, API.concat("/remover/feedback/").concat(String.valueOf(id)));
         mvc.perform(request)
@@ -102,7 +102,7 @@ public class DonoControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveBuscarComFiltroController() throws Exception{
+    public void deveBuscarComFiltro() throws Exception{
         Mockito.when(donoService.buscar(Mockito.any(Dono.class))).thenReturn(getListDonoInstance());
         String json = toJson(getDonoDTOInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.GET, API.concat("/buscar/filtro"), json);
@@ -112,8 +112,8 @@ public class DonoControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveBuscarPorIdController() throws Exception{
-        Long id = Long.valueOf(1);
+    public void deveBuscarPorId() throws Exception{
+        Long id = 1L;
         Mockito.when(donoService.buscarPorId(Mockito.anyLong())).thenReturn(getDonoInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.GET, API.concat("/buscar/").concat(String.valueOf(id)));
         mvc.perform(request)
@@ -122,7 +122,7 @@ public class DonoControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveBuscarTodosController() throws Exception{
+    public void deveBuscarTodos() throws Exception{
         Mockito.when(donoService.buscarTodos()).thenReturn(getListDonoInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.GET, API.concat("/buscarTodos"));
         mvc.perform(request)
@@ -131,8 +131,8 @@ public class DonoControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveBuscarTodosAnimaisController() throws Exception{
-        Long id = Long.valueOf(1);
+    public void deveBuscarTodosAnimais() throws Exception{
+        Long id = 1L;
         Mockito.when(donoService.buscarTodosAnimais(Mockito.anyLong())).thenReturn(getAnimalListInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.GET, API.concat("/animais/".concat(String.valueOf(id))));
         mvc.perform(request)

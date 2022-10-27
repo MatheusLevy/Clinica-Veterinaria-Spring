@@ -1,6 +1,7 @@
 package com.produtos.apirest.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.produtos.apirest.models.DTO.AnimalDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -40,5 +41,15 @@ public class Animal {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "[id= "+ animalId +", nome= " + nome +", tipo= " + tipoAnimal + ", dono= " + dono + "]";
+    }
+
+    public AnimalDTO toDTO(){
+        return AnimalDTO.builder()
+                .id(this.animalId)
+                .idTipoAnimal(this.tipoAnimal.getTipoAnimalId())
+                .nomeTipoAnimal(this.tipoAnimal.getNome())
+                .nomeDono(this.dono.getNome())
+                .idDono(this.dono.getDonoId())
+                .build();
     }
 }

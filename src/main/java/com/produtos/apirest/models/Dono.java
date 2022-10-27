@@ -1,6 +1,7 @@
 package com.produtos.apirest.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.produtos.apirest.models.DTO.DonoDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -38,5 +39,13 @@ public class Dono {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "[donoId=" + donoId + ", nome=" + nome +", telefone=" + telefone + ", cpf= " + cpf + " ]";
+    }
+
+    public DonoDTO toDTO(){
+       return DonoDTO.builder()
+                .id(this.donoId)
+                .telefone(this.telefone)
+                .nome(this.nome)
+                .build();
     }
 }

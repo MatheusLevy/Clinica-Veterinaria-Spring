@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.produtos.apirest.models.Animal;
+import com.produtos.apirest.models.Consulta;
 import com.produtos.apirest.models.TipoConsulta;
 import com.produtos.apirest.models.Veterinario;
 import lombok.AllArgsConstructor;
@@ -31,7 +32,7 @@ public class ConsultaDTO {
     private List<Veterinario> veterinarios;
     private Animal animal;
     private String animalNome;
-    private Long idAnimal;
+    private Long animalId;
     private List<Animal> animais;
     private String descricao;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -43,4 +44,26 @@ public class ConsultaDTO {
     private String tipoNome;
     private Long tipoConsultaId;
     private List<TipoConsulta> tiposConsulta;
+
+    public Consulta toConsulta(){
+        return Consulta.builder()
+                .consultaId(this.id)
+                .data(this.data)
+                .descricao(this.descricao)
+                .animal(this.animal)
+                .veterinario(this.veterinario)
+                .tipoConsulta(this.tipo)
+                .build();
+    }
+
+    public Consulta toConsulta(Animal animal, Veterinario veterinario, TipoConsulta tipoConsulta){
+        return Consulta.builder()
+                .consultaId(this.id)
+                .data(this.data)
+                .descricao(this.descricao)
+                .animal(animal)
+                .veterinario(veterinario)
+                .tipoConsulta(tipoConsulta)
+                .build();
+    }
 }
