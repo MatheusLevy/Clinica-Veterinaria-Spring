@@ -56,16 +56,15 @@ public class AnimalTeste {
         donoRepo.delete(animal.getDono());
     }
 
-    //TODO:Renomear Testes de Modelo
     @Test
-    public void deveSalvarModel(){
+    public void deveSalvar(){
         Animal animalSalvo = animalRepo.save(generateAnimal());
         Assertions.assertNotNull(animalSalvo);
         rollback(animalSalvo);
     }
 
     @Test
-    public void deveAlterarDonoModel(){
+    public void deveAlterarDono(){
         Animal animalSalvo = animalRepo.save(generateAnimal());
         Dono donoAntigo = animalSalvo.getDono();
         animalSalvo.setDono(donoRepo.save(generateDono()));
@@ -77,7 +76,7 @@ public class AnimalTeste {
     }
 
     @Test
-    public void deveAtualizarModel(){
+    public void deveAtualizar(){
         Animal animalSalvo = animalRepo.save(generateAnimal());
         animalSalvo.setNome("Nome alterado");
         Animal animalAtualizado = animalRepo.save(animalSalvo);
@@ -88,7 +87,7 @@ public class AnimalTeste {
     }
 
     @Test
-    public void deveAtualizarTipoAnimalModel(){
+    public void deveAtualizarTipoAnimal(){
         Animal animalSalvo = animalRepo.save(generateAnimal());
         TipoAnimal tipoAnimalAntigo = animalSalvo.getTipoAnimal();
         animalSalvo.setTipoAnimal(tipoAnimalRepo.save(generateTipoAnimal()));
@@ -101,7 +100,7 @@ public class AnimalTeste {
     }
 
     @Test
-    public void deveRemoverModel(){
+    public void deveRemover(){
         Animal animalSalvo = animalRepo.save(generateAnimal());
         Long id = animalSalvo.getAnimalId();
         animalRepo.delete(animalSalvo);
@@ -112,7 +111,7 @@ public class AnimalTeste {
     }
 
     @Test
-    public void deveBuscarModel(){
+    public void deveBuscar(){
         Animal animalSalvo = animalRepo.save(generateAnimal());
         Long id = animalSalvo.getAnimalId();
         Assertions.assertTrue(animalRepo.findById(id).isPresent());

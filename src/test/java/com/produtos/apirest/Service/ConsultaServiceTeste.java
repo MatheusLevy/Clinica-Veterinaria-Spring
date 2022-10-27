@@ -116,7 +116,6 @@ public class ConsultaServiceTeste {
     public void deveSalvar(){
         Consulta consultaSalva = consultaService.salvar(generateConsulta(true));
         Assertions.assertNotNull(consultaSalva);
-        Assertions.assertNotNull(consultaSalva.getConsultaId());
         rollback(consultaSalva, false);
     }
 

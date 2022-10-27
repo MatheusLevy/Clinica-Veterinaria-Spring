@@ -32,7 +32,7 @@ public class DonoTeste {
     }
 
     @Test
-    public void deveSalvarModel(){
+    public void deveSalvar(){
         Dono donoSalvo = donoRepo.save(generateDono());
         Assertions.assertNotNull(donoSalvo);
         Assertions.assertEquals(generateDono().getNome(), donoSalvo.getNome());
@@ -50,7 +50,7 @@ public class DonoTeste {
     }
 
     @Test
-    public void deveRemoverModel(){
+    public void deveRemover(){
         Dono donoSalvo = donoRepo.save(generateDono());
         Long id = donoSalvo.getDonoId();
         donoRepo.deleteById(id);
@@ -58,7 +58,7 @@ public class DonoTeste {
     }
 
     @Test
-    public void deveBuscarModel(){
+    public void deveBuscar(){
         Dono donoSalvo = donoRepo.save(generateDono());
         Long id = donoSalvo.getDonoId();
         Assertions.assertTrue(donoRepo.findById(id).isPresent());

@@ -109,10 +109,9 @@ public class AreaServiceTeste {
         Area areaSalva = areaRepo.save(generateArea());
         Especialidade especialidadeComAreaNaoSalva = generateEspecialidade(false, areaRepo);
         especialidadeComAreaNaoSalva.setArea(areaSalva);
-        Especialidade especialidadeComAreaSalva = especialidadeComAreaNaoSalva;
-        especialidadeRepo.save(especialidadeComAreaSalva);
+        especialidadeRepo.save(especialidadeComAreaNaoSalva);
         List<Especialidade> especialidadeList = areaService.buscarTodasEspecialidades(areaSalva);
         Assertions.assertFalse(especialidadeList.isEmpty());
-        rollbackEspecialidade(especialidadeComAreaSalva, especialidadeRepo, areaRepo);
+        rollbackEspecialidade(especialidadeComAreaNaoSalva, especialidadeRepo, areaRepo);
     }
 }

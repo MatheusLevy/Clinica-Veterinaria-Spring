@@ -27,7 +27,7 @@ public class TipoAnimalTeste {
     }
 
     @Test
-    public void deveSalvarModel(){
+    public void deveSalvar(){
         TipoAnimal tipoAnimalSalvo = tipoAnimalRepo.save(generateTipoAnimal());
         Assertions.assertNotNull(tipoAnimalSalvo);
         Assertions.assertEquals(generateTipoAnimal().getNome(), tipoAnimalSalvo.getNome());
@@ -46,7 +46,7 @@ public class TipoAnimalTeste {
     }
 
     @Test
-    public void deveRemoverModel(){
+    public void deveRemover(){
         TipoAnimal tipoAnimalSalvo = tipoAnimalRepo.save(generateTipoAnimal());
         Long id = tipoAnimalSalvo.getTipoAnimalId();
         tipoAnimalRepo.deleteById(id);
@@ -54,7 +54,7 @@ public class TipoAnimalTeste {
     }
 
     @Test
-    public void deveBuscarModel(){
+    public void deveBuscar(){
         TipoAnimal tipoAnimalSalvo = tipoAnimalRepo.save(generateTipoAnimal());
         Long id = tipoAnimalSalvo.getTipoAnimalId();
         Assertions.assertTrue(tipoAnimalRepo.findById(id).isPresent());

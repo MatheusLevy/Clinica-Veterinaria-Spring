@@ -88,15 +88,14 @@ public class ConsultaTeste {
     }
 
     @Test
-    public void deveSalvarModel(){
+    public void deveSalvar(){
         Consulta consultaSalva = consultaRepo.save(generateConsulta(true));
         Assertions.assertNotNull(consultaSalva);
-        Assertions.assertNotNull(consultaSalva.getConsultaId());
         rollback(consultaSalva, false);
     }
 
     @Test
-    public void deveAtualizarConsulta(){
+    public void deveAtualizar(){
         Consulta consultaSalva = consultaRepo.save(generateConsulta(true));
         consultaSalva.setDescricao("Nova descrição");
         Consulta consultaAtualizada = consultaRepo.save(consultaSalva);
@@ -107,7 +106,7 @@ public class ConsultaTeste {
     }
 
     @Test
-    public void deveAtualizarTipoConsultaModel(){
+    public void deveAtualizarTipoConsulta(){
         Consulta consultaSalva = consultaRepo.save(generateConsulta(true));
         TipoConsulta tipoConsultaAntiga = consultaSalva.getTipoConsulta();
         consultaSalva.setTipoConsulta(tipoConsultaRepo.save(generateTipoConsulta()));
@@ -120,7 +119,7 @@ public class ConsultaTeste {
     }
 
     @Test
-    public void deveAtualizarAnimalModel(){
+    public void deveAtualizarAnimal(){
         Consulta consultaSalva = consultaRepo.save(generateConsulta(true));
         Animal animalAntigo = consultaSalva.getAnimal();
         consultaSalva.setAnimal(animalRepo.save(generateAnimal(tipoAnimalRepo, donoRepo)));
@@ -133,7 +132,7 @@ public class ConsultaTeste {
     }
 
     @Test
-    public void deveAtualizarVeterinarioModel(){
+    public void deveAtualizarVeterinario(){
         Consulta consultaSalva = consultaRepo.save(generateConsulta(true));
         Veterinario veterinarioAntigo = consultaSalva.getVeterinario();
         consultaSalva.setVeterinario(veterinarioRepo.save(generateVeterinario(true, especialidadeRepo, areaRepo)));
@@ -146,7 +145,7 @@ public class ConsultaTeste {
     }
 
     @Test
-    public void deveRemoverModel(){
+    public void deveRemover(){
         Consulta consultaSalva = consultaRepo.save(generateConsulta(true));
         Long id = consultaSalva.getConsultaId();
         consultaRepo.deleteById(id);
@@ -155,7 +154,7 @@ public class ConsultaTeste {
     }
 
     @Test
-    public void deveBuscarModel(){
+    public void deveBuscar(){
         Consulta consultaSalva = consultaRepo.save(generateConsulta(true));
         Long id = consultaSalva.getConsultaId();
         Assertions.assertTrue(consultaRepo.findById(id).isPresent());

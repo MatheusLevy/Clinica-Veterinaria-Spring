@@ -78,7 +78,6 @@ public class AnimalServiceTeste {
     public void deveSalvar(){
         Animal animalSalvo = animalService.salvar(generateAnimal(true));
         Assertions.assertNotNull(animalSalvo);
-        Assertions.assertNotNull(animalSalvo.getAnimalId());
         rollback(animalSalvo, false);
     }
 
@@ -115,7 +114,7 @@ public class AnimalServiceTeste {
     public void deveRemoverComFeedback(){
         Animal animalSalvo = animalRepo.save(generateAnimal(true));
         Long id = animalSalvo.getAnimalId();
-        Animal animalFeedback = animalService.removerComFeedback(id);
+        animalService.removerComFeedback(id);
         Assertions.assertFalse(animalRepo.findById(id).isPresent());
         rollback(animalSalvo, true);
     }
@@ -126,7 +125,6 @@ public class AnimalServiceTeste {
         Long id = animalSalvo.getAnimalId();
         Animal animalEncontrado = animalService.buscarPorId(id);
         Assertions.assertNotNull(animalEncontrado);
-        Assertions.assertNotNull(animalEncontrado.getAnimalId());
         Assertions.assertEquals(animalSalvo.getDono().getDonoId(), animalEncontrado.getDono().getDonoId());
         rollback(animalSalvo, false);
     }
@@ -158,7 +156,6 @@ public class AnimalServiceTeste {
         Animal animalSalvo = animalRepo.save(generateAnimal(true));
         Dono donoEncontrado = animalService.buscarDonoPorId(animalSalvo.getAnimalId());
         Assertions.assertNotNull(donoEncontrado);
-        Assertions.assertNotNull(donoEncontrado.getDonoId());
         Assertions.assertEquals(donoEncontrado.getDonoId(), animalSalvo.getDono().getDonoId());
         rollback(animalSalvo, false);
     }

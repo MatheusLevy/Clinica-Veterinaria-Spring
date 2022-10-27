@@ -29,7 +29,7 @@ public class UsuarioTeste {
     }
 
     @Test
-    public void deveSalvarModel(){
+    public void deveSalvar(){
         Usuario usuarioSalvo = usuarioRepo.save(generateUsuario());
         Assertions.assertNotNull(usuarioSalvo);
         Assertions.assertNotNull(usuarioSalvo.getUsuarioId());
@@ -37,7 +37,7 @@ public class UsuarioTeste {
     }
 
     @Test
-    public void deveAtualizarUsuario(){
+    public void deveAtualizar(){
         Usuario usuarioSalvo = usuarioRepo.save(generateUsuario());
         usuarioSalvo.setUsername("Novo Username");
         Usuario usuarioAtualizado = usuarioRepo.save(usuarioSalvo);
@@ -48,7 +48,7 @@ public class UsuarioTeste {
     }
 
     @Test
-    public void deveRemoverModel(){
+    public void deveRemover(){
         Usuario usuarioSalvo = usuarioRepo.save(generateUsuario());
         Long id = usuarioSalvo.getUsuarioId();
         usuarioRepo.deleteById(id);
@@ -56,7 +56,7 @@ public class UsuarioTeste {
     }
 
     @Test
-    public void deveBuscarModel(){
+    public void deveBuscar(){
         Usuario usuarioSalvo = usuarioRepo.save(generateUsuario());
         Long id = usuarioSalvo.getUsuarioId();
         Assertions.assertTrue(usuarioRepo.findById(id).isPresent());
@@ -64,7 +64,7 @@ public class UsuarioTeste {
     }
 
     @Test
-    public void deveBuscarPeloUsernameModel(){
+    public void deveBuscarPeloUsername(){
         Usuario usuarioSalvo = usuarioRepo.save(generateUsuario());
         Usuario usuarioEncontrado = usuarioRepo.findByUsername(usuarioSalvo.getUsername());
         Assertions.assertNotNull(usuarioEncontrado);

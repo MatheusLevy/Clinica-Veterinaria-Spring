@@ -53,7 +53,7 @@ public class EspecialidadeTeste {
     }
 
     @Test
-    public void deveSalvarModel(){
+    public void deveSalvar(){
         Especialidade especialidadeSalva = especialidadeRepo.save(generateEspecialidade(true));
         Assertions.assertNotNull(especialidadeSalva);
         Assertions.assertEquals(especialidadeSalva.getNome(), generateEspecialidade(false).getNome());
@@ -61,7 +61,7 @@ public class EspecialidadeTeste {
     }
 
     @Test
-    public void deveAtualizarModel(){
+    public void deveAtualizar(){
         Especialidade especialidadeSalva = especialidadeRepo.save(generateEspecialidade(true));
         especialidadeSalva.setNome("Nome Atualizado");
         Especialidade especialidadeAtualizada = especialidadeRepo.save(especialidadeSalva);
@@ -72,7 +72,7 @@ public class EspecialidadeTeste {
     }
 
     @Test
-    public void deveAtualizarAreaModel(){
+    public void deveAtualizarArea(){
         Especialidade especialidadeSalva = especialidadeRepo.save(generateEspecialidade(true));
         Area areaAntiga = especialidadeSalva.getArea();
         especialidadeSalva.setArea(areaRepo.save(generateArea()));
@@ -85,7 +85,7 @@ public class EspecialidadeTeste {
     }
 
     @Test
-    public void deveRemoverModel() {
+    public void deveRemover() {
         Especialidade especialidadeSalva = especialidadeRepo.save(generateEspecialidade(true));
         Long id = especialidadeSalva.getEspecialidadeId();
         especialidadeRepo.deleteById(id);
@@ -94,7 +94,7 @@ public class EspecialidadeTeste {
     }
 
     @Test
-    public void deveBuscarModel(){
+    public void deveBuscar(){
         Especialidade especialidadeSalva = especialidadeRepo.save(generateEspecialidade(true));
         Long id = especialidadeSalva.getEspecialidadeId();
         Assertions.assertTrue(especialidadeRepo.findById(id).isPresent());

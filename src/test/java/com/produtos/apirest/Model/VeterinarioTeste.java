@@ -69,7 +69,7 @@ public class VeterinarioTeste {
     }
 
     @Test
-    public void deveSalvarModel(){
+    public void deveSalvar(){
         Veterinario veterinarioSalvo = veterinarioRepo.save(generateVeterinario(true));
         Assertions.assertNotNull(veterinarioSalvo);
         Assertions.assertEquals(veterinarioSalvo.getNome(), generateVeterinario(false).getNome());
@@ -77,7 +77,7 @@ public class VeterinarioTeste {
     }
 
     @Test
-    public void deveAtualizarModel(){
+    public void deveAtualizar(){
         Veterinario veterinarioSalvo = veterinarioRepo.save(generateVeterinario(true));
         veterinarioSalvo.setNome("Novo Nome");
         Veterinario veterinarioAtualizado = veterinarioRepo.save(veterinarioSalvo);
@@ -88,7 +88,7 @@ public class VeterinarioTeste {
     }
 
     @Test
-    public void deveAtualizarEspecialidadeModel(){
+    public void deveAtualizarEspecialidade(){
         Veterinario veterinarioSalvo = veterinarioRepo.save(generateVeterinario(true));
         Especialidade especialidadeAntiga = veterinarioSalvo.getEspecialidade();
         veterinarioSalvo.setEspecialidade(especialidadeRepo.save(generateEspecialidade(true, areaRepo)));
@@ -100,7 +100,7 @@ public class VeterinarioTeste {
     }
 
     @Test
-    public void deveRemoverModel(){
+    public void deveRemover(){
         Veterinario veterinarioSalvo = veterinarioRepo.save(generateVeterinario(true));
         Long id  = veterinarioSalvo.getVeterinarioId();
         veterinarioRepo.deleteById(id);
@@ -109,7 +109,7 @@ public class VeterinarioTeste {
     }
 
     @Test
-    public void deveBuscarModel(){
+    public void deveBuscar(){
         Veterinario veterinarioSalvo = veterinarioRepo.save(generateVeterinario(true));
         Long id = veterinarioSalvo.getVeterinarioId();
         Assertions.assertTrue(veterinarioRepo.findById(id).isPresent());

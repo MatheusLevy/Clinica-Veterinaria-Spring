@@ -29,7 +29,7 @@ public class RoleTeste {
     }
 
     @Test
-    public void deveSalvarModel(){
+    public void deveSalvar(){
         Role roleSalva= roleRepo.save(generateRole());
         Assertions.assertNotNull(roleSalva);
         Assertions.assertEquals(generateRole().getRoleName(), roleSalva.getRoleName());
@@ -37,7 +37,7 @@ public class RoleTeste {
     }
 
     @Test
-    public void deveAtualizarModel(){
+    public void deveAtualizar(){
         Role roleSalva= roleRepo.save(generateRole());
         roleSalva.setRoleName(RoleName.ROLE_TESTE2);
         Role roleAtualizada = roleRepo.save(roleSalva);
@@ -48,7 +48,7 @@ public class RoleTeste {
     }
 
     @Test
-    public void deveRemoverModel(){
+    public void deveRemover(){
         Role roleSalva= roleRepo.save(generateRole());
         Long id = roleSalva.getRoleId();
         roleRepo.deleteById(id);
@@ -56,7 +56,7 @@ public class RoleTeste {
     }
 
     @Test
-    public void deveBuscarModel(){
+    public void deveBuscar(){
         Role roleSalva= roleRepo.save(generateRole());
         Long id = roleSalva.getRoleId();
         Assertions.assertTrue(roleRepo.findById(id).isPresent());

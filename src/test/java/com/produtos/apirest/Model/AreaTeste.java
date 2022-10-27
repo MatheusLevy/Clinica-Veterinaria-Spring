@@ -29,7 +29,7 @@ public class AreaTeste {
     }
 
     @Test
-    public void deveSalvarModel(){
+    public void deveSalvar(){
         Area areaSalva = areaRepo.save(generateArea());
         Assertions.assertNotNull(areaSalva);
         Assertions.assertEquals(generateArea().getNome(), areaSalva.getNome());
@@ -37,7 +37,7 @@ public class AreaTeste {
     }
 
     @Test
-    public void deveAtualizarArea(){
+    public void deveAtualizar(){
         Area areaSalva = areaRepo.save(generateArea());
         areaSalva.setNome("Nome Novo");
         Area areaAtualizado = areaRepo.save(areaSalva);
@@ -48,7 +48,7 @@ public class AreaTeste {
     }
 
     @Test
-    public void deveRemoverModel(){
+    public void deveRemover(){
         Area areaSalva = areaRepo.save(generateArea());
         Long id = areaSalva.getAreaId();
         areaRepo.deleteById(id);
@@ -56,7 +56,7 @@ public class AreaTeste {
     }
 
     @Test
-    public void deveBuscarModel(){
+    public void deveBuscar(){
         Area areaSalva = areaRepo.save(generateArea());
         Optional<Area> temp = areaRepo.findById(areaSalva.getAreaId());
         Assertions.assertTrue(temp.isPresent());

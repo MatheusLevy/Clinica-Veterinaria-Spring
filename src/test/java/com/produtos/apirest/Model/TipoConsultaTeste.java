@@ -27,7 +27,7 @@ public class TipoConsultaTeste {
     }
 
     @Test
-    public void deveSalvarModel(){
+    public void deveSalvar(){
         TipoConsulta tipoConsultaSalva = tipoConsultaRepo.save(generateTipoConsulta());
         Assertions.assertNotNull(tipoConsultaSalva);
         Assertions.assertEquals(generateTipoConsulta().getNome(), tipoConsultaSalva.getNome());
@@ -35,7 +35,7 @@ public class TipoConsultaTeste {
     }
 
     @Test
-    public void deveAtualizarModel(){
+    public void deveAtualizar(){
         TipoConsulta tipoConsultaSalva = tipoConsultaRepo.save(generateTipoConsulta());
         tipoConsultaSalva.setNome("Nome Novo");
         TipoConsulta tipoConsultaAtualizada =  tipoConsultaRepo.save(tipoConsultaSalva);
@@ -46,7 +46,7 @@ public class TipoConsultaTeste {
     }
 
     @Test
-    public void deveRemoverModel(){
+    public void deveRemover(){
         TipoConsulta tipoConsultaSalva = tipoConsultaRepo.save(generateTipoConsulta());
         Long id = tipoConsultaSalva.getTipoConsultaId();
         tipoConsultaRepo.deleteById(id);
@@ -54,7 +54,7 @@ public class TipoConsultaTeste {
     }
 
     @Test
-    public void deveBuscarModel(){
+    public void deveBuscar(){
         TipoConsulta tipoConsultaSalva = tipoConsultaRepo.save(generateTipoConsulta());
         Long id = tipoConsultaSalva.getTipoConsultaId();
         Assertions.assertTrue(tipoConsultaRepo.findById(id).isPresent());

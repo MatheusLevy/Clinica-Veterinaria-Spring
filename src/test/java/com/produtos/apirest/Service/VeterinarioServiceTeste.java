@@ -84,7 +84,6 @@ public class VeterinarioServiceTeste {
     public void deveSalvar(){
         Veterinario veterinarioSalvo = veterinarioService.salvar(generateVeterinario(true));
         Assertions.assertNotNull(veterinarioSalvo);
-        Assertions.assertNotNull(veterinarioSalvo.getVeterinarioId());
         rollback(veterinarioSalvo, false);
     }
 
@@ -152,7 +151,6 @@ public class VeterinarioServiceTeste {
         Especialidade especialidadeNova = especialidadeRepo.save(generateEspecialidade(true, areaRepo));
         Veterinario veterinarioAtualizado = veterinarioService.atualizarEspecialidade(especialidadeNova, veterinarioSalvo);
         Assertions.assertNotNull(veterinarioAtualizado);
-        Assertions.assertNotNull(veterinarioAtualizado.getVeterinarioId());
         Assertions.assertEquals(veterinarioSalvo.getVeterinarioId(), veterinarioAtualizado.getVeterinarioId());
         rollback(veterinarioAtualizado, false);
         rollbackEspecialidade(especialidadeAntiga, especialidadeRepo, areaRepo);
