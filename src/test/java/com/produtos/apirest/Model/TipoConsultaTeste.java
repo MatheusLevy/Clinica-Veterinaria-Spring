@@ -12,7 +12,7 @@ public class TipoConsultaTeste {
     @Autowired
     public TipoConsultaRepo tipoConsultaRepo;
 
-    protected static TipoConsulta generateTipoConsulta(){
+    public static TipoConsulta generateTipoConsulta(){
        return TipoConsulta.builder()
                 .nome("nome")
                 .build();

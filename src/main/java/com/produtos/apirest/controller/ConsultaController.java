@@ -40,7 +40,7 @@ public class ConsultaController {
             Animal AnimalEncontrado = animalService.buscarPorId(consultadto.getAnimalId());
             Consulta consulta = consultadto.toConsulta(AnimalEncontrado, veterinarioEncontrado, tipoConsultaEncontrada);
             Consulta consultaSalva = consultaService.salvar(consulta);
-            ConsultaDTO dtoRetorno = consultaSalva.toDTO();
+            ConsultaDTO dtoRetorno = consultaSalva.toConsultaDTO();
             return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -55,7 +55,7 @@ public class ConsultaController {
             Animal AnimalEncontrado = animalService.buscarPorId(consultadto.getAnimalId());
             Consulta consulta = consultadto.toConsulta(AnimalEncontrado, veterinarioEncontrado, tipoConsultaEncontrada);
             Consulta consultaAtualizada = consultaService.atualizar(consulta);
-            ConsultaDTO dtoRetorno = consultaAtualizada.toDTO();
+            ConsultaDTO dtoRetorno = consultaAtualizada.toConsultaDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -68,7 +68,7 @@ public class ConsultaController {
             List<Consulta> consultas = consultaService.buscarTodos();
             List<ConsultaDTO> dtos = consultas
                     .stream()
-                    .map(Consulta::toDTO)
+                    .map(Consulta::toConsultaDTO)
                     .collect(Collectors.toList());
             return ResponseEntity.ok(dtos);
         }catch (Exception e){
@@ -91,7 +91,7 @@ public class ConsultaController {
     public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
         try{
             Consulta consultaRemovida = consultaService.removerComFeedback(id);
-            ConsultaDTO dtoRetorno = consultaRemovida.toDTO();
+            ConsultaDTO dtoRetorno = consultaRemovida.toConsultaDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());

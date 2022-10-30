@@ -33,7 +33,7 @@ public class AnimalController {
             TipoAnimal tipoEncontrado = tipoAnimalService.buscarPorId(animaldto.getIdTipoAnimal());
             Animal animal = animaldto.toAnimal(donoEncontrado, tipoEncontrado);
             Animal animalSalvo = animalService.salvar(animal);
-            AnimalDTO dtoRetorno = animalSalvo.toDTO();
+            AnimalDTO dtoRetorno = animalSalvo.toAnimalDTO();
             return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -54,7 +54,7 @@ public class AnimalController {
     public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
         try{
             Animal animalRemovido = animalService.removerComFeedback(id);
-            AnimalDTO dtoRetorno = animalRemovido.toDTO();
+            AnimalDTO dtoRetorno = animalRemovido.toAnimalDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -65,7 +65,7 @@ public class AnimalController {
     public ResponseEntity<?> buscarPorId(@PathVariable(value = "id") Long id){
         try{
             Animal animalBuscado = animalService.buscarPorId(id);
-            AnimalDTO dtoRetorno = animalBuscado.toDTO();
+            AnimalDTO dtoRetorno = animalBuscado.toAnimalDTO();
         return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -79,7 +79,7 @@ public class AnimalController {
             TipoAnimal tipoEncontrado = tipoAnimalService.buscarPorId(animalDTO.getIdTipoAnimal());
             Animal animal = animalDTO.toAnimal(donoEncontrado, tipoEncontrado);
             Animal atualizado = animalService.atualizar(animal);
-            AnimalDTO dtoRetorno = atualizado.toDTO();
+            AnimalDTO dtoRetorno = atualizado.toAnimalDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -90,7 +90,7 @@ public class AnimalController {
     public ResponseEntity<?> buscarDono(@PathVariable(value = "id") Long id){
         try {
             Dono donoEncontrado = animalService.buscarDonoPorId(id);
-            DonoDTO dtoRetorno = donoEncontrado.toDTO();
+            DonoDTO dtoRetorno = donoEncontrado.toDonoDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -103,7 +103,7 @@ public class AnimalController {
             Dono donoBuscado = donoService.buscarPorId(animalDTO.getIdDono());
             Animal animalBuscado = animalService.buscarPorId(animalDTO.getId());
             Animal animaAtualizado = animalService.atualizarDono(animalBuscado, donoBuscado);
-            AnimalDTO dtoRetorno = animaAtualizado.toDTO();
+            AnimalDTO dtoRetorno = animaAtualizado.toAnimalDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());

@@ -39,7 +39,7 @@ public class Especialidade {
         return getClass().getSimpleName() + "[id= " + especialidadeId + ", nome= " + nome + ", area= "+ area.getNome() + "]";
     }
 
-    public EspecialidadeDTO toDTO(){
+    public EspecialidadeDTO toEspecialidadeDTO(){
         return EspecialidadeDTO.builder()
                 .id(this.especialidadeId)
                 .nome(this.nome)

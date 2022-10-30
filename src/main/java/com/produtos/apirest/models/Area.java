@@ -30,7 +30,7 @@ public class Area {
     @JsonIgnore
     private List<Especialidade> especialidades;
 
-    public AreaDTO toDTO(){
+    public AreaDTO toAreaDTO(){
         return AreaDTO.builder()
                 .id(this.areaId)
                 .nome(this.nome)

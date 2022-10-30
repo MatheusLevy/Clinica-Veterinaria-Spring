@@ -35,7 +35,7 @@ public class TipoConsulta {
         return getClass().getSimpleName() + "[id= " + tipoConsultaId + ", nome= " + nome+ " ]" ;
     }
 
-    public TipoConsultaDTO toDTO(){
+    public TipoConsultaDTO toTipoConsultaDTO(){
         return TipoConsultaDTO.builder()
                 .id(this.tipoConsultaId)
                 .nome(this.nome)

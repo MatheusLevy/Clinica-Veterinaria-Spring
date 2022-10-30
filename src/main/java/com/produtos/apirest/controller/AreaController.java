@@ -27,7 +27,7 @@ public class AreaController {
         try {
             Area area = areaDTO.toArea();
             Area areaSalva = areaService.salvar(area);
-            AreaDTO areadtoRetorno = areaSalva.toDTO();
+            AreaDTO areadtoRetorno = areaSalva.toAreaDTO();
             return new ResponseEntity<>(areadtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -39,7 +39,7 @@ public class AreaController {
         try{
             Area area = areadto.toArea();
             Area areaSalva = areaService.atualizar(area);
-            AreaDTO areaDTORetorno = areaSalva.toDTO();
+            AreaDTO areaDTORetorno = areaSalva.toAreaDTO();
             return ResponseEntity.ok(areaDTORetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -60,7 +60,7 @@ public class AreaController {
     public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
         try {
             Area areaRemovida = areaService.removerComFeedback(id);
-            AreaDTO retornoDTO = areaRemovida.toDTO();
+            AreaDTO retornoDTO = areaRemovida.toAreaDTO();
             return ResponseEntity.ok(retornoDTO);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -71,7 +71,7 @@ public class AreaController {
     public ResponseEntity<?> buscarPorId(@PathVariable(value = "id") Long id){
         try {
             Area areaBuscada = areaService.buscarPorId(id);
-            AreaDTO retornoDTO = areaBuscada.toDTO();
+            AreaDTO retornoDTO = areaBuscada.toAreaDTO();
             return ResponseEntity.ok(retornoDTO);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -86,7 +86,7 @@ public class AreaController {
             List<Area> areas = areaService.buscar(filtroArea);
             List<AreaDTO> dtos = areas
                     .stream()
-                    .map(Area::toDTO)
+                    .map(Area::toAreaDTO)
                     .collect(Collectors.toList());
             return ResponseEntity.ok(dtos);
         } catch (Exception e){
@@ -100,7 +100,7 @@ public class AreaController {
             List<Area> areas = areaService.buscarTodos();
             List<AreaDTO> dtos = areas
                     .stream()
-                    .map(Area::toDTO)
+                    .map(Area::toAreaDTO)
                     .collect(Collectors.toList());
             return ResponseEntity.ok(dtos);
         } catch (Exception e){
@@ -115,7 +115,7 @@ public class AreaController {
             List<Especialidade> especialidades = areaService.buscarTodasEspecialidades(areaBuscada);
             List<EspecialidadeDTO> dtos = especialidades
                     .stream()
-                    .map(Especialidade::toDTO)
+                    .map(Especialidade::toEspecialidadeDTO)
                     .collect(Collectors.toList());
             return ResponseEntity.ok(dtos);
         } catch (Exception e){

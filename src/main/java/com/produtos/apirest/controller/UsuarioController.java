@@ -21,7 +21,7 @@ public class UsuarioController {
     public ResponseEntity<?> autenticar(@RequestBody UsuarioDTO dto){
         try{
             Usuario usuarioAutenticado = usuarioService.autenticar(dto.getUsername(), dto.getSenha());
-            UsuarioDTO dtoRetorno = usuarioAutenticado.toDTO();
+            UsuarioDTO dtoRetorno = usuarioAutenticado.toUsuarioDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -33,7 +33,7 @@ public class UsuarioController {
         try{
             Usuario usuario =  dto.toUsuario();
             Usuario usuarioSalvo = usuarioService.salvar(usuario);
-            UsuarioDTO dtoRetorno = usuarioSalvo.toDTO();
+            UsuarioDTO dtoRetorno = usuarioSalvo.toUsuarioDTO();
             return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -57,7 +57,7 @@ public class UsuarioController {
     public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
         try{
             Usuario usuarioRemovido = usuarioService.removerComFeedback(id);
-            UsuarioDTO dtoRetorno = usuarioRemovido.toDTO();
+            UsuarioDTO dtoRetorno = usuarioRemovido.toUsuarioDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -69,7 +69,7 @@ public class UsuarioController {
     public ResponseEntity<?> buscarPorId(@PathVariable(value = "id") Long id){
         try{
             Usuario usuarioBuscado = usuarioService.buscarPorId(id);
-            UsuarioDTO dtoRetorno = usuarioBuscado.toDTO();
+            UsuarioDTO dtoRetorno = usuarioBuscado.toUsuarioDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -81,7 +81,7 @@ public class UsuarioController {
     public ResponseEntity<?> buscarPorUsername(@PathVariable(value = "username") String username){
         try {
             Usuario usuarioEncontrado = usuarioService.buscarPorUsername(username);
-            UsuarioDTO dtoRetorno = usuarioEncontrado.toDTO();
+            UsuarioDTO dtoRetorno = usuarioEncontrado.toUsuarioDTO();
             return ResponseEntity.ok(dtoRetorno);
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -94,7 +94,7 @@ public class UsuarioController {
         try{
             Usuario usuario = dto.toUsuario();
             Usuario atualizado = usuarioService.atualizar(usuario);
-            UsuarioDTO dtoRetorno = atualizado.toDTO();
+            UsuarioDTO dtoRetorno = atualizado.toUsuarioDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());

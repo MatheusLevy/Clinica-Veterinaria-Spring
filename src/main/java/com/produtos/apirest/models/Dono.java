@@ -41,7 +41,7 @@ public class Dono {
         return getClass().getSimpleName() + "[donoId=" + donoId + ", nome=" + nome +", telefone=" + telefone + ", cpf= " + cpf + " ]";
     }
 
-    public DonoDTO toDTO(){
+    public DonoDTO toDonoDTO(){
        return DonoDTO.builder()
                 .id(this.donoId)
                 .telefone(this.telefone)

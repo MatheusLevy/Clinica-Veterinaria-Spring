@@ -78,7 +78,7 @@ public class Usuario implements UserDetails{
         return true;
     }
 
-    public UsuarioDTO toDTO(){
+    public UsuarioDTO toUsuarioDTO(){
         return UsuarioDTO.builder()
                 .id(this.usuarioId)
                 .username(this.username)

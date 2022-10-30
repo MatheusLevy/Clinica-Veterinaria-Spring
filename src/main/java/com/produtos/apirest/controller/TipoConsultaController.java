@@ -22,7 +22,7 @@ public class TipoConsultaController {
         try{
             TipoConsulta tipoConsulta = dto.toTipoConsulta();
             TipoConsulta tipoSalvo = tipoService.salvar(tipoConsulta);
-            TipoConsultaDTO dtoRetorno = tipoSalvo.toDTO();
+            TipoConsultaDTO dtoRetorno = tipoSalvo.toTipoConsultaDTO();
             return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -43,7 +43,7 @@ public class TipoConsultaController {
     public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
         try{
             TipoConsulta tipoRemovido = tipoService.removerComFeedback(id);
-            TipoConsultaDTO dtoRetorno = tipoRemovido.toDTO();
+            TipoConsultaDTO dtoRetorno = tipoRemovido.toTipoConsultaDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -54,7 +54,7 @@ public class TipoConsultaController {
     public ResponseEntity<?> buscarPorId(@PathVariable(value = "id") Long id){
         try{
             TipoConsulta tipoBuscado = tipoService.buscarPorId(id);
-            TipoConsultaDTO dtoRetorno = tipoBuscado.toDTO();
+            TipoConsultaDTO dtoRetorno = tipoBuscado.toTipoConsultaDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -66,7 +66,7 @@ public class TipoConsultaController {
         try{
             TipoConsulta tipoConsulta = dto.toTipoConsulta();
             TipoConsulta tipoConsultaAtualizado = tipoService.atualizar(tipoConsulta);
-            TipoConsultaDTO dtoRetorno = tipoConsultaAtualizado.toDTO();
+            TipoConsultaDTO dtoRetorno = tipoConsultaAtualizado.toTipoConsultaDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());

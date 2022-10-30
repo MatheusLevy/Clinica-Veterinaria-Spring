@@ -31,7 +31,7 @@ public class VeterinarioController {
             Especialidade especialidadeEncontrada = especialidadeService.buscarPorId(dto.getEspecialidadeId());
             Veterinario veterinario = dto.toVeterinario(especialidadeEncontrada);
             Veterinario veterinarioSalvo = veterinarioService.salvar(veterinario);
-            VeterinarioDTO dtoRetorno = veterinarioSalvo.toDTO();
+            VeterinarioDTO dtoRetorno = veterinarioSalvo.toVeterinarioDTO();
             return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -44,7 +44,7 @@ public class VeterinarioController {
             Especialidade especialidadeEncontrada = especialidadeService.buscarPorId(dto.getEspecialidadeId());
             Veterinario veterinario = dto.toVeterinario(especialidadeEncontrada);
             Veterinario veterinarioAtualizado = veterinarioService.atualizar(veterinario);
-            VeterinarioDTO retornoDTO = veterinarioAtualizado.toDTO();
+            VeterinarioDTO retornoDTO = veterinarioAtualizado.toVeterinarioDTO();
             return ResponseEntity.ok(retornoDTO);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -65,7 +65,7 @@ public class VeterinarioController {
     public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
         try{
             Veterinario veterinarioFeedback = veterinarioService.removerComFeedback(id);
-            VeterinarioDTO dtoRetorno = veterinarioFeedback.toDTO();
+            VeterinarioDTO dtoRetorno = veterinarioFeedback.toVeterinarioDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -76,7 +76,7 @@ public class VeterinarioController {
     public ResponseEntity<?> buscarPorId(@PathVariable(value = "id") Long id){
         try{
             Veterinario veterinarioEncontrado = veterinarioService.buscarPorId(id);
-            VeterinarioDTO dtoRetorno = veterinarioEncontrado.toDTO();
+            VeterinarioDTO dtoRetorno = veterinarioEncontrado.toVeterinarioDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -89,7 +89,7 @@ public class VeterinarioController {
             List<Veterinario> veterinariosList = veterinarioService.buscarTodos();
             List<VeterinarioDTO> dtosRetorno = veterinariosList
                     .stream()
-                    .map(Veterinario::toDTO)
+                    .map(Veterinario::toVeterinarioDTO)
                     .collect(Collectors.toList());
             return ResponseEntity.ok(dtosRetorno);
         } catch (Exception e){

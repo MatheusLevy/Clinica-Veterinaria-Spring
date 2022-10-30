@@ -1,6 +1,7 @@
 package com.produtos.apirest.models;
 
 import com.produtos.apirest.enums.RoleName;
+import com.produtos.apirest.models.DTO.RoleDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,5 +30,12 @@ public class Role implements GrantedAuthority {
     @Override
     public String getAuthority() {
         return this.roleName.toString();
+    }
+
+    public RoleDTO toRoleDTO(){
+        return RoleDTO.builder()
+                .id(this.RoleId)
+                .roleName(this.roleName)
+                .build();
     }
 }

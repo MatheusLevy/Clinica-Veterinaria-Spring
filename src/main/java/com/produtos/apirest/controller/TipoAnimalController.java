@@ -22,7 +22,7 @@ public class TipoAnimalController {
         try{
             TipoAnimal tipoAnimal = tipoAnimalDTO.toTipoAnimal();
             TipoAnimal tipoSalvo = tipoService.salvar(tipoAnimal);
-            TipoAnimalDTO dtoRetorno = tipoSalvo.toDTO();
+            TipoAnimalDTO dtoRetorno = tipoSalvo.toTipoAnimalDTO();
             return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -43,7 +43,7 @@ public class TipoAnimalController {
     public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
         try{
             TipoAnimal tipoRemovido = tipoService.removerComFeedback(id);
-            TipoAnimalDTO dtoRetorno = tipoRemovido.toDTO();
+            TipoAnimalDTO dtoRetorno = tipoRemovido.toTipoAnimalDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -55,7 +55,7 @@ public class TipoAnimalController {
         try{
             TipoAnimal tipoAnimal = tipoAnimalDTO.toTipoAnimal();
             TipoAnimal tipoAnimalAtualizado = tipoService.atualizar(tipoAnimal);
-            TipoAnimalDTO dtoRetorno = tipoAnimalAtualizado.toDTO();
+            TipoAnimalDTO dtoRetorno = tipoAnimalAtualizado.toTipoAnimalDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -66,7 +66,7 @@ public class TipoAnimalController {
     public ResponseEntity<?> buscar(@PathVariable(value = "id") Long id){
         try{
             TipoAnimal tipoBuscado = tipoService.buscarPorId(id);
-            TipoAnimalDTO dtoRetorno = tipoBuscado.toDTO();
+            TipoAnimalDTO dtoRetorno = tipoBuscado.toTipoAnimalDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());

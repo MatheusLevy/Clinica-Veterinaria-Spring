@@ -45,7 +45,7 @@ public class Veterinario {
         + ", telefone= " + telefone + ", cpf= " + cpf + "especialidade= " + especialidade + " ]";
     }
 
-    public VeterinarioDTO toDTO(){
+    public VeterinarioDTO toVeterinarioDTO(){
         return VeterinarioDTO.builder()
                 .id(this.veterinarioId)
                 .nome(this.nome)

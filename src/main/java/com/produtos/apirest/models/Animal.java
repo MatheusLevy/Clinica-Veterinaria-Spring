@@ -43,7 +43,7 @@ public class Animal {
         return getClass().getSimpleName() + "[id= "+ animalId +", nome= " + nome +", tipo= " + tipoAnimal + ", dono= " + dono + "]";
     }
 
-    public AnimalDTO toDTO(){
+    public AnimalDTO toAnimalDTO(){
         return AnimalDTO.builder()
                 .id(this.animalId)
                 .idTipoAnimal(this.tipoAnimal.getTipoAnimalId())

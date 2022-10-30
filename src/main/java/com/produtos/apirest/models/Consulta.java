@@ -55,7 +55,7 @@ public class Consulta {
                 + ", descrição= " + descricao + ", data= " + data + " ]";
     }
 
-    public ConsultaDTO toDTO(){
+    public ConsultaDTO toConsultaDTO(){
         return ConsultaDTO.builder()
                 .id(this.consultaId)
                 .data(this.data)

@@ -7,7 +7,6 @@ import com.produtos.apirest.service.AreaService;
 import com.produtos.apirest.service.EspecialidadeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,7 +30,7 @@ public class EspecialidadeController {
             Area areaBuscada = areaService.buscarPorId(dto.getIdArea());
             Especialidade especialidade = dto.toEspecialidade(areaBuscada);
             Especialidade especialidadeSalva = especialidadeService.salvar(especialidade);
-            EspecialidadeDTO dtoRetorno = especialidadeSalva.toDTO();
+            EspecialidadeDTO dtoRetorno = especialidadeSalva.toEspecialidadeDTO();
             return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -44,7 +43,7 @@ public class EspecialidadeController {
             Area areaBuscada = areaService.buscarPorId(dto.getIdArea());
             Especialidade especialidade = dto.toEspecialidade(areaBuscada);
             Especialidade especialidadeAtualizada = especialidadeService.atualizar(especialidade);
-            EspecialidadeDTO dtoRetorno = especialidadeAtualizada.toDTO();
+            EspecialidadeDTO dtoRetorno = especialidadeAtualizada.toEspecialidadeDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -66,7 +65,7 @@ public class EspecialidadeController {
     public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
         try {
             Especialidade especialidadeRemovida = especialidadeService.removerFeedback(id);
-            EspecialidadeDTO dtoRetorno = especialidadeRemovida.toDTO();
+            EspecialidadeDTO dtoRetorno = especialidadeRemovida.toEspecialidadeDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -77,7 +76,7 @@ public class EspecialidadeController {
     public ResponseEntity<?> buscarPorId(@PathVariable(value = "id") Long id){
         try {
             Especialidade especialidadeBuscada = especialidadeService.buscarPorId(id);
-            EspecialidadeDTO dtoRetorno = especialidadeBuscada.toDTO();
+            EspecialidadeDTO dtoRetorno = especialidadeBuscada.toEspecialidadeDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -91,7 +90,7 @@ public class EspecialidadeController {
             List<Especialidade> especialidades = especialidadeService.buscar(filtro);
             List<EspecialidadeDTO> dtos = especialidades
                     .stream()
-                    .map(Especialidade::toDTO)
+                    .map(Especialidade::toEspecialidadeDTO)
                     .collect(Collectors.toList());
             return ResponseEntity.ok(dtos);
         } catch (Exception e){
@@ -99,14 +98,13 @@ public class EspecialidadeController {
         }
     }
 
-    @PreAuthorize("hasRole('A')")
     @GetMapping("/buscarTodos")
     public ResponseEntity<?> buscarTodos(){
         try{
             List<Especialidade> especialidadeList = especialidadeService.buscarTodos();
             List<EspecialidadeDTO> dtos = especialidadeList
                     .stream()
-                    .map(Especialidade::toDTO)
+                    .map(Especialidade::toEspecialidadeDTO)
                     .collect(Collectors.toList());
             return ResponseEntity.ok(dtos);
         } catch (Exception e){

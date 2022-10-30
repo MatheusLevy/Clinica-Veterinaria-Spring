@@ -27,7 +27,7 @@ public class DonoController {
         try{
             Dono dono = donodto.toDono();
             Dono donoSalvo = donoService.salvar(dono);
-            DonoDTO dtoRetorno = donoSalvo.toDTO();
+            DonoDTO dtoRetorno = donoSalvo.toDonoDTO();
             return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -39,7 +39,7 @@ public class DonoController {
         try{
             Dono dono = donodto.toDono();
             Dono donoAtualizado = donoService.atualizar(dono);
-            DonoDTO dtoRetorno = donoAtualizado.toDTO();
+            DonoDTO dtoRetorno = donoAtualizado.toDonoDTO();
             return ResponseEntity.ok(dtoRetorno);
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -61,7 +61,7 @@ public class DonoController {
         List<Dono> donos = donoService.buscarTodos();
         List<DonoDTO> donosDTOS = donos
                 .stream()
-                .map(Dono::toDTO)
+                .map(Dono::toDonoDTO)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(donosDTOS);
     }
@@ -70,7 +70,7 @@ public class DonoController {
     public ResponseEntity<?> buscarPorId(@PathVariable(value = "id") Long id){
         try{
             Dono donoBuscado = donoService.buscarPorId(id);
-            DonoDTO dtoRetorno = donoBuscado.toDTO();
+            DonoDTO dtoRetorno = donoBuscado.toDonoDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -81,7 +81,7 @@ public class DonoController {
     public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
         try{
             Dono removido = donoService.removerComFeedback(id);
-            DonoDTO dtoRetorno = removido.toDTO();
+            DonoDTO dtoRetorno = removido.toDonoDTO();
             return  ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -95,7 +95,7 @@ public class DonoController {
             List<Dono> donosEncontrados = donoService.buscar(filtro);
             List<DonoDTO> dtosRetorno = donosEncontrados
                     .stream()
-                    .map(Dono::toDTO)
+                    .map(Dono::toDonoDTO)
                     .collect(Collectors.toList());
             return ResponseEntity.ok(dtosRetorno);
         } catch (Exception e){
@@ -109,7 +109,7 @@ public class DonoController {
             List<Animal> animais  =  donoService.buscarTodosAnimais(id);
             List<AnimalDTO> dtosRetorno = animais
                     .stream()
-                    .map(Animal::toDTO)
+                    .map(Animal::toAnimalDTO)
                     .collect(Collectors.toList());
             return ResponseEntity.ok(dtosRetorno);
         } catch (Exception e){
