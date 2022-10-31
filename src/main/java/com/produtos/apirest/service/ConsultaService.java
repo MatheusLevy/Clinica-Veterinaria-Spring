@@ -1,11 +1,11 @@
 package com.produtos.apirest.service;
 
-import com.produtos.apirest.models.*;
-import com.produtos.apirest.repository.AnimalRepo;
+import com.produtos.apirest.models.Animal;
+import com.produtos.apirest.models.Consulta;
+import com.produtos.apirest.models.TipoConsulta;
+import com.produtos.apirest.models.Veterinario;
 import com.produtos.apirest.repository.ConsultaRepo;
-import com.produtos.apirest.repository.TipoConsultaRepo;
-import com.produtos.apirest.repository.VeterinarioRepo;
-import com.produtos.apirest.service.excecoes.*;
+import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -16,16 +16,9 @@ import java.util.Optional;
 public class ConsultaService {
 
     private final ConsultaRepo repo;
-    private final  VeterinarioRepo veterinarioRepo;
-    private final  AnimalRepo animalRepo;
-    private final  TipoConsultaRepo tipoConsultaRepo;
 
-    public ConsultaService(ConsultaRepo consultaRepo, VeterinarioRepo veterinarioRepo, AnimalRepo animalRepo,
-                           TipoConsultaRepo tipoConsultaRepo){
+    public ConsultaService(ConsultaRepo consultaRepo){
         this.repo = consultaRepo;
-        this.veterinarioRepo = veterinarioRepo;
-        this.animalRepo = animalRepo;
-        this.tipoConsultaRepo = tipoConsultaRepo;
     }
 
     public static void verificaConsulta(Consulta consulta){
@@ -70,20 +63,8 @@ public class ConsultaService {
         VeterinarioService.verificaId(veterinarioNovo);
         verificaConsulta(destino);
         verificaId(destino);
-
-        Optional<Veterinario> veterinarioOptional = veterinarioRepo.findById(veterinarioNovo.getVeterinarioId());
-        if(veterinarioOptional.isEmpty())
-            throw new RegraNegocioRunTime("Não foi possivel achar o Veterinário!");
-
-        Optional<Consulta> consultaOptional = repo.findById(destino.getConsultaId());
-        if(consultaOptional.isEmpty())
-            throw new RegraNegocioRunTime("Não foi possivel achar a Consulta!");
-
-        Consulta consultaDestinoEncontrada = consultaOptional.get();
-        Veterinario novoVeterinario = veterinarioOptional.get();
-        consultaDestinoEncontrada.setVeterinario(novoVeterinario);
-
-        return repo.save(consultaDestinoEncontrada);
+        destino.setVeterinario(veterinarioNovo);
+        return repo.save(destino);
     }
 
     @Transactional
@@ -92,20 +73,8 @@ public class ConsultaService {
         AnimalService.verificaId(animalNovo);
         verificaConsulta(destino);
         verificaId(destino);
-
-        Optional<Animal> animalOptional = animalRepo.findById(animalNovo.getAnimalId());
-        if(animalOptional.isEmpty())
-            throw new RegraNegocioRunTime("Não foi possivel achar o Animal!");
-
-        Optional<Consulta> consultaOptional = repo.findById(destino.getConsultaId());
-        if(consultaOptional.isEmpty())
-            throw new RegraNegocioRunTime("Não foi possivel achar a Consulta");
-
-        Consulta consultaDestinoEncontrada = consultaOptional.get();
-        Animal novoAnimalEncontrado = animalOptional.get();
-        consultaDestinoEncontrada.setAnimal(novoAnimalEncontrado);
-
-        return repo.save(consultaDestinoEncontrada);
+        destino.setAnimal(animalNovo);
+        return repo.save(destino);
     }
 
     @Transactional
@@ -114,20 +83,8 @@ public class ConsultaService {
         TipoConsultaService.verificaId(tipoConsultaNovo);
         verificaConsulta(destino);
         verificaId(destino);
-
-        Optional<TipoConsulta> tipoConsultaOptional = tipoConsultaRepo.findById(tipoConsultaNovo.getTipoConsultaId());
-        if (tipoConsultaOptional.isEmpty())
-            throw new RegraNegocioRunTime("Não foi possivel achar o Tipo de Consulta!");
-
-        Optional<Consulta> consultaOptional = repo.findById(destino.getConsultaId());
-        if(consultaOptional.isEmpty())
-            throw new RegraNegocioRunTime("Não foi possivel achar a Consulta!");
-
-        Consulta consultaDestinoEncontrada = consultaOptional.get();
-        TipoConsulta tipoConsultaNovoEncontrado = tipoConsultaOptional.get();
-        consultaDestinoEncontrada.setTipoConsulta(tipoConsultaNovoEncontrado);
-
-        return repo.save(consultaDestinoEncontrada);
+        destino.setTipoConsulta(tipoConsultaNovo);
+        return repo.save(destino);
     }
 
     @Transactional

@@ -27,9 +27,9 @@ public class VeterinarioService {
     public static void verificaVeterinario(Veterinario veterinario){
         if (veterinario == null)
             throw new NullPointerException("Veterinario não pode ser Nulo!");
-        if(veterinario.getNome() == null || veterinario.getNome().equals(""))
+        if(veterinario.getNome().equals(""))
             throw new RegraNegocioRunTime("Veterinario deve ter um Nome!");
-        if (veterinario.getCpf() == null || veterinario.getCpf().equals(""))
+        if (veterinario.getCpf().equals(""))
             throw new RegraNegocioRunTime("Veterinario deve ter um CPF");
         if (veterinario.getEspecialidade() == null)
             throw new RegraNegocioRunTime("Veterinario deve ter uma Especialidade");
@@ -108,23 +108,12 @@ public class VeterinarioService {
     }
 
     @Transactional
-    public Veterinario atualizarEspecialidade(Especialidade especialidade, Veterinario veterinario){
-        EspecialidadeService.verificaEspecialidade(especialidade);
-        EspecialidadeService.verificaId(especialidade);
-        verificaVeterinario(veterinario);
-        verificaId(veterinario);
-
-        Optional<Veterinario> veterinarioTemp = repo.findById(veterinario.getVeterinarioId());
-        if (veterinarioTemp.isEmpty())
-            throw new RegraNegocioRunTime("Veterinario não encontrado!");
-
-        Optional<Especialidade> especialidadeTemp = especialidadeRepo.findById(especialidade.getEspecialidadeId());
-        if(especialidadeTemp.isEmpty())
-            throw new RegraNegocioRunTime("Especialidade não encontrada!");
-
-        Veterinario veterinarioAtualizar = veterinarioTemp.get();
-        Especialidade novaEspecialidade = especialidadeTemp.get();
-        veterinarioAtualizar.setEspecialidade(novaEspecialidade);
-        return  repo.save(veterinarioAtualizar);
+    public Veterinario atualizarEspecialidade(Veterinario destino, Especialidade especialidadeNova){
+        EspecialidadeService.verificaEspecialidade(especialidadeNova);
+        EspecialidadeService.verificaId(especialidadeNova);
+        verificaVeterinario(destino);
+        verificaId(destino);
+        destino.setEspecialidade(especialidadeNova);
+        return  repo.save(destino);
     }
 }

@@ -23,8 +23,8 @@ public class TipoAnimalService {
     public static void verificaTipoAnimal(TipoAnimal tipo){
         if (tipo == null)
             throw new NullPointerException("Tipo de Animal não pode ser Nulo!");
-        if (tipo.getNome() == null || tipo.getNome().equals(""))
-            throw new RegraNegocioRunTime("Tipo de Animla deve ter um nome!");
+        if (tipo.getNome().equals(""))
+            throw new RegraNegocioRunTime("Tipo de Animal deve ter um nome!");
     }
 
     public static void verificaId(TipoAnimal tipo){

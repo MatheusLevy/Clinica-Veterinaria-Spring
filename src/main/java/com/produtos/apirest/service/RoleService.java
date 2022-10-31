@@ -23,8 +23,6 @@ public class RoleService {
     public static void verificaRole(Role role){
         if (role == null)
             throw new NullPointerException("Role não pode ser Nula!");
-        if (role.getRoleName() == null)
-            throw new RegraNegocioRunTime("Role deve ter um RoleName!");
     }
 
     public static void verificaId(Role role){

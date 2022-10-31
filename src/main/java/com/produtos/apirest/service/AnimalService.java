@@ -60,20 +60,8 @@ public class AnimalService {
         DonoService.verificaId(donoNovo);
         verificaAnimal(destino);
         verificaId(destino);
-
-        Optional<Dono> donoOptional = donoRepo.findById(donoNovo.getDonoId());
-        if (donoOptional.isEmpty())
-            throw new RegraNegocioRunTime("Não foi possivel encontrar o Dono");
-
-        Optional<Animal> animalOptional = repo.findById(destino.getAnimalId());
-        if(animalOptional.isEmpty())
-            throw new RegraNegocioRunTime("Não foi possivel encontrar o Animal");
-
-        Animal animalDestinoEncontrado = animalOptional.get();
-        Dono donoNovoEncontrado = donoOptional.get();
-        animalDestinoEncontrado.setDono(donoNovoEncontrado);
-
-        return repo.save(animalDestinoEncontrado);
+        destino.setDono(donoNovo);
+        return repo.save(destino);
     }
 
     @Transactional

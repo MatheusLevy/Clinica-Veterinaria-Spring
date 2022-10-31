@@ -2,7 +2,6 @@ package com.produtos.apirest.service;
 
 import com.produtos.apirest.models.Area;
 import com.produtos.apirest.models.Especialidade;
-import com.produtos.apirest.repository.AreaRepo;
 import com.produtos.apirest.repository.EspecialidadeRepo;
 import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
 import org.springframework.data.domain.Example;
@@ -17,17 +16,15 @@ import java.util.Optional;
 public class EspecialidadeService {
 
     private final EspecialidadeRepo repo;
-    private final AreaRepo areaRepo;
 
-    public EspecialidadeService(EspecialidadeRepo especialidadeRepo, AreaRepo areaRepo){
+    public EspecialidadeService(EspecialidadeRepo especialidadeRepo){
         this.repo = especialidadeRepo;
-        this.areaRepo = areaRepo;
     }
 
     public static void verificaEspecialidade(Especialidade especialidade){
         if (especialidade == null)
             throw new NullPointerException("Especialidade não pode ser Nula!");
-        if (especialidade.getNome() == null || especialidade.getNome().equals(""))
+        if (especialidade.getNome().equals(""))
             throw new RegraNegocioRunTime("Especialidade deve ter um nome");
         if (especialidade.getArea() == null)
             throw new RegraNegocioRunTime("Especialidade deve ter uma Area!");
@@ -62,20 +59,8 @@ public class EspecialidadeService {
         verificaId(destino);
         AreaService.verificaArea(areaNova);
         AreaService.verificaId(areaNova);
-
-        Optional<Especialidade> especialidadesOptional = repo.findById(destino.getEspecialidadeId());
-        if (especialidadesOptional.isEmpty())
-            throw new RegraNegocioRunTime("Não foi possivel encontrar a Especialidade");
-
-        Optional<Area> areasOptional = areaRepo.findById(areaNova.getAreaId());
-        if (areasOptional.isEmpty())
-            throw new RegraNegocioRunTime("Não foi possivel encontrar a Especialidade");
-
-        Especialidade especialidadeDestinoEncontrada = especialidadesOptional.get();
-        Area areaNovaEncontrada = areasOptional.get();
-
-        especialidadeDestinoEncontrada.setArea(areaNovaEncontrada);
-        return repo.save(especialidadeDestinoEncontrada);
+        destino.setArea(areaNova);
+        return repo.save(destino);
     }
 
     @Transactional

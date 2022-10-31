@@ -149,7 +149,7 @@ public class VeterinarioServiceTeste {
         Veterinario veterinarioSalvo = veterinarioRepo.save(generateVeterinario(true));
         Especialidade especialidadeAntiga = veterinarioSalvo.getEspecialidade();
         Especialidade especialidadeNova = especialidadeRepo.save(generateEspecialidade(true, areaRepo));
-        Veterinario veterinarioAtualizado = veterinarioService.atualizarEspecialidade(especialidadeNova, veterinarioSalvo);
+        Veterinario veterinarioAtualizado = veterinarioService.atualizarEspecialidade(veterinarioSalvo, especialidadeNova);
         Assertions.assertNotNull(veterinarioAtualizado);
         Assertions.assertEquals(veterinarioSalvo.getVeterinarioId(), veterinarioAtualizado.getVeterinarioId());
         rollback(veterinarioAtualizado, false);

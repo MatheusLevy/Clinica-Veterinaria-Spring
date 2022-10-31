@@ -2,6 +2,7 @@ package com.produtos.apirest.service;
 
 import com.produtos.apirest.models.Usuario;
 import com.produtos.apirest.repository.UsuarioRepo;
+import com.produtos.apirest.service.excecoes.AuthenticationFailedExpection;
 import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,8 +29,8 @@ public class UsuarioService {
             throw new NullPointerException("Usuario não pode ser nulo!");
         if (usuario.getUsername() == null)
             throw  new RegraNegocioRunTime("Nome de usuário não pode ser nulo!");
-        if (usuario.getSenha() == null)
-            throw new RegraNegocioRunTime("Senha não pode ser nula!");
+        if (usuario.getSenha().equals(""))
+            throw new RegraNegocioRunTime("Senha não pode ser vazia!");
         if (usuario.getRoles().isEmpty())
             throw new RegraNegocioRunTime("As roles do usuário não podem ser nulas!");
     }
@@ -52,7 +53,7 @@ public class UsuarioService {
         if(passwordEncoder().matches(senha, usuario.getSenha()))
             return usuario;
         else
-            return new Usuario();
+            throw new AuthenticationFailedExpection("Usuário ou senha inválidos!");
     }
 
     @Transactional
