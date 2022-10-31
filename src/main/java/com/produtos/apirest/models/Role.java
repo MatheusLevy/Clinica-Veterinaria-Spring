@@ -6,13 +6,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 
 @Entity
 @Data
-@Table(name = "Role")
+@Table(name = "role")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,6 +26,7 @@ public class Role implements GrantedAuthority {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "roleName", nullable = false, unique = true)
+    @NotNull
     private RoleName roleName;
 
     @Override

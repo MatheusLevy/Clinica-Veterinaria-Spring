@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -26,9 +27,11 @@ public class Usuario implements UserDetails{
     private Long usuarioId;
 
     @Column(name = "usuario")
+    @NotNull
     private String username;
 
     @Column(name = "senha")
+    @NotNull
     private String senha;
 
     @ManyToMany

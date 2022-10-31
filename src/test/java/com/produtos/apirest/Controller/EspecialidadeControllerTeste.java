@@ -46,7 +46,7 @@ public class EspecialidadeControllerTeste {
                 .id(1L)
                 .idArea(1L)
                 .nome("nome")
-                .area(new Area())
+                .area(generateAreaInstance())
                 .build();
     }
 
@@ -54,7 +54,7 @@ public class EspecialidadeControllerTeste {
         return Especialidade.builder()
                 .especialidadeId(1L)
                 .nome("nome")
-                .area(new Area())
+                .area(generateAreaInstance())
                 .build();
     }
 

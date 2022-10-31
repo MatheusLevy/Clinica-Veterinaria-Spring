@@ -27,6 +27,7 @@ public class DonoDTO {
                 .donoId(this.id)
                 .nome(this.nome)
                 .cpf(this.cpf)
+                .telefone(this.telefone)
                 .build();
     }
 }
