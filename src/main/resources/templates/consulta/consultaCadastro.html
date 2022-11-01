@@ -114,33 +114,33 @@
 
     <div class = "mb-3">
       <label for="veterinario-input" class="form-label">Veterinário</label>
-      <select th:field="${consultadto.veterinario}" id ="veterinario-input" class="js-example-basic-single" name="veterinario" style="width: 50%">
-        <option  th:each="veterinario : ${consultadto.veterinarios}" th:value="${veterinario.veterinarioId}" th:text="${veterinario.nome}" th:selected="${consultadto.veterinario == veterinario}"> </option>
+      <select th:field="${consultadto.getVeterinary}" id ="veterinario-input" class="js-example-basic-single" name="veterinario" style="width: 50%">
+        <option th:each="veterinario : ${consultadto.getVets}" th:value="${veterinario.veterinarioId}" th:text="${veterinario.nome}" th:selected="${consultadto.getVeterinary == veterinario}"> </option>
       </select>
     </div>
 
     <div class = "mb-3">
       <label for="animal-input" class="form-label">Animal</label>
       <select th:field="${consultadto.animal}" id ="animal-input" class="js-example-basic-single" name="animal" style="width: 50%">
-        <option  th:each="animal : ${consultadto.animais}" th:value="${animal.animalId}" th:text="${animal.nome}" th:selected="${consultadto.animal == animal}"> </option>
+        <option th:each="animal : ${consultadto.getAnimals}" th:value="${animal.animalId}" th:text="${animal.nome}" th:selected="${consultadto.animal == animal}"> </option>
       </select>
     </div>
 
     <div class = "mb-3">
       <label for="tipo-input" class="form-label">Tipo Consulta</label>
-      <select  th:field="${consultadto.tipo}" id="tipo-input" class="js-example-basic-single" name="tipo" style="width: 50%">
-        <option th:each="tipo : ${consultadto.tiposConsulta}" th:value="${tipo.tipoConsultaId}" th:text="${tipo.nome}" th:selected="${consultadto.tipo == tipo}"> </option>
+      <select th:field="${consultadto.getType}" id="tipo-input" class="js-example-basic-single" name="tipo" style="width: 50%">
+        <option th:each="tipo : ${consultadto.getAppointmentTypes}" th:value="${tipo.tipoConsultaId}" th:text="${tipo.nome}" th:selected="${consultadto.getType == tipo}"> </option>
       </select>
     </div>
 
     <div class="mb-3">
       <label for="descricao-input" class="form-label">Descrição</label>
-      <input type="text" class ="form-control" name="descricao"  id ="descricao-input" placeholder="Digite a descrição" required th:value="${consultadto.descricao}" >
+      <input type="text" class ="form-control" name="descricao"  id ="descricao-input" placeholder="Digite a descrição" required th:value="${consultadto.getDescription}" >
     </div>
 
     <div class="mb-3">
       <label for="date-input" class="form-label">Data</label>
-      <input type="date" class ="form-control" name="data"  id ="date-input"  required th:value="${consultadto.data}" th:field="${consultadto.data}" >
+      <input type="date" class ="form-control" name="data" id ="date-input" required th:value="${consultadto.getDate}" th:field="${consultadto.getDate}" >
     </div>
 
     <button type="submit" class="btn btn-primary">Cadastrar</button>

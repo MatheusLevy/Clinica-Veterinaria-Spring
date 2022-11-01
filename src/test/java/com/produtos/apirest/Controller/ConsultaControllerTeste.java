@@ -1,7 +1,7 @@
 package com.produtos.apirest.Controller;
 
-import com.produtos.apirest.models.Consulta;
-import com.produtos.apirest.models.DTO.ConsultaDTO;
+import com.produtos.apirest.models.Appointment;
+import com.produtos.apirest.models.DTO.AppointmentDTO;
 import com.produtos.apirest.service.AnimalService;
 import com.produtos.apirest.service.ConsultaService;
 import com.produtos.apirest.service.TipoConsultaService;
@@ -47,9 +47,9 @@ public class ConsultaControllerTeste {
     @Autowired
     public MockMvc mvc;
 
-    public static Consulta generateConsultaInstance(){
-        return Consulta.builder()
-                .consultaId(1L)
+    public static Appointment generateConsultaInstance(){
+        return Appointment.builder()
+                .appointmentId(1L)
                 .description("descrição")
                 .appointmentType(generateTipoConsultaInstance())
                 .veterinary(generateVeterinarioInstance())
@@ -57,17 +57,17 @@ public class ConsultaControllerTeste {
                 .build();
     }
 
-    public static ConsultaDTO generateConsultaDTOInstance(){
-        return ConsultaDTO.builder()
+    public static AppointmentDTO generateConsultaDTOInstance(){
+        return AppointmentDTO.builder()
                 .id(1L)
-                .descricao("descrição")
-                .tipoConsultaId(1L)
-                .veterinarioId(1L)
+                .description("descrição")
+                .appointmentTypeId(1L)
+                .vetId(1L)
                 .animalId(1L)
                 .build();
     }
 
-    public static List<Consulta> generateConsultaListInstance(){
+    public static List<Appointment> generateConsultaListInstance(){
         return new ArrayList<>(){
             {
                 add(generateConsultaInstance());
@@ -78,7 +78,7 @@ public class ConsultaControllerTeste {
     @Test
     @WithUserDetails("Admin")
     public void deveSalvar() throws Exception{
-        Mockito.when(consultaService.salvar(Mockito.any(Consulta.class))).thenReturn(generateConsultaInstance());
+        Mockito.when(consultaService.salvar(Mockito.any(Appointment.class))).thenReturn(generateConsultaInstance());
         Mockito.when(tipoConsultaService.buscarPorId(Mockito.anyLong())).thenReturn(generateTipoConsultaInstance());
         Mockito.when(animalService.buscarPorId(Mockito.anyLong())).thenReturn(generateAnimalInstance());
         String json = toJson(generateConsultaDTOInstance());
@@ -90,7 +90,7 @@ public class ConsultaControllerTeste {
     @WithUserDetails("Admin")
     @Test
     public void deveAtualizar() throws Exception{
-        Mockito.when(consultaService.atualizar(Mockito.any(Consulta.class))).thenReturn(generateConsultaInstance());
+        Mockito.when(consultaService.atualizar(Mockito.any(Appointment.class))).thenReturn(generateConsultaInstance());
         String json = toJson(generateConsultaDTOInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.PUT, API.concat("/atualizar"), json);
         mvc.perform(request)

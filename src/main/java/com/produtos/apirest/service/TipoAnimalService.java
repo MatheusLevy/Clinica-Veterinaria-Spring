@@ -1,7 +1,7 @@
 package com.produtos.apirest.service;
 
-import com.produtos.apirest.models.TipoAnimal;
-import com.produtos.apirest.repository.TipoAnimalRepo;
+import com.produtos.apirest.models.AnimalType;
+import com.produtos.apirest.repository.AnimalTypeRepo;
 import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -14,20 +14,20 @@ import java.util.Optional;
 @Service
 public class TipoAnimalService {
 
-    private final TipoAnimalRepo repo;
+    private final AnimalTypeRepo repo;
 
-    public TipoAnimalService(TipoAnimalRepo tipoAnimalRepo){
-        this.repo = tipoAnimalRepo;
+    public TipoAnimalService(AnimalTypeRepo animalTypeRepo){
+        this.repo = animalTypeRepo;
     }
 
-    public static void verificaTipoAnimal(TipoAnimal tipo){
+    public static void verificaTipoAnimal(AnimalType tipo){
         if (tipo == null)
             throw new NullPointerException("Tipo de Animal não pode ser Nulo!");
         if (tipo.getName().equals(""))
             throw new RegraNegocioRunTime("Tipo de Animal deve ter um nome!");
     }
 
-    public static void verificaId(TipoAnimal tipo){
+    public static void verificaId(AnimalType tipo){
         if(tipo == null || tipo.getAnimalTypeId() <= 0)
             throw new RegraNegocioRunTime("Tipo de Animal deve ter um identificador!");
     }
@@ -38,31 +38,31 @@ public class TipoAnimalService {
     }
 
     @Transactional
-    public TipoAnimal salvar(TipoAnimal tipo){
+    public AnimalType salvar(AnimalType tipo){
         verificaTipoAnimal(tipo);
         return repo.save(tipo);
     }
 
     @Transactional
-    public TipoAnimal atualizar(TipoAnimal tipo){
+    public AnimalType atualizar(AnimalType tipo){
         verificaTipoAnimal(tipo);
         verificaId(tipo);
         return repo.save(tipo);
     }
 
     @Transactional
-    public void remover(TipoAnimal tipo){
+    public void remover(AnimalType tipo){
         verificaTipoAnimal(tipo);
         verificaId(tipo);
         repo.delete(tipo);
     }
 
     @Transactional
-    public TipoAnimal removerComFeedback(Long id){
+    public AnimalType removerComFeedback(Long id){
         verificaId(id);
-        Optional<TipoAnimal> tipoAnimalEncontrados = repo.findById(id);
+        Optional<AnimalType> tipoAnimalEncontrados = repo.findById(id);
         if (tipoAnimalEncontrados.isPresent()) {
-            TipoAnimal tipoAnimalFeedback = tipoAnimalEncontrados.get();
+            AnimalType tipoAnimalFeedback = tipoAnimalEncontrados.get();
             repo.delete(tipoAnimalFeedback);
             return tipoAnimalFeedback;
         }
@@ -76,24 +76,24 @@ public class TipoAnimalService {
     }
 
     @Transactional
-    public TipoAnimal buscarPorId(Long id){
+    public AnimalType buscarPorId(Long id){
         verificaId(id);
-        Optional<TipoAnimal> tipoAnimalEncontrados = repo.findById(id);
+        Optional<AnimalType> tipoAnimalEncontrados = repo.findById(id);
         return tipoAnimalEncontrados.orElse(null);
     }
 
     @Transactional
-    public List<TipoAnimal> buscar(TipoAnimal filtro){
+    public List<AnimalType> buscar(AnimalType filtro){
         if (filtro == null)
             throw new NullPointerException("Filtro não pode ser nulo");
-        Example<TipoAnimal> example = Example.of(filtro, ExampleMatcher.matching()
+        Example<AnimalType> example = Example.of(filtro, ExampleMatcher.matching()
                 .withIgnoreCase()
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
         return repo.findAll(example);
     }
 
     @Transactional
-    public List<TipoAnimal> buscarTodos(){
+    public List<AnimalType> buscarTodos(){
         return repo.findAll();
     }
 }

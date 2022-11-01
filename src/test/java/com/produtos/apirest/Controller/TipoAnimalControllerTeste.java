@@ -1,7 +1,7 @@
 package com.produtos.apirest.Controller;
 
-import com.produtos.apirest.models.DTO.TipoAnimalDTO;
-import com.produtos.apirest.models.TipoAnimal;
+import com.produtos.apirest.models.AnimalType;
+import com.produtos.apirest.models.DTO.AnimalTypeDTO;
 import com.produtos.apirest.service.TipoAnimalService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -32,24 +32,24 @@ public class TipoAnimalControllerTeste {
     @Autowired
     MockMvc mvc;
 
-    public static TipoAnimal generateTipoAnimalInstance(){
-        return TipoAnimal.builder()
+    public static AnimalType generateTipoAnimalInstance(){
+        return AnimalType.builder()
                 .animalTypeId(1L)
                 .name("name")
                 .build();
     }
 
-    public TipoAnimalDTO generateTipoAnimalDTOInstance(){
-        return TipoAnimalDTO.builder()
+    public AnimalTypeDTO generateTipoAnimalDTOInstance(){
+        return AnimalTypeDTO.builder()
                 .id(1L)
-                .nome("nome")
+                .name("nome")
                 .build();
     }
 
     @WithUserDetails("Admin")
     @Test
     public void deveSalvar() throws Exception{
-        Mockito.when(tipoAnimalService.salvar(Mockito.any(TipoAnimal.class))).thenReturn(generateTipoAnimalInstance());
+        Mockito.when(tipoAnimalService.salvar(Mockito.any(AnimalType.class))).thenReturn(generateTipoAnimalInstance());
         String json = toJson(generateTipoAnimalDTOInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.POST, API.concat("/salvar"), json);
         mvc.perform(request)
@@ -59,7 +59,7 @@ public class TipoAnimalControllerTeste {
     @WithUserDetails("Admin")
     @Test
     public void deveAtualizar() throws Exception{
-        Mockito.when(tipoAnimalService.atualizar(Mockito.any(TipoAnimal.class))).thenReturn(generateTipoAnimalInstance());
+        Mockito.when(tipoAnimalService.atualizar(Mockito.any(AnimalType.class))).thenReturn(generateTipoAnimalInstance());
         String json = toJson(generateTipoAnimalDTOInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.PUT, API.concat("/atualizar"), json);
         mvc.perform(request)

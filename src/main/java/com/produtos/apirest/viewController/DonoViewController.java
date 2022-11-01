@@ -1,6 +1,6 @@
 package com.produtos.apirest.viewController;
 
-import com.produtos.apirest.models.Dono;
+import com.produtos.apirest.models.Owner;
 import com.produtos.apirest.service.DonoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,15 +22,15 @@ public class DonoViewController {
     @GetMapping("/dono/donoCadastro")
     public ModelAndView dono_cadastro_page(){
         ModelAndView mv = new ModelAndView("/dono/donoCadastro");
-        mv.addObject("dono", new Dono());
+        mv.addObject("dono", new Owner());
         return mv;
     }
 
     @PreAuthorize("hasRole('S')")
     @PostMapping("/dono/donoCadastro")
-    public String donoCadastroControll(Dono dono){
+    public String donoCadastroControll(Owner dono){
 
-        if(Long.valueOf(dono.getDonoId()) == null){
+        if(Long.valueOf(dono.getOwnerId()) == null){
             donoService.salvar(dono);
         }else {
             donoService.atualizar(dono);
@@ -41,7 +41,7 @@ public class DonoViewController {
     @PreAuthorize("hasRole('S')")
     @GetMapping("/dono/donoList")
     public ModelAndView donoList(){
-        List<Dono> donos = donoService.buscarTodos();
+        List<Owner> donos = donoService.buscarTodos();
         ModelAndView mv = new ModelAndView("/dono/donoList");
         mv.addObject( "donos", donos);
         //System.out.println(mv);
@@ -51,7 +51,7 @@ public class DonoViewController {
     @PreAuthorize("hasRole('S')")
     @GetMapping("/dono/atualizar/{id}")
     public ModelAndView donoAtualizar(@PathVariable(value = "id", required = true) Long id){
-        Dono donoFind = donoService.buscarPorId(id);
+        Owner donoFind = donoService.buscarPorId(id);
         ModelAndView mv = new ModelAndView("/dono/donoCadastro");
         mv.addObject("dono", donoFind);
         return mv;
@@ -60,8 +60,8 @@ public class DonoViewController {
     @PreAuthorize("hasRole('S')")
     @GetMapping("/dono/remover/{id}")
     public String donoRemover(@PathVariable(value = "id", required = true) Long id){
-        Dono donoFind = donoService.buscarPorId(id);
-        donoService.removerPorId(donoFind.getDonoId());
+        Owner donoFind = donoService.buscarPorId(id);
+        donoService.removerPorId(donoFind.getOwnerId());
         return "redirect:/dono/donoList";
     }
 }

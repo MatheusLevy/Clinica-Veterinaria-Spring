@@ -1,8 +1,8 @@
 package com.produtos.apirest.models.DTO;
 
 import com.produtos.apirest.models.Animal;
-import com.produtos.apirest.models.Dono;
-import com.produtos.apirest.models.TipoAnimal;
+import com.produtos.apirest.models.AnimalType;
+import com.produtos.apirest.models.Owner;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,33 +16,31 @@ import java.util.List;
 @NoArgsConstructor
 public class AnimalDTO {
     private Long id;
-    private String nome;
-
-    private Long idDono;
-    private Dono dono;
-    private String nomeDono;
-    private List<Dono> donos;
-
-    private TipoAnimal tipo;
-    private Long idTipoAnimal;
-    private String nomeTipoAnimal;
-    private List<TipoAnimal> tipos;
+    private String name;
+    private Long ownerId;
+    private Owner owner;
+    private String ownerName;
+    private List<Owner> owners;
+    private AnimalType type;
+    private Long animalTypeId;
+    private String animalTypeName;
+    private List<AnimalType> types;
 
     public Animal toAnimal(){
         return Animal.builder()
                 .animalId(this.id)
-                .name(this.nome)
-                .owner(this.dono)
-                .animalType(this.tipo)
+                .name(this.name)
+                .owner(this.owner)
+                .animalType(this.type)
                 .build();
     }
 
-    public Animal toAnimal(Dono dono, TipoAnimal tipo){
+    public Animal toAnimal(Owner owner, AnimalType type){
         return Animal.builder()
                 .animalId(this.id)
-                .name(this.nome)
-                .owner(dono)
-                .animalType(tipo)
+                .name(this.name)
+                .owner(owner)
+                .animalType(type)
                 .build();
     }
 }

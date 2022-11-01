@@ -1,7 +1,7 @@
 package com.produtos.apirest.models.DTO;
 
 import com.produtos.apirest.models.Animal;
-import com.produtos.apirest.models.Dono;
+import com.produtos.apirest.models.Owner;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,21 +13,21 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class DonoDTO {
+public class OwnerDTO {
 
     private Long id;
-    private String nome;
-    private String telefone;
+    private String name;
+    private String phone;
     private String cpf;
-    private List<Animal> animais;
-    private List<Dono> donosList;
+    private List<Animal> animals;
+    private List<Owner> owners;
 
-    public Dono toDono(){
-        return Dono.builder()
-                .donoId(this.id)
-                .name(this.nome)
+    public Owner toOwner(){
+        return Owner.builder()
+                .ownerId(this.id)
+                .name(this.name)
                 .cpf(this.cpf)
-                .phone(this.telefone)
+                .phone(this.phone)
                 .build();
     }
 }

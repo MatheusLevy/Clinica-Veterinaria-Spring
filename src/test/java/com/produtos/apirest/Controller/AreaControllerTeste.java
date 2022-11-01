@@ -47,7 +47,7 @@ public class AreaControllerTeste {
     public static AreaDTO generateAreaDTOInstance(){
         return AreaDTO.builder()
                 .id(1L)
-                .nome("nome")
+                .name("nome")
                 .build();
     }
 

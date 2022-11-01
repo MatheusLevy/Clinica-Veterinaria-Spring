@@ -1,7 +1,7 @@
 package com.produtos.apirest.service;
 
 import com.produtos.apirest.models.Area;
-import com.produtos.apirest.models.Especialidade;
+import com.produtos.apirest.models.Expertise;
 import com.produtos.apirest.repository.AreaRepo;
 import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
 import org.hibernate.Hibernate;
@@ -100,7 +100,7 @@ public class AreaService {
     }
 
     @Transactional
-    public List<Especialidade> buscarTodasEspecialidades(Area area){
+    public List<Expertise> buscarTodasEspecialidades(Area area){
         verificaArea(area);
         verificaId(area);
         try {

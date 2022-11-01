@@ -1,10 +1,10 @@
 package com.produtos.apirest.service;
 
 import com.produtos.apirest.models.Animal;
-import com.produtos.apirest.models.Consulta;
-import com.produtos.apirest.models.TipoConsulta;
-import com.produtos.apirest.models.Veterinario;
-import com.produtos.apirest.repository.ConsultaRepo;
+import com.produtos.apirest.models.Appointment;
+import com.produtos.apirest.models.AppointmentType;
+import com.produtos.apirest.models.Veterinary;
+import com.produtos.apirest.repository.AppointmentRepo;
 import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +15,13 @@ import java.util.Optional;
 @Service
 public class ConsultaService {
 
-    private final ConsultaRepo repo;
+    private final AppointmentRepo repo;
 
-    public ConsultaService(ConsultaRepo consultaRepo){
+    public ConsultaService(AppointmentRepo consultaRepo){
         this.repo = consultaRepo;
     }
 
-    public static void verificaConsulta(Consulta consulta){
+    public static void verificaConsulta(Appointment consulta){
         if(consulta == null)
             throw new NullPointerException("A Consulta não pode ser Nula!");
         if(consulta.getAppointmentType() == null)
@@ -34,8 +34,8 @@ public class ConsultaService {
             throw new RegraNegocioRunTime("Consulta deve ter uma Data!");
     }
 
-    public static void verificaId(Consulta consulta){
-        if (consulta == null || consulta.getConsultaId() <= 0)
+    public static void verificaId(Appointment consulta){
+        if (consulta == null || consulta.getAppointmentId() <= 0)
             throw new RegraNegocioRunTime("Consulta deve ter um identificador!");
     }
 
@@ -45,20 +45,20 @@ public class ConsultaService {
     }
 
     @Transactional
-    public Consulta salvar(Consulta consulta){
+    public Appointment salvar(Appointment consulta){
         verificaConsulta(consulta);
         return repo.save(consulta);
     }
 
     @Transactional
-    public Consulta atualizar(Consulta consulta){
+    public Appointment atualizar(Appointment consulta){
         verificaConsulta(consulta);
         verificaId(consulta);
         return repo.save(consulta);
     }
 
     @Transactional
-    public Consulta atualizarVeterinario(Consulta destino, Veterinario veterinarioNovo){
+    public Appointment atualizarVeterinario(Appointment destino, Veterinary veterinarioNovo){
         VeterinarioService.verificaVeterinario(veterinarioNovo);
         VeterinarioService.verificaId(veterinarioNovo);
         verificaConsulta(destino);
@@ -68,7 +68,7 @@ public class ConsultaService {
     }
 
     @Transactional
-    public Consulta atualizarAnimal(Consulta destino, Animal animalNovo){
+    public Appointment atualizarAnimal(Appointment destino, Animal animalNovo){
         AnimalService.verificaAnimal(animalNovo);
         AnimalService.verificaId(animalNovo);
         verificaConsulta(destino);
@@ -78,7 +78,7 @@ public class ConsultaService {
     }
 
     @Transactional
-    public Consulta atualizarTipoConsulta(Consulta destino, TipoConsulta tipoConsultaNovo){
+    public Appointment atualizarTipoConsulta(Appointment destino, AppointmentType tipoConsultaNovo){
         TipoConsultaService.verificaTipoConsulta(tipoConsultaNovo);
         TipoConsultaService.verificaId(tipoConsultaNovo);
         verificaConsulta(destino);
@@ -88,7 +88,7 @@ public class ConsultaService {
     }
 
     @Transactional
-    public void remover(Consulta consulta){
+    public void remover(Appointment consulta){
         verificaConsulta(consulta);
         verificaId(consulta);
         repo.delete(consulta);
@@ -101,11 +101,11 @@ public class ConsultaService {
     }
 
     @Transactional
-    public Consulta removerComFeedback(Long id){
+    public Appointment removerComFeedback(Long id){
         verificaId(id);
-        Optional<Consulta> consultasEncontradas = repo.findById(id);
+        Optional<Appointment> consultasEncontradas = repo.findById(id);
         if (consultasEncontradas.isPresent()) {
-            Consulta consultaFeedback = consultasEncontradas.get();
+            Appointment consultaFeedback = consultasEncontradas.get();
             repo.delete(consultaFeedback);
             return consultaFeedback;
         }
@@ -113,14 +113,14 @@ public class ConsultaService {
     }
 
     @Transactional
-    public Consulta buscarPorId(Long id){
+    public Appointment buscarPorId(Long id){
         verificaId(id);
-        Optional<Consulta> consultasEncotradas = repo.findById(id);
+        Optional<Appointment> consultasEncotradas = repo.findById(id);
         return consultasEncotradas.orElse(null);
     }
 
     @Transactional
-    public List<Consulta> buscarTodos(){
+    public List<Appointment> buscarTodos(){
         return repo.findAll();
     }
 }

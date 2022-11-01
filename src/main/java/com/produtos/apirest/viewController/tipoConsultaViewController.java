@@ -1,6 +1,6 @@
 package com.produtos.apirest.viewController;
 
-import com.produtos.apirest.models.TipoConsulta;
+import com.produtos.apirest.models.AppointmentType;
 import com.produtos.apirest.service.TipoConsultaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,14 +22,14 @@ public class tipoConsultaViewController {
     @GetMapping("/tipoConsulta/cadastro")
     public ModelAndView tipoConsultaCadastro(){
         ModelAndView mv = new ModelAndView("tipoConsulta/tipoConsultaCadastro");
-        TipoConsulta tipoConsulta = TipoConsulta.builder().build();
+        AppointmentType tipoConsulta = AppointmentType.builder().build();
         mv.addObject("tipoConsulta", tipoConsulta);
         return mv;
     }
 
     @PreAuthorize("hasRole('A')")
     @PostMapping("/tipoConsulta/cadastro")
-    public String tipoConsultaCadastroControll(TipoConsulta tipo){
+    public String tipoConsultaCadastroControll(AppointmentType tipo){
 
         if(Long.valueOf(tipo.getAppointmentTypeId()) == null){
             tipoService.salvar(tipo);
@@ -43,7 +43,7 @@ public class tipoConsultaViewController {
     @GetMapping("/tipoConsulta/atualizar/{id}")
     public ModelAndView tipoConsultaAtualizar(@PathVariable(value = "id", required = true) Long id){
 
-        TipoConsulta tipoFind = tipoService.buscarPorId(id);
+        AppointmentType tipoFind = tipoService.buscarPorId(id);
         ModelAndView mv = new ModelAndView("/tipoConsulta/tipoConsultaCadastro");
         mv.addObject("tipoConsulta", tipoFind);
         return mv;
@@ -59,7 +59,7 @@ public class tipoConsultaViewController {
     @PreAuthorize("hasRole('A')")
     @GetMapping("/tipoConsulta/tipoConsultaList")
     public ModelAndView tipoConsultaList(){
-        List<TipoConsulta> tipos = tipoService.buscarTodos();
+        List<AppointmentType> tipos = tipoService.buscarTodos();
         ModelAndView mv = new ModelAndView("/tipoConsulta/tipoConsultaList");
         mv.addObject("tipos", tipos);
         return mv;

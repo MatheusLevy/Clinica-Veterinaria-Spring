@@ -1,8 +1,8 @@
 package com.produtos.apirest.service;
 
 import com.produtos.apirest.models.Animal;
-import com.produtos.apirest.models.Dono;
-import com.produtos.apirest.repository.DonoRepo;
+import com.produtos.apirest.models.Owner;
+import com.produtos.apirest.repository.OwnerRepo;
 import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
 import org.hibernate.Hibernate;
 import org.springframework.data.domain.Example;
@@ -16,13 +16,13 @@ import java.util.Optional;
 @Service
 public class DonoService {
 
-    private final DonoRepo repo;
+    private final OwnerRepo repo;
 
-    public DonoService(DonoRepo donoRepo){
-        this.repo = donoRepo;
+    public DonoService(OwnerRepo ownerRepo){
+        this.repo = ownerRepo;
     }
 
-    public static void verificaDono(Dono dono){
+    public static void verificaDono(Owner dono){
         if (dono == null)
             throw new NullPointerException("Dono não pode ser Nulo!");
         if (dono.getName().equals(""))
@@ -31,8 +31,8 @@ public class DonoService {
             throw new RegraNegocioRunTime("Dono deve ter um CPF!");
     }
 
-    public static void verificaId(Dono dono){
-        if (dono == null || dono.getDonoId() <= 0)
+    public static void verificaId(Owner dono){
+        if (dono == null || dono.getOwnerId() <= 0)
             throw new RegraNegocioRunTime("Dono deve ter um indentificador!");
     }
 
@@ -42,23 +42,23 @@ public class DonoService {
     }
 
     @Transactional
-    public Dono salvar(Dono Dono){
+    public Owner salvar(Owner Dono){
         verificaDono(Dono);
         return repo.save(Dono);
     }
 
     @Transactional
-    public Dono atualizar(Dono Dono){
+    public Owner atualizar(Owner Dono){
         verificaDono(Dono);
         verificaId(Dono);
         return repo.save(Dono);
     }
 
     @Transactional
-    public void remover(Dono Dono){
-        verificaDono(Dono);
-        verificaId(Dono);
-        repo.delete(Dono);
+    public void remover(Owner dono){
+        verificaDono(dono);
+        verificaId(dono);
+        repo.delete(dono);
     }
 
     @Transactional
@@ -68,11 +68,11 @@ public class DonoService {
     }
 
     @Transactional
-    public Dono removerComFeedback(Long id){
+    public Owner removerComFeedback(Long id){
         verificaId(id);
-        Optional<Dono> donosEncontrados = repo.findById(id);
+        Optional<Owner> donosEncontrados = repo.findById(id);
         if (donosEncontrados.isPresent()) {
-            Dono donoFeedback = donosEncontrados.get();
+            Owner donoFeedback = donosEncontrados.get();
             repo.delete(donoFeedback);
             return donoFeedback;
         }
@@ -80,35 +80,35 @@ public class DonoService {
     }
 
     @Transactional
-    public Dono buscarPorId(Long id){
+    public Owner buscarPorId(Long id){
         verificaId(id);
-        Optional<Dono> donosEncontrados = repo.findById(id);
+        Optional<Owner> donosEncontrados = repo.findById(id);
         return donosEncontrados.orElse(null);
     }
 
     @Transactional
-    public List<Dono> buscar(Dono filtro){
+    public List<Owner> buscar(Owner filtro){
         if (filtro == null)
             throw new NullPointerException("Filtro não pode ser nulo");
-        Example<Dono> example = Example.of(filtro, ExampleMatcher.matching()
+        Example<Owner> example = Example.of(filtro, ExampleMatcher.matching()
                 .withIgnoreCase()
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
         return repo.findAll(example);
     }
 
     @Transactional
-    public List<Dono> buscarTodos(){
+    public List<Owner> buscarTodos(){
         return repo.findAll();
     }
 
     @Transactional
     public List<Animal> buscarTodosAnimais(Long id){
         verificaId(id);
-        Optional<Dono> donosEncontrados = repo.findById(id);
+        Optional<Owner> donosEncontrados = repo.findById(id);
         if (donosEncontrados.isPresent()) {
-            Dono donoEncontrado = donosEncontrados.get();
-            Hibernate.initialize(donoEncontrado.getAnimais());
-            return donoEncontrado.getAnimais();
+            Owner donoEncontrado = donosEncontrados.get();
+            Hibernate.initialize(donoEncontrado.getAnimals());
+            return donoEncontrado.getAnimals();
         }
         return null;
     }

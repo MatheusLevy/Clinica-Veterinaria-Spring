@@ -1,7 +1,7 @@
 package com.produtos.apirest.Controller;
 
-import com.produtos.apirest.models.DTO.TipoConsultaDTO;
-import com.produtos.apirest.models.TipoConsulta;
+import com.produtos.apirest.models.AppointmentType;
+import com.produtos.apirest.models.DTO.AppointmentTypeDTO;
 import com.produtos.apirest.service.TipoConsultaService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -30,24 +30,24 @@ public class TipoConsultaControllerTeste {
     @Autowired
     MockMvc mvc;
 
-    public static TipoConsulta generateTipoConsultaInstance(){
-        return TipoConsulta.builder()
+    public static AppointmentType generateTipoConsultaInstance(){
+        return AppointmentType.builder()
                 .appointmentTypeId(1L)
                 .name("name")
                 .build();
     }
 
-    public static TipoConsultaDTO generateTipoConsultaDTOInstance(){
-        return TipoConsultaDTO.builder()
+    public static AppointmentTypeDTO generateTipoConsultaDTOInstance(){
+        return AppointmentTypeDTO.builder()
                 .id(1L)
-                .nome("nome")
+                .name("nome")
                 .build();
     }
 
     @WithUserDetails("Admin")
     @Test
     public void deveSalvar() throws Exception{
-        Mockito.when(tipoConsultaService.salvar(Mockito.any(TipoConsulta.class))).thenReturn(generateTipoConsultaInstance());
+        Mockito.when(tipoConsultaService.salvar(Mockito.any(AppointmentType.class))).thenReturn(generateTipoConsultaInstance());
         String json = toJson(generateTipoConsultaDTOInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.POST, API.concat("/salvar"), json);
         mvc.perform(request)
@@ -57,7 +57,7 @@ public class TipoConsultaControllerTeste {
     @WithUserDetails("Admin")
     @Test
     public void deveAtualizar() throws Exception{
-        Mockito.when(tipoConsultaService.atualizar(Mockito.any(TipoConsulta.class))).thenReturn(generateTipoConsultaInstance());
+        Mockito.when(tipoConsultaService.atualizar(Mockito.any(AppointmentType.class))).thenReturn(generateTipoConsultaInstance());
         String json = toJson(generateTipoConsultaDTOInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.PUT, API.concat("/atualizar"), json);
         mvc.perform(request)

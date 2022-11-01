@@ -1,7 +1,7 @@
 package com.produtos.apirest.viewController;
 
 import com.produtos.apirest.models.*;
-import com.produtos.apirest.models.DTO.ConsultaDTO;
+import com.produtos.apirest.models.DTO.AppointmentDTO;
 import com.produtos.apirest.service.AnimalService;
 import com.produtos.apirest.service.ConsultaService;
 import com.produtos.apirest.service.TipoConsultaService;
@@ -35,10 +35,10 @@ public class ConsultaViewController {
     @GetMapping("/consulta/cadastro")
     public ModelAndView consultaCadastro(){
         ModelAndView mv = new ModelAndView("consulta/consultaCadastro");
-        ConsultaDTO dto = ConsultaDTO.builder()
-                .tiposConsulta(tipo_consultaService.buscarTodos())
-                .veterinarios(veterinarioService.buscarTodos())
-                .animais(animalService.buscarTodos())
+        AppointmentDTO dto = AppointmentDTO.builder()
+                .appointmentTypes(tipo_consultaService.buscarTodos())
+                .vets(veterinarioService.buscarTodos())
+                .animals(animalService.buscarTodos())
                 .build();
         mv.addObject("consultadto", dto);
         return mv;
@@ -46,19 +46,19 @@ public class ConsultaViewController {
 
     @PreAuthorize("hasRole('S')")
     @PostMapping("/consulta/cadastro")
-    public String consultaCadastro(ConsultaDTO dto){
-        Consulta consulta = Consulta.builder()
-                .veterinary(dto.getVeterinario())
+    public String consultaCadastro(AppointmentDTO dto){
+        Appointment consulta = Appointment.builder()
+                .veterinary(dto.getVeterinary())
                 .animal(dto.getAnimal())
-                .appointmentType(dto.getTipo())
-                .description(dto.getDescricao())
-                .date(dto.getData())
+                .appointmentType(dto.getType())
+                .description(dto.getDescription())
+                .date(dto.getDate())
                 .build();
 
         if(dto.getId() == null){
             consultaService.salvar(consulta);
         }else{
-            consulta.setConsultaId(dto.getId());
+            consulta.setAppointmentId(dto.getId());
             consultaService.atualizar(consulta);
         }
         return "redirect:/consulta/consultaList";
@@ -67,7 +67,7 @@ public class ConsultaViewController {
     @PreAuthorize("hasRole('S')")
     @GetMapping("/consulta/consultaList")
     public ModelAndView consultaList(){
-        List<Consulta> consultas = consultaService.buscarTodos();
+        List<Appointment> consultas = consultaService.buscarTodos();
         ModelAndView mv = new ModelAndView("/consulta/consultaList");
         mv.addObject("consultas", consultas);
         //System.out.println(mv);
@@ -77,28 +77,28 @@ public class ConsultaViewController {
     @PreAuthorize("hasRole('S')")
     @GetMapping("/consulta/atualizar/{id}")
     public ModelAndView consultaAtualizar(@PathVariable(value = "id") Long id){
-        Consulta consulta = Consulta.builder().consultaId(id).build();
-        Consulta consultaFind = consultaService.buscarPorId(consulta.getConsultaId());
+        Appointment consulta = Appointment.builder().appointmentId(id).build();
+        Appointment consultaFind = consultaService.buscarPorId(consulta.getAppointmentId());
 
         //Lista Veterinarios
-        List<Veterinario> veterinarios = veterinarioService.buscarTodos();
+        List<Veterinary> veterinarios = veterinarioService.buscarTodos();
 
         //Lista Animais
         List<Animal> animais = animalService.buscarTodos();
 
         //Lista Tipo Consulta
-        List<TipoConsulta> tipos = tipo_consultaService.buscarTodos();
+        List<AppointmentType> tipos = tipo_consultaService.buscarTodos();
 
-        ConsultaDTO dto = ConsultaDTO.builder()
-                .id(consultaFind.getConsultaId())
-                .tipo(consultaFind.getAppointmentType())
+        AppointmentDTO dto = AppointmentDTO.builder()
+                .id(consultaFind.getAppointmentId())
+                .type(consultaFind.getAppointmentType())
                 .animal(consultaFind.getAnimal())
-                .descricao(consultaFind.getDescription())
-                .data(consultaFind.getDate())
-                .veterinario(consultaFind.getVeterinary())
-                .animais(animais)
-                .tiposConsulta(tipos)
-                .veterinarios(veterinarios)
+                .description(consultaFind.getDescription())
+                .date(consultaFind.getDate())
+                .veterinary(consultaFind.getVeterinary())
+                .animals(animais)
+                .appointmentTypes(tipos)
+                .vets(veterinarios)
                 .build();
 
         ModelAndView mv = new ModelAndView("/consulta/consultaCadastro");
@@ -109,8 +109,8 @@ public class ConsultaViewController {
     @PreAuthorize("hasRole('S')")
     @GetMapping("/consulta/remover/{id}")
     public String consultaRemover(@PathVariable(value = "id", required = true) Long id){
-        Consulta consulta = Consulta.builder().consultaId(id).build();
-        Consulta consultaFind = consultaService.buscarPorId(consulta.getConsultaId());
+        Appointment consulta = Appointment.builder().appointmentId(id).build();
+        Appointment consultaFind = consultaService.buscarPorId(consulta.getAppointmentId());
         consultaService.remover(consultaFind);
         return "redirect:/consulta/consultaList";
     }

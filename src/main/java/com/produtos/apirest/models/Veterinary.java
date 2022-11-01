@@ -1,14 +1,23 @@
 package com.produtos.apirest.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.produtos.apirest.models.DTO.VeterinarioDTO;
+import com.produtos.apirest.models.DTO.VeterinaryDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.List;
 
 @Entity
@@ -17,7 +26,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Veterinario {
+public class Veterinary {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
@@ -37,11 +46,11 @@ public class Veterinario {
 
     @ManyToOne
     @JoinColumn(name = "expertise_id", nullable = false)
-    private Especialidade expertise;
+    private Expertise expertise;
 
     @OneToMany(mappedBy = "veterinary", fetch = FetchType.EAGER)
     @JsonIgnore
-    private List<Consulta> appointments;
+    private List<Appointment> appointments;
 
     @Override
     public String toString(){
@@ -49,13 +58,13 @@ public class Veterinario {
         + ", phone= " + phone + ", cpf= " + cpf + "expertise= " + expertise + " ]";
     }
 
-    public VeterinarioDTO toVeterinarioDTO(){
-        return VeterinarioDTO.builder()
+    public VeterinaryDTO toVeterinaryDTO(){
+        return VeterinaryDTO.builder()
                 .id(this.veterinaryId)
-                .nome(this.name)
-                .telefone(this.phone)
-                .especialidadeId(this.expertise.getExpertiseId())
-                .especialidadeNome(this.expertise.getName())
+                .name(this.name)
+                .phone(this.phone)
+                .expertiseId(this.expertise.getExpertiseId())
+                .expertiseName(this.expertise.getName())
                 .build();
     }
 }

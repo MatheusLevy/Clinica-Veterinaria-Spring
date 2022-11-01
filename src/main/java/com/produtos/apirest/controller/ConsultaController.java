@@ -1,17 +1,25 @@
 package com.produtos.apirest.controller;
 
 import com.produtos.apirest.models.Animal;
-import com.produtos.apirest.models.Consulta;
-import com.produtos.apirest.models.DTO.ConsultaDTO;
-import com.produtos.apirest.models.TipoConsulta;
-import com.produtos.apirest.models.Veterinario;
+import com.produtos.apirest.models.Appointment;
+import com.produtos.apirest.models.AppointmentType;
+import com.produtos.apirest.models.DTO.AppointmentDTO;
+import com.produtos.apirest.models.Veterinary;
 import com.produtos.apirest.service.AnimalService;
 import com.produtos.apirest.service.ConsultaService;
 import com.produtos.apirest.service.TipoConsultaService;
 import com.produtos.apirest.service.VeterinarioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,14 +41,14 @@ public class ConsultaController {
     }
 
     @PostMapping("/salvar")
-    public ResponseEntity<?> salvar(@RequestBody ConsultaDTO consultadto){
+    public ResponseEntity<?> salvar(@RequestBody AppointmentDTO consultadto){
         try {
-            TipoConsulta tipoConsultaEncontrada = tipoConsultaService.buscarPorId(consultadto.getTipoConsultaId());
-            Veterinario veterinarioEncontrado = veterinarioService.buscarPorId(consultadto.getVeterinarioId());
+            AppointmentType tipoConsultaEncontrada = tipoConsultaService.buscarPorId(consultadto.getAppointmentTypeId());
+            Veterinary veterinarioEncontrado = veterinarioService.buscarPorId(consultadto.getVetId());
             Animal AnimalEncontrado = animalService.buscarPorId(consultadto.getAnimalId());
-            Consulta consulta = consultadto.toConsulta(AnimalEncontrado, veterinarioEncontrado, tipoConsultaEncontrada);
-            Consulta consultaSalva = consultaService.salvar(consulta);
-            ConsultaDTO dtoRetorno = consultaSalva.toConsultaDTO();
+            Appointment consulta = consultadto.toAppointment(AnimalEncontrado, veterinarioEncontrado, tipoConsultaEncontrada);
+            Appointment consultaSalva = consultaService.salvar(consulta);
+            AppointmentDTO dtoRetorno = consultaSalva.toAppointmentDTO();
             return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -48,14 +56,14 @@ public class ConsultaController {
     }
 
     @PutMapping("/atualizar")
-    public ResponseEntity<?> atualizar(@RequestBody ConsultaDTO consultadto){
+    public ResponseEntity<?> atualizar(@RequestBody AppointmentDTO consultadto){
         try {
-            TipoConsulta tipoConsultaEncontrada = tipoConsultaService.buscarPorId(consultadto.getTipoConsultaId());
-            Veterinario veterinarioEncontrado = veterinarioService.buscarPorId(consultadto.getVeterinarioId());
+            AppointmentType tipoConsultaEncontrada = tipoConsultaService.buscarPorId(consultadto.getAppointmentTypeId());
+            Veterinary veterinarioEncontrado = veterinarioService.buscarPorId(consultadto.getVetId());
             Animal AnimalEncontrado = animalService.buscarPorId(consultadto.getAnimalId());
-            Consulta consulta = consultadto.toConsulta(AnimalEncontrado, veterinarioEncontrado, tipoConsultaEncontrada);
-            Consulta consultaAtualizada = consultaService.atualizar(consulta);
-            ConsultaDTO dtoRetorno = consultaAtualizada.toConsultaDTO();
+            Appointment consulta = consultadto.toAppointment(AnimalEncontrado, veterinarioEncontrado, tipoConsultaEncontrada);
+            Appointment consultaAtualizada = consultaService.atualizar(consulta);
+            AppointmentDTO dtoRetorno = consultaAtualizada.toAppointmentDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -65,10 +73,10 @@ public class ConsultaController {
     @GetMapping("/buscarTodos")
     public ResponseEntity<?> buscarTodos(){
         try{
-            List<Consulta> consultas = consultaService.buscarTodos();
-            List<ConsultaDTO> dtos = consultas
+            List<Appointment> consultas = consultaService.buscarTodos();
+            List<AppointmentDTO> dtos = consultas
                     .stream()
-                    .map(Consulta::toConsultaDTO)
+                    .map(Appointment::toAppointmentDTO)
                     .collect(Collectors.toList());
             return ResponseEntity.ok(dtos);
         }catch (Exception e){
@@ -90,8 +98,8 @@ public class ConsultaController {
     @DeleteMapping("/remover/feedback/{id}")
     public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
         try{
-            Consulta consultaRemovida = consultaService.removerComFeedback(id);
-            ConsultaDTO dtoRetorno = consultaRemovida.toConsultaDTO();
+            Appointment consultaRemovida = consultaService.removerComFeedback(id);
+            AppointmentDTO dtoRetorno = consultaRemovida.toAppointmentDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());

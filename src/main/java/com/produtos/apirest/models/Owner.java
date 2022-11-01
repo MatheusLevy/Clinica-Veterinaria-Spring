@@ -1,14 +1,21 @@
 package com.produtos.apirest.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.produtos.apirest.models.DTO.DonoDTO;
+import com.produtos.apirest.models.DTO.OwnerDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.List;
 
 @Entity
@@ -17,14 +24,14 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Dono {
+public class Owner {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private long donoId;
+    private long ownerId;
 
-    @Column(name = "nome")
+    @Column(name = "name")
     @NotNull
     private String name;
 
@@ -38,18 +45,18 @@ public class Dono {
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<Animal> animais;
+    private List<Animal> animals;
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "[OwnerId=" + donoId + ", name=" + name +", phone=" + phone + ", cpf= " + cpf + " ]";
+        return getClass().getSimpleName() + "[OwnerId=" + ownerId + ", name=" + name +", phone=" + phone + ", cpf= " + cpf + " ]";
     }
 
-    public DonoDTO toDonoDTO(){
-       return DonoDTO.builder()
-                .id(this.donoId)
-                .telefone(this.phone)
-                .nome(this.name)
+    public OwnerDTO toOwnerDTO(){
+       return OwnerDTO.builder()
+                .id(this.ownerId)
+                .phone(this.phone)
+                .name(this.name)
                 .build();
     }
 }

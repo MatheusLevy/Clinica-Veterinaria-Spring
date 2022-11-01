@@ -1,9 +1,9 @@
 package com.produtos.apirest.viewController;
 
 import com.produtos.apirest.models.Animal;
+import com.produtos.apirest.models.AnimalType;
 import com.produtos.apirest.models.DTO.AnimalDTO;
-import com.produtos.apirest.models.Dono;
-import com.produtos.apirest.models.TipoAnimal;
+import com.produtos.apirest.models.Owner;
 import com.produtos.apirest.service.AnimalService;
 import com.produtos.apirest.service.DonoService;
 import com.produtos.apirest.service.TipoAnimalService;
@@ -34,8 +34,8 @@ public class AnimalViewController {
     public ModelAndView animalCadastroControl(){
         ModelAndView mv = new ModelAndView("/animal/animalCadastro");
         AnimalDTO dto = new AnimalDTO();
-        dto.setDonos(donoService.buscarTodos());
-        dto.setTipos(tipoAnimalService.buscarTodos());
+        dto.setOwners(donoService.buscarTodos());
+        dto.setTypes(tipoAnimalService.buscarTodos());
         mv.addObject("animaldto", dto);
         return mv;
     }
@@ -44,9 +44,9 @@ public class AnimalViewController {
     @PostMapping("/animal/cadastro")
     public String animalCadastro(AnimalDTO dto){
         Animal animal = Animal.builder()
-                .name(dto.getNome())
-                .owner(dto.getDono())
-                .animalType(dto.getTipo()).build();
+                .name(dto.getName())
+                .owner(dto.getOwner())
+                .animalType(dto.getType()).build();
         if(dto.getId() == null){
             animalService.salvar(animal);
         }else{
@@ -72,18 +72,18 @@ public class AnimalViewController {
         Animal animalFind = animalService.buscarPorId(id);
 
         //Tipo Animal List
-        List<TipoAnimal> tipoAnimal = tipoAnimalService.buscarTodos();
+        List<AnimalType> tipoAnimal = tipoAnimalService.buscarTodos();
 
         //Dono List
-        List<Dono> donos = donoService.buscarTodos();
+        List<Owner> donos = donoService.buscarTodos();
 
         //AnimalDTO
         AnimalDTO dto = AnimalDTO.builder().id(animalFind.getAnimalId()).
-                nome(animalFind.getName())
-                .tipo(animalFind.getAnimalType())
-                .tipos(tipoAnimal)
-                .dono(animalFind.getOwner())
-                .donos(donos)
+                name(animalFind.getName())
+                .type(animalFind.getAnimalType())
+                .types(tipoAnimal)
+                .owner(animalFind.getOwner())
+                .owners(donos)
                 .build();
 
         ModelAndView mv = new ModelAndView("/animal/animalCadastro");

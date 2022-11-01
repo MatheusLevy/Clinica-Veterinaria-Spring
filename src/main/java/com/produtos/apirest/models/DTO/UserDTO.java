@@ -1,7 +1,7 @@
 package com.produtos.apirest.models.DTO;
 
 import com.produtos.apirest.models.Role;
-import com.produtos.apirest.models.Usuario;
+import com.produtos.apirest.models.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,18 +13,18 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UsuarioDTO {
+public class UserDTO {
 
     private Long id;
     private String username;
-    private String senha;
+    private String password;
     private List<Role> roles;
 
-    public Usuario toUsuario(){
-        return Usuario.builder()
+    public User toUser(){
+        return User.builder()
                 .userId(this.id)
                 .username(this.username)
-                .password(this.senha)
+                .password(this.password)
                 .roles(this.roles)
                 .build();
     }

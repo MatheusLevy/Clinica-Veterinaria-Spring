@@ -1,8 +1,8 @@
 package com.produtos.apirest.Controller;
 
 import com.produtos.apirest.models.Area;
-import com.produtos.apirest.models.DTO.EspecialidadeDTO;
-import com.produtos.apirest.models.Especialidade;
+import com.produtos.apirest.models.DTO.ExpertiseDTO;
+import com.produtos.apirest.models.Expertise;
 import com.produtos.apirest.service.AreaService;
 import com.produtos.apirest.service.EspecialidadeService;
 import org.junit.jupiter.api.Test;
@@ -41,24 +41,24 @@ public class EspecialidadeControllerTeste {
     @Autowired
     MockMvc mvc;
 
-    public static EspecialidadeDTO generateEspecialidadeDTOInstance(){
-        return EspecialidadeDTO.builder()
+    public static ExpertiseDTO generateEspecialidadeDTOInstance(){
+        return ExpertiseDTO.builder()
                 .id(1L)
-                .idArea(1L)
-                .nome("nome")
+                .areaId(1L)
+                .name("nome")
                 .area(generateAreaInstance())
                 .build();
     }
 
-    public static Especialidade generateEspecialidadeInstance(){
-        return Especialidade.builder()
+    public static Expertise generateEspecialidadeInstance(){
+        return Expertise.builder()
                 .expertiseId(1L)
                 .name("nome")
                 .area(generateAreaInstance())
                 .build();
     }
 
-    public static List<Especialidade> generateEspecialidadeListInstance(){
+    public static List<Expertise> generateEspecialidadeListInstance(){
         return new ArrayList<>(){{
             add(generateEspecialidadeInstance());
         }};
@@ -67,7 +67,7 @@ public class EspecialidadeControllerTeste {
     @WithUserDetails("Admin")
     @Test
     public void deveSalvar() throws Exception{
-        Mockito.when(especialidadeService.salvar(Mockito.any(Especialidade.class))).thenReturn(generateEspecialidadeInstance());
+        Mockito.when(especialidadeService.salvar(Mockito.any(Expertise.class))).thenReturn(generateEspecialidadeInstance());
         Mockito.when(areaService.salvar(Mockito.any(Area.class))).thenReturn(generateAreaInstance());
         String json = toJson(generateEspecialidadeDTOInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.POST, API.concat("/salvar"), json);
@@ -78,7 +78,7 @@ public class EspecialidadeControllerTeste {
     @WithUserDetails("Admin")
     @Test
     public void deveAtualizar() throws Exception{
-        Mockito.when(especialidadeService.atualizar(Mockito.any(Especialidade.class))).thenReturn(generateEspecialidadeInstance());
+        Mockito.when(especialidadeService.atualizar(Mockito.any(Expertise.class))).thenReturn(generateEspecialidadeInstance());
         String json = toJson(generateEspecialidadeDTOInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.PUT, API.concat("/atualizar"), json);
         mvc.perform(request)
@@ -90,7 +90,7 @@ public class EspecialidadeControllerTeste {
     public void deveRemover() throws Exception{
         Long id = 1L;
         Mockito.when(especialidadeService.buscarPorId(Mockito.anyLong())).thenReturn(generateEspecialidadeInstance());
-        Mockito.doNothing().when(especialidadeService).remover(Mockito.any(Especialidade.class));
+        Mockito.doNothing().when(especialidadeService).remover(Mockito.any(Expertise.class));
         MockHttpServletRequestBuilder request = request(HttpMethod.DELETE, API.concat("/remover/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -109,7 +109,7 @@ public class EspecialidadeControllerTeste {
     @WithUserDetails("Admin")
     @Test
     public void deveBuscarPorFiltro() throws Exception{
-        Mockito.when(especialidadeService.buscar(Mockito.any(Especialidade.class))).thenReturn(generateEspecialidadeListInstance());
+        Mockito.when(especialidadeService.buscar(Mockito.any(Expertise.class))).thenReturn(generateEspecialidadeListInstance());
         String json = toJson(generateEspecialidadeDTOInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.GET, API.concat("/buscar/filtro"), json);
         mvc.perform(request)

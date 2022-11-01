@@ -1,9 +1,9 @@
 package com.produtos.apirest.service;
 
 import com.produtos.apirest.models.Animal;
-import com.produtos.apirest.models.Dono;
+import com.produtos.apirest.models.Owner;
 import com.produtos.apirest.repository.AnimalRepo;
-import com.produtos.apirest.repository.DonoRepo;
+import com.produtos.apirest.repository.OwnerRepo;
 import com.produtos.apirest.service.excecoes.*;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -17,11 +17,11 @@ import java.util.Optional;
 public class AnimalService {
 
     private final AnimalRepo repo;
-    private final DonoRepo donoRepo;
+    private final OwnerRepo ownerRepo;
 
-    public AnimalService(AnimalRepo animalRepo, DonoRepo donoRepo){
+    public AnimalService(AnimalRepo animalRepo, OwnerRepo ownerRepo){
         this.repo = animalRepo;
-        this.donoRepo = donoRepo;
+        this.ownerRepo = ownerRepo;
     }
 
     public static void verificaAnimal(Animal animal){
@@ -55,7 +55,7 @@ public class AnimalService {
     }
 
     @Transactional
-    public Animal atualizarDono(Animal destino, Dono donoNovo){
+    public Animal atualizarDono(Animal destino, Owner donoNovo){
         DonoService.verificaDono(donoNovo);
         DonoService.verificaId(donoNovo);
         verificaAnimal(destino);
@@ -112,7 +112,7 @@ public class AnimalService {
     }
 
     @Transactional
-    public Dono buscarDonoPorId(Long id){
+    public Owner buscarDonoPorId(Long id){
         verificaId(id);
         Optional<Animal> animaisEncontrados = repo.findById(id);
         return animaisEncontrados.map(Animal::getOwner).orElse(null);

@@ -1,11 +1,18 @@
 package com.produtos.apirest.controller;
 
-import com.produtos.apirest.models.DTO.TipoConsultaDTO;
-import com.produtos.apirest.models.TipoConsulta;
+import com.produtos.apirest.models.AppointmentType;
+import com.produtos.apirest.models.DTO.AppointmentTypeDTO;
 import com.produtos.apirest.service.TipoConsultaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/tipoConsulta")
@@ -18,11 +25,11 @@ public class TipoConsultaController {
     }
 
     @PostMapping("/salvar")
-    public ResponseEntity<?> salvar(@RequestBody TipoConsultaDTO dto){
+    public ResponseEntity<?> salvar(@RequestBody AppointmentTypeDTO dto){
         try{
-            TipoConsulta tipoConsulta = dto.toTipoConsulta();
-            TipoConsulta tipoSalvo = tipoService.salvar(tipoConsulta);
-            TipoConsultaDTO dtoRetorno = tipoSalvo.toTipoConsultaDTO();
+            AppointmentType tipoConsulta = dto.toAppointment();
+            AppointmentType tipoSalvo = tipoService.salvar(tipoConsulta);
+            AppointmentTypeDTO dtoRetorno = tipoSalvo.toAppointmentTypeDTO();
             return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -42,8 +49,8 @@ public class TipoConsultaController {
     @DeleteMapping("/remover/feedback/{id}")
     public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
         try{
-            TipoConsulta tipoRemovido = tipoService.removerComFeedback(id);
-            TipoConsultaDTO dtoRetorno = tipoRemovido.toTipoConsultaDTO();
+            AppointmentType tipoRemovido = tipoService.removerComFeedback(id);
+            AppointmentTypeDTO dtoRetorno = tipoRemovido.toAppointmentTypeDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -53,8 +60,8 @@ public class TipoConsultaController {
     @GetMapping("/buscar/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable(value = "id") Long id){
         try{
-            TipoConsulta tipoBuscado = tipoService.buscarPorId(id);
-            TipoConsultaDTO dtoRetorno = tipoBuscado.toTipoConsultaDTO();
+            AppointmentType tipoBuscado = tipoService.buscarPorId(id);
+            AppointmentTypeDTO dtoRetorno = tipoBuscado.toAppointmentTypeDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -62,11 +69,11 @@ public class TipoConsultaController {
     }
 
     @PutMapping("/atualizar")
-    public ResponseEntity<?> atualizar(@RequestBody TipoConsultaDTO dto){
+    public ResponseEntity<?> atualizar(@RequestBody AppointmentTypeDTO dto){
         try{
-            TipoConsulta tipoConsulta = dto.toTipoConsulta();
-            TipoConsulta tipoConsultaAtualizado = tipoService.atualizar(tipoConsulta);
-            TipoConsultaDTO dtoRetorno = tipoConsultaAtualizado.toTipoConsultaDTO();
+            AppointmentType tipoConsulta = dto.toAppointment();
+            AppointmentType tipoConsultaAtualizado = tipoService.atualizar(tipoConsulta);
+            AppointmentTypeDTO dtoRetorno = tipoConsultaAtualizado.toAppointmentTypeDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());

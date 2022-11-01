@@ -1,10 +1,9 @@
 package com.produtos.apirest.repository;
 
-import com.produtos.apirest.models.Usuario;
+import com.produtos.apirest.models.AppointmentType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UsuarioRepo extends JpaRepository<Usuario, Long> {
-    Usuario findByUsername(String username);
+public interface AppointmentTypeRepo extends JpaRepository<AppointmentType, Long> {
 }

@@ -1,6 +1,6 @@
 package com.produtos.apirest.viewController;
 
-import com.produtos.apirest.models.Usuario;
+import com.produtos.apirest.models.User;
 import com.produtos.apirest.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,7 +23,7 @@ public class UsuarioViewController {
     @GetMapping("/usuario/cadastro")
     public ModelAndView usuarioCadastro(){
         ModelAndView mv = new ModelAndView("usuarios/usuarioCadastro");
-        Usuario usuario = Usuario.builder().build();
+        User usuario = User.builder().build();
         mv.addObject("usuario", usuario);
         return mv;
     }
@@ -32,7 +32,7 @@ public class UsuarioViewController {
     //TODO: ### ** Verificar Criptografica da senha **
     @PreAuthorize("hasRole('A')")
     @PostMapping("/usuario/cadastro")
-    public String usuarioCadastroControll(Usuario usuario){
+    public String usuarioCadastroControll(User usuario){
 
         if(usuario.getUserId() == null){
             usarioService.salvar(usuario);
@@ -45,7 +45,7 @@ public class UsuarioViewController {
     @PreAuthorize("hasRole('A')")
     @GetMapping("/usuario/atualizar/{id}")
     public ModelAndView usuarioAtualizar(@PathVariable(value = "id", required = true) Long id){
-        Usuario usuarioFind = usarioService.buscarPorId(id);
+        User usuarioFind = usarioService.buscarPorId(id);
         ModelAndView mv = new ModelAndView("/usuarios/usuarioCadastro");
         mv.addObject("usuario", usuarioFind);
         return mv;
@@ -54,7 +54,7 @@ public class UsuarioViewController {
     @PreAuthorize("hasRole('A')")
     @GetMapping("/usuario/remover/{id}")
     public String usuarioRemover(@PathVariable(value = "id", required = true) Long id){
-        Usuario usuarioFind = usarioService.buscarPorId(id);
+        User usuarioFind = usarioService.buscarPorId(id);
         usarioService.remover(usuarioFind);
         return "redirect:/usuario/usuarioList";
     }
@@ -62,7 +62,7 @@ public class UsuarioViewController {
     @PreAuthorize("hasRole('A')")
     @GetMapping("/usuario/usuarioList")
     public ModelAndView usuarioList(){
-        List<Usuario> usuarios = usarioService.buscarTodos();
+        List<User> usuarios = usarioService.buscarTodos();
         ModelAndView mv = new ModelAndView("/usuarios/usuarioList");
         mv.addObject("usuarios", usuarios);
         return mv;

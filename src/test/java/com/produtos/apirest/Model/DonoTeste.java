@@ -1,39 +1,40 @@
 package com.produtos.apirest.Model;
 
-import com.produtos.apirest.models.Dono;
-import com.produtos.apirest.repository.DonoRepo;
+import com.produtos.apirest.models.Owner;
+import com.produtos.apirest.repository.OwnerRepo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static com.produtos.apirest.Util.Util.*;
+import static com.produtos.apirest.Util.Util.generateCPF;
+import static com.produtos.apirest.Util.Util.generateTelefone;
 
 @SpringBootTest
 public class DonoTeste {
 
     @Autowired
-    public DonoRepo donoRepo;
+    public OwnerRepo ownerRepo;
 
-    protected static  Dono generateDono(){
-        return Dono.builder()
+    protected static Owner generateDono(){
+        return Owner.builder()
                 .name("name")
                 .cpf(generateCPF())
                 .phone(generateTelefone())
                 .build();
     }
 
-    private void rollback(Dono dono){
-        donoRepo.delete(dono);
+    private void rollback(Owner dono){
+        ownerRepo.delete(dono);
     }
 
-    protected static void rollbackDono(Dono dono, DonoRepo donoRepo){
-        donoRepo.delete(dono);
+    protected static void rollbackDono(Owner dono, OwnerRepo ownerRepo){
+        ownerRepo.delete(dono);
     }
 
     @Test
     public void deveSalvar(){
-        Dono donoSalvo = donoRepo.save(generateDono());
+        Owner donoSalvo = ownerRepo.save(generateDono());
         Assertions.assertNotNull(donoSalvo);
         Assertions.assertEquals(generateDono().getName(), donoSalvo.getName());
         rollback(donoSalvo);
@@ -41,27 +42,27 @@ public class DonoTeste {
 
     @Test
     public void deveAtualizar(){
-        Dono donoSalvo = donoRepo.save(generateDono());
+        Owner donoSalvo = ownerRepo.save(generateDono());
         donoSalvo.setName("Novo nome");
-        Dono donoAtualizado = donoRepo.save(donoSalvo);
+        Owner donoAtualizado = ownerRepo.save(donoSalvo);
         Assertions.assertNotNull(donoAtualizado);
-        Assertions.assertEquals(donoAtualizado.getDonoId(), donoSalvo.getDonoId());
+        Assertions.assertEquals(donoAtualizado.getOwnerId(), donoSalvo.getOwnerId());
         rollback(donoAtualizado);
     }
 
     @Test
     public void deveRemover(){
-        Dono donoSalvo = donoRepo.save(generateDono());
-        Long id = donoSalvo.getDonoId();
-        donoRepo.deleteById(id);
-        Assertions.assertFalse(donoRepo.findById(id).isPresent());
+        Owner donoSalvo = ownerRepo.save(generateDono());
+        Long id = donoSalvo.getOwnerId();
+        ownerRepo.deleteById(id);
+        Assertions.assertFalse(ownerRepo.findById(id).isPresent());
     }
 
     @Test
     public void deveBuscar(){
-        Dono donoSalvo = donoRepo.save(generateDono());
-        Long id = donoSalvo.getDonoId();
-        Assertions.assertTrue(donoRepo.findById(id).isPresent());
+        Owner donoSalvo = ownerRepo.save(generateDono());
+        Long id = donoSalvo.getOwnerId();
+        Assertions.assertTrue(ownerRepo.findById(id).isPresent());
         rollback(donoSalvo);
     }
 }

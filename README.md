@@ -1,6 +1,6 @@
 <h1 align="center">
     <p>P for Pet</p>
-    <img src="https://pixabay.com/get/ga39211e441c4ae7872f51730943824f6daa185c62f2e0103958cc15137682bac70311481054abf2f035a92262dd914998e8c6a7c2989c96613e796a102ce1b57cff2d5a983ba9aecf8113cdbc5f76f0a_1280.jpg" alt="P for Pet">
+    <img src="./Doc/logo.jpg" alt="P for Pet">
 </h1>
 
 <p align="center">

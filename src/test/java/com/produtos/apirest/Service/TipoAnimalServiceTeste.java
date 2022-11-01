@@ -1,7 +1,7 @@
 package com.produtos.apirest.Service;
 
-import com.produtos.apirest.models.TipoAnimal;
-import com.produtos.apirest.repository.TipoAnimalRepo;
+import com.produtos.apirest.models.AnimalType;
+import com.produtos.apirest.repository.AnimalTypeRepo;
 import com.produtos.apirest.service.TipoAnimalService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -17,34 +17,34 @@ public class TipoAnimalServiceTeste {
     public TipoAnimalService tipoAnimalService;
 
     @Autowired
-    public TipoAnimalRepo tipoAnimalRepo;
+    public AnimalTypeRepo animalTypeRepo;
 
-    protected static TipoAnimal generateTipoAnimal(){
-        return TipoAnimal.builder()
+    protected static AnimalType generateTipoAnimal(){
+        return AnimalType.builder()
                 .name("test")
                 .build();
     }
 
-    private void rollback(TipoAnimal tipoAnimal){
-        tipoAnimalRepo.delete(tipoAnimal);
+    private void rollback(AnimalType tipoAnimal){
+        animalTypeRepo.delete(tipoAnimal);
     }
 
-    protected void rollbackTipoAnimal(TipoAnimal tipoAnimal, TipoAnimalRepo tipoAnimalRepo){
-        tipoAnimalRepo.delete(tipoAnimal);
+    protected void rollbackTipoAnimal(AnimalType tipoAnimal, AnimalTypeRepo animalTypeRepo){
+        animalTypeRepo.delete(tipoAnimal);
     }
 
     @Test
     public void deveSalvar(){
-        TipoAnimal tipoAnimalSalvo = tipoAnimalService.salvar(generateTipoAnimal());
+        AnimalType tipoAnimalSalvo = tipoAnimalService.salvar(generateTipoAnimal());
         Assertions.assertNotNull(tipoAnimalSalvo);
         rollback(tipoAnimalSalvo);
     }
 
     @Test
     public void deveAtualizar(){
-        TipoAnimal tipoAnimalSalvo = tipoAnimalRepo.save(generateTipoAnimal());
+        AnimalType tipoAnimalSalvo = animalTypeRepo.save(generateTipoAnimal());
         tipoAnimalSalvo.setName("Tipo Animal Atualizado");
-        TipoAnimal tipoAnimalAtualizado = tipoAnimalService.atualizar(tipoAnimalSalvo);
+        AnimalType tipoAnimalAtualizado = tipoAnimalService.atualizar(tipoAnimalSalvo);
         Assertions.assertNotNull(tipoAnimalAtualizado);
         Assertions.assertEquals(tipoAnimalSalvo.getAnimalTypeId(), tipoAnimalAtualizado.getAnimalTypeId());
         rollback(tipoAnimalAtualizado);
@@ -52,31 +52,31 @@ public class TipoAnimalServiceTeste {
 
     @Test
     public void deveRemover(){
-        TipoAnimal tipoAnimalSalvo = tipoAnimalRepo.save(generateTipoAnimal());
+        AnimalType tipoAnimalSalvo = animalTypeRepo.save(generateTipoAnimal());
         tipoAnimalService.remover(tipoAnimalSalvo);
-        Assertions.assertFalse(tipoAnimalRepo.findById(tipoAnimalSalvo.getAnimalTypeId()).isPresent());
+        Assertions.assertFalse(animalTypeRepo.findById(tipoAnimalSalvo.getAnimalTypeId()).isPresent());
     }
 
     @Test
     public void deveRemoverComFeedback(){
-        TipoAnimal tipoAnimalSalvo = tipoAnimalRepo.save(generateTipoAnimal());
-        TipoAnimal tipoAnimalFeedback = tipoAnimalService.removerComFeedback(tipoAnimalSalvo.getAnimalTypeId());
+        AnimalType tipoAnimalSalvo = animalTypeRepo.save(generateTipoAnimal());
+        AnimalType tipoAnimalFeedback = tipoAnimalService.removerComFeedback(tipoAnimalSalvo.getAnimalTypeId());
         Assertions.assertNotNull(tipoAnimalFeedback);
         Assertions.assertEquals(tipoAnimalSalvo.getAnimalTypeId(), tipoAnimalFeedback.getAnimalTypeId());
     }
 
     @Test
     public void deveRemoverPorId(){
-        TipoAnimal tipoAnimalSalvo = tipoAnimalRepo.save(generateTipoAnimal());
+        AnimalType tipoAnimalSalvo = animalTypeRepo.save(generateTipoAnimal());
         Long id = tipoAnimalSalvo.getAnimalTypeId();
         tipoAnimalService.removerPorId(id);;
-        Assertions.assertFalse(tipoAnimalRepo.findById(id).isPresent());
+        Assertions.assertFalse(animalTypeRepo.findById(id).isPresent());
     }
 
     @Test
     public void deveBuscarPorId(){
-        TipoAnimal tipoAnimalSalvo = tipoAnimalRepo.save(generateTipoAnimal());
-        TipoAnimal TipoAnimalEncontrado = tipoAnimalService.buscarPorId(tipoAnimalSalvo.getAnimalTypeId());
+        AnimalType tipoAnimalSalvo = animalTypeRepo.save(generateTipoAnimal());
+        AnimalType TipoAnimalEncontrado = tipoAnimalService.buscarPorId(tipoAnimalSalvo.getAnimalTypeId());
         Assertions.assertNotNull(TipoAnimalEncontrado);
         Assertions.assertEquals(TipoAnimalEncontrado.getAnimalTypeId(), tipoAnimalSalvo.getAnimalTypeId());
         rollback(tipoAnimalSalvo);
@@ -84,8 +84,8 @@ public class TipoAnimalServiceTeste {
 
     @Test
     public void deveBuscarPorFiltro(){
-        TipoAnimal tipoAnimalSalvo = tipoAnimalRepo.save(generateTipoAnimal());
-        List<TipoAnimal> tiposEncontradosList = tipoAnimalService.buscar(tipoAnimalSalvo);
+        AnimalType tipoAnimalSalvo = animalTypeRepo.save(generateTipoAnimal());
+        List<AnimalType> tiposEncontradosList = tipoAnimalService.buscar(tipoAnimalSalvo);
         Assertions.assertNotNull(tiposEncontradosList);
         Assertions.assertFalse(tiposEncontradosList.isEmpty());
         rollback(tipoAnimalSalvo);
@@ -93,8 +93,8 @@ public class TipoAnimalServiceTeste {
 
     @Test
     public void deveBuscarTodos(){
-        TipoAnimal tipoAnimalSalvo = tipoAnimalRepo.save(generateTipoAnimal());
-        List<TipoAnimal> tiposList = tipoAnimalService.buscarTodos();
+        AnimalType tipoAnimalSalvo = animalTypeRepo.save(generateTipoAnimal());
+        List<AnimalType> tiposList = tipoAnimalService.buscarTodos();
         Assertions.assertNotNull(tiposList);
         Assertions.assertFalse(tiposList.isEmpty());
         rollback(tipoAnimalSalvo);

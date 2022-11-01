@@ -107,7 +107,7 @@
 
 <div style="margin: 10px 200px 10px 200px;">
   <form method="POST" action="/dono/donoCadastro" th:object="${dono}">
-    <input type="hidden" name="donoId" id="donoId-input" th:value="${dono.donoId}">
+    <input type="hidden" name="donoId" id="donoId-input" th:value="${dono.getOwnerId}">
     <div class="mb-3">
       <label for="nome-input" class="form-label">Nome</label>
       <input type="text" class ="form-control" name="nome"  id ="nome-input" placeholder="Digite o nome" required th:value="${dono.getName}">

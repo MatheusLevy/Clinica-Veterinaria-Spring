@@ -2,12 +2,19 @@ package com.produtos.apirest.controller;
 
 import com.produtos.apirest.models.Area;
 import com.produtos.apirest.models.DTO.AreaDTO;
-import com.produtos.apirest.models.DTO.EspecialidadeDTO;
-import com.produtos.apirest.models.Especialidade;
+import com.produtos.apirest.models.DTO.ExpertiseDTO;
+import com.produtos.apirest.models.Expertise;
 import com.produtos.apirest.service.AreaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -112,10 +119,10 @@ public class AreaController {
     public ResponseEntity<?> buscarEspecialidades(@PathVariable(value = "id") Long id){
         try {
             Area areaBuscada = areaService.buscarPorId(id);
-            List<Especialidade> especialidades = areaService.buscarTodasEspecialidades(areaBuscada);
-            List<EspecialidadeDTO> dtos = especialidades
+            List<Expertise> especialidades = areaService.buscarTodasEspecialidades(areaBuscada);
+            List<ExpertiseDTO> dtos = especialidades
                     .stream()
-                    .map(Especialidade::toEspecialidadeDTO)
+                    .map(Expertise::toExpertiseDTO)
                     .collect(Collectors.toList());
             return ResponseEntity.ok(dtos);
         } catch (Exception e){

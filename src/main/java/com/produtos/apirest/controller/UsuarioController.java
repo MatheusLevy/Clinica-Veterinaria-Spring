@@ -1,11 +1,18 @@
 package com.produtos.apirest.controller;
 
-import com.produtos.apirest.models.DTO.UsuarioDTO;
-import com.produtos.apirest.models.Usuario;
+import com.produtos.apirest.models.DTO.UserDTO;
+import com.produtos.apirest.models.User;
 import com.produtos.apirest.service.UsuarioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/usuario")
@@ -18,10 +25,10 @@ public class UsuarioController {
     }
 
     @GetMapping("/autenticar")
-    public ResponseEntity<?> autenticar(@RequestBody UsuarioDTO dto){
+    public ResponseEntity<?> autenticar(@RequestBody UserDTO dto){
         try{
-            Usuario usuarioAutenticado = usuarioService.autenticar(dto.getUsername(), dto.getSenha());
-            UsuarioDTO dtoRetorno = usuarioAutenticado.toUsuarioDTO();
+            User usuarioAutenticado = usuarioService.autenticar(dto.getUsername(), dto.getPassword());
+            UserDTO dtoRetorno = usuarioAutenticado.toUserDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -29,11 +36,11 @@ public class UsuarioController {
     }
 
     @PostMapping("/salvar")
-    public ResponseEntity<?> salvar(@RequestBody UsuarioDTO dto){
+    public ResponseEntity<?> salvar(@RequestBody UserDTO dto){
         try{
-            Usuario usuario =  dto.toUsuario();
-            Usuario usuarioSalvo = usuarioService.salvar(usuario);
-            UsuarioDTO dtoRetorno = usuarioSalvo.toUsuarioDTO();
+            User usuario =  dto.toUser();
+            User usuarioSalvo = usuarioService.salvar(usuario);
+            UserDTO dtoRetorno = usuarioSalvo.toUserDTO();
             return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -44,7 +51,7 @@ public class UsuarioController {
     @DeleteMapping("/remover/{id}")
     public ResponseEntity<?> removerComId(@PathVariable(value = "id") Long id){
         try{
-            Usuario usuarioBuscado = usuarioService.buscarPorId(id);
+            User usuarioBuscado = usuarioService.buscarPorId(id);
             usuarioService.remover(usuarioBuscado);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (Exception e){
@@ -56,8 +63,8 @@ public class UsuarioController {
     @DeleteMapping("/remover/feedback/{id}")
     public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
         try{
-            Usuario usuarioRemovido = usuarioService.removerComFeedback(id);
-            UsuarioDTO dtoRetorno = usuarioRemovido.toUsuarioDTO();
+            User usuarioRemovido = usuarioService.removerComFeedback(id);
+            UserDTO dtoRetorno = usuarioRemovido.toUserDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -68,8 +75,8 @@ public class UsuarioController {
     @GetMapping("/buscar/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable(value = "id") Long id){
         try{
-            Usuario usuarioBuscado = usuarioService.buscarPorId(id);
-            UsuarioDTO dtoRetorno = usuarioBuscado.toUsuarioDTO();
+            User usuarioBuscado = usuarioService.buscarPorId(id);
+            UserDTO dtoRetorno = usuarioBuscado.toUserDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -80,8 +87,8 @@ public class UsuarioController {
     @GetMapping("/buscarPorUsername/{username}")
     public ResponseEntity<?> buscarPorUsername(@PathVariable(value = "username") String username){
         try {
-            Usuario usuarioEncontrado = usuarioService.buscarPorUsername(username);
-            UsuarioDTO dtoRetorno = usuarioEncontrado.toUsuarioDTO();
+            User usuarioEncontrado = usuarioService.buscarPorUsername(username);
+            UserDTO dtoRetorno = usuarioEncontrado.toUserDTO();
             return ResponseEntity.ok(dtoRetorno);
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -90,11 +97,11 @@ public class UsuarioController {
 
 
     @PutMapping("/atualizar")
-    public ResponseEntity<?> atualizar(@RequestBody UsuarioDTO dto){
+    public ResponseEntity<?> atualizar(@RequestBody UserDTO dto){
         try{
-            Usuario usuario = dto.toUsuario();
-            Usuario atualizado = usuarioService.atualizar(usuario);
-            UsuarioDTO dtoRetorno = atualizado.toUsuarioDTO();
+            User usuario = dto.toUser();
+            User atualizado = usuarioService.atualizar(usuario);
+            UserDTO dtoRetorno = atualizado.toUserDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());

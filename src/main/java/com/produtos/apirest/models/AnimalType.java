@@ -1,14 +1,21 @@
 package com.produtos.apirest.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.produtos.apirest.models.DTO.TipoAnimalDTO;
+import com.produtos.apirest.models.DTO.AnimalTypeDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.List;
 
 @Entity
@@ -17,7 +24,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TipoAnimal {
+public class AnimalType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -37,10 +44,10 @@ public class TipoAnimal {
         return getClass().getSimpleName() + "[id= " + animalTypeId + ", name= " + name + "]";
     }
 
-    public TipoAnimalDTO toTipoAnimalDTO(){
-        return TipoAnimalDTO.builder()
+    public AnimalTypeDTO toAnimalTypeDTO(){
+        return AnimalTypeDTO.builder()
                 .id(this.animalTypeId)
-                .nome(this.name)
+                .name(this.name)
                 .build();
     }
 }

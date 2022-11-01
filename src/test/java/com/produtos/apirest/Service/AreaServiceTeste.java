@@ -1,9 +1,9 @@
 package com.produtos.apirest.Service;
 
 import com.produtos.apirest.models.Area;
-import com.produtos.apirest.models.Especialidade;
+import com.produtos.apirest.models.Expertise;
 import com.produtos.apirest.repository.AreaRepo;
-import com.produtos.apirest.repository.EspecialidadeRepo;
+import com.produtos.apirest.repository.ExpertiseRepo;
 import com.produtos.apirest.service.AreaService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ public class AreaServiceTeste {
     public AreaService areaService;
 
     @Autowired
-    public EspecialidadeRepo especialidadeRepo;
+    public ExpertiseRepo expertiseRepo;
 
 
     protected static Area generateArea(){
@@ -107,11 +107,11 @@ public class AreaServiceTeste {
     @Test
     public void deveBuscarTodasEspecialidades(){
         Area areaSalva = areaRepo.save(generateArea());
-        Especialidade especialidadeComAreaNaoSalva = generateEspecialidade(false, areaRepo);
+        Expertise especialidadeComAreaNaoSalva = generateEspecialidade(false, areaRepo);
         especialidadeComAreaNaoSalva.setArea(areaSalva);
-        especialidadeRepo.save(especialidadeComAreaNaoSalva);
-        List<Especialidade> especialidadeList = areaService.buscarTodasEspecialidades(areaSalva);
+        expertiseRepo.save(especialidadeComAreaNaoSalva);
+        List<Expertise> especialidadeList = areaService.buscarTodasEspecialidades(areaSalva);
         Assertions.assertFalse(especialidadeList.isEmpty());
-        rollbackEspecialidade(especialidadeComAreaNaoSalva, especialidadeRepo, areaRepo);
+        rollbackEspecialidade(especialidadeComAreaNaoSalva, expertiseRepo, areaRepo);
     }
 }

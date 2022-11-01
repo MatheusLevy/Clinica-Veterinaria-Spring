@@ -30,15 +30,15 @@ public class Animal {
 
     @ManyToOne
     @JoinColumn(name="type_id", nullable = false)
-    private TipoAnimal animalType;
+    private AnimalType animalType;
 
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)
-    private Dono owner;
+    private Owner owner;
 
     @OneToMany(mappedBy = "animal")
     @JsonIgnore
-    private List<Consulta> appointments;
+    private List<Appointment> appointments;
 
     @Override
     public String toString() {
@@ -48,10 +48,10 @@ public class Animal {
     public AnimalDTO toAnimalDTO(){
         return AnimalDTO.builder()
                 .id(this.animalId)
-                .idTipoAnimal(this.animalType.getAnimalTypeId())
-                .nomeTipoAnimal(this.animalType.getName())
-                .nomeDono(this.owner.getName())
-                .idDono(this.owner.getDonoId())
+                .animalTypeId(this.animalType.getAnimalTypeId())
+                .animalTypeName(this.animalType.getName())
+                .ownerName(this.owner.getName())
+                .ownerId(this.owner.getOwnerId())
                 .build();
     }
 }

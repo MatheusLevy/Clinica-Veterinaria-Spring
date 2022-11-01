@@ -1,14 +1,23 @@
 package com.produtos.apirest.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.produtos.apirest.models.DTO.EspecialidadeDTO;
+import com.produtos.apirest.models.DTO.ExpertiseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.List;
 
 @Entity
@@ -17,14 +26,14 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Especialidade {
+public class Expertise {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private long expertiseId;
 
-    @Column(name = "nome")
+    @Column(name = "name")
     @NotNull
     private String name;
 
@@ -34,18 +43,18 @@ public class Especialidade {
 
     @OneToMany(mappedBy = "expertise", fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<Veterinario> veterinarys;
+    private List<Veterinary> veterinarys;
 
     @Override
     public String toString(){
         return getClass().getSimpleName() + "[id= " + expertiseId + ", name= " + name + ", area= "+ area.getName() + "]";
     }
 
-    public EspecialidadeDTO toEspecialidadeDTO(){
-        return EspecialidadeDTO.builder()
+    public ExpertiseDTO toExpertiseDTO(){
+        return ExpertiseDTO.builder()
                 .id(this.expertiseId)
-                .nome(this.name)
-                .idArea(this.area.getAreaId())
+                .name(this.name)
+                .areaId(this.area.getAreaId())
                 .build();
     }
 }

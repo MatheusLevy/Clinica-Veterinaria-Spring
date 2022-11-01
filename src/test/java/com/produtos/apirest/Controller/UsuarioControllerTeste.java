@@ -1,7 +1,7 @@
 package com.produtos.apirest.Controller;
 
-import com.produtos.apirest.models.DTO.UsuarioDTO;
-import com.produtos.apirest.models.Usuario;
+import com.produtos.apirest.models.DTO.UserDTO;
+import com.produtos.apirest.models.User;
 import com.produtos.apirest.service.UsuarioService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -32,16 +32,16 @@ public class UsuarioControllerTeste {
     @Autowired
     MockMvc mvc;
 
-    public static UsuarioDTO generateUsuarioDTOInstance(){
-        return UsuarioDTO.builder()
+    public static UserDTO generateUsuarioDTOInstance(){
+        return UserDTO.builder()
                 .id(1L)
                 .username("username")
-                .senha("senha")
+                .password("senha")
                 .build();
     }
 
-    public static Usuario generateUsuarioInstance(){
-        return Usuario.builder()
+    public static User generateUsuarioInstance(){
+        return User.builder()
                 .userId(1L)
                 .username("username")
                 .password("passsword")
@@ -60,7 +60,7 @@ public class UsuarioControllerTeste {
     @WithUserDetails("Admin")
     @Test
     public void deveSalvar() throws Exception{
-        Mockito.when(usuarioService.salvar(Mockito.any(Usuario.class))).thenReturn(generateUsuarioInstance());
+        Mockito.when(usuarioService.salvar(Mockito.any(User.class))).thenReturn(generateUsuarioInstance());
         String json = toJson(generateUsuarioDTOInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.POST, API.concat("/salvar"), json);
         mvc.perform(request)
@@ -70,7 +70,7 @@ public class UsuarioControllerTeste {
     @WithUserDetails("Admin")
     @Test
     public void deveAtualizar() throws Exception{
-        Mockito.when(usuarioService.atualizar(Mockito.any(Usuario.class))).thenReturn(generateUsuarioInstance());
+        Mockito.when(usuarioService.atualizar(Mockito.any(User.class))).thenReturn(generateUsuarioInstance());
         String json = toJson(generateUsuarioDTOInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.PUT, API.concat("/atualizar"), json);
         mvc.perform(request)
@@ -82,7 +82,7 @@ public class UsuarioControllerTeste {
     public void deveRemoverComId() throws Exception{
         Long id = 1L;
         Mockito.when(usuarioService.buscarPorId(Mockito.anyLong())).thenReturn(generateUsuarioInstance());
-        Mockito.doNothing().when(usuarioService).remover(Mockito.any(Usuario.class));
+        Mockito.doNothing().when(usuarioService).remover(Mockito.any(User.class));
         MockHttpServletRequestBuilder request = request(HttpMethod.DELETE, API.concat("/remover/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());

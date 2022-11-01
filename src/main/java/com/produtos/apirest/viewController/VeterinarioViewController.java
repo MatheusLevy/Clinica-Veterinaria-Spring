@@ -1,8 +1,8 @@
 package com.produtos.apirest.viewController;
 
-import com.produtos.apirest.models.DTO.VeterinarioDTO;
-import com.produtos.apirest.models.Especialidade;
-import com.produtos.apirest.models.Veterinario;
+import com.produtos.apirest.models.DTO.VeterinaryDTO;
+import com.produtos.apirest.models.Expertise;
+import com.produtos.apirest.models.Veterinary;
 import com.produtos.apirest.service.EspecialidadeService;
 import com.produtos.apirest.service.VeterinarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +27,8 @@ public class VeterinarioViewController {
     @PreAuthorize("hasRole('S')")
     @GetMapping("/veterinario/cadastro")
     public ModelAndView veterinarioCadastroPage(){
-        VeterinarioDTO dto = new VeterinarioDTO();
-        dto.setEspecialidades(especialidadeService.buscarTodos());
+        VeterinaryDTO dto = new VeterinaryDTO();
+        dto.setExpertises(especialidadeService.buscarTodos());
         ModelAndView mv = new ModelAndView("veterinario/veterinarioCadastro");
         mv.addObject("veterinarioDTO", dto);
         return mv;
@@ -36,12 +36,12 @@ public class VeterinarioViewController {
 
     @PreAuthorize("hasRole('S')")
     @PostMapping("/veterinario/cadastro")
-    public String veterinarioCadastro(VeterinarioDTO dto){
-        Veterinario veterinario = Veterinario.builder()
-                .name(dto.getNome())
+    public String veterinarioCadastro(VeterinaryDTO dto){
+        Veterinary veterinario = Veterinary.builder()
+                .name(dto.getName())
                 .cpf(dto.getCpf())
-                .phone(dto.getTelefone())
-                .expertise(dto.getEspecialidade())
+                .phone(dto.getPhone())
+                .expertise(dto.getExpertise())
                 .build();
         if(dto.getId() == null){
             veterinarioService.salvar(veterinario);
@@ -56,7 +56,7 @@ public class VeterinarioViewController {
     @PreAuthorize("hasRole('S')")
     @GetMapping("/veterinario/veterinarioList")
     public ModelAndView veterinarioList(){
-        List<Veterinario> veterinarios = veterinarioService.buscarTodos();
+        List<Veterinary> veterinarios = veterinarioService.buscarTodos();
         ModelAndView mv = new ModelAndView("/veterinario/veterinarioList");
         mv.addObject("veterinarios", veterinarios);
         //System.out.println(mv);
@@ -67,19 +67,19 @@ public class VeterinarioViewController {
     @GetMapping("/veterinario/atualizar/{id}")
     public ModelAndView veterinarioAtualizar(@PathVariable(value = "id", required = true) Long id){
         //Veterinario
-        Veterinario veterinarioBuscado = veterinarioService.buscarPorId(id);
+        Veterinary veterinarioBuscado = veterinarioService.buscarPorId(id);
 
         //Especialidades
-        List<Especialidade> especialidades = especialidadeService.buscarTodos();
+        List<Expertise> especialidades = especialidadeService.buscarTodos();
 
         //DTO
-        VeterinarioDTO veterinarioDTO = VeterinarioDTO.builder()
+        VeterinaryDTO veterinarioDTO = VeterinaryDTO.builder()
                 .id(veterinarioBuscado.getVeterinaryId())
-                .nome(veterinarioBuscado.getName())
-                .telefone(veterinarioBuscado.getPhone())
+                .name(veterinarioBuscado.getName())
+                .phone(veterinarioBuscado.getPhone())
                 .cpf(veterinarioBuscado.getCpf())
-                .especialidade(veterinarioBuscado.getExpertise())
-                .especialidades(especialidades)
+                .expertise(veterinarioBuscado.getExpertise())
+                .expertises(especialidades)
                 .build();
 
         ModelAndView mv = new ModelAndView("veterinario/veterinarioCadastro");

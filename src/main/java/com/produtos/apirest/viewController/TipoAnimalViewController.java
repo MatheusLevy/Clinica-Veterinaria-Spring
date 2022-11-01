@@ -1,7 +1,7 @@
 package com.produtos.apirest.viewController;
 
 
-import com.produtos.apirest.models.TipoAnimal;
+import com.produtos.apirest.models.AnimalType;
 import com.produtos.apirest.service.TipoAnimalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,14 +23,14 @@ public class TipoAnimalViewController {
     @GetMapping("/tipoAnimal/cadastro")
     public ModelAndView tipoAnimalCadastro(){
         ModelAndView mv = new ModelAndView("tipoAnimal/tipoAnimalCadastro");
-        TipoAnimal tipo = TipoAnimal.builder().build();
+        AnimalType tipo = AnimalType.builder().build();
         mv.addObject("tipoAnimal", tipo);
         return mv;
     }
 
     @PreAuthorize("hasRole('A')")
     @PostMapping("/tipoAnimal/cadastro")
-    public String tipoAnimalCadastroControll(TipoAnimal tipo){
+    public String tipoAnimalCadastroControll(AnimalType tipo){
 
         if(Long.valueOf(tipo.getAnimalTypeId()) == null){
             tipoService.salvar(tipo);
@@ -43,7 +43,7 @@ public class TipoAnimalViewController {
     @PreAuthorize("hasRole('A')")
     @GetMapping("/tipoAnimal/atualizar/{id}")
     public ModelAndView tipoAnimalAtualizar(@PathVariable(value = "id", required = true) Long id){
-        TipoAnimal tipoFind = tipoService.buscarPorId(id);
+        AnimalType tipoFind = tipoService.buscarPorId(id);
         ModelAndView mv = new ModelAndView("/tipoAnimal/tipoAnimalCadastro");
         mv.addObject("tipoAnimal", tipoFind);
         return mv;
@@ -52,7 +52,7 @@ public class TipoAnimalViewController {
     @PreAuthorize("hasRole('A')")
     @GetMapping("/tipoAnimal/remover/{id}")
     public String tipoAnimalRemover(@PathVariable(value = "id", required = true) Long id){
-        TipoAnimal tipoFind = tipoService.buscarPorId(id);
+        AnimalType tipoFind = tipoService.buscarPorId(id);
         tipoService.removerPorId(tipoFind.getAnimalTypeId());
         return "redirect:/tipoAnimal/tipoAnimalList";
     }
@@ -60,7 +60,7 @@ public class TipoAnimalViewController {
     @PreAuthorize("hasRole('A')")
     @GetMapping("/tipoAnimal/tipoAnimalList")
     public ModelAndView tipoAnimalList(){
-        List<TipoAnimal> tipos = tipoService.buscarTodos();
+        List<AnimalType> tipos = tipoService.buscarTodos();
         ModelAndView mv = new ModelAndView("/tipoAnimal/tipoAnimalList");
         mv.addObject("tipos", tipos);
         return mv;

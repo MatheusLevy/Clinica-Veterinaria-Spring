@@ -1,7 +1,7 @@
 package com.produtos.apirest.Model;
 
-import com.produtos.apirest.models.Usuario;
-import com.produtos.apirest.repository.UsuarioRepo;
+import com.produtos.apirest.models.User;
+import com.produtos.apirest.repository.UserRepo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,26 +11,26 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class UsuarioTeste {
 
     @Autowired
-    public UsuarioRepo usuarioRepo;
+    public UserRepo userRepo;
 
-    protected static Usuario generateUsuario(){
-        return Usuario.builder()
+    protected static User generateUsuario(){
+        return User.builder()
                 .username("username")
                 .password("password")
                 .build();
     }
 
-    private void rollback(Usuario usuario){
-        usuarioRepo.delete(usuario);
+    private void rollback(User usuario){
+        userRepo.delete(usuario);
     }
 
-    protected static void rollbackUsuario(Usuario usuario, UsuarioRepo usuarioRepo){
-        usuarioRepo.delete(usuario);
+    protected static void rollbackUsuario(User usuario, UserRepo userRepo){
+        userRepo.delete(usuario);
     }
 
     @Test
     public void deveSalvar(){
-        Usuario usuarioSalvo = usuarioRepo.save(generateUsuario());
+        User usuarioSalvo = userRepo.save(generateUsuario());
         Assertions.assertNotNull(usuarioSalvo);
         Assertions.assertNotNull(usuarioSalvo.getUserId());
         rollback(usuarioSalvo);
@@ -38,9 +38,9 @@ public class UsuarioTeste {
 
     @Test
     public void deveAtualizar(){
-        Usuario usuarioSalvo = usuarioRepo.save(generateUsuario());
+        User usuarioSalvo = userRepo.save(generateUsuario());
         usuarioSalvo.setUsername("Novo Username");
-        Usuario usuarioAtualizado = usuarioRepo.save(usuarioSalvo);
+        User usuarioAtualizado = userRepo.save(usuarioSalvo);
         Assertions.assertNotNull(usuarioAtualizado);
         Assertions.assertEquals(usuarioAtualizado.getUserId(), usuarioSalvo.getUserId());
         Assertions.assertEquals(usuarioAtualizado.getUsername(), "Novo Username");
@@ -49,24 +49,24 @@ public class UsuarioTeste {
 
     @Test
     public void deveRemover(){
-        Usuario usuarioSalvo = usuarioRepo.save(generateUsuario());
+        User usuarioSalvo = userRepo.save(generateUsuario());
         Long id = usuarioSalvo.getUserId();
-        usuarioRepo.deleteById(id);
-        Assertions.assertFalse(usuarioRepo.findById(id).isPresent());
+        userRepo.deleteById(id);
+        Assertions.assertFalse(userRepo.findById(id).isPresent());
     }
 
     @Test
     public void deveBuscar(){
-        Usuario usuarioSalvo = usuarioRepo.save(generateUsuario());
+        User usuarioSalvo = userRepo.save(generateUsuario());
         Long id = usuarioSalvo.getUserId();
-        Assertions.assertTrue(usuarioRepo.findById(id).isPresent());
+        Assertions.assertTrue(userRepo.findById(id).isPresent());
         rollback(usuarioSalvo);
     }
 
     @Test
     public void deveBuscarPeloUsername(){
-        Usuario usuarioSalvo = usuarioRepo.save(generateUsuario());
-        Usuario usuarioEncontrado = usuarioRepo.findByUsername(usuarioSalvo.getUsername());
+        User usuarioSalvo = userRepo.save(generateUsuario());
+        User usuarioEncontrado = userRepo.findByUsername(usuarioSalvo.getUsername());
         Assertions.assertNotNull(usuarioEncontrado);
         Assertions.assertEquals(usuarioEncontrado.getUserId(), usuarioSalvo.getUserId());
         rollback(usuarioSalvo);

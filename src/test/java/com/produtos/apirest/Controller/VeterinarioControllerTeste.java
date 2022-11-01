@@ -1,7 +1,7 @@
 package com.produtos.apirest.Controller;
 
-import com.produtos.apirest.models.DTO.VeterinarioDTO;
-import com.produtos.apirest.models.Veterinario;
+import com.produtos.apirest.models.DTO.VeterinaryDTO;
+import com.produtos.apirest.models.Veterinary;
 import com.produtos.apirest.service.EspecialidadeService;
 import com.produtos.apirest.service.VeterinarioService;
 import org.junit.jupiter.api.Test;
@@ -40,8 +40,8 @@ public class VeterinarioControllerTeste {
     @Autowired
     MockMvc mvc;
 
-    public static Veterinario generateVeterinarioInstance(){
-        return Veterinario.builder()
+    public static Veterinary generateVeterinarioInstance(){
+        return Veterinary.builder()
                 .veterinaryId(1L)
                 .name("nome")
                 .phone("telefone")
@@ -50,17 +50,17 @@ public class VeterinarioControllerTeste {
                 .build();
     }
 
-    public static VeterinarioDTO generateVeterinarioDTOInstance(){
-        return VeterinarioDTO.builder()
+    public static VeterinaryDTO generateVeterinarioDTOInstance(){
+        return VeterinaryDTO.builder()
                 .id(1L)
-                .nome("nome")
-                .telefone("telefone")
+                .name("nome")
+                .phone("telefone")
                 .cpf("cpf")
-                .especialidade(generateEspecialidadeInstance())
+                .expertise(generateEspecialidadeInstance())
                 .build();
     }
 
-    public static List<Veterinario> generateVeterinarioListInstance(){
+    public static List<Veterinary> generateVeterinarioListInstance(){
         return new ArrayList<>(){{
            add(generateVeterinarioInstance());
         }};
@@ -70,7 +70,7 @@ public class VeterinarioControllerTeste {
     @Test
     public void deveSalvar() throws Exception{
         Mockito.when(especialidadeService.buscarPorId(Mockito.anyLong())).thenReturn(generateEspecialidadeInstance());
-        Mockito.when(veterinarioService.salvar(Mockito.any(Veterinario.class))).thenReturn(generateVeterinarioInstance());
+        Mockito.when(veterinarioService.salvar(Mockito.any(Veterinary.class))).thenReturn(generateVeterinarioInstance());
         String json = toJson(generateVeterinarioDTOInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.POST, API.concat("/salvar"), json);
         mvc.perform(request)
@@ -80,7 +80,7 @@ public class VeterinarioControllerTeste {
     @WithUserDetails("Admin")
     @Test
     public void deveAtualizar() throws Exception{
-        Mockito.when(veterinarioService.atualizar(Mockito.any(Veterinario.class))).thenReturn(generateVeterinarioInstance());
+        Mockito.when(veterinarioService.atualizar(Mockito.any(Veterinary.class))).thenReturn(generateVeterinarioInstance());
         String json = toJson(generateVeterinarioDTOInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.PUT, API.concat("/atualizar"), json);
         mvc.perform(request)

@@ -1,13 +1,20 @@
 package com.produtos.apirest.controller;
 
-import com.produtos.apirest.models.DTO.VeterinarioDTO;
-import com.produtos.apirest.models.Especialidade;
-import com.produtos.apirest.models.Veterinario;
+import com.produtos.apirest.models.DTO.VeterinaryDTO;
+import com.produtos.apirest.models.Expertise;
+import com.produtos.apirest.models.Veterinary;
 import com.produtos.apirest.service.EspecialidadeService;
 import com.produtos.apirest.service.VeterinarioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,12 +33,12 @@ public class VeterinarioController {
     }
 
     @PostMapping("/salvar")
-    public ResponseEntity<?> salvar(@RequestBody VeterinarioDTO dto){
+    public ResponseEntity<?> salvar(@RequestBody VeterinaryDTO dto){
         try{
-            Especialidade especialidadeEncontrada = especialidadeService.buscarPorId(dto.getEspecialidadeId());
-            Veterinario veterinario = dto.toVeterinario(especialidadeEncontrada);
-            Veterinario veterinarioSalvo = veterinarioService.salvar(veterinario);
-            VeterinarioDTO dtoRetorno = veterinarioSalvo.toVeterinarioDTO();
+            Expertise especialidadeEncontrada = especialidadeService.buscarPorId(dto.getExpertiseId());
+            Veterinary veterinario = dto.toVeterinary(especialidadeEncontrada);
+            Veterinary veterinarioSalvo = veterinarioService.salvar(veterinario);
+            VeterinaryDTO dtoRetorno = veterinarioSalvo.toVeterinaryDTO();
             return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -39,12 +46,12 @@ public class VeterinarioController {
     }
 
     @PutMapping("/atualizar")
-    public ResponseEntity<?> atualizar(@RequestBody VeterinarioDTO dto){
+    public ResponseEntity<?> atualizar(@RequestBody VeterinaryDTO dto){
         try{
-            Especialidade especialidadeEncontrada = especialidadeService.buscarPorId(dto.getEspecialidadeId());
-            Veterinario veterinario = dto.toVeterinario(especialidadeEncontrada);
-            Veterinario veterinarioAtualizado = veterinarioService.atualizar(veterinario);
-            VeterinarioDTO retornoDTO = veterinarioAtualizado.toVeterinarioDTO();
+            Expertise especialidadeEncontrada = especialidadeService.buscarPorId(dto.getExpertiseId());
+            Veterinary veterinario = dto.toVeterinary(especialidadeEncontrada);
+            Veterinary veterinarioAtualizado = veterinarioService.atualizar(veterinario);
+            VeterinaryDTO retornoDTO = veterinarioAtualizado.toVeterinaryDTO();
             return ResponseEntity.ok(retornoDTO);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -64,8 +71,8 @@ public class VeterinarioController {
     @DeleteMapping("/remover/feedback/{id}")
     public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
         try{
-            Veterinario veterinarioFeedback = veterinarioService.removerComFeedback(id);
-            VeterinarioDTO dtoRetorno = veterinarioFeedback.toVeterinarioDTO();
+            Veterinary veterinarioFeedback = veterinarioService.removerComFeedback(id);
+            VeterinaryDTO dtoRetorno = veterinarioFeedback.toVeterinaryDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -75,8 +82,8 @@ public class VeterinarioController {
     @GetMapping("/buscar/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable(value = "id") Long id){
         try{
-            Veterinario veterinarioEncontrado = veterinarioService.buscarPorId(id);
-            VeterinarioDTO dtoRetorno = veterinarioEncontrado.toVeterinarioDTO();
+            Veterinary veterinarioEncontrado = veterinarioService.buscarPorId(id);
+            VeterinaryDTO dtoRetorno = veterinarioEncontrado.toVeterinaryDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -86,10 +93,10 @@ public class VeterinarioController {
     @GetMapping("/buscarTodos")
     public ResponseEntity<?> buscarTodos(){
         try{
-            List<Veterinario> veterinariosList = veterinarioService.buscarTodos();
-            List<VeterinarioDTO> dtosRetorno = veterinariosList
+            List<Veterinary> veterinariosList = veterinarioService.buscarTodos();
+            List<VeterinaryDTO> dtosRetorno = veterinariosList
                     .stream()
-                    .map(Veterinario::toVeterinarioDTO)
+                    .map(Veterinary::toVeterinaryDTO)
                     .collect(Collectors.toList());
             return ResponseEntity.ok(dtosRetorno);
         } catch (Exception e){

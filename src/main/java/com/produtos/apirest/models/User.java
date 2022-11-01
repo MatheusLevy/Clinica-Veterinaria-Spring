@@ -1,6 +1,6 @@
 package com.produtos.apirest.models;
 
-import com.produtos.apirest.models.DTO.UsuarioDTO;
+import com.produtos.apirest.models.DTO.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +9,15 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.util.Collection;
 import java.util.List;
 
@@ -19,14 +27,14 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Usuario implements UserDetails{
+public class User implements UserDetails{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long userId;
 
-    @Column(name = "usuario")
+    @Column(name = "username")
     @NotNull
     private String username;
 
@@ -81,8 +89,8 @@ public class Usuario implements UserDetails{
         return true;
     }
 
-    public UsuarioDTO toUsuarioDTO(){
-        return UsuarioDTO.builder()
+    public UserDTO toUserDTO(){
+        return UserDTO.builder()
                 .id(this.userId)
                 .username(this.username)
                 .roles(this.roles)

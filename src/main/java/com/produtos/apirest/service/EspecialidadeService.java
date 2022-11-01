@@ -1,8 +1,8 @@
 package com.produtos.apirest.service;
 
 import com.produtos.apirest.models.Area;
-import com.produtos.apirest.models.Especialidade;
-import com.produtos.apirest.repository.EspecialidadeRepo;
+import com.produtos.apirest.models.Expertise;
+import com.produtos.apirest.repository.ExpertiseRepo;
 import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -15,13 +15,13 @@ import java.util.Optional;
 @Service
 public class EspecialidadeService {
 
-    private final EspecialidadeRepo repo;
+    private final ExpertiseRepo repo;
 
-    public EspecialidadeService(EspecialidadeRepo especialidadeRepo){
-        this.repo = especialidadeRepo;
+    public EspecialidadeService(ExpertiseRepo expertiseRepo){
+        this.repo = expertiseRepo;
     }
 
-    public static void verificaEspecialidade(Especialidade especialidade){
+    public static void verificaEspecialidade(Expertise especialidade){
         if (especialidade == null)
             throw new NullPointerException("Especialidade não pode ser Nula!");
         if (especialidade.getName().equals(""))
@@ -30,7 +30,7 @@ public class EspecialidadeService {
             throw new RegraNegocioRunTime("Especialidade deve ter uma Area!");
     }
 
-    public static void verificaId(Especialidade especialidade){
+    public static void verificaId(Expertise especialidade){
         if (especialidade == null || especialidade.getExpertiseId() <= 0)
             throw new RegraNegocioRunTime("Especialidade deve ter um identificador!s");
     }
@@ -41,20 +41,20 @@ public class EspecialidadeService {
     }
 
     @Transactional
-    public Especialidade salvar(Especialidade especialidade){
+    public Expertise salvar(Expertise especialidade){
         verificaEspecialidade(especialidade);
         return repo.save(especialidade);
     }
 
     @Transactional
-    public Especialidade atualizar(Especialidade especialidade){
+    public Expertise atualizar(Expertise especialidade){
         verificaEspecialidade(especialidade);
         verificaId(especialidade);
         return repo.save(especialidade);
     }
 
     @Transactional
-    public Especialidade atualizarArea(Especialidade destino, Area areaNova){
+    public Expertise atualizarArea(Expertise destino, Area areaNova){
         verificaEspecialidade(destino);
         verificaId(destino);
         AreaService.verificaArea(areaNova);
@@ -64,18 +64,18 @@ public class EspecialidadeService {
     }
 
     @Transactional
-    public void remover(Especialidade especialidade){
+    public void remover(Expertise especialidade){
         verificaEspecialidade(especialidade);
         verificaId(especialidade);
         repo.delete(especialidade);
     }
 
     @Transactional
-    public Especialidade removerFeedback(Long id){
+    public Expertise removerFeedback(Long id){
         verificaId(id);
-        Optional<Especialidade> especialidadesEncotradas = repo.findById(id);
+        Optional<Expertise> especialidadesEncotradas = repo.findById(id);
         if (especialidadesEncotradas.isPresent()) {
-            Especialidade especialidadeFeedback = especialidadesEncotradas.get();
+            Expertise especialidadeFeedback = especialidadesEncotradas.get();
             repo.delete(especialidadeFeedback);
             return especialidadeFeedback;
         }
@@ -89,24 +89,24 @@ public class EspecialidadeService {
     }
 
     @Transactional
-    public Especialidade buscarPorId(Long id){
+    public Expertise buscarPorId(Long id){
         verificaId(id);
-        Optional<Especialidade> especialidadeEncontradas = repo.findById(id);
+        Optional<Expertise> especialidadeEncontradas = repo.findById(id);
         return especialidadeEncontradas.orElse(null);
     }
 
     @Transactional
-    public List<Especialidade> buscar(Especialidade filtro){
+    public List<Expertise> buscar(Expertise filtro){
         if (filtro == null)
             throw new NullPointerException("Filtro não pode ser nulo");
-        Example<Especialidade> example = Example.of(filtro, ExampleMatcher.matching()
+        Example<Expertise> example = Example.of(filtro, ExampleMatcher.matching()
                 .withIgnoreCase()
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
         return repo.findAll(example);
     }
 
     @Transactional
-    public List<Especialidade> buscarTodos(){
+    public List<Expertise> buscarTodos(){
         return repo.findAll();
     }
 }

@@ -1,9 +1,9 @@
 package com.produtos.apirest.Model;
 
 import com.produtos.apirest.models.Area;
-import com.produtos.apirest.models.Especialidade;
+import com.produtos.apirest.models.Expertise;
 import com.produtos.apirest.repository.AreaRepo;
-import com.produtos.apirest.repository.EspecialidadeRepo;
+import com.produtos.apirest.repository.ExpertiseRepo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +15,13 @@ import static com.produtos.apirest.Model.AreaTeste.rollbackArea;
 @SpringBootTest
 public class EspecialidadeTeste {
     @Autowired
-    public EspecialidadeRepo especialidadeRepo;
+    public ExpertiseRepo expertiseRepo;
 
     @Autowired
     public AreaRepo areaRepo;
 
-    private Especialidade generateEspecialidade(Boolean inicializeArea){
-         Especialidade especialidade =  Especialidade.builder()
+    private Expertise generateEspecialidade(Boolean inicializeArea){
+        Expertise especialidade =  Expertise.builder()
                 .name("name")
                 .area(generateArea())
                 .build();
@@ -30,8 +30,8 @@ public class EspecialidadeTeste {
          return especialidade;
     }
 
-    protected static Especialidade generateEspecialidade(Boolean inicializeArea, AreaRepo areaRepo){
-        Especialidade especialidade =  Especialidade.builder()
+    protected static Expertise generateEspecialidade(Boolean inicializeArea, AreaRepo areaRepo){
+        Expertise especialidade =  Expertise.builder()
                 .name("name")
                 .area(generateArea())
                 .build();
@@ -40,21 +40,21 @@ public class EspecialidadeTeste {
         return especialidade;
     }
 
-    private void rollback(Especialidade especialidade){
-        especialidadeRepo.delete(especialidade);
+    private void rollback(Expertise especialidade){
+        expertiseRepo.delete(especialidade);
         areaRepo.delete(especialidade.getArea());
     }
 
-    protected static void rollbackEspecialidade(Especialidade especialidade,
-                                                EspecialidadeRepo especialidadeRepo,
+    protected static void rollbackEspecialidade(Expertise especialidade,
+                                                ExpertiseRepo expertiseRepo,
                                                 AreaRepo areaRepo){
-        especialidadeRepo.delete(especialidade);
+        expertiseRepo.delete(especialidade);
         areaRepo.delete(especialidade.getArea());
     }
 
     @Test
     public void deveSalvar(){
-        Especialidade especialidadeSalva = especialidadeRepo.save(generateEspecialidade(true));
+        Expertise especialidadeSalva = expertiseRepo.save(generateEspecialidade(true));
         Assertions.assertNotNull(especialidadeSalva);
         Assertions.assertEquals(especialidadeSalva.getName(), generateEspecialidade(false).getName());
         rollback(especialidadeSalva);
@@ -62,9 +62,9 @@ public class EspecialidadeTeste {
 
     @Test
     public void deveAtualizar(){
-        Especialidade especialidadeSalva = especialidadeRepo.save(generateEspecialidade(true));
+        Expertise especialidadeSalva = expertiseRepo.save(generateEspecialidade(true));
         especialidadeSalva.setName("Nome Atualizado");
-        Especialidade especialidadeAtualizada = especialidadeRepo.save(especialidadeSalva);
+        Expertise especialidadeAtualizada = expertiseRepo.save(especialidadeSalva);
         Assertions.assertNotNull(especialidadeAtualizada);
         Assertions.assertEquals(especialidadeSalva.getExpertiseId(), especialidadeAtualizada.getExpertiseId());
         Assertions.assertEquals(especialidadeAtualizada.getName(),  "Nome Atualizado");
@@ -73,10 +73,10 @@ public class EspecialidadeTeste {
 
     @Test
     public void deveAtualizarArea(){
-        Especialidade especialidadeSalva = especialidadeRepo.save(generateEspecialidade(true));
+        Expertise especialidadeSalva = expertiseRepo.save(generateEspecialidade(true));
         Area areaAntiga = especialidadeSalva.getArea();
         especialidadeSalva.setArea(areaRepo.save(generateArea()));
-        Especialidade especialiadeAtualizada = especialidadeRepo.save(especialidadeSalva);
+        Expertise especialiadeAtualizada = expertiseRepo.save(especialidadeSalva);
         Assertions.assertNotNull(especialiadeAtualizada);
         Assertions.assertEquals(especialiadeAtualizada.getExpertiseId(), especialidadeSalva.getExpertiseId());
         Assertions.assertEquals(especialiadeAtualizada.getArea().getAreaId(), especialidadeSalva.getArea().getAreaId());
@@ -86,18 +86,18 @@ public class EspecialidadeTeste {
 
     @Test
     public void deveRemover() {
-        Especialidade especialidadeSalva = especialidadeRepo.save(generateEspecialidade(true));
+        Expertise especialidadeSalva = expertiseRepo.save(generateEspecialidade(true));
         Long id = especialidadeSalva.getExpertiseId();
-        especialidadeRepo.deleteById(id);
-        Assertions.assertFalse(especialidadeRepo.findById(id).isPresent());
+        expertiseRepo.deleteById(id);
+        Assertions.assertFalse(expertiseRepo.findById(id).isPresent());
         rollbackArea(especialidadeSalva.getArea(), areaRepo);
     }
 
     @Test
     public void deveBuscar(){
-        Especialidade especialidadeSalva = especialidadeRepo.save(generateEspecialidade(true));
+        Expertise especialidadeSalva = expertiseRepo.save(generateEspecialidade(true));
         Long id = especialidadeSalva.getExpertiseId();
-        Assertions.assertTrue(especialidadeRepo.findById(id).isPresent());
+        Assertions.assertTrue(expertiseRepo.findById(id).isPresent());
         rollback(especialidadeSalva);
     }
 }

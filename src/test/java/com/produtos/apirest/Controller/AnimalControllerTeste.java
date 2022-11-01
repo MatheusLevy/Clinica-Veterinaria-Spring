@@ -3,7 +3,7 @@ package com.produtos.apirest.Controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.produtos.apirest.models.Animal;
 import com.produtos.apirest.models.DTO.AnimalDTO;
-import com.produtos.apirest.models.Dono;
+import com.produtos.apirest.models.Owner;
 import com.produtos.apirest.service.AnimalService;
 import com.produtos.apirest.service.DonoService;
 import com.produtos.apirest.service.TipoAnimalService;
@@ -23,7 +23,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.produtos.apirest.Controller.DonoControllerTeste.generateDonoInstance;
+import static com.produtos.apirest.Controller.DonoControllerTeste.generateOwner;
 import static com.produtos.apirest.Controller.TipoAnimalControllerTeste.generateTipoAnimalInstance;
 import static com.produtos.apirest.Util.Util.request;
 import static com.produtos.apirest.Util.Util.toJson;
@@ -49,7 +49,7 @@ public class AnimalControllerTeste {
     @MockBean
     private TipoAnimalService tipoAnimalService;
 
-    public static List<Animal> generateAnimalListInstance(){
+    public static List<Animal> generateAnimalList(){
         return new ArrayList<>(){{
             add(generateAnimalInstance());
         }};
@@ -59,7 +59,7 @@ public class AnimalControllerTeste {
         return Animal.builder()
                 .animalId(1L)
                 .name("name")
-                .owner(generateDonoInstance())
+                .owner(generateOwner())
                 .animalType(generateTipoAnimalInstance())
                 .build();
     }
@@ -67,19 +67,19 @@ public class AnimalControllerTeste {
     public static AnimalDTO generateAnimalDTOInstance(){
         return AnimalDTO.builder()
                 .id(1L)
-                .idTipoAnimal(1L)
-                .nome("nome")
-                .idDono(1L)
-                .idTipoAnimal(1L)
-                .dono(generateDonoInstance())
-                .tipo(generateTipoAnimalInstance())
+                .animalTypeId(1L)
+                .name("nome")
+                .ownerId(1L)
+                .animalTypeId(1L)
+                .owner(generateOwner())
+                .type(generateTipoAnimalInstance())
                 .build();
     }
     @Test
     @WithUserDetails("Admin")
     public void deveSalvar() throws Exception{
         Mockito.when(animalService.salvar(Mockito.any(Animal.class))).thenReturn(generateAnimalInstance());
-        Mockito.when(donoService.buscarPorId(Mockito.anyLong())).thenReturn(generateDonoInstance());
+        Mockito.when(donoService.buscarPorId(Mockito.anyLong())).thenReturn(generateOwner());
         Mockito.when(tipoAnimalService.buscarPorId(Mockito.anyLong())).thenReturn(generateTipoAnimalInstance());
         String json = new ObjectMapper().writeValueAsString(generateAnimalDTOInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.POST, API.concat("/salvar"), json);
@@ -100,9 +100,9 @@ public class AnimalControllerTeste {
     @Test
     @WithUserDetails("Admin")
     public void deveAtualizarDono() throws Exception{
-        Mockito.when(donoService.buscarPorId(Mockito.anyLong())).thenReturn(generateDonoInstance());
+        Mockito.when(donoService.buscarPorId(Mockito.anyLong())).thenReturn(generateOwner());
         Mockito.when(animalService.buscarPorId(Mockito.anyLong())).thenReturn(generateAnimalInstance());
-        Mockito.when(animalService.atualizarDono(Mockito.any(Animal.class), Mockito.any(Dono.class))).thenReturn(generateAnimalInstance());
+        Mockito.when(animalService.atualizarDono(Mockito.any(Animal.class), Mockito.any(Owner.class))).thenReturn(generateAnimalInstance());
         String json = toJson(generateAnimalDTOInstance());
         MockHttpServletRequestBuilder request = request(HttpMethod.PUT, API.concat("/atualizar/dono"), json);
         mvc.perform(request)
@@ -144,7 +144,7 @@ public class AnimalControllerTeste {
     @WithUserDetails("Admin")
     public void deveBuscarDono() throws Exception{
         Long id = 1L;
-        Mockito.when(animalService.buscarDonoPorId(Mockito.anyLong())).thenReturn(generateDonoInstance());
+        Mockito.when(animalService.buscarDonoPorId(Mockito.anyLong())).thenReturn(generateOwner());
         MockHttpServletRequestBuilder request = request(HttpMethod.GET, API.concat("/buscarDono/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());

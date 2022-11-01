@@ -1,7 +1,7 @@
 package com.produtos.apirest.viewController;
 
-import com.produtos.apirest.models.DTO.EspecialidadeDTO;
-import com.produtos.apirest.models.Especialidade;
+import com.produtos.apirest.models.DTO.ExpertiseDTO;
+import com.produtos.apirest.models.Expertise;
 import com.produtos.apirest.service.AreaService;
 import com.produtos.apirest.service.EspecialidadeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class EspecialidadeViewController {
     @GetMapping("/especialidade/cadastro")
     public ModelAndView especialidadeCadastro(){
         ModelAndView mv = new ModelAndView("especialidade/especialidadeCadastro");
-        EspecialidadeDTO dto = new EspecialidadeDTO();
+        ExpertiseDTO dto = new ExpertiseDTO();
         dto.setAreas(areaService.buscarTodos());
         mv.addObject("especialidadedto", dto);
         return mv;
@@ -35,7 +35,7 @@ public class EspecialidadeViewController {
 
     @PreAuthorize("hasRole('A')")
     @PostMapping("/especialidade/cadastro")
-    public String especialidadeCadastroControll(Especialidade especialidade){
+    public String especialidadeCadastroControll(Expertise especialidade){
 
         if(Long.valueOf(especialidade.getExpertiseId()) == null){
             especialidadeService.salvar(especialidade);
@@ -48,7 +48,7 @@ public class EspecialidadeViewController {
     @PreAuthorize("hasRole('A')")
     @GetMapping("/especialidade/especialidadeList")
     public ModelAndView especialidadeList(){
-        List<Especialidade> especialidades = especialidadeService.buscarTodos();
+        List<Expertise> especialidades = especialidadeService.buscarTodos();
         ModelAndView mv = new ModelAndView("/especialidade/especialidadeList");
         mv.addObject("especialidades", especialidades);
         return mv;
@@ -57,14 +57,14 @@ public class EspecialidadeViewController {
     @PreAuthorize("hasRole('A')")
     @GetMapping("/especialidade/atualizar/{id}")
     public ModelAndView especialidadeAtualizar(@PathVariable(value = "id", required = true) Long id){
-        Especialidade especialidade = Especialidade.builder()
+        Expertise especialidade = Expertise.builder()
                 .expertiseId(id).build();
-        Especialidade especialidadeFind = especialidadeService.buscarPorId(especialidade.getExpertiseId());
+        Expertise especialidadeFind = especialidadeService.buscarPorId(especialidade.getExpertiseId());
 
         //EspecialidadeDTO
-        EspecialidadeDTO dto = EspecialidadeDTO.builder()
+        ExpertiseDTO dto = ExpertiseDTO.builder()
                 .id(especialidadeFind.getExpertiseId())
-                .nome(especialidadeFind.getName())
+                .name(especialidadeFind.getName())
                 .areas(areaService.buscarTodos())
                 .area(especialidadeFind.getArea())
                 .build();
@@ -77,8 +77,8 @@ public class EspecialidadeViewController {
     @PreAuthorize("hasRole('A')")
     @GetMapping("/especialidade/remover/{id}")
     public String especialidadeRemover(@PathVariable(value = "id", required = true) Long id){
-        Especialidade especialidade = Especialidade.builder().expertiseId(id).build();
-        Especialidade especialidadeFind = especialidadeService.buscarPorId(especialidade.getExpertiseId());
+        Expertise especialidade = Expertise.builder().expertiseId(id).build();
+        Expertise especialidadeFind = especialidadeService.buscarPorId(especialidade.getExpertiseId());
         especialidadeService.remover(especialidadeFind);
         return "redirect:/especialidade/especialidadeList";
     }

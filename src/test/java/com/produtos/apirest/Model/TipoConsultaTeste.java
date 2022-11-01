@@ -1,7 +1,7 @@
 package com.produtos.apirest.Model;
 
-import com.produtos.apirest.models.TipoConsulta;
-import com.produtos.apirest.repository.TipoConsultaRepo;
+import com.produtos.apirest.models.AppointmentType;
+import com.produtos.apirest.repository.AppointmentTypeRepo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,25 +10,25 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class TipoConsultaTeste {
     @Autowired
-    public TipoConsultaRepo tipoConsultaRepo;
+    public AppointmentTypeRepo appointmentTypeRepo;
 
-    public static TipoConsulta generateTipoConsulta(){
-       return TipoConsulta.builder()
+    public static AppointmentType generateTipoConsulta(){
+       return AppointmentType.builder()
                 .name("name")
                 .build();
     }
 
-    private void rollback(TipoConsulta tipoConsulta){
-        tipoConsultaRepo.delete(tipoConsulta);
+    private void rollback(AppointmentType tipoConsulta){
+        appointmentTypeRepo.delete(tipoConsulta);
     }
 
-    protected static void rollbackTipoConsulta(TipoConsulta tipoConsulta, TipoConsultaRepo tipoConsultaRepo){
-        tipoConsultaRepo.delete(tipoConsulta);
+    protected static void rollbackTipoConsulta(AppointmentType tipoConsulta, AppointmentTypeRepo appointmentTypeRepo){
+        appointmentTypeRepo.delete(tipoConsulta);
     }
 
     @Test
     public void deveSalvar(){
-        TipoConsulta tipoConsultaSalva = tipoConsultaRepo.save(generateTipoConsulta());
+        AppointmentType tipoConsultaSalva = appointmentTypeRepo.save(generateTipoConsulta());
         Assertions.assertNotNull(tipoConsultaSalva);
         Assertions.assertEquals(generateTipoConsulta().getName(), tipoConsultaSalva.getName());
         rollback(tipoConsultaSalva);
@@ -36,9 +36,9 @@ public class TipoConsultaTeste {
 
     @Test
     public void deveAtualizar(){
-        TipoConsulta tipoConsultaSalva = tipoConsultaRepo.save(generateTipoConsulta());
+        AppointmentType tipoConsultaSalva = appointmentTypeRepo.save(generateTipoConsulta());
         tipoConsultaSalva.setName("Nome Novo");
-        TipoConsulta tipoConsultaAtualizada =  tipoConsultaRepo.save(tipoConsultaSalva);
+        AppointmentType tipoConsultaAtualizada =  appointmentTypeRepo.save(tipoConsultaSalva);
         Assertions.assertNotNull(tipoConsultaAtualizada);
         Assertions.assertEquals(tipoConsultaAtualizada.getAppointmentTypeId(), tipoConsultaSalva.getAppointmentTypeId());
         Assertions.assertEquals(tipoConsultaAtualizada.getName(), "Nome Novo");
@@ -47,17 +47,17 @@ public class TipoConsultaTeste {
 
     @Test
     public void deveRemover(){
-        TipoConsulta tipoConsultaSalva = tipoConsultaRepo.save(generateTipoConsulta());
+        AppointmentType tipoConsultaSalva = appointmentTypeRepo.save(generateTipoConsulta());
         Long id = tipoConsultaSalva.getAppointmentTypeId();
-        tipoConsultaRepo.deleteById(id);
-        Assertions.assertFalse(tipoConsultaRepo.findById(id).isPresent());
+        appointmentTypeRepo.deleteById(id);
+        Assertions.assertFalse(appointmentTypeRepo.findById(id).isPresent());
     }
 
     @Test
     public void deveBuscar(){
-        TipoConsulta tipoConsultaSalva = tipoConsultaRepo.save(generateTipoConsulta());
+        AppointmentType tipoConsultaSalva = appointmentTypeRepo.save(generateTipoConsulta());
         Long id = tipoConsultaSalva.getAppointmentTypeId();
-        Assertions.assertTrue(tipoConsultaRepo.findById(id).isPresent());
+        Assertions.assertTrue(appointmentTypeRepo.findById(id).isPresent());
         rollback(tipoConsultaSalva);
     }
 }
