@@ -43,7 +43,10 @@ public class AnimalViewController {
     @PreAuthorize("hasRole('S')")
     @PostMapping("/animal/cadastro")
     public String animalCadastro(AnimalDTO dto){
-        Animal animal = Animal.builder().nome(dto.getNome()).dono(dto.getDono()).tipoAnimal(dto.getTipo()).build();
+        Animal animal = Animal.builder()
+                .name(dto.getNome())
+                .owner(dto.getDono())
+                .animalType(dto.getTipo()).build();
         if(dto.getId() == null){
             animalService.salvar(animal);
         }else{
@@ -76,10 +79,10 @@ public class AnimalViewController {
 
         //AnimalDTO
         AnimalDTO dto = AnimalDTO.builder().id(animalFind.getAnimalId()).
-                nome(animalFind.getNome())
-                .tipo(animalFind.getTipoAnimal())
+                nome(animalFind.getName())
+                .tipo(animalFind.getAnimalType())
                 .tipos(tipoAnimal)
-                .dono(animalFind.getDono())
+                .dono(animalFind.getOwner())
                 .donos(donos)
                 .build();
 

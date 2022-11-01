@@ -31,18 +31,18 @@ public class AnimalDTO {
     public Animal toAnimal(){
         return Animal.builder()
                 .animalId(this.id)
-                .nome(this.nome)
-                .dono(this.dono)
-                .tipoAnimal(this.tipo)
+                .name(this.nome)
+                .owner(this.dono)
+                .animalType(this.tipo)
                 .build();
     }
 
     public Animal toAnimal(Dono dono, TipoAnimal tipo){
         return Animal.builder()
                 .animalId(this.id)
-                .nome(this.nome)
-                .dono(dono)
-                .tipoAnimal(tipo)
+                .name(this.nome)
+                .owner(dono)
+                .animalType(tipo)
                 .build();
     }
 }

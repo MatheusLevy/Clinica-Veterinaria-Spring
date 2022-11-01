@@ -17,9 +17,9 @@ public class DonoTeste {
 
     protected static  Dono generateDono(){
         return Dono.builder()
-                .nome("nome")
+                .name("name")
                 .cpf(generateCPF())
-                .telefone(generateTelefone())
+                .phone(generateTelefone())
                 .build();
     }
 
@@ -35,14 +35,14 @@ public class DonoTeste {
     public void deveSalvar(){
         Dono donoSalvo = donoRepo.save(generateDono());
         Assertions.assertNotNull(donoSalvo);
-        Assertions.assertEquals(generateDono().getNome(), donoSalvo.getNome());
+        Assertions.assertEquals(generateDono().getName(), donoSalvo.getName());
         rollback(donoSalvo);
     }
 
     @Test
     public void deveAtualizar(){
         Dono donoSalvo = donoRepo.save(generateDono());
-        donoSalvo.setNome("Novo nome");
+        donoSalvo.setName("Novo nome");
         Dono donoAtualizado = donoRepo.save(donoSalvo);
         Assertions.assertNotNull(donoAtualizado);
         Assertions.assertEquals(donoAtualizado.getDonoId(), donoSalvo.getDonoId());

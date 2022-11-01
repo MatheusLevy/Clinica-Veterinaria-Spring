@@ -107,7 +107,7 @@
 
 <div style="margin: 10px 200px 10px 200px;">
   <form method="POST" action="/usuario/cadastro" th:object="${usuario}">
-    <input type="hidden" name="usuarioId" id="usuarioId-input" th:value="${usuario.usuarioId}">
+    <input type="hidden" name="usuarioId" id="usuarioId-input" th:value="${usuario.getUserId}">
 
     <div class="mb-3">
       <label for="nome-input" class="form-label">Username</label>
@@ -116,7 +116,7 @@
 
     <div class="mb-3">
       <label for="senha-input" class="form-label">Senha</label>
-      <input type="password" class ="form-control" name="senha"  id ="senha-input" placeholder="Digite a senha" required th:value="${usuario.senha}">
+      <input type="password" class ="form-control" name="senha"  id ="senha-input" placeholder="Digite a senha" required th:value="${usuario.getPassword}">
     </div>
 
     <div class="mb-3">

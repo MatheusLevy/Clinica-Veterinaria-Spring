@@ -29,31 +29,31 @@ public class AnimalTeste {
 
     protected Animal generateAnimal(){
         return Animal.builder()
-                .nome("nome")
-                .tipoAnimal(tipoAnimalRepo.save(generateTipoAnimal()))
-                .dono(donoRepo.save(generateDono()))
+                .name("name")
+                .animalType(tipoAnimalRepo.save(generateTipoAnimal()))
+                .owner(donoRepo.save(generateDono()))
                 .build();
     }
 
     protected static Animal generateAnimal(TipoAnimalRepo tipoAnimalRepo, DonoRepo donoRepo){
         return Animal.builder()
-                .nome("nome")
-                .tipoAnimal(tipoAnimalRepo.save(generateTipoAnimal()))
-                .dono(donoRepo.save(generateDono()))
+                .name("name")
+                .animalType(tipoAnimalRepo.save(generateTipoAnimal()))
+                .owner(donoRepo.save(generateDono()))
                 .build();
     }
 
     private void rollback(Animal animal){
         animalRepo.delete(animal);
-        tipoAnimalRepo.delete(animal.getTipoAnimal());
-        donoRepo.delete(animal.getDono());
+        tipoAnimalRepo.delete(animal.getAnimalType());
+        donoRepo.delete(animal.getOwner());
     }
 
     protected static void rollbackAnimal(Animal animal, AnimalRepo animalRepo,
                                          TipoAnimalRepo tipoAnimalRepo, DonoRepo donoRepo){
         animalRepo.delete(animal);
-        tipoAnimalRepo.delete(animal.getTipoAnimal());
-        donoRepo.delete(animal.getDono());
+        tipoAnimalRepo.delete(animal.getAnimalType());
+        donoRepo.delete(animal.getOwner());
     }
 
     @Test
@@ -66,8 +66,8 @@ public class AnimalTeste {
     @Test
     public void deveAlterarDono(){
         Animal animalSalvo = animalRepo.save(generateAnimal());
-        Dono donoAntigo = animalSalvo.getDono();
-        animalSalvo.setDono(donoRepo.save(generateDono()));
+        Dono donoAntigo = animalSalvo.getOwner();
+        animalSalvo.setOwner(donoRepo.save(generateDono()));
         Animal animalAtualizado = animalRepo.save(animalSalvo);
         Assertions.assertNotNull(animalAtualizado);
         Assertions.assertEquals(animalSalvo.getAnimalId(), animalAtualizado.getAnimalId());
@@ -78,23 +78,23 @@ public class AnimalTeste {
     @Test
     public void deveAtualizar(){
         Animal animalSalvo = animalRepo.save(generateAnimal());
-        animalSalvo.setNome("Nome alterado");
+        animalSalvo.setName("Nome alterado");
         Animal animalAtualizado = animalRepo.save(animalSalvo);
         Assertions.assertNotNull(animalAtualizado);
         Assertions.assertEquals(animalAtualizado.getAnimalId(), animalSalvo.getAnimalId());
-        Assertions.assertEquals(animalAtualizado.getNome(), "Nome alterado");
+        Assertions.assertEquals(animalAtualizado.getName(), "Nome alterado");
         rollback(animalAtualizado);
     }
 
     @Test
     public void deveAtualizarTipoAnimal(){
         Animal animalSalvo = animalRepo.save(generateAnimal());
-        TipoAnimal tipoAnimalAntigo = animalSalvo.getTipoAnimal();
-        animalSalvo.setTipoAnimal(tipoAnimalRepo.save(generateTipoAnimal()));
+        TipoAnimal tipoAnimalAntigo = animalSalvo.getAnimalType();
+        animalSalvo.setAnimalType(tipoAnimalRepo.save(generateTipoAnimal()));
         Animal animalAtualizado = animalRepo.save(animalSalvo);
         Assertions.assertNotNull(animalAtualizado);
         Assertions.assertEquals(animalAtualizado.getAnimalId(), animalSalvo.getAnimalId());
-        Assertions.assertEquals(animalAtualizado.getTipoAnimal().getTipoAnimalId(), animalSalvo.getTipoAnimal().getTipoAnimalId());
+        Assertions.assertEquals(animalAtualizado.getAnimalType().getAnimalTypeId(), animalSalvo.getAnimalType().getAnimalTypeId());
         rollback(animalAtualizado);
         rollbackTipoAnimal(tipoAnimalAntigo, tipoAnimalRepo);
     }
@@ -105,8 +105,8 @@ public class AnimalTeste {
         Long id = animalSalvo.getAnimalId();
         animalRepo.delete(animalSalvo);
         Assertions.assertFalse(animalRepo.findById(id).isPresent());
-        rollbackTipoAnimal(animalSalvo.getTipoAnimal(), tipoAnimalRepo);
-        rollbackDono(animalSalvo.getDono(), donoRepo);
+        rollbackTipoAnimal(animalSalvo.getAnimalType(), tipoAnimalRepo);
+        rollbackDono(animalSalvo.getOwner(), donoRepo);
 
     }
 

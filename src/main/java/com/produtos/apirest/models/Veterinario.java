@@ -13,7 +13,7 @@ import java.util.List;
 
 @Entity
 @Data
-@Table(name = "veterinario")
+@Table(name = "veterinary")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -21,41 +21,41 @@ public class Veterinario {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private long veterinarioId;
+    private long veterinaryId;
 
-    @Column(name = "nome")
+    @Column(name = "name")
     @NotNull
-    private String nome;
+    private String name;
 
-    @Column(name = "telefone")
+    @Column(name = "phone")
     @NotNull
-    private String telefone;
+    private String phone;
 
     @Column(name = "cpf")
     @NotNull
     private String cpf;
 
     @ManyToOne
-    @JoinColumn(name = "especialidade_id", nullable = false)
-    private Especialidade especialidade;
+    @JoinColumn(name = "expertise_id", nullable = false)
+    private Especialidade expertise;
 
-    @OneToMany(mappedBy = "veterinario", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "veterinary", fetch = FetchType.EAGER)
     @JsonIgnore
-    private List<Consulta> consultas;
+    private List<Consulta> appointments;
 
     @Override
     public String toString(){
-        return getClass().getSimpleName() + "[id= " + veterinarioId + ", nome = " + nome
-        + ", telefone= " + telefone + ", cpf= " + cpf + "especialidade= " + especialidade + " ]";
+        return getClass().getSimpleName() + "[id= " + veterinaryId + ", name = " + name
+        + ", phone= " + phone + ", cpf= " + cpf + "expertise= " + expertise + " ]";
     }
 
     public VeterinarioDTO toVeterinarioDTO(){
         return VeterinarioDTO.builder()
-                .id(this.veterinarioId)
-                .nome(this.nome)
-                .telefone(this.telefone)
-                .especialidadeId(this.especialidade.getEspecialidadeId())
-                .especialidadeNome(this.especialidade.getNome())
+                .id(this.veterinaryId)
+                .nome(this.name)
+                .telefone(this.phone)
+                .especialidadeId(this.expertise.getExpertiseId())
+                .especialidadeNome(this.expertise.getName())
                 .build();
     }
 }

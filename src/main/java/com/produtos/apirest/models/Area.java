@@ -26,16 +26,16 @@ public class Area {
 
     @Column(name = "nome")
     @NotNull
-    private String nome;
+    private String name;
 
     @OneToMany(mappedBy = "area", fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<Especialidade> especialidades;
+    private List<Especialidade> expertises;
 
     public AreaDTO toAreaDTO(){
         return AreaDTO.builder()
                 .id(this.areaId)
-                .nome(this.nome)
+                .nome(this.name)
                 .build();
     }
 }

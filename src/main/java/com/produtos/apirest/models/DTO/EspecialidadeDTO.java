@@ -23,17 +23,17 @@ public class EspecialidadeDTO {
 
     public Especialidade toEspecialidade(){
         return Especialidade.builder()
-                .especialidadeId(this.id)
+                .expertiseId(this.id)
                 .area(this.area)
-                .nome(this.nome)
+                .name(this.nome)
                 .build();
     }
 
     public Especialidade toEspecialidade(Area area){
         return Especialidade.builder()
-                .especialidadeId(this.id)
+                .expertiseId(this.id)
                 .area(area)
-                .nome(this.nome)
+                .name(this.nome)
                 .build();
     }
 }

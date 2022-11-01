@@ -37,7 +37,7 @@ public class EspecialidadeViewController {
     @PostMapping("/especialidade/cadastro")
     public String especialidadeCadastroControll(Especialidade especialidade){
 
-        if(Long.valueOf(especialidade.getEspecialidadeId()) == null){
+        if(Long.valueOf(especialidade.getExpertiseId()) == null){
             especialidadeService.salvar(especialidade);
         }else {
             especialidadeService.atualizar(especialidade);
@@ -57,13 +57,14 @@ public class EspecialidadeViewController {
     @PreAuthorize("hasRole('A')")
     @GetMapping("/especialidade/atualizar/{id}")
     public ModelAndView especialidadeAtualizar(@PathVariable(value = "id", required = true) Long id){
-        Especialidade especialidade = Especialidade.builder().especialidadeId(id).build();
-        Especialidade especialidadeFind = especialidadeService.buscarPorId(especialidade.getEspecialidadeId());
+        Especialidade especialidade = Especialidade.builder()
+                .expertiseId(id).build();
+        Especialidade especialidadeFind = especialidadeService.buscarPorId(especialidade.getExpertiseId());
 
         //EspecialidadeDTO
         EspecialidadeDTO dto = EspecialidadeDTO.builder()
-                .id(especialidadeFind.getEspecialidadeId())
-                .nome(especialidadeFind.getNome())
+                .id(especialidadeFind.getExpertiseId())
+                .nome(especialidadeFind.getName())
                 .areas(areaService.buscarTodos())
                 .area(especialidadeFind.getArea())
                 .build();
@@ -76,8 +77,8 @@ public class EspecialidadeViewController {
     @PreAuthorize("hasRole('A')")
     @GetMapping("/especialidade/remover/{id}")
     public String especialidadeRemover(@PathVariable(value = "id", required = true) Long id){
-        Especialidade especialidade = Especialidade.builder().especialidadeId(id).build();
-        Especialidade especialidadeFind = especialidadeService.buscarPorId(especialidade.getEspecialidadeId());
+        Especialidade especialidade = Especialidade.builder().expertiseId(id).build();
+        Especialidade especialidadeFind = especialidadeService.buscarPorId(especialidade.getExpertiseId());
         especialidadeService.remover(especialidadeFind);
         return "redirect:/especialidade/especialidadeList";
     }

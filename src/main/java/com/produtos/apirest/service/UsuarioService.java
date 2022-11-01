@@ -29,14 +29,14 @@ public class UsuarioService {
             throw new NullPointerException("Usuario não pode ser nulo!");
         if (usuario.getUsername() == null)
             throw  new RegraNegocioRunTime("Nome de usuário não pode ser nulo!");
-        if (usuario.getSenha().equals(""))
+        if (usuario.getPassword().equals(""))
             throw new RegraNegocioRunTime("Senha não pode ser vazia!");
         if (usuario.getRoles().isEmpty())
             throw new RegraNegocioRunTime("As roles do usuário não podem ser nulas!");
     }
 
     public static void verificaId(Usuario usuario){
-        if (usuario == null || usuario.getUsuarioId() <= 0){
+        if (usuario == null || usuario.getUserId() <= 0){
             throw new RegraNegocioRunTime("Usuario deve possuir um identificador!");
         }
     }
@@ -50,7 +50,7 @@ public class UsuarioService {
     @Transactional
     public Usuario autenticar (String username, String senha){
         Usuario usuario = usuarioRepo.findByUsername(username);
-        if(passwordEncoder().matches(senha, usuario.getSenha()))
+        if(passwordEncoder().matches(senha, usuario.getPassword()))
             return usuario;
         else
             throw new AuthenticationFailedExpection("Usuário ou senha inválidos!");
@@ -59,7 +59,7 @@ public class UsuarioService {
     @Transactional
     public Usuario salvar(Usuario usuario){
         verificaUsuario(usuario);
-        usuario.setSenha(passwordEncoder().encode(usuario.getSenha()));
+        usuario.setPassword(passwordEncoder().encode(usuario.getPassword()));
         return usuarioRepo.save(usuario);
     }
 

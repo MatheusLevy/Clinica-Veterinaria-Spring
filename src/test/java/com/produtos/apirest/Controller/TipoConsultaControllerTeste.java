@@ -32,8 +32,8 @@ public class TipoConsultaControllerTeste {
 
     public static TipoConsulta generateTipoConsultaInstance(){
         return TipoConsulta.builder()
-                .tipoConsultaId(1L)
-                .nome("nome")
+                .appointmentTypeId(1L)
+                .name("name")
                 .build();
     }
 

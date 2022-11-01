@@ -52,8 +52,8 @@ public class EspecialidadeControllerTeste {
 
     public static Especialidade generateEspecialidadeInstance(){
         return Especialidade.builder()
-                .especialidadeId(1L)
-                .nome("nome")
+                .expertiseId(1L)
+                .name("nome")
                 .area(generateAreaInstance())
                 .build();
     }

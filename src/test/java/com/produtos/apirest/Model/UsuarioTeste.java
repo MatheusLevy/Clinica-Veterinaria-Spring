@@ -16,7 +16,7 @@ public class UsuarioTeste {
     protected static Usuario generateUsuario(){
         return Usuario.builder()
                 .username("username")
-                .senha("123")
+                .password("password")
                 .build();
     }
 
@@ -32,7 +32,7 @@ public class UsuarioTeste {
     public void deveSalvar(){
         Usuario usuarioSalvo = usuarioRepo.save(generateUsuario());
         Assertions.assertNotNull(usuarioSalvo);
-        Assertions.assertNotNull(usuarioSalvo.getUsuarioId());
+        Assertions.assertNotNull(usuarioSalvo.getUserId());
         rollback(usuarioSalvo);
     }
 
@@ -42,7 +42,7 @@ public class UsuarioTeste {
         usuarioSalvo.setUsername("Novo Username");
         Usuario usuarioAtualizado = usuarioRepo.save(usuarioSalvo);
         Assertions.assertNotNull(usuarioAtualizado);
-        Assertions.assertEquals(usuarioAtualizado.getUsuarioId(), usuarioSalvo.getUsuarioId());
+        Assertions.assertEquals(usuarioAtualizado.getUserId(), usuarioSalvo.getUserId());
         Assertions.assertEquals(usuarioAtualizado.getUsername(), "Novo Username");
         rollback(usuarioSalvo);
     }
@@ -50,7 +50,7 @@ public class UsuarioTeste {
     @Test
     public void deveRemover(){
         Usuario usuarioSalvo = usuarioRepo.save(generateUsuario());
-        Long id = usuarioSalvo.getUsuarioId();
+        Long id = usuarioSalvo.getUserId();
         usuarioRepo.deleteById(id);
         Assertions.assertFalse(usuarioRepo.findById(id).isPresent());
     }
@@ -58,7 +58,7 @@ public class UsuarioTeste {
     @Test
     public void deveBuscar(){
         Usuario usuarioSalvo = usuarioRepo.save(generateUsuario());
-        Long id = usuarioSalvo.getUsuarioId();
+        Long id = usuarioSalvo.getUserId();
         Assertions.assertTrue(usuarioRepo.findById(id).isPresent());
         rollback(usuarioSalvo);
     }
@@ -68,7 +68,7 @@ public class UsuarioTeste {
         Usuario usuarioSalvo = usuarioRepo.save(generateUsuario());
         Usuario usuarioEncontrado = usuarioRepo.findByUsername(usuarioSalvo.getUsername());
         Assertions.assertNotNull(usuarioEncontrado);
-        Assertions.assertEquals(usuarioEncontrado.getUsuarioId(), usuarioSalvo.getUsuarioId());
+        Assertions.assertEquals(usuarioEncontrado.getUserId(), usuarioSalvo.getUserId());
         rollback(usuarioSalvo);
     }
 }

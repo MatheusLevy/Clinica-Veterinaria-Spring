@@ -12,7 +12,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "tipo_animal")
+@Table(name = "animal_type")
 @Data
 @Builder
 @NoArgsConstructor
@@ -22,25 +22,25 @@ public class TipoAnimal {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private long tipoAnimalId;
+    private long animalTypeId;
 
-    @Column(name = "nome")
+    @Column(name = "name")
     @NotNull
-    private String nome;
+    private String name;
 
-    @OneToMany(mappedBy = "tipoAnimal", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "animalType", fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<Animal> animais;
+    private List<Animal> animals;
 
     @Override
     public String toString(){
-        return getClass().getSimpleName() + "[id= " + tipoAnimalId + ", nome= " + nome + "]";
+        return getClass().getSimpleName() + "[id= " + animalTypeId + ", name= " + name + "]";
     }
 
     public TipoAnimalDTO toTipoAnimalDTO(){
         return TipoAnimalDTO.builder()
-                .id(this.tipoAnimalId)
-                .nome(this.nome)
+                .id(this.animalTypeId)
+                .nome(this.name)
                 .build();
     }
 }

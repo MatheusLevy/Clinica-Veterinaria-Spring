@@ -40,7 +40,7 @@ public class AreaControllerTeste {
     public static Area generateAreaInstance(){
         return Area.builder()
                 .areaId(1L)
-                .nome("nome")
+                .name("name")
                 .build();
     }
 

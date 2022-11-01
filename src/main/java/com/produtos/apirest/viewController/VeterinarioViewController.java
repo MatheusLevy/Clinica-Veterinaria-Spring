@@ -1,8 +1,6 @@
 package com.produtos.apirest.viewController;
 
-import com.produtos.apirest.models.Animal;
 import com.produtos.apirest.models.DTO.VeterinarioDTO;
-import com.produtos.apirest.models.Dono;
 import com.produtos.apirest.models.Especialidade;
 import com.produtos.apirest.models.Veterinario;
 import com.produtos.apirest.service.EspecialidadeService;
@@ -10,11 +8,9 @@ import com.produtos.apirest.service.VeterinarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -42,15 +38,15 @@ public class VeterinarioViewController {
     @PostMapping("/veterinario/cadastro")
     public String veterinarioCadastro(VeterinarioDTO dto){
         Veterinario veterinario = Veterinario.builder()
-                .nome(dto.getNome())
+                .name(dto.getNome())
                 .cpf(dto.getCpf())
-                .telefone(dto.getTelefone())
-                .especialidade(dto.getEspecialidade())
+                .phone(dto.getTelefone())
+                .expertise(dto.getEspecialidade())
                 .build();
         if(dto.getId() == null){
             veterinarioService.salvar(veterinario);
         }else{
-            veterinario.setVeterinarioId(dto.getId());
+            veterinario.setVeterinaryId(dto.getId());
             veterinarioService.atualizar(veterinario);
 
         }
@@ -78,11 +74,11 @@ public class VeterinarioViewController {
 
         //DTO
         VeterinarioDTO veterinarioDTO = VeterinarioDTO.builder()
-                .id(veterinarioBuscado.getVeterinarioId())
-                .nome(veterinarioBuscado.getNome())
-                .telefone(veterinarioBuscado.getTelefone())
+                .id(veterinarioBuscado.getVeterinaryId())
+                .nome(veterinarioBuscado.getName())
+                .telefone(veterinarioBuscado.getPhone())
                 .cpf(veterinarioBuscado.getCpf())
-                .especialidade(veterinarioBuscado.getEspecialidade())
+                .especialidade(veterinarioBuscado.getExpertise())
                 .especialidades(especialidades)
                 .build();
 

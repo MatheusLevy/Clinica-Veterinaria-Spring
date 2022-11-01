@@ -23,12 +23,12 @@ public class TipoConsultaService {
     public static void verificaTipoConsulta(TipoConsulta tipo){
         if (tipo == null)
             throw new NullPointerException("Tipo de Consulta não pode ser Nulo!");
-        if (tipo.getNome().equals(""))
+        if (tipo.getName().equals(""))
             throw new RegraNegocioRunTime("Tipo de Consulta deve ter um nome!");
     }
 
     public static void verificaId(TipoConsulta tipo){
-        if(tipo == null || tipo.getTipoConsultaId() <= 0)
+        if(tipo == null || tipo.getAppointmentTypeId() <= 0)
             throw new RegraNegocioRunTime("Tipo de Consulta deve ter um identificador!");
     }
 

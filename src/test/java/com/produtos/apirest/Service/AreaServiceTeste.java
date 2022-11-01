@@ -29,7 +29,7 @@ public class AreaServiceTeste {
 
     protected static Area generateArea(){
         return Area.builder()
-                .nome("nome")
+                .name("name")
                 .build();
     }
 
@@ -51,7 +51,7 @@ public class AreaServiceTeste {
     @Test
     public void deveAtualizar(){
         Area areaSalva = areaRepo.save(generateArea());
-        areaSalva.setNome("Area Atualizada");
+        areaSalva.setName("Area Atualizada");
         Area areaAtualizada = areaService.atualizar(areaSalva);
         Assertions.assertNotNull(areaAtualizada);
         Assertions.assertEquals(areaSalva.getAreaId(), areaAtualizada.getAreaId());
@@ -89,7 +89,7 @@ public class AreaServiceTeste {
         Area AreaEncontrada = areaService.buscarPorId(areaSalva.getAreaId());
         Assertions.assertNotNull(AreaEncontrada);
         Assertions.assertEquals(areaSalva.getAreaId(), AreaEncontrada.getAreaId());
-        Assertions.assertEquals(areaSalva.getNome(), AreaEncontrada.getNome());
+        Assertions.assertEquals(areaSalva.getName(), AreaEncontrada.getName());
         rollback(areaSalva);
     }
 
@@ -98,7 +98,7 @@ public class AreaServiceTeste {
         Area areaSalva = areaRepo.save(generateArea());
         Area filtro = Area.builder()
                 .areaId(areaSalva.getAreaId())
-                .nome(areaSalva.getNome())
+                .name(areaSalva.getName())
                 .build();
         Assertions.assertFalse(areaService.buscar(filtro).isEmpty());
         rollback(areaSalva);

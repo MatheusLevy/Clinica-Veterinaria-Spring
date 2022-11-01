@@ -48,11 +48,11 @@ public class ConsultaViewController {
     @PostMapping("/consulta/cadastro")
     public String consultaCadastro(ConsultaDTO dto){
         Consulta consulta = Consulta.builder()
-                .veterinario(dto.getVeterinario())
+                .veterinary(dto.getVeterinario())
                 .animal(dto.getAnimal())
-                .tipoConsulta(dto.getTipo())
-                .descricao(dto.getDescricao())
-                .data(dto.getData())
+                .appointmentType(dto.getTipo())
+                .description(dto.getDescricao())
+                .date(dto.getData())
                 .build();
 
         if(dto.getId() == null){
@@ -91,11 +91,11 @@ public class ConsultaViewController {
 
         ConsultaDTO dto = ConsultaDTO.builder()
                 .id(consultaFind.getConsultaId())
-                .tipo(consultaFind.getTipoConsulta())
+                .tipo(consultaFind.getAppointmentType())
                 .animal(consultaFind.getAnimal())
-                .descricao(consultaFind.getDescricao())
-                .data(consultaFind.getData())
-                .veterinario(consultaFind.getVeterinario())
+                .descricao(consultaFind.getDescription())
+                .data(consultaFind.getDate())
+                .veterinario(consultaFind.getVeterinary())
                 .animais(animais)
                 .tiposConsulta(tipos)
                 .veterinarios(veterinarios)

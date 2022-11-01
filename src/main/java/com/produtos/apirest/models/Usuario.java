@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "usuarios")
+@Table(name = "users")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,15 +24,15 @@ public class Usuario implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private Long usuarioId;
+    private Long userId;
 
     @Column(name = "usuario")
     @NotNull
     private String username;
 
-    @Column(name = "senha")
+    @Column(name = "password")
     @NotNull
-    private String senha;
+    private String password;
 
     @ManyToMany
     @JoinTable(name="Users_Roles",
@@ -43,8 +43,8 @@ public class Usuario implements UserDetails{
 
     @Override
     public String toString(){
-        return getClass().getSimpleName() + "[id= " + usuarioId + ", username= " + username
-                + ", senha= " + senha + ", Roles= " + roles + "]";
+        return getClass().getSimpleName() + "[id= " + userId + ", username= " + username
+                + ", password= " + password + ", Roles= " + roles + "]";
     }
 
     @Override
@@ -58,7 +58,7 @@ public class Usuario implements UserDetails{
     }
     @Override
     public String getPassword() {
-        return this.senha;
+        return this.password;
     }
 
     @Override
@@ -83,7 +83,7 @@ public class Usuario implements UserDetails{
 
     public UsuarioDTO toUsuarioDTO(){
         return UsuarioDTO.builder()
-                .id(this.usuarioId)
+                .id(this.userId)
                 .username(this.username)
                 .roles(this.roles)
                 .build();

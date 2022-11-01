@@ -14,7 +14,7 @@ public class TipoAnimalTeste {
 
     protected static TipoAnimal generateTipoAnimal(){
        return TipoAnimal.builder()
-                .nome("nome")
+                .name("name")
                 .build();
     }
 
@@ -30,25 +30,25 @@ public class TipoAnimalTeste {
     public void deveSalvar(){
         TipoAnimal tipoAnimalSalvo = tipoAnimalRepo.save(generateTipoAnimal());
         Assertions.assertNotNull(tipoAnimalSalvo);
-        Assertions.assertEquals(generateTipoAnimal().getNome(), tipoAnimalSalvo.getNome());
+        Assertions.assertEquals(generateTipoAnimal().getName(), tipoAnimalSalvo.getName());
         rollback(tipoAnimalSalvo);
     }
 
     @Test
     public void deveAtualizar(){
         TipoAnimal tipoAnimalSalvo = tipoAnimalRepo.save(generateTipoAnimal());
-        tipoAnimalSalvo.setNome("Novo nome");
+        tipoAnimalSalvo.setName("Novo nome");
         TipoAnimal tipoAnimalAtualizado = tipoAnimalRepo.save(tipoAnimalSalvo);
         Assertions.assertNotNull(tipoAnimalAtualizado);
-        Assertions.assertEquals(tipoAnimalAtualizado.getTipoAnimalId(), tipoAnimalSalvo.getTipoAnimalId());
-        Assertions.assertEquals(tipoAnimalAtualizado.getNome(), "Novo nome");
+        Assertions.assertEquals(tipoAnimalAtualizado.getAnimalTypeId(), tipoAnimalSalvo.getAnimalTypeId());
+        Assertions.assertEquals(tipoAnimalAtualizado.getName(), "Novo nome");
         rollback(tipoAnimalAtualizado);
     }
 
     @Test
     public void deveRemover(){
         TipoAnimal tipoAnimalSalvo = tipoAnimalRepo.save(generateTipoAnimal());
-        Long id = tipoAnimalSalvo.getTipoAnimalId();
+        Long id = tipoAnimalSalvo.getAnimalTypeId();
         tipoAnimalRepo.deleteById(id);
         Assertions.assertFalse(tipoAnimalRepo.findById(id).isPresent());
     }
@@ -56,7 +56,7 @@ public class TipoAnimalTeste {
     @Test
     public void deveBuscar(){
         TipoAnimal tipoAnimalSalvo = tipoAnimalRepo.save(generateTipoAnimal());
-        Long id = tipoAnimalSalvo.getTipoAnimalId();
+        Long id = tipoAnimalSalvo.getAnimalTypeId();
         Assertions.assertTrue(tipoAnimalRepo.findById(id).isPresent());
         rollback(tipoAnimalSalvo);
     }

@@ -110,12 +110,12 @@
     <input type="hidden" name="donoId" id="donoId-input" th:value="${dono.donoId}">
     <div class="mb-3">
       <label for="nome-input" class="form-label">Nome</label>
-      <input type="text" class ="form-control" name="nome"  id ="nome-input" placeholder="Digite o nome" required th:value="${dono.nome}">
+      <input type="text" class ="form-control" name="nome"  id ="nome-input" placeholder="Digite o nome" required th:value="${dono.getName}">
     </div>
 
     <div class = "mb-3">
       <label for="telefone-input" class="form-label">Telefone</label>
-      <input type="text" class="form-control" name="telefone" id="telefone-input" placeholder="Digite o telefone" th:value="${dono.telefone}" data-mask="(00) 0000-0000" data-mask-selectonfocus="true" required="required">
+      <input type="text" class="form-control" name="telefone" id="telefone-input" placeholder="Digite o telefone" th:value="${dono.getPhone}" data-mask="(00) 0000-0000" data-mask-selectonfocus="true" required="required">
     </div>
 
     <div class = "mb-3">

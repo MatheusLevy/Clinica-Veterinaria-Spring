@@ -21,7 +21,7 @@ public class TipoAnimalServiceTeste {
 
     protected static TipoAnimal generateTipoAnimal(){
         return TipoAnimal.builder()
-                .nome("teste")
+                .name("test")
                 .build();
     }
 
@@ -43,10 +43,10 @@ public class TipoAnimalServiceTeste {
     @Test
     public void deveAtualizar(){
         TipoAnimal tipoAnimalSalvo = tipoAnimalRepo.save(generateTipoAnimal());
-        tipoAnimalSalvo.setNome("Tipo Animal Atualizado");
+        tipoAnimalSalvo.setName("Tipo Animal Atualizado");
         TipoAnimal tipoAnimalAtualizado = tipoAnimalService.atualizar(tipoAnimalSalvo);
         Assertions.assertNotNull(tipoAnimalAtualizado);
-        Assertions.assertEquals(tipoAnimalSalvo.getTipoAnimalId(), tipoAnimalAtualizado.getTipoAnimalId());
+        Assertions.assertEquals(tipoAnimalSalvo.getAnimalTypeId(), tipoAnimalAtualizado.getAnimalTypeId());
         rollback(tipoAnimalAtualizado);
     }
 
@@ -54,21 +54,21 @@ public class TipoAnimalServiceTeste {
     public void deveRemover(){
         TipoAnimal tipoAnimalSalvo = tipoAnimalRepo.save(generateTipoAnimal());
         tipoAnimalService.remover(tipoAnimalSalvo);
-        Assertions.assertFalse(tipoAnimalRepo.findById(tipoAnimalSalvo.getTipoAnimalId()).isPresent());
+        Assertions.assertFalse(tipoAnimalRepo.findById(tipoAnimalSalvo.getAnimalTypeId()).isPresent());
     }
 
     @Test
     public void deveRemoverComFeedback(){
         TipoAnimal tipoAnimalSalvo = tipoAnimalRepo.save(generateTipoAnimal());
-        TipoAnimal tipoAnimalFeedback = tipoAnimalService.removerComFeedback(tipoAnimalSalvo.getTipoAnimalId());
+        TipoAnimal tipoAnimalFeedback = tipoAnimalService.removerComFeedback(tipoAnimalSalvo.getAnimalTypeId());
         Assertions.assertNotNull(tipoAnimalFeedback);
-        Assertions.assertEquals(tipoAnimalSalvo.getTipoAnimalId(), tipoAnimalFeedback.getTipoAnimalId());
+        Assertions.assertEquals(tipoAnimalSalvo.getAnimalTypeId(), tipoAnimalFeedback.getAnimalTypeId());
     }
 
     @Test
     public void deveRemoverPorId(){
         TipoAnimal tipoAnimalSalvo = tipoAnimalRepo.save(generateTipoAnimal());
-        Long id = tipoAnimalSalvo.getTipoAnimalId();
+        Long id = tipoAnimalSalvo.getAnimalTypeId();
         tipoAnimalService.removerPorId(id);;
         Assertions.assertFalse(tipoAnimalRepo.findById(id).isPresent());
     }
@@ -76,9 +76,9 @@ public class TipoAnimalServiceTeste {
     @Test
     public void deveBuscarPorId(){
         TipoAnimal tipoAnimalSalvo = tipoAnimalRepo.save(generateTipoAnimal());
-        TipoAnimal TipoAnimalEncontrado = tipoAnimalService.buscarPorId(tipoAnimalSalvo.getTipoAnimalId());
+        TipoAnimal TipoAnimalEncontrado = tipoAnimalService.buscarPorId(tipoAnimalSalvo.getAnimalTypeId());
         Assertions.assertNotNull(TipoAnimalEncontrado);
-        Assertions.assertEquals(TipoAnimalEncontrado.getTipoAnimalId(), tipoAnimalSalvo.getTipoAnimalId());
+        Assertions.assertEquals(TipoAnimalEncontrado.getAnimalTypeId(), tipoAnimalSalvo.getAnimalTypeId());
         rollback(tipoAnimalSalvo);
     }
 

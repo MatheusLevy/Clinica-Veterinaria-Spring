@@ -48,22 +48,22 @@ public class ConsultaDTO {
     public Consulta toConsulta(){
         return Consulta.builder()
                 .consultaId(this.id)
-                .data(this.data)
-                .descricao(this.descricao)
+                .date(this.data)
+                .description(this.descricao)
                 .animal(this.animal)
-                .veterinario(this.veterinario)
-                .tipoConsulta(this.tipo)
+                .veterinary(this.veterinario)
+                .appointmentType(this.tipo)
                 .build();
     }
 
     public Consulta toConsulta(Animal animal, Veterinario veterinario, TipoConsulta tipoConsulta){
         return Consulta.builder()
                 .consultaId(this.id)
-                .data(this.data)
-                .descricao(this.descricao)
+                .date(this.data)
+                .description(this.descricao)
                 .animal(animal)
-                .veterinario(veterinario)
-                .tipoConsulta(tipoConsulta)
+                .veterinary(veterinario)
+                .appointmentType(tipoConsulta)
                 .build();
     }
 }

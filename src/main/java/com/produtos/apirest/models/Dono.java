@@ -13,7 +13,7 @@ import java.util.List;
 
 @Entity
 @Data
-@Table(name = "dono")
+@Table(name = "owner")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,30 +26,30 @@ public class Dono {
 
     @Column(name = "nome")
     @NotNull
-    private String nome;
+    private String name;
 
-    @Column(name = "telefone")
+    @Column(name = "phone")
     @NotNull
-    private String telefone;
+    private String phone;
 
     @Column(name = "cpf")
     @NotNull
     private String cpf;
 
-    @OneToMany(mappedBy = "dono", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Animal> animais;
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "[donoId=" + donoId + ", nome=" + nome +", telefone=" + telefone + ", cpf= " + cpf + " ]";
+        return getClass().getSimpleName() + "[OwnerId=" + donoId + ", name=" + name +", phone=" + phone + ", cpf= " + cpf + " ]";
     }
 
     public DonoDTO toDonoDTO(){
        return DonoDTO.builder()
                 .id(this.donoId)
-                .telefone(this.telefone)
-                .nome(this.nome)
+                .telefone(this.phone)
+                .nome(this.name)
                 .build();
     }
 }

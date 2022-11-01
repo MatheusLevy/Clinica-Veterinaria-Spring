@@ -12,7 +12,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "tipo_consulta")
+@Table(name = "appointment_type")
 @Data
 @Builder
 @NoArgsConstructor
@@ -22,25 +22,25 @@ public class TipoConsulta {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private long tipoConsultaId;
+    private long appointmentTypeId;
 
-    @Column(name = "nome")
+    @Column(name = "name")
     @NotNull
-    private String nome;
+    private String name;
 
-    @OneToMany(mappedBy = "tipoConsulta", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "appointmentType", fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<Consulta> consultas;
+    private List<Consulta> appointments;
 
     @Override
     public String toString(){
-        return getClass().getSimpleName() + "[id= " + tipoConsultaId + ", nome= " + nome+ " ]" ;
+        return getClass().getSimpleName() + "[id= " + appointmentTypeId + ", name= " + name + " ]" ;
     }
 
     public TipoConsultaDTO toTipoConsultaDTO(){
         return TipoConsultaDTO.builder()
-                .id(this.tipoConsultaId)
-                .nome(this.nome)
+                .id(this.appointmentTypeId)
+                .nome(this.name)
                 .build();
     }
 }

@@ -35,26 +35,26 @@ public class AnimalServiceTeste {
     protected static Animal generateAnimal(TipoAnimalRepo tipoAnimalRepo, DonoRepo donoRepo,
                                            Boolean initializeFields){
         Animal animal = Animal.builder()
-                .nome("teste")
-                .tipoAnimal(generateTipoAnimal())
-                .dono(generateDono())
+                .name("test")
+                .animalType(generateTipoAnimal())
+                .owner(generateDono())
                 .build();
         if (initializeFields){
-            animal.setTipoAnimal(tipoAnimalRepo.save(animal.getTipoAnimal()));
-            animal.setDono(donoRepo.save(animal.getDono()));
+            animal.setAnimalType(tipoAnimalRepo.save(animal.getAnimalType()));
+            animal.setOwner(donoRepo.save(animal.getOwner()));
         }
         return animal;
     }
 
     private Animal generateAnimal(Boolean initializeFields){
         Animal animal = Animal.builder()
-                .nome("teste")
-                .tipoAnimal(generateTipoAnimal())
-                .dono(generateDono())
+                .name("test")
+                .animalType(generateTipoAnimal())
+                .owner(generateDono())
                 .build();
         if (initializeFields){
-            animal.setTipoAnimal(tipoAnimalRepo.save(animal.getTipoAnimal()));
-            animal.setDono(donoRepo.save(animal.getDono()));
+            animal.setAnimalType(tipoAnimalRepo.save(animal.getAnimalType()));
+            animal.setOwner(donoRepo.save(animal.getOwner()));
         }
         return animal;
     }
@@ -63,15 +63,15 @@ public class AnimalServiceTeste {
                                          DonoRepo donoRepo,
                                          TipoAnimalRepo tipoAnimalRepo){
         animalRepo.delete(animal);
-        donoRepo.delete(animal.getDono());
-        tipoAnimalRepo.delete(animal.getTipoAnimal());
+        donoRepo.delete(animal.getOwner());
+        tipoAnimalRepo.delete(animal.getAnimalType());
     }
 
     private void rollback(Animal animal, Boolean skipAnimal){
         if (!skipAnimal)
             animalRepo.delete(animal);
-        donoRepo.delete(animal.getDono());
-        tipoAnimalRepo.delete(animal.getTipoAnimal());
+        donoRepo.delete(animal.getOwner());
+        tipoAnimalRepo.delete(animal.getAnimalType());
     }
 
     @Test
@@ -84,11 +84,11 @@ public class AnimalServiceTeste {
     @Test
     public void deveAtualizar(){
         Animal animalSalvo = animalRepo.save(generateAnimal(true));
-        animalSalvo.setNome("Animal Atualizado");
+        animalSalvo.setName("Animal Atualizado");
         Animal animalAtualizado = animalService.atualizar(animalSalvo);
         Assertions.assertNotNull(animalAtualizado);
         Assertions.assertEquals(animalSalvo.getAnimalId(), animalAtualizado.getAnimalId());
-        Assertions.assertEquals(animalAtualizado.getNome(), "Animal Atualizado");
+        Assertions.assertEquals(animalAtualizado.getName(), "Animal Atualizado");
         rollback(animalSalvo, false);
     }
 
@@ -125,7 +125,7 @@ public class AnimalServiceTeste {
         Long id = animalSalvo.getAnimalId();
         Animal animalEncontrado = animalService.buscarPorId(id);
         Assertions.assertNotNull(animalEncontrado);
-        Assertions.assertEquals(animalSalvo.getDono().getDonoId(), animalEncontrado.getDono().getDonoId());
+        Assertions.assertEquals(animalSalvo.getOwner().getDonoId(), animalEncontrado.getOwner().getDonoId());
         rollback(animalSalvo, false);
     }
 
@@ -134,7 +134,7 @@ public class AnimalServiceTeste {
         Animal animalSalvo = animalRepo.save(generateAnimal(true));
         Animal filtro = Animal.builder()
                 .animalId(animalSalvo.getAnimalId())
-                .nome(animalSalvo.getNome())
+                .name(animalSalvo.getName())
                 .build();
         List<Animal> animaisEncontradosList = animalService.buscar(filtro);
         Assertions.assertNotNull(animaisEncontradosList);
@@ -156,18 +156,18 @@ public class AnimalServiceTeste {
         Animal animalSalvo = animalRepo.save(generateAnimal(true));
         Dono donoEncontrado = animalService.buscarDonoPorId(animalSalvo.getAnimalId());
         Assertions.assertNotNull(donoEncontrado);
-        Assertions.assertEquals(donoEncontrado.getDonoId(), animalSalvo.getDono().getDonoId());
+        Assertions.assertEquals(donoEncontrado.getDonoId(), animalSalvo.getOwner().getDonoId());
         rollback(animalSalvo, false);
     }
 
     @Test
     public void deveAtualizarDono(){
         Animal animalSalvo = animalRepo.save(generateAnimal(true));
-        Dono donoAntigo = animalSalvo.getDono();
+        Dono donoAntigo = animalSalvo.getOwner();
         Dono donoNovo = donoRepo.save(generateDono());
         Animal animalAtualizado = animalService.atualizarDono(animalSalvo, donoNovo);
         Assertions.assertNotNull(animalAtualizado);
-        Assertions.assertEquals(animalAtualizado.getDono().getDonoId(), donoNovo.getDonoId());
+        Assertions.assertEquals(animalAtualizado.getOwner().getDonoId(), donoNovo.getDonoId());
         rollback(animalAtualizado, false);
         donoRepo.delete(donoAntigo);
     }

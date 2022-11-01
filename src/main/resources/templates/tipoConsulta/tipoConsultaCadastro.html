@@ -107,10 +107,10 @@
 
 <div style="margin: 10px 200px 10px 200px;">
   <form method="POST" action="/tipoConsulta/cadastro" th:object="${tipoConsulta}">
-    <input type="hidden" name="tipoConsultaId" id="tipoConsultaId-input" th:value="${tipoConsulta.tipoConsultaId}">
+    <input type="hidden" name="tipoConsultaId" id="tipoConsultaId-input" th:value="${tipoConsulta.getAppointmentTypeId}">
     <div class="mb-3">
       <label for="nome-input" class="form-label">Nome</label>
-      <input type="text" class ="form-control" name="nome"  id ="nome-input" placeholder="Digite o nome" required th:value="${tipoConsulta.nome}">
+      <input type="text" class ="form-control" name="nome"  id ="nome-input" placeholder="Digite o nome" required th:value="${tipoConsulta.getName}">
     </div>
     <button type="submit" class="btn btn-primary">Cadastrar</button>
   </form>

@@ -45,15 +45,15 @@ public class ConsultaTeste {
 
     protected Consulta generateConsulta(Boolean initializeFields){
         Consulta consulta = Consulta.builder()
-                .descricao("desc")
-                .data(LocalDate.now())
-                .tipoConsulta(generateTipoConsulta())
-                .veterinario(generateVeterinario(true, especialidadeRepo, areaRepo))
+                .description("desc")
+                .date(LocalDate.now())
+                .appointmentType(generateTipoConsulta())
+                .veterinary(generateVeterinario(true, especialidadeRepo, areaRepo))
                 .animal(generateAnimal(tipoAnimalRepo, donoRepo))
                 .build();
         if(initializeFields){
-            consulta.setTipoConsulta(tipoConsultaRepo.save(consulta.getTipoConsulta()));
-            consulta.setVeterinario(veterinarioRepo.save(consulta.getVeterinario()));
+            consulta.setAppointmentType(tipoConsultaRepo.save(consulta.getAppointmentType()));
+            consulta.setVeterinary(veterinarioRepo.save(consulta.getVeterinary()));
             consulta.setAnimal(animalRepo.save(consulta.getAnimal()));
         }
         return consulta;
@@ -62,13 +62,13 @@ public class ConsultaTeste {
     private void rollback(Consulta consulta, Boolean skipConsulta){
         if (!skipConsulta)
             consultaRepo.delete(consulta);
-        veterinarioRepo.delete(consulta.getVeterinario());
-        especialidadeRepo.delete(consulta.getVeterinario().getEspecialidade());
-        areaRepo.delete(consulta.getVeterinario().getEspecialidade().getArea());
+        veterinarioRepo.delete(consulta.getVeterinary());
+        especialidadeRepo.delete(consulta.getVeterinary().getExpertise());
+        areaRepo.delete(consulta.getVeterinary().getExpertise().getArea());
         animalRepo.delete(consulta.getAnimal());
-        tipoAnimalRepo.delete(consulta.getAnimal().getTipoAnimal());
-        donoRepo.delete(consulta.getAnimal().getDono());
-        tipoConsultaRepo.delete(consulta.getTipoConsulta());
+        tipoAnimalRepo.delete(consulta.getAnimal().getAnimalType());
+        donoRepo.delete(consulta.getAnimal().getOwner());
+        tipoConsultaRepo.delete(consulta.getAppointmentType());
     }
 
     protected static void rollbackConsulta(Consulta consulta, ConsultaRepo consultaRepo,
@@ -78,13 +78,13 @@ public class ConsultaTeste {
                                            Boolean skipConsulta){
         if (!skipConsulta)
             consultaRepo.delete(consulta);
-        veterinarioRepo.delete(consulta.getVeterinario());
-        especialidadeRepo.delete(consulta.getVeterinario().getEspecialidade());
-        areaRepo.delete(consulta.getVeterinario().getEspecialidade().getArea());
+        veterinarioRepo.delete(consulta.getVeterinary());
+        especialidadeRepo.delete(consulta.getVeterinary().getExpertise());
+        areaRepo.delete(consulta.getVeterinary().getExpertise().getArea());
         animalRepo.delete(consulta.getAnimal());
-        tipoAnimalRepo.delete(consulta.getAnimal().getTipoAnimal());
-        donoRepo.delete(consulta.getAnimal().getDono());
-        tipoConsultaRepo.delete(consulta.getTipoConsulta());
+        tipoAnimalRepo.delete(consulta.getAnimal().getAnimalType());
+        donoRepo.delete(consulta.getAnimal().getOwner());
+        tipoConsultaRepo.delete(consulta.getAppointmentType());
     }
 
     @Test
@@ -97,23 +97,23 @@ public class ConsultaTeste {
     @Test
     public void deveAtualizar(){
         Consulta consultaSalva = consultaRepo.save(generateConsulta(true));
-        consultaSalva.setDescricao("Nova descrição");
+        consultaSalva.setDescription("Nova descrição");
         Consulta consultaAtualizada = consultaRepo.save(consultaSalva);
         Assertions.assertNotNull(consultaAtualizada);
         Assertions.assertEquals(consultaSalva.getConsultaId(), consultaAtualizada.getConsultaId());
-        Assertions.assertEquals(consultaAtualizada.getDescricao(), "Nova descrição");
+        Assertions.assertEquals(consultaAtualizada.getDescription(), "Nova descrição");
         rollback(consultaSalva, false);
     }
 
     @Test
     public void deveAtualizarTipoConsulta(){
         Consulta consultaSalva = consultaRepo.save(generateConsulta(true));
-        TipoConsulta tipoConsultaAntiga = consultaSalva.getTipoConsulta();
-        consultaSalva.setTipoConsulta(tipoConsultaRepo.save(generateTipoConsulta()));
+        TipoConsulta tipoConsultaAntiga = consultaSalva.getAppointmentType();
+        consultaSalva.setAppointmentType(tipoConsultaRepo.save(generateTipoConsulta()));
         Consulta consultaAtualizada = consultaRepo.save(consultaSalva);
         Assertions.assertNotNull(consultaAtualizada);
         Assertions.assertEquals(consultaSalva.getConsultaId(), consultaAtualizada.getConsultaId());
-        Assertions.assertEquals(consultaAtualizada.getTipoConsulta().getTipoConsultaId(), consultaSalva.getTipoConsulta().getTipoConsultaId());
+        Assertions.assertEquals(consultaAtualizada.getAppointmentType().getAppointmentTypeId(), consultaSalva.getAppointmentType().getAppointmentTypeId());
         rollback(consultaSalva, false);
         rollbackTipoConsulta(tipoConsultaAntiga, tipoConsultaRepo);
     }
@@ -134,12 +134,12 @@ public class ConsultaTeste {
     @Test
     public void deveAtualizarVeterinario(){
         Consulta consultaSalva = consultaRepo.save(generateConsulta(true));
-        Veterinario veterinarioAntigo = consultaSalva.getVeterinario();
-        consultaSalva.setVeterinario(veterinarioRepo.save(generateVeterinario(true, especialidadeRepo, areaRepo)));
+        Veterinario veterinarioAntigo = consultaSalva.getVeterinary();
+        consultaSalva.setVeterinary(veterinarioRepo.save(generateVeterinario(true, especialidadeRepo, areaRepo)));
         Consulta consultaAtualizada = consultaRepo.save(consultaSalva);
         Assertions.assertNotNull(consultaAtualizada);
         Assertions.assertEquals(consultaSalva.getConsultaId(), consultaAtualizada.getConsultaId());
-        Assertions.assertEquals(consultaAtualizada.getVeterinario().getVeterinarioId(), consultaSalva.getVeterinario().getVeterinarioId());
+        Assertions.assertEquals(consultaAtualizada.getVeterinary().getVeterinaryId(), consultaSalva.getVeterinary().getVeterinaryId());
         rollback(consultaSalva, false);
         rollbackVeterinario(veterinarioAntigo, veterinarioRepo, areaRepo, especialidadeRepo);
     }

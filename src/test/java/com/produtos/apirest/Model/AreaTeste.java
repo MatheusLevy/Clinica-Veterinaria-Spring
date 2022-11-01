@@ -16,7 +16,7 @@ public class AreaTeste {
 
     protected static Area generateArea(){
         return Area.builder()
-                .nome("Nome")
+                .name("name")
                 .build();
     }
 
@@ -32,18 +32,18 @@ public class AreaTeste {
     public void deveSalvar(){
         Area areaSalva = areaRepo.save(generateArea());
         Assertions.assertNotNull(areaSalva);
-        Assertions.assertEquals(generateArea().getNome(), areaSalva.getNome());
+        Assertions.assertEquals(generateArea().getName(), areaSalva.getName());
         rollback(areaSalva);
     }
 
     @Test
     public void deveAtualizar(){
         Area areaSalva = areaRepo.save(generateArea());
-        areaSalva.setNome("Nome Novo");
+        areaSalva.setName("Nome Novo");
         Area areaAtualizado = areaRepo.save(areaSalva);
         Assertions.assertNotNull(areaAtualizado);
         Assertions.assertEquals(areaAtualizado.getAreaId(), areaSalva.getAreaId());
-        Assertions.assertEquals(areaAtualizado.getNome(), "Nome Novo");
+        Assertions.assertEquals(areaAtualizado.getName(), "Nome Novo");
         rollback(areaAtualizado);
     }
 

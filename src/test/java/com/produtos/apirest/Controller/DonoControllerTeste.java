@@ -38,9 +38,9 @@ public class DonoControllerTeste {
     public static Dono generateDonoInstance(){
         return Dono.builder()
                 .donoId(1L)
-                .nome("nome")
+                .name("name")
                 .cpf("cpf")
-                .telefone("telefone")
+                .phone("phone")
                 .build();
     }
 

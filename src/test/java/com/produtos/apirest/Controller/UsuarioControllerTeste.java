@@ -42,9 +42,9 @@ public class UsuarioControllerTeste {
 
     public static Usuario generateUsuarioInstance(){
         return Usuario.builder()
-                .usuarioId(1L)
+                .userId(1L)
                 .username("username")
-                .senha("senha")
+                .password("passsword")
                 .build();
     }
 

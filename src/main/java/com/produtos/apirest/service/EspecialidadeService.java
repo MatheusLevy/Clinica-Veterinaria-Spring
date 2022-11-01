@@ -24,14 +24,14 @@ public class EspecialidadeService {
     public static void verificaEspecialidade(Especialidade especialidade){
         if (especialidade == null)
             throw new NullPointerException("Especialidade não pode ser Nula!");
-        if (especialidade.getNome().equals(""))
+        if (especialidade.getName().equals(""))
             throw new RegraNegocioRunTime("Especialidade deve ter um nome");
         if (especialidade.getArea() == null)
             throw new RegraNegocioRunTime("Especialidade deve ter uma Area!");
     }
 
     public static void verificaId(Especialidade especialidade){
-        if (especialidade == null || especialidade.getEspecialidadeId() <= 0)
+        if (especialidade == null || especialidade.getExpertiseId() <= 0)
             throw new RegraNegocioRunTime("Especialidade deve ter um identificador!s");
     }
 

@@ -22,7 +22,7 @@ public class EspecialidadeTeste {
 
     private Especialidade generateEspecialidade(Boolean inicializeArea){
          Especialidade especialidade =  Especialidade.builder()
-                .nome("nome")
+                .name("name")
                 .area(generateArea())
                 .build();
          if (inicializeArea)
@@ -32,7 +32,7 @@ public class EspecialidadeTeste {
 
     protected static Especialidade generateEspecialidade(Boolean inicializeArea, AreaRepo areaRepo){
         Especialidade especialidade =  Especialidade.builder()
-                .nome("nome")
+                .name("name")
                 .area(generateArea())
                 .build();
         if (inicializeArea)
@@ -56,18 +56,18 @@ public class EspecialidadeTeste {
     public void deveSalvar(){
         Especialidade especialidadeSalva = especialidadeRepo.save(generateEspecialidade(true));
         Assertions.assertNotNull(especialidadeSalva);
-        Assertions.assertEquals(especialidadeSalva.getNome(), generateEspecialidade(false).getNome());
+        Assertions.assertEquals(especialidadeSalva.getName(), generateEspecialidade(false).getName());
         rollback(especialidadeSalva);
     }
 
     @Test
     public void deveAtualizar(){
         Especialidade especialidadeSalva = especialidadeRepo.save(generateEspecialidade(true));
-        especialidadeSalva.setNome("Nome Atualizado");
+        especialidadeSalva.setName("Nome Atualizado");
         Especialidade especialidadeAtualizada = especialidadeRepo.save(especialidadeSalva);
         Assertions.assertNotNull(especialidadeAtualizada);
-        Assertions.assertEquals(especialidadeSalva.getEspecialidadeId(), especialidadeAtualizada.getEspecialidadeId());
-        Assertions.assertEquals(especialidadeAtualizada.getNome(),  "Nome Atualizado");
+        Assertions.assertEquals(especialidadeSalva.getExpertiseId(), especialidadeAtualizada.getExpertiseId());
+        Assertions.assertEquals(especialidadeAtualizada.getName(),  "Nome Atualizado");
         rollback(especialidadeAtualizada);
     }
 
@@ -78,7 +78,7 @@ public class EspecialidadeTeste {
         especialidadeSalva.setArea(areaRepo.save(generateArea()));
         Especialidade especialiadeAtualizada = especialidadeRepo.save(especialidadeSalva);
         Assertions.assertNotNull(especialiadeAtualizada);
-        Assertions.assertEquals(especialiadeAtualizada.getEspecialidadeId(), especialidadeSalva.getEspecialidadeId());
+        Assertions.assertEquals(especialiadeAtualizada.getExpertiseId(), especialidadeSalva.getExpertiseId());
         Assertions.assertEquals(especialiadeAtualizada.getArea().getAreaId(), especialidadeSalva.getArea().getAreaId());
         rollback(especialiadeAtualizada);
         rollbackArea(areaAntiga, areaRepo);
@@ -87,7 +87,7 @@ public class EspecialidadeTeste {
     @Test
     public void deveRemover() {
         Especialidade especialidadeSalva = especialidadeRepo.save(generateEspecialidade(true));
-        Long id = especialidadeSalva.getEspecialidadeId();
+        Long id = especialidadeSalva.getExpertiseId();
         especialidadeRepo.deleteById(id);
         Assertions.assertFalse(especialidadeRepo.findById(id).isPresent());
         rollbackArea(especialidadeSalva.getArea(), areaRepo);
@@ -96,7 +96,7 @@ public class EspecialidadeTeste {
     @Test
     public void deveBuscar(){
         Especialidade especialidadeSalva = especialidadeRepo.save(generateEspecialidade(true));
-        Long id = especialidadeSalva.getEspecialidadeId();
+        Long id = especialidadeSalva.getExpertiseId();
         Assertions.assertTrue(especialidadeRepo.findById(id).isPresent());
         rollback(especialidadeSalva);
     }

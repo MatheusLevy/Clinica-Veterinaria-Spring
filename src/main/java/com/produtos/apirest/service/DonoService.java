@@ -25,7 +25,7 @@ public class DonoService {
     public static void verificaDono(Dono dono){
         if (dono == null)
             throw new NullPointerException("Dono não pode ser Nulo!");
-        if (dono.getNome().equals(""))
+        if (dono.getName().equals(""))
             throw new RegraNegocioRunTime("Dono deve ter um nome!");
         if (dono.getCpf().equals(""))
             throw new RegraNegocioRunTime("Dono deve ter um CPF!");

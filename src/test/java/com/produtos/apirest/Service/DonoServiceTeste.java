@@ -35,8 +35,8 @@ public class DonoServiceTeste {
 
     protected static Dono generateDono(){
         return Dono.builder()
-                .nome("teste")
-                .telefone(generateTelefone())
+                .name("test")
+                .phone(generateTelefone())
                 .cpf(generateCPF())
                 .build();
     }
@@ -59,7 +59,7 @@ public class DonoServiceTeste {
     @Test
     public void deveAtualizar(){
         Dono donoSalvo = donoRepo.save(generateDono());
-        donoSalvo.setNome("Dono Atualizado");
+        donoSalvo.setName("Dono Atualizado");
         Dono donoAtualizado = donoService.atualizar(donoSalvo);
         Assertions.assertNotNull(donoAtualizado);
         Assertions.assertEquals(donoSalvo.getDonoId(), donoAtualizado.getDonoId());
@@ -119,7 +119,7 @@ public class DonoServiceTeste {
     @Test
     public void deveBuscarTodosAnimais(){
         Animal animal = animalRepo.save(generateAnimal(tipoAnimalRepo, donoRepo, true));
-        Dono donoDoAnimal = animal.getDono();
+        Dono donoDoAnimal = animal.getOwner();
         List<Animal> animaisList = donoService.buscarTodosAnimais(donoDoAnimal.getDonoId());
         Assertions.assertNotNull(animaisList);
         Assertions.assertFalse(animaisList.isEmpty());

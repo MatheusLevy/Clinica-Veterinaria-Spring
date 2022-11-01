@@ -32,7 +32,7 @@ public class AreaViewController {
     @PreAuthorize("hasRole('A')")
     @PostMapping("/area/cadastro")
     public String areaCadastro(AreaDTO dto){
-        Area area = Area.builder().nome(dto.getNome()).build();
+        Area area = Area.builder().name(dto.getNome()).build();
         if(dto.getId() == null){
             areaService.salvar(area);
         }else{
@@ -59,7 +59,7 @@ public class AreaViewController {
         //AreaDTO
         AreaDTO dto = AreaDTO.builder()
                 .id(areaFind.getAreaId())
-                .nome(areaFind.getNome())
+                .nome(areaFind.getName())
                 .build();
         ModelAndView mv = new ModelAndView("/area/areaCadastro");
         mv.addObject("areadto", dto);

@@ -50,9 +50,9 @@ public class ConsultaControllerTeste {
     public static Consulta generateConsultaInstance(){
         return Consulta.builder()
                 .consultaId(1L)
-                .descricao("descrição")
-                .tipoConsulta(generateTipoConsultaInstance())
-                .veterinario(generateVeterinarioInstance())
+                .description("descrição")
+                .appointmentType(generateTipoConsultaInstance())
+                .veterinary(generateVeterinarioInstance())
                 .animal(generateAnimalInstance())
                 .build();
     }

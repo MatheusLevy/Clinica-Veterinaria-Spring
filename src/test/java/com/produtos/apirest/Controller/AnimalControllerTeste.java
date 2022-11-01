@@ -58,9 +58,9 @@ public class AnimalControllerTeste {
     public static Animal generateAnimalInstance(){
         return Animal.builder()
                 .animalId(1L)
-                .nome("nome")
-                .dono(generateDonoInstance())
-                .tipoAnimal(generateTipoAnimalInstance())
+                .name("name")
+                .owner(generateDonoInstance())
+                .animalType(generateTipoAnimalInstance())
                 .build();
     }
 

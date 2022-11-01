@@ -22,9 +22,9 @@ public class TipoAnimalDTO {
 
     public TipoAnimal toTipoAnimal(){
         return TipoAnimal.builder()
-                .tipoAnimalId(this.id)
-                .nome(this.nome)
-                .animais(this.animais)
+                .animalTypeId(this.id)
+                .name(this.nome)
+                .animals(this.animais)
                 .build();
     }
 }

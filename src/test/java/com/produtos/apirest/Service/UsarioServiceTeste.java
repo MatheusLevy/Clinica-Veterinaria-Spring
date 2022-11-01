@@ -26,16 +26,16 @@ public class UsarioServiceTeste {
 
     protected static Usuario generateUsuario(Boolean initializeRole, RoleRepo roleRepo){
         return Usuario.builder()
-                .username("teste")
-                .senha("senha")
+                .username("test")
+                .password("password")
                 .roles(genereteRolesList(initializeRole, roleRepo))
                 .build();
     }
 
     private Usuario generateUsuario(Boolean initializeRole){
         return Usuario.builder()
-                .username("teste")
-                .senha("senha")
+                .username("test")
+                .password("password")
                 .roles(genereteRolesList(initializeRole, roleRepo))
                 .build();
     }
@@ -54,7 +54,7 @@ public class UsarioServiceTeste {
     public void deveSalvar(){
         Usuario usuarioSalvo = usuarioService.salvar(generateUsuario(true));
         Assertions.assertNotNull(usuarioSalvo);
-        Assertions.assertNotNull(usuarioSalvo.getUsuarioId());
+        Assertions.assertNotNull(usuarioSalvo.getUserId());
         rollback(usuarioSalvo);
     }
 
@@ -64,22 +64,22 @@ public class UsarioServiceTeste {
         usuarioSalvo.setUsername("Novo Username");
         Usuario usuarioAtualizado = usuarioService.atualizar(usuarioSalvo);
         Assertions.assertNotNull(usuarioAtualizado);
-        Assertions.assertEquals(usuarioAtualizado.getUsuarioId(), usuarioSalvo.getUsuarioId());
+        Assertions.assertEquals(usuarioAtualizado.getUserId(), usuarioSalvo.getUserId());
         rollback(usuarioSalvo);
     }
 
     @Test
     public void deveAutenticar(){
         Usuario usuarioSalvo = usuarioService.salvar(generateUsuario(true));
-        Usuario autenticado = usuarioService.autenticar(usuarioSalvo.getUsername(), "senha");
-        Assertions.assertNotNull(autenticado.getUsuarioId());
+        Usuario autenticado = usuarioService.autenticar(usuarioSalvo.getUsername(), "password");
+        Assertions.assertNotNull(autenticado.getUserId());
         rollback(usuarioSalvo);
     }
 
     @Test
     public void deveRemover(){
         Usuario usuarioSalvo = usuarioService.salvar(generateUsuario(true));
-        Long id = usuarioSalvo.getUsuarioId();
+        Long id = usuarioSalvo.getUserId();
         usuarioService.remover(usuarioSalvo);
         Assertions.assertFalse(usuarioRepo.findById(id).isPresent());
         rollbackRolesList(usuarioSalvo.getRoles(), roleRepo);
@@ -88,9 +88,9 @@ public class UsarioServiceTeste {
     @Test
     public void deveRemoverComFeedback(){
         Usuario usuarioSalvo = usuarioService.salvar(generateUsuario(true));
-        Usuario usuarioFeeback = usuarioService.removerComFeedback(usuarioSalvo.getUsuarioId());
+        Usuario usuarioFeeback = usuarioService.removerComFeedback(usuarioSalvo.getUserId());
         Assertions.assertNotNull(usuarioFeeback);
-        Assertions.assertEquals(usuarioFeeback.getUsuarioId(), usuarioSalvo.getUsuarioId());
+        Assertions.assertEquals(usuarioFeeback.getUserId(), usuarioSalvo.getUserId());
         rollbackRolesList(usuarioSalvo.getRoles(), roleRepo);
     }
 
@@ -99,17 +99,17 @@ public class UsarioServiceTeste {
         Usuario usuarioSalvo = usuarioService.salvar(generateUsuario(true));
         Usuario usuarioBuscado = usuarioService.buscarPorUsername(usuarioSalvo.getUsername());
         Assertions.assertNotNull(usuarioBuscado);
-        Assertions.assertEquals(usuarioBuscado.getUsuarioId(), usuarioSalvo.getUsuarioId());
+        Assertions.assertEquals(usuarioBuscado.getUserId(), usuarioSalvo.getUserId());
         rollback(usuarioSalvo);
     }
 
     @Test
     public void deveBuscarPorId(){
         Usuario usuarioSalvo = usuarioService.salvar(generateUsuario(true));
-        Long id = usuarioSalvo.getUsuarioId();
+        Long id = usuarioSalvo.getUserId();
         Usuario usuarioBuscado = usuarioService.buscarPorId(id);
         Assertions.assertNotNull(usuarioBuscado);
-        Assertions.assertEquals(usuarioBuscado.getUsuarioId(), usuarioSalvo.getUsuarioId());
+        Assertions.assertEquals(usuarioBuscado.getUserId(), usuarioSalvo.getUserId());
         rollback(usuarioSalvo);
     }
 

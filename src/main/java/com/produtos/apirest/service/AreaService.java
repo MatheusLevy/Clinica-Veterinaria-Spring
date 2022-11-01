@@ -25,7 +25,7 @@ public class AreaService {
     public static void verificaArea(Area area){
         if (area == null)
             throw new NullPointerException("A Area não pode ser Nula!");
-        if(area.getNome() == null || area.getNome().equals(""))
+        if(area.getName() == null || area.getName().equals(""))
             throw new RegraNegocioRunTime("A Area deve ter um nome!");
     }
 
@@ -107,10 +107,10 @@ public class AreaService {
             Optional<Area> areasEncontradas = repo.findById(area.getAreaId());
             if(areasEncontradas.isPresent()) {
                 Area areaEncontrada = areasEncontradas.get();
-                Hibernate.initialize(areaEncontrada.getEspecialidades());
+                Hibernate.initialize(areaEncontrada.getExpertises());
                 verificaArea(areaEncontrada);
                 verificaId(areaEncontrada);
-                return areaEncontrada.getEspecialidades();
+                return areaEncontrada.getExpertises();
             }
             return null;
         } catch (Exception e){

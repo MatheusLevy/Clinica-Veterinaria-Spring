@@ -31,7 +31,7 @@ public class tipoConsultaViewController {
     @PostMapping("/tipoConsulta/cadastro")
     public String tipoConsultaCadastroControll(TipoConsulta tipo){
 
-        if(Long.valueOf(tipo.getTipoConsultaId()) == null){
+        if(Long.valueOf(tipo.getAppointmentTypeId()) == null){
             tipoService.salvar(tipo);
         }else {
             tipoService.atualizar(tipo);

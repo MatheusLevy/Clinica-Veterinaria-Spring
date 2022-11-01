@@ -28,12 +28,12 @@ public class VeterinarioTeste {
 
     private Veterinario generateVeterinario(Boolean initializedEspecialidade){
         Veterinario veterinario = Veterinario.builder()
-                .nome("nome")
+                .name("name")
                 .cpf(generateCPF())
-                .telefone(generateTelefone())
+                .phone(generateTelefone())
                 .build();
         if (initializedEspecialidade)
-            veterinario.setEspecialidade(especialidadeRepo.save(generateEspecialidade(true, areaRepo)));
+            veterinario.setExpertise(especialidadeRepo.save(generateEspecialidade(true, areaRepo)));
         return veterinario;
     }
 
@@ -41,22 +41,22 @@ public class VeterinarioTeste {
                                                         EspecialidadeRepo especialidadeRepo,
                                                         AreaRepo areaRepo){
         Veterinario veterinario = Veterinario.builder()
-                .nome("nome")
+                .name("name")
                 .cpf(generateCPF())
-                .telefone(generateTelefone())
-                .especialidade(generateEspecialidade(true, areaRepo))
+                .phone(generateTelefone())
+                .expertise(generateEspecialidade(true, areaRepo))
                 .build();
         if (initializeEspecialidade)
-            veterinario.setEspecialidade(
-                    especialidadeRepo.save(veterinario.getEspecialidade())
+            veterinario.setExpertise(
+                    especialidadeRepo.save(veterinario.getExpertise())
             );
         return veterinario;
     }
 
     private void rollback(Veterinario veterinario){
         veterinarioRepo.delete(veterinario);
-        especialidadeRepo.delete(veterinario.getEspecialidade());
-        areaRepo.delete(veterinario.getEspecialidade().getArea());
+        especialidadeRepo.delete(veterinario.getExpertise());
+        areaRepo.delete(veterinario.getExpertise().getArea());
     }
 
     protected static void rollbackVeterinario(Veterinario veterinario,
@@ -64,37 +64,37 @@ public class VeterinarioTeste {
                             AreaRepo areaRepo,
                             EspecialidadeRepo especialidadeRepo){
         veterinarioRepo.delete(veterinario);
-        especialidadeRepo.delete(veterinario.getEspecialidade());
-        areaRepo.delete(veterinario.getEspecialidade().getArea());
+        especialidadeRepo.delete(veterinario.getExpertise());
+        areaRepo.delete(veterinario.getExpertise().getArea());
     }
 
     @Test
     public void deveSalvar(){
         Veterinario veterinarioSalvo = veterinarioRepo.save(generateVeterinario(true));
         Assertions.assertNotNull(veterinarioSalvo);
-        Assertions.assertEquals(veterinarioSalvo.getNome(), generateVeterinario(false).getNome());
+        Assertions.assertEquals(veterinarioSalvo.getName(), generateVeterinario(false).getName());
         rollback(veterinarioSalvo);
     }
 
     @Test
     public void deveAtualizar(){
         Veterinario veterinarioSalvo = veterinarioRepo.save(generateVeterinario(true));
-        veterinarioSalvo.setNome("Novo Nome");
+        veterinarioSalvo.setName("Novo Nome");
         Veterinario veterinarioAtualizado = veterinarioRepo.save(veterinarioSalvo);
         Assertions.assertNotNull(veterinarioAtualizado);
-        Assertions.assertEquals(veterinarioAtualizado.getVeterinarioId(), veterinarioSalvo.getVeterinarioId());
-        Assertions.assertEquals(veterinarioAtualizado.getNome(), "Novo Nome");
+        Assertions.assertEquals(veterinarioAtualizado.getVeterinaryId(), veterinarioSalvo.getVeterinaryId());
+        Assertions.assertEquals(veterinarioAtualizado.getName(), "Novo Nome");
         rollback(veterinarioAtualizado);
     }
 
     @Test
     public void deveAtualizarEspecialidade(){
         Veterinario veterinarioSalvo = veterinarioRepo.save(generateVeterinario(true));
-        Especialidade especialidadeAntiga = veterinarioSalvo.getEspecialidade();
-        veterinarioSalvo.setEspecialidade(especialidadeRepo.save(generateEspecialidade(true, areaRepo)));
+        Especialidade especialidadeAntiga = veterinarioSalvo.getExpertise();
+        veterinarioSalvo.setExpertise(especialidadeRepo.save(generateEspecialidade(true, areaRepo)));
         Veterinario veterinarioAtualizado = veterinarioRepo.save(veterinarioSalvo);
         Assertions.assertNotNull(veterinarioAtualizado);
-        Assertions.assertEquals(veterinarioAtualizado.getVeterinarioId(), veterinarioSalvo.getVeterinarioId());
+        Assertions.assertEquals(veterinarioAtualizado.getVeterinaryId(), veterinarioSalvo.getVeterinaryId());
         rollback(veterinarioAtualizado);
         rollbackEspecialidade(especialidadeAntiga, especialidadeRepo, areaRepo);
     }
@@ -102,16 +102,16 @@ public class VeterinarioTeste {
     @Test
     public void deveRemover(){
         Veterinario veterinarioSalvo = veterinarioRepo.save(generateVeterinario(true));
-        Long id  = veterinarioSalvo.getVeterinarioId();
+        Long id  = veterinarioSalvo.getVeterinaryId();
         veterinarioRepo.deleteById(id);
         Assertions.assertFalse(veterinarioRepo.findById(id).isPresent());
-        rollbackEspecialidade(veterinarioSalvo.getEspecialidade(), especialidadeRepo, areaRepo);
+        rollbackEspecialidade(veterinarioSalvo.getExpertise(), especialidadeRepo, areaRepo);
     }
 
     @Test
     public void deveBuscar(){
         Veterinario veterinarioSalvo = veterinarioRepo.save(generateVeterinario(true));
-        Long id = veterinarioSalvo.getVeterinarioId();
+        Long id = veterinarioSalvo.getVeterinaryId();
         Assertions.assertTrue(veterinarioRepo.findById(id).isPresent());
         rollback(veterinarioSalvo);
     }

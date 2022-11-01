@@ -22,9 +22,9 @@ public class TipoConsultaDTO {
 
     public TipoConsulta toTipoConsulta(){
         return TipoConsulta.builder()
-                .tipoConsultaId(this.id)
-                .nome(this.nome)
-                .consultas(this.consultas)
+                .appointmentTypeId(this.id)
+                .name(this.nome)
+                .appointments(this.consultas)
                 .build();
     }
 }

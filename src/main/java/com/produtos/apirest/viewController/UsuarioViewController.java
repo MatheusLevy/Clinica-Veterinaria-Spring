@@ -34,7 +34,7 @@ public class UsuarioViewController {
     @PostMapping("/usuario/cadastro")
     public String usuarioCadastroControll(Usuario usuario){
 
-        if(usuario.getUsuarioId() == null){
+        if(usuario.getUserId() == null){
             usarioService.salvar(usuario);
         }else {
             usarioService.atualizar(usuario);

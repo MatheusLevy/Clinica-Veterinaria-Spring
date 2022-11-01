@@ -23,12 +23,12 @@ public class TipoAnimalService {
     public static void verificaTipoAnimal(TipoAnimal tipo){
         if (tipo == null)
             throw new NullPointerException("Tipo de Animal não pode ser Nulo!");
-        if (tipo.getNome().equals(""))
+        if (tipo.getName().equals(""))
             throw new RegraNegocioRunTime("Tipo de Animal deve ter um nome!");
     }
 
     public static void verificaId(TipoAnimal tipo){
-        if(tipo == null || tipo.getTipoAnimalId() <= 0)
+        if(tipo == null || tipo.getAnimalTypeId() <= 0)
             throw new RegraNegocioRunTime("Tipo de Animal deve ter um identificador!");
     }
 

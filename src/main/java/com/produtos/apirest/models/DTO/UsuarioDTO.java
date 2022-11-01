@@ -22,9 +22,9 @@ public class UsuarioDTO {
 
     public Usuario toUsuario(){
         return Usuario.builder()
-                .usuarioId(this.id)
+                .userId(this.id)
                 .username(this.username)
-                .senha(this.senha)
+                .password(this.senha)
                 .roles(this.roles)
                 .build();
     }

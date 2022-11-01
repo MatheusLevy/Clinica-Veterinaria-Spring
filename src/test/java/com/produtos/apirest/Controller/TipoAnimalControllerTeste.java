@@ -34,8 +34,8 @@ public class TipoAnimalControllerTeste {
 
     public static TipoAnimal generateTipoAnimalInstance(){
         return TipoAnimal.builder()
-                .tipoAnimalId(1L)
-                .nome("nome")
+                .animalTypeId(1L)
+                .name("name")
                 .build();
     }
 

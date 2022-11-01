@@ -14,7 +14,7 @@ public class TipoConsultaTeste {
 
     public static TipoConsulta generateTipoConsulta(){
        return TipoConsulta.builder()
-                .nome("nome")
+                .name("name")
                 .build();
     }
 
@@ -30,25 +30,25 @@ public class TipoConsultaTeste {
     public void deveSalvar(){
         TipoConsulta tipoConsultaSalva = tipoConsultaRepo.save(generateTipoConsulta());
         Assertions.assertNotNull(tipoConsultaSalva);
-        Assertions.assertEquals(generateTipoConsulta().getNome(), tipoConsultaSalva.getNome());
+        Assertions.assertEquals(generateTipoConsulta().getName(), tipoConsultaSalva.getName());
         rollback(tipoConsultaSalva);
     }
 
     @Test
     public void deveAtualizar(){
         TipoConsulta tipoConsultaSalva = tipoConsultaRepo.save(generateTipoConsulta());
-        tipoConsultaSalva.setNome("Nome Novo");
+        tipoConsultaSalva.setName("Nome Novo");
         TipoConsulta tipoConsultaAtualizada =  tipoConsultaRepo.save(tipoConsultaSalva);
         Assertions.assertNotNull(tipoConsultaAtualizada);
-        Assertions.assertEquals(tipoConsultaAtualizada.getTipoConsultaId(), tipoConsultaSalva.getTipoConsultaId());
-        Assertions.assertEquals(tipoConsultaAtualizada.getNome(), "Nome Novo");
+        Assertions.assertEquals(tipoConsultaAtualizada.getAppointmentTypeId(), tipoConsultaSalva.getAppointmentTypeId());
+        Assertions.assertEquals(tipoConsultaAtualizada.getName(), "Nome Novo");
         rollback(tipoConsultaAtualizada);
     }
 
     @Test
     public void deveRemover(){
         TipoConsulta tipoConsultaSalva = tipoConsultaRepo.save(generateTipoConsulta());
-        Long id = tipoConsultaSalva.getTipoConsultaId();
+        Long id = tipoConsultaSalva.getAppointmentTypeId();
         tipoConsultaRepo.deleteById(id);
         Assertions.assertFalse(tipoConsultaRepo.findById(id).isPresent());
     }
@@ -56,7 +56,7 @@ public class TipoConsultaTeste {
     @Test
     public void deveBuscar(){
         TipoConsulta tipoConsultaSalva = tipoConsultaRepo.save(generateTipoConsulta());
-        Long id = tipoConsultaSalva.getTipoConsultaId();
+        Long id = tipoConsultaSalva.getAppointmentTypeId();
         Assertions.assertTrue(tipoConsultaRepo.findById(id).isPresent());
         rollback(tipoConsultaSalva);
     }

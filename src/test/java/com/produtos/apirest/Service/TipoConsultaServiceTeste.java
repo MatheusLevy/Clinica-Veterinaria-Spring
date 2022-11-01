@@ -21,7 +21,7 @@ public class TipoConsultaServiceTeste {
 
     protected static TipoConsulta generateTipoConsulta(){
         return TipoConsulta.builder()
-                .nome("Teste")
+                .name("Test")
                 .build();
     }
 
@@ -43,17 +43,17 @@ public class TipoConsultaServiceTeste {
     @Test
     public void deveAtualizar(){
         TipoConsulta tipoConsultaSalva = tipoConsultaRepo.save(generateTipoConsulta());
-        tipoConsultaSalva.setNome("Tipo Consulta Atualizado");
+        tipoConsultaSalva.setName("Tipo Consulta Atualizado");
         TipoConsulta tipoConsultaAtualizada = tipoConsultaRepo.save(tipoConsultaSalva);
         Assertions.assertNotNull(tipoConsultaAtualizada);
-        Assertions.assertEquals(tipoConsultaSalva.getTipoConsultaId(), tipoConsultaAtualizada.getTipoConsultaId());
+        Assertions.assertEquals(tipoConsultaSalva.getAppointmentTypeId(), tipoConsultaAtualizada.getAppointmentTypeId());
         rollback(tipoConsultaAtualizada);
     }
 
     @Test
     public void deveRemover(){
         TipoConsulta tipoConsultaSalvo = tipoConsultaRepo.save(generateTipoConsulta());
-        Long id = tipoConsultaSalvo.getTipoConsultaId();
+        Long id = tipoConsultaSalvo.getAppointmentTypeId();
         tipoConsultaService.removerPorId(id);
         Assertions.assertFalse(tipoConsultaRepo.findById(id).isPresent());
     }
@@ -61,16 +61,16 @@ public class TipoConsultaServiceTeste {
     @Test
     public void deveRemoverComFeedback(){
         TipoConsulta tipoConsultaSalvo = tipoConsultaRepo.save(generateTipoConsulta());
-        TipoConsulta tipoConsultaFeedback = tipoConsultaService.removerComFeedback(tipoConsultaSalvo.getTipoConsultaId());
+        TipoConsulta tipoConsultaFeedback = tipoConsultaService.removerComFeedback(tipoConsultaSalvo.getAppointmentTypeId());
         Assertions.assertNotNull(tipoConsultaFeedback);
     }
 
     @Test
     public void deveBuscarPorId(){
         TipoConsulta tipoConsultaSalvo = tipoConsultaRepo.save(generateTipoConsulta());
-        TipoConsulta tipoConsultaEncontrado = tipoConsultaService.buscarPorId(tipoConsultaSalvo.getTipoConsultaId());
+        TipoConsulta tipoConsultaEncontrado = tipoConsultaService.buscarPorId(tipoConsultaSalvo.getAppointmentTypeId());
         Assertions.assertNotNull(tipoConsultaEncontrado);
-        Assertions.assertEquals(tipoConsultaSalvo.getTipoConsultaId(), tipoConsultaEncontrado.getTipoConsultaId());
+        Assertions.assertEquals(tipoConsultaSalvo.getAppointmentTypeId(), tipoConsultaEncontrado.getAppointmentTypeId());
         rollback(tipoConsultaSalvo);
     }
 

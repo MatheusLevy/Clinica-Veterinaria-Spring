@@ -26,9 +26,9 @@ public class Consulta {
     private long consultaId;
 
     @ManyToOne
-    @JoinColumn(name="veterinario_id", nullable = false)
+    @JoinColumn(name="veterinary_id", nullable = false)
     @JsonIgnore
-    private Veterinario veterinario;
+    private Veterinario veterinary;
 
     @ManyToOne
     @JoinColumn(name="animal_id", nullable = false)
@@ -36,36 +36,36 @@ public class Consulta {
     private Animal animal;
 
     @ManyToOne
-    @JoinColumn(name="consultatipo_id", nullable = false)
+    @JoinColumn(name="appointmentType_id", nullable = false)
     @JsonIgnore
-    private TipoConsulta tipoConsulta;
+    private TipoConsulta appointmentType;
 
-    @Column(name = "descricao")
-    private String descricao;
+    @Column(name = "description")
+    private String description;
 
     @Column(name = "data")
     @Convert(converter = Jsr310JpaConverters.LocalDateConverter.class)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate data;
+    private LocalDate date;
 
     @Override
     public String toString(){
-        return getClass().getSimpleName() + "[id= " + consultaId + ", veterinario= "
-                + veterinario + ", animal= " + animal + ", tipo Consulta= " + tipoConsulta
-                + ", descrição= " + descricao + ", data= " + data + " ]";
+        return getClass().getSimpleName() + "[id= " + consultaId + ", veterinary= "
+                + veterinary + ", animal= " + animal + ", Appointment Type= " + appointmentType
+                + ", description= " + description + ", date= " + date + " ]";
     }
 
     public ConsultaDTO toConsultaDTO(){
         return ConsultaDTO.builder()
                 .id(this.consultaId)
-                .data(this.data)
-                .descricao(this.descricao)
-                .veterinarioId(this.veterinario.getVeterinarioId())
-                .veterinarioNome(this.veterinario.getNome())
+                .data(this.date)
+                .descricao(this.description)
+                .veterinarioId(this.veterinary.getVeterinaryId())
+                .veterinarioNome(this.veterinary.getName())
                 .animalId(this.animal.getAnimalId())
-                .animalNome(this.animal.getNome())
-                .tipoConsultaId(this.tipoConsulta.getTipoConsultaId())
-                .tipoNome(this.tipoConsulta.getNome())
+                .animalNome(this.animal.getName())
+                .tipoConsultaId(this.appointmentType.getAppointmentTypeId())
+                .tipoNome(this.appointmentType.getName())
                 .build();
     }
 }

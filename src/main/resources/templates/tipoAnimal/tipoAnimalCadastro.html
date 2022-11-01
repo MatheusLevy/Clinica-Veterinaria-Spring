@@ -106,10 +106,10 @@
 </nav>
 <div style="margin: 10px 200px 10px 200px;">
   <form method="POST" action="/tipoAnimal/cadastro" th:object="${tipoAnimal}">
-    <input type="hidden" name="tipoAnimalId" id="tipoAnimalId-input" th:value="${tipoAnimal.tipoAnimalId}">
+    <input type="hidden" name="tipoAnimalId" id="tipoAnimalId-input" th:value="${tipoAnimal.getAnimalTypeId}">
     <div class="mb-3">
       <label for="nome-input" class="form-label">Nome</label>
-      <input type="text" class ="form-control" name="nome"  id ="nome-input" placeholder="Digite o nome" required th:value="${tipoAnimal.nome}">
+      <input type="text" class ="form-control" name="nome"  id ="nome-input" placeholder="Digite o nome" required th:value="${tipoAnimal.getName}">
     </div>
     <button type="submit" class="btn btn-primary">Cadastrar</button>
   </form>

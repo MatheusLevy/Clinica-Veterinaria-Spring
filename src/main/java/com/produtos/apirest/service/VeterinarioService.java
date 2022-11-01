@@ -27,16 +27,16 @@ public class VeterinarioService {
     public static void verificaVeterinario(Veterinario veterinario){
         if (veterinario == null)
             throw new NullPointerException("Veterinario não pode ser Nulo!");
-        if(veterinario.getNome().equals(""))
+        if(veterinario.getName().equals(""))
             throw new RegraNegocioRunTime("Veterinario deve ter um Nome!");
         if (veterinario.getCpf().equals(""))
             throw new RegraNegocioRunTime("Veterinario deve ter um CPF");
-        if (veterinario.getEspecialidade() == null)
+        if (veterinario.getExpertise() == null)
             throw new RegraNegocioRunTime("Veterinario deve ter uma Especialidade");
     }
 
     public static void verificaId(Veterinario veterinario){
-        if (veterinario.getVeterinarioId() <= 0)
+        if (veterinario.getVeterinaryId() <= 0)
             throw new RegraNegocioRunTime("Veterinario deve ter um identificador");
     }
 
@@ -102,9 +102,9 @@ public class VeterinarioService {
     public Especialidade buscarEspecialidade(Veterinario veterinario){
         verificaVeterinario(veterinario);
         verificaId(veterinario);
-        Long id = veterinario.getVeterinarioId();
+        Long id = veterinario.getVeterinaryId();
         Optional<Veterinario> veterinariosEncontrados = repo.findById(id);
-        return veterinariosEncontrados.map(Veterinario::getEspecialidade).orElse(null);
+        return veterinariosEncontrados.map(Veterinario::getExpertise).orElse(null);
     }
 
     @Transactional
@@ -113,7 +113,7 @@ public class VeterinarioService {
         EspecialidadeService.verificaId(especialidadeNova);
         verificaVeterinario(destino);
         verificaId(destino);
-        destino.setEspecialidade(especialidadeNova);
+        destino.setExpertise(especialidadeNova);
         return  repo.save(destino);
     }
 }

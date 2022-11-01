@@ -24,13 +24,13 @@ public class ConsultaService {
     public static void verificaConsulta(Consulta consulta){
         if(consulta == null)
             throw new NullPointerException("A Consulta não pode ser Nula!");
-        if(consulta.getTipoConsulta() == null)
+        if(consulta.getAppointmentType() == null)
             throw new RegraNegocioRunTime("Consulta deve possuir um Tipo de Consulta!");
         if(consulta.getAnimal() == null)
             throw new RegraNegocioRunTime("Consulta deve possuir um Animal!");
-        if (consulta.getVeterinario() == null)
+        if (consulta.getVeterinary() == null)
             throw new RegraNegocioRunTime("Consulta deve possuir um Veterinario!");
-        if(consulta.getData() == null)
+        if(consulta.getDate() == null)
             throw new RegraNegocioRunTime("Consulta deve ter uma Data!");
     }
 
@@ -63,7 +63,7 @@ public class ConsultaService {
         VeterinarioService.verificaId(veterinarioNovo);
         verificaConsulta(destino);
         verificaId(destino);
-        destino.setVeterinario(veterinarioNovo);
+        destino.setVeterinary(veterinarioNovo);
         return repo.save(destino);
     }
 
@@ -83,7 +83,7 @@ public class ConsultaService {
         TipoConsultaService.verificaId(tipoConsultaNovo);
         verificaConsulta(destino);
         verificaId(destino);
-        destino.setTipoConsulta(tipoConsultaNovo);
+        destino.setAppointmentType(tipoConsultaNovo);
         return repo.save(destino);
     }
 

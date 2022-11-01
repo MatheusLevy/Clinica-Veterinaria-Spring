@@ -32,7 +32,7 @@ public class TipoAnimalViewController {
     @PostMapping("/tipoAnimal/cadastro")
     public String tipoAnimalCadastroControll(TipoAnimal tipo){
 
-        if(Long.valueOf(tipo.getTipoAnimalId()) == null){
+        if(Long.valueOf(tipo.getAnimalTypeId()) == null){
             tipoService.salvar(tipo);
         }else {
             tipoService.atualizar(tipo);
@@ -53,7 +53,7 @@ public class TipoAnimalViewController {
     @GetMapping("/tipoAnimal/remover/{id}")
     public String tipoAnimalRemover(@PathVariable(value = "id", required = true) Long id){
         TipoAnimal tipoFind = tipoService.buscarPorId(id);
-        tipoService.removerPorId(tipoFind.getTipoAnimalId());
+        tipoService.removerPorId(tipoFind.getAnimalTypeId());
         return "redirect:/tipoAnimal/tipoAnimalList";
     }
 

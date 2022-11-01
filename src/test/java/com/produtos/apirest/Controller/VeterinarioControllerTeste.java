@@ -42,11 +42,11 @@ public class VeterinarioControllerTeste {
 
     public static Veterinario generateVeterinarioInstance(){
         return Veterinario.builder()
-                .veterinarioId(1L)
-                .nome("nome")
-                .telefone("telefone")
+                .veterinaryId(1L)
+                .name("nome")
+                .phone("telefone")
                 .cpf("cpf")
-                .especialidade(generateEspecialidadeInstance())
+                .expertise(generateEspecialidadeInstance())
                 .build();
     }
 

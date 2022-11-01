@@ -21,7 +21,7 @@ public class AreaDTO {
     public Area toArea(){
         return Area.builder()
                 .areaId(this.id)
-                .nome(this.nome)
+                .name(this.nome)
                 .build();
     }
 }

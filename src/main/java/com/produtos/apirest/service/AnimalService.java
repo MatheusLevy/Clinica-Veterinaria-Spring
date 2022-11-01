@@ -27,7 +27,7 @@ public class AnimalService {
     public static void verificaAnimal(Animal animal){
         if (animal == null)
             throw new NullPointerException("O Animal não pode ser Nulo!");
-        if(animal.getNome() == null || animal.getNome().equals(""))
+        if(animal.getName() == null || animal.getName().equals(""))
             throw new RegraNegocioRunTime("Animal deve ter nome!");
     }
 
@@ -60,7 +60,7 @@ public class AnimalService {
         DonoService.verificaId(donoNovo);
         verificaAnimal(destino);
         verificaId(destino);
-        destino.setDono(donoNovo);
+        destino.setOwner(donoNovo);
         return repo.save(destino);
     }
 
@@ -115,6 +115,6 @@ public class AnimalService {
     public Dono buscarDonoPorId(Long id){
         verificaId(id);
         Optional<Animal> animaisEncontrados = repo.findById(id);
-        return animaisEncontrados.map(Animal::getDono).orElse(null);
+        return animaisEncontrados.map(Animal::getOwner).orElse(null);
     }
 }

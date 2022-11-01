@@ -25,21 +25,21 @@ public class VeterinarioDTO {
 
     public Veterinario toVeterinario(){
         return Veterinario.builder()
-                .veterinarioId(this.id)
-                .nome(this.nome)
+                .veterinaryId(this.id)
+                .name(this.nome)
                 .cpf(this.cpf)
-                .telefone(this.telefone)
-                .especialidade(this.especialidade)
+                .phone(this.telefone)
+                .expertise(this.especialidade)
                 .build();
     }
 
     public Veterinario toVeterinario(Especialidade especialidade){
         return Veterinario.builder()
-                .veterinarioId(this.id)
-                .nome(this.nome)
+                .veterinaryId(this.id)
+                .name(this.nome)
                 .cpf(this.cpf)
-                .telefone(this.telefone)
-                .especialidade(especialidade)
+                .phone(this.telefone)
+                .expertise(especialidade)
                 .build();
     }
 }
