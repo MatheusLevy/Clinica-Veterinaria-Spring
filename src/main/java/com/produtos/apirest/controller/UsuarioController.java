@@ -27,7 +27,7 @@ public class UsuarioController {
     @GetMapping("/autenticar")
     public ResponseEntity<?> autenticar(@RequestBody UserDTO dto){
         try{
-            User usuarioAutenticado = usuarioService.autenticar(dto.getUsername(), dto.getPassword());
+            User usuarioAutenticado = usuarioService.authenticate(dto.getUsername(), dto.getPassword());
             UserDTO dtoRetorno = usuarioAutenticado.toUserDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
@@ -39,7 +39,7 @@ public class UsuarioController {
     public ResponseEntity<?> salvar(@RequestBody UserDTO dto){
         try{
             User usuario =  dto.toUser();
-            User usuarioSalvo = usuarioService.salvar(usuario);
+            User usuarioSalvo = usuarioService.save(usuario);
             UserDTO dtoRetorno = usuarioSalvo.toUserDTO();
             return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
@@ -51,8 +51,8 @@ public class UsuarioController {
     @DeleteMapping("/remover/{id}")
     public ResponseEntity<?> removerComId(@PathVariable(value = "id") Long id){
         try{
-            User usuarioBuscado = usuarioService.buscarPorId(id);
-            usuarioService.remover(usuarioBuscado);
+            User usuarioBuscado = usuarioService.findById(id);
+            usuarioService.remove(usuarioBuscado);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -63,7 +63,7 @@ public class UsuarioController {
     @DeleteMapping("/remover/feedback/{id}")
     public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
         try{
-            User usuarioRemovido = usuarioService.removerComFeedback(id);
+            User usuarioRemovido = usuarioService.removeByIdWithFeedback(id);
             UserDTO dtoRetorno = usuarioRemovido.toUserDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
@@ -75,7 +75,7 @@ public class UsuarioController {
     @GetMapping("/buscar/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable(value = "id") Long id){
         try{
-            User usuarioBuscado = usuarioService.buscarPorId(id);
+            User usuarioBuscado = usuarioService.findById(id);
             UserDTO dtoRetorno = usuarioBuscado.toUserDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
@@ -87,7 +87,7 @@ public class UsuarioController {
     @GetMapping("/buscarPorUsername/{username}")
     public ResponseEntity<?> buscarPorUsername(@PathVariable(value = "username") String username){
         try {
-            User usuarioEncontrado = usuarioService.buscarPorUsername(username);
+            User usuarioEncontrado = usuarioService.findByUsername(username);
             UserDTO dtoRetorno = usuarioEncontrado.toUserDTO();
             return ResponseEntity.ok(dtoRetorno);
         }catch (Exception e){
@@ -100,7 +100,7 @@ public class UsuarioController {
     public ResponseEntity<?> atualizar(@RequestBody UserDTO dto){
         try{
             User usuario = dto.toUser();
-            User atualizado = usuarioService.atualizar(usuario);
+            User atualizado = usuarioService.update(usuario);
             UserDTO dtoRetorno = atualizado.toUserDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){

@@ -28,7 +28,7 @@ public class TipoAnimalController {
     public ResponseEntity<?> salvar(@RequestBody AnimalTypeDTO animalTypeDTO){
         try{
             AnimalType tipoAnimal = animalTypeDTO.toAnimalType();
-            AnimalType tipoSalvo = tipoService.salvar(tipoAnimal);
+            AnimalType tipoSalvo = tipoService.save(tipoAnimal);
             AnimalTypeDTO dtoRetorno = tipoSalvo.toAnimalTypeDTO();
             return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
@@ -39,7 +39,7 @@ public class TipoAnimalController {
     @DeleteMapping("/remover/{id}")
     public ResponseEntity<?> remover(@PathVariable(value = "id") Long id){
         try{
-            tipoService.removerPorId(id);
+            tipoService.removeById(id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -49,7 +49,7 @@ public class TipoAnimalController {
     @DeleteMapping("/remover/feedback/{id}")
     public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
         try{
-            AnimalType tipoRemovido = tipoService.removerComFeedback(id);
+            AnimalType tipoRemovido = tipoService.removeByIdWithFeedback(id);
             AnimalTypeDTO dtoRetorno = tipoRemovido.toAnimalTypeDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
@@ -61,7 +61,7 @@ public class TipoAnimalController {
     public ResponseEntity<?> atualizar(@RequestBody AnimalTypeDTO animalTypeDTO){
         try{
             AnimalType tipoAnimal = animalTypeDTO.toAnimalType();
-            AnimalType tipoAnimalAtualizado = tipoService.atualizar(tipoAnimal);
+            AnimalType tipoAnimalAtualizado = tipoService.update(tipoAnimal);
             AnimalTypeDTO dtoRetorno = tipoAnimalAtualizado.toAnimalTypeDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
@@ -72,7 +72,7 @@ public class TipoAnimalController {
     @GetMapping("/buscarPorId/{id}")
     public ResponseEntity<?> buscar(@PathVariable(value = "id") Long id){
         try{
-            AnimalType tipoBuscado = tipoService.buscarPorId(id);
+            AnimalType tipoBuscado = tipoService.findById(id);
             AnimalTypeDTO dtoRetorno = tipoBuscado.toAnimalTypeDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){

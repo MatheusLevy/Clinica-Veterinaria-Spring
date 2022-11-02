@@ -33,7 +33,7 @@ public class AreaController {
     public ResponseEntity<?> salvar(@RequestBody AreaDTO areaDTO){
         try {
             Area area = areaDTO.toArea();
-            Area areaSalva = areaService.salvar(area);
+            Area areaSalva = areaService.save(area);
             AreaDTO areadtoRetorno = areaSalva.toAreaDTO();
             return new ResponseEntity<>(areadtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
@@ -45,7 +45,7 @@ public class AreaController {
     public ResponseEntity<?> atualizar(@RequestBody AreaDTO areadto){
         try{
             Area area = areadto.toArea();
-            Area areaSalva = areaService.atualizar(area);
+            Area areaSalva = areaService.update(area);
             AreaDTO areaDTORetorno = areaSalva.toAreaDTO();
             return ResponseEntity.ok(areaDTORetorno);
         } catch (Exception e){
@@ -56,7 +56,7 @@ public class AreaController {
     @DeleteMapping("/remover/{id}")
     public ResponseEntity<?> remover(@PathVariable(value = "id") Long id){
         try {
-            areaService.removerPorId(id);
+            areaService.removeById(id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -66,7 +66,7 @@ public class AreaController {
     @DeleteMapping("/remover/feedback/{id}")
     public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
         try {
-            Area areaRemovida = areaService.removerComFeedback(id);
+            Area areaRemovida = areaService.removeByIdWithFeedback(id);
             AreaDTO retornoDTO = areaRemovida.toAreaDTO();
             return ResponseEntity.ok(retornoDTO);
         } catch (Exception e){
@@ -77,7 +77,7 @@ public class AreaController {
     @GetMapping("/buscarId/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable(value = "id") Long id){
         try {
-            Area areaBuscada = areaService.buscarPorId(id);
+            Area areaBuscada = areaService.findById(id);
             AreaDTO retornoDTO = areaBuscada.toAreaDTO();
             return ResponseEntity.ok(retornoDTO);
         } catch (Exception e){
@@ -90,7 +90,7 @@ public class AreaController {
     public ResponseEntity<?> buscar(@RequestBody AreaDTO filtro){
         try{
             Area filtroArea = filtro.toArea();
-            List<Area> areas = areaService.buscar(filtroArea);
+            List<Area> areas = areaService.find(filtroArea);
             List<AreaDTO> dtos = areas
                     .stream()
                     .map(Area::toAreaDTO)
@@ -104,7 +104,7 @@ public class AreaController {
     @GetMapping("/buscarTodos")
     public ResponseEntity<?> buscarTodos(){
         try {
-            List<Area> areas = areaService.buscarTodos();
+            List<Area> areas = areaService.findAll();
             List<AreaDTO> dtos = areas
                     .stream()
                     .map(Area::toAreaDTO)
@@ -118,8 +118,8 @@ public class AreaController {
     @GetMapping("/buscar/especialidades/{id}")
     public ResponseEntity<?> buscarEspecialidades(@PathVariable(value = "id") Long id){
         try {
-            Area areaBuscada = areaService.buscarPorId(id);
-            List<Expertise> especialidades = areaService.buscarTodasEspecialidades(areaBuscada);
+            Area areaBuscada = areaService.findById(id);
+            List<Expertise> especialidades = areaService.findAllExpertiseByAreaId(areaBuscada.getAreaId());
             List<ExpertiseDTO> dtos = especialidades
                     .stream()
                     .map(Expertise::toExpertiseDTO)

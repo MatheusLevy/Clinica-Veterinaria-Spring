@@ -35,9 +35,9 @@ public class UsuarioViewController {
     public String usuarioCadastroControll(User usuario){
 
         if(usuario.getUserId() == null){
-            usarioService.salvar(usuario);
+            usarioService.save(usuario);
         }else {
-            usarioService.atualizar(usuario);
+            usarioService.update(usuario);
         }
         return "redirect:/usuario/usuarioList";
     }
@@ -45,7 +45,7 @@ public class UsuarioViewController {
     @PreAuthorize("hasRole('A')")
     @GetMapping("/usuario/atualizar/{id}")
     public ModelAndView usuarioAtualizar(@PathVariable(value = "id", required = true) Long id){
-        User usuarioFind = usarioService.buscarPorId(id);
+        User usuarioFind = usarioService.findById(id);
         ModelAndView mv = new ModelAndView("/usuarios/usuarioCadastro");
         mv.addObject("usuario", usuarioFind);
         return mv;
@@ -54,15 +54,15 @@ public class UsuarioViewController {
     @PreAuthorize("hasRole('A')")
     @GetMapping("/usuario/remover/{id}")
     public String usuarioRemover(@PathVariable(value = "id", required = true) Long id){
-        User usuarioFind = usarioService.buscarPorId(id);
-        usarioService.remover(usuarioFind);
+        User usuarioFind = usarioService.findById(id);
+        usarioService.remove(usuarioFind);
         return "redirect:/usuario/usuarioList";
     }
 
     @PreAuthorize("hasRole('A')")
     @GetMapping("/usuario/usuarioList")
     public ModelAndView usuarioList(){
-        List<User> usuarios = usarioService.buscarTodos();
+        List<User> usuarios = usarioService.findAll();
         ModelAndView mv = new ModelAndView("/usuarios/usuarioList");
         mv.addObject("usuarios", usuarios);
         return mv;

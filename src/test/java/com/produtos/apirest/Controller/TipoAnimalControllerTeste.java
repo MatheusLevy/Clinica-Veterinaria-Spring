@@ -1,5 +1,6 @@
 package com.produtos.apirest.Controller;
 
+import com.produtos.apirest.Util.Util;
 import com.produtos.apirest.models.AnimalType;
 import com.produtos.apirest.models.DTO.AnimalTypeDTO;
 import com.produtos.apirest.service.TipoAnimalService;
@@ -16,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static com.produtos.apirest.Util.Util.request;
+import static com.produtos.apirest.Util.Util.buildRequest;
 import static com.produtos.apirest.Util.Util.toJson;
 
 @ActiveProfiles("test")
@@ -49,9 +50,9 @@ public class TipoAnimalControllerTeste {
     @WithUserDetails("Admin")
     @Test
     public void deveSalvar() throws Exception{
-        Mockito.when(tipoAnimalService.salvar(Mockito.any(AnimalType.class))).thenReturn(generateTipoAnimalInstance());
+        Mockito.when(tipoAnimalService.save(Mockito.any(AnimalType.class))).thenReturn(generateTipoAnimalInstance());
         String json = toJson(generateTipoAnimalDTOInstance());
-        MockHttpServletRequestBuilder request = request(HttpMethod.POST, API.concat("/salvar"), json);
+        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.POST, API.concat("/salvar"), json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
@@ -59,9 +60,9 @@ public class TipoAnimalControllerTeste {
     @WithUserDetails("Admin")
     @Test
     public void deveAtualizar() throws Exception{
-        Mockito.when(tipoAnimalService.atualizar(Mockito.any(AnimalType.class))).thenReturn(generateTipoAnimalInstance());
+        Mockito.when(tipoAnimalService.update(Mockito.any(AnimalType.class))).thenReturn(generateTipoAnimalInstance());
         String json = toJson(generateTipoAnimalDTOInstance());
-        MockHttpServletRequestBuilder request = request(HttpMethod.PUT, API.concat("/atualizar"), json);
+        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.PUT, API.concat("/atualizar"), json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -70,8 +71,8 @@ public class TipoAnimalControllerTeste {
     @Test
     public void deveRemover() throws Exception{
         Long id = 1L;
-        Mockito.doNothing().when(tipoAnimalService).removerPorId(Mockito.anyLong());
-        MockHttpServletRequestBuilder request = request(HttpMethod.DELETE, API.concat("/remover/").concat(String.valueOf(id)));
+        Mockito.doNothing().when(tipoAnimalService).removeById(Mockito.anyLong());
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/remover/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -80,8 +81,8 @@ public class TipoAnimalControllerTeste {
     @Test
     public void deveRemoverComFeedback() throws Exception{
         Long id = 1L;
-        Mockito.when(tipoAnimalService.removerComFeedback(Mockito.anyLong())).thenReturn(generateTipoAnimalInstance());
-        MockHttpServletRequestBuilder request = request(HttpMethod.DELETE, API.concat("/remover/feedback/").concat(String.valueOf(id)));
+        Mockito.when(tipoAnimalService.removeByIdWithFeedback(Mockito.anyLong())).thenReturn(generateTipoAnimalInstance());
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/remover/feedback/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -90,8 +91,8 @@ public class TipoAnimalControllerTeste {
     @Test
     public void deveBuscarPorId() throws Exception{
         Long id = 1L;
-        Mockito.when(tipoAnimalService.buscarPorId(Mockito.anyLong())).thenReturn(generateTipoAnimalInstance());
-        MockHttpServletRequestBuilder request = request(HttpMethod.GET, API.concat("/buscarPorId/").concat(String.valueOf(id)));
+        Mockito.when(tipoAnimalService.findById(Mockito.anyLong())).thenReturn(generateTipoAnimalInstance());
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/buscarPorId/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }

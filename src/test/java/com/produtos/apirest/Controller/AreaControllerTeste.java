@@ -1,5 +1,6 @@
 package com.produtos.apirest.Controller;
 
+import com.produtos.apirest.Util.Util;
 import com.produtos.apirest.models.Area;
 import com.produtos.apirest.models.DTO.AreaDTO;
 import com.produtos.apirest.service.AreaService;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.produtos.apirest.Controller.EspecialidadeControllerTeste.generateEspecialidadeListInstance;
-import static com.produtos.apirest.Util.Util.request;
+import static com.produtos.apirest.Util.Util.buildRequest;
 import static com.produtos.apirest.Util.Util.toJson;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doNothing;
@@ -60,9 +61,9 @@ public class AreaControllerTeste {
     @Test
     @WithUserDetails("Admin")
     public void deveSalvar() throws Exception{
-        Mockito.when(areaService.salvar(Mockito.any(Area.class))).thenReturn(generateAreaInstance());
+        Mockito.when(areaService.save(Mockito.any(Area.class))).thenReturn(generateAreaInstance());
         String json = toJson(generateAreaDTOInstance());
-        MockHttpServletRequestBuilder request = request(HttpMethod.POST, API.concat("/salvar"), json);
+        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.POST, API.concat("/salvar"), json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
@@ -70,9 +71,9 @@ public class AreaControllerTeste {
     @Test
     @WithUserDetails("Admin")
     public void deveAtualizar() throws Exception{
-        Mockito.when(areaService.atualizar(Mockito.any(Area.class))).thenReturn(generateAreaInstance());
+        Mockito.when(areaService.update(Mockito.any(Area.class))).thenReturn(generateAreaInstance());
         String json = toJson(generateAreaDTOInstance());
-        MockHttpServletRequestBuilder request = request(HttpMethod.PUT, API.concat("/atualizar"), json);
+        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.PUT, API.concat("/atualizar"), json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -81,8 +82,8 @@ public class AreaControllerTeste {
     @WithUserDetails("Admin")
     public void deveRemover() throws Exception{
         Long id = 1L;
-        doNothing().when(areaService).removerPorId(isA(Long.class));
-        MockHttpServletRequestBuilder request = request(HttpMethod.DELETE, API.concat("/remover/").concat(String.valueOf(id)));
+        doNothing().when(areaService).removeById(isA(Long.class));
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/remover/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string("\"NO_CONTENT\""));
@@ -92,8 +93,8 @@ public class AreaControllerTeste {
     @WithUserDetails("Admin")
     public void deveRemoverComFeedback() throws Exception{
         Long id = 1L;
-        Mockito.when(areaService.removerComFeedback(Mockito.anyLong())).thenReturn(generateAreaInstance());
-        MockHttpServletRequestBuilder request = request(HttpMethod.DELETE, API.concat("/remover/feedback/").concat(String.valueOf(id)));
+        Mockito.when(areaService.removeByIdWithFeedback(Mockito.anyLong())).thenReturn(generateAreaInstance());
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/remover/feedback/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -101,9 +102,9 @@ public class AreaControllerTeste {
     @Test
     @WithUserDetails("Admin")
     public void deveBuscarPorFiltro() throws Exception{
-        Mockito.when(areaService.buscar(Mockito.any(Area.class))).thenReturn(generateAreaListInstance());
+        Mockito.when(areaService.find(Mockito.any(Area.class))).thenReturn(generateAreaListInstance());
         String json = toJson(generateAreaDTOInstance());
-        MockHttpServletRequestBuilder request = request(HttpMethod.GET, API.concat("/buscar/filtro"), json);
+        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.GET, API.concat("/buscar/filtro"), json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -112,8 +113,8 @@ public class AreaControllerTeste {
     @WithUserDetails("Admin")
     public void deveBuscarPorId() throws Exception{
         Long id = 1L;
-        Mockito.when(areaService.buscarPorId(Mockito.anyLong())).thenReturn(generateAreaInstance());
-        MockHttpServletRequestBuilder request = request(HttpMethod.GET, API.concat("/buscarId/").concat(String.valueOf(id)));
+        Mockito.when(areaService.findById(Mockito.anyLong())).thenReturn(generateAreaInstance());
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/buscarId/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -122,9 +123,9 @@ public class AreaControllerTeste {
     @Test
     public void deveBuscarEspecialidade() throws Exception{
         Long id = 1L;
-        Mockito.when(areaService.buscarPorId(Mockito.anyLong())).thenReturn(generateAreaInstance());
-        Mockito.when(areaService.buscarTodasEspecialidades(Mockito.any(Area.class))).thenReturn(generateEspecialidadeListInstance());
-        MockHttpServletRequestBuilder request = request(HttpMethod.GET, API.concat("/buscar/especialidades/").concat(String.valueOf(id)));
+        Mockito.when(areaService.findById(Mockito.anyLong())).thenReturn(generateAreaInstance());
+        Mockito.when(areaService.findAllExpertiseByAreaId(Mockito.anyLong())).thenReturn(generateEspecialidadeListInstance());
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/buscar/especialidades/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -132,8 +133,8 @@ public class AreaControllerTeste {
     @WithUserDetails("Admin")
     @Test
     public void deveBuscarTodos() throws Exception{
-        Mockito.when(areaService.buscarTodos()).thenReturn(generateAreaListInstance());
-        MockHttpServletRequestBuilder request = request(HttpMethod.GET, API.concat("/buscarTodos"));
+        Mockito.when(areaService.findAll()).thenReturn(generateAreaListInstance());
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/buscarTodos"));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }

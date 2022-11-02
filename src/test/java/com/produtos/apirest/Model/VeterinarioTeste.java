@@ -13,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static com.produtos.apirest.Model.EspecialidadeTeste.generateEspecialidade;
 import static com.produtos.apirest.Model.EspecialidadeTeste.rollbackEspecialidade;
 import static com.produtos.apirest.Util.Util.generateCPF;
-import static com.produtos.apirest.Util.Util.generateTelefone;
+import static com.produtos.apirest.Util.Util.generatePhone;
 
 @SpringBootTest
 public class VeterinarioTeste {
@@ -30,7 +30,7 @@ public class VeterinarioTeste {
         Veterinary veterinario = Veterinary.builder()
                 .name("name")
                 .cpf(generateCPF())
-                .phone(generateTelefone())
+                .phone(generatePhone())
                 .build();
         if (initializedEspecialidade)
             veterinario.setExpertise(expertiseRepo.save(generateEspecialidade(true, areaRepo)));
@@ -43,7 +43,7 @@ public class VeterinarioTeste {
         Veterinary veterinario = Veterinary.builder()
                 .name("name")
                 .cpf(generateCPF())
-                .phone(generateTelefone())
+                .phone(generatePhone())
                 .expertise(generateEspecialidade(true, areaRepo))
                 .build();
         if (initializeEspecialidade)

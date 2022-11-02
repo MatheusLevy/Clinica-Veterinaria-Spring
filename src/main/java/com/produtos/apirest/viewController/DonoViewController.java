@@ -31,9 +31,9 @@ public class DonoViewController {
     public String donoCadastroControll(Owner dono){
 
         if(Long.valueOf(dono.getOwnerId()) == null){
-            donoService.salvar(dono);
+            donoService.save(dono);
         }else {
-            donoService.atualizar(dono);
+            donoService.update(dono);
         }
         return "redirect:/dono/donoList";
     }
@@ -41,7 +41,7 @@ public class DonoViewController {
     @PreAuthorize("hasRole('S')")
     @GetMapping("/dono/donoList")
     public ModelAndView donoList(){
-        List<Owner> donos = donoService.buscarTodos();
+        List<Owner> donos = donoService.findAll();
         ModelAndView mv = new ModelAndView("/dono/donoList");
         mv.addObject( "donos", donos);
         //System.out.println(mv);
@@ -51,7 +51,7 @@ public class DonoViewController {
     @PreAuthorize("hasRole('S')")
     @GetMapping("/dono/atualizar/{id}")
     public ModelAndView donoAtualizar(@PathVariable(value = "id", required = true) Long id){
-        Owner donoFind = donoService.buscarPorId(id);
+        Owner donoFind = donoService.findById(id);
         ModelAndView mv = new ModelAndView("/dono/donoCadastro");
         mv.addObject("dono", donoFind);
         return mv;
@@ -60,8 +60,8 @@ public class DonoViewController {
     @PreAuthorize("hasRole('S')")
     @GetMapping("/dono/remover/{id}")
     public String donoRemover(@PathVariable(value = "id", required = true) Long id){
-        Owner donoFind = donoService.buscarPorId(id);
-        donoService.removerPorId(donoFind.getOwnerId());
+        Owner donoFind = donoService.findById(id);
+        donoService.removeById(donoFind.getOwnerId());
         return "redirect:/dono/donoList";
     }
 }

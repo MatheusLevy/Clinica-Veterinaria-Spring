@@ -20,15 +20,14 @@
 
 ## Introduction
 
-P for Pet, provides end-points for consume. It has CRUD end-points for each model. The routes provided by the controllers need to be authenticated with basic authentication.
+P for Pet, provides end-points for consumers. It has CRUD end-points for each model. The routes provided by the controllers need to be authenticated with basic authentication.
 
 Every function, method, service and controller needs to have a unit test. 
 
  * **Starting**
 > Clone the repository and opens with your favored java editor. I recommend IntelliJ or Eclipse. Then wait for Maven to download the needed dependencies. Now you can work.
 
-The idea behind the api is that we have the Secretary and the Admin users. The first have access some end-points of the api when authenticated and the second has access to all end-points. 
-So the users of this api are the secretary and the admin. So the secretary can log into a system and will create the animals, owners and other by making requests to the api. As a future update I'm thinking about adding the client of the clinic as a consumers so the client could book the appointment by itself without the need of the secretary.   
+The idea is to make rest api to provide microservices as save, delete, update and find for the models.
 ## The developing
 
 I originally wrote all the code in portuguese, since I'm brazilian, and now I'm changing to english for a  more international view. So you can sometimes find some method names or variables in portuguese. If you find you can help me on discussion.

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 public class ConsultaService {
@@ -21,106 +21,124 @@ public class ConsultaService {
         this.repo = consultaRepo;
     }
 
-    public static void verificaConsulta(Appointment consulta){
-        if(consulta == null)
-            throw new NullPointerException("A Consulta não pode ser Nula!");
-        if(consulta.getAppointmentType() == null)
-            throw new RegraNegocioRunTime("Consulta deve possuir um Tipo de Consulta!");
-        if(consulta.getAnimal() == null)
-            throw new RegraNegocioRunTime("Consulta deve possuir um Animal!");
-        if (consulta.getVeterinary() == null)
-            throw new RegraNegocioRunTime("Consulta deve possuir um Veterinario!");
-        if(consulta.getDate() == null)
-            throw new RegraNegocioRunTime("Consulta deve ter uma Data!");
+    public static void verifyIsNull(Appointment appointment){
+        if(appointment == null)
+            throw new NullPointerException("The appointment must not be null!");
     }
 
-    public static void verificaId(Appointment consulta){
-        if (consulta == null || consulta.getAppointmentId() <= 0)
-            throw new RegraNegocioRunTime("Consulta deve ter um identificador!");
+    public static void verifyHasAnimal(Appointment appointment){
+        if(appointment.getAnimal() == null)
+            throw new RegraNegocioRunTime("The appointment should hava a animal!");
     }
 
-    public static void verificaId(Long id){
+    public static void verifyHasType(Appointment appointment){
+        if(appointment.getAppointmentType() == null)
+            throw new RegraNegocioRunTime("The appointment should have a type!");
+    }
+
+    public static void verifyHasVeterinary(Appointment appointment){
+        if (appointment.getVeterinary() == null)
+            throw new RegraNegocioRunTime("The appointment should have a veterinary!");
+    }
+
+    public static void verifyHasDate(Appointment appointment){
+        if(appointment.getDate() == null)
+            throw new RegraNegocioRunTime("The appointment should have a date!");
+    }
+
+    public static void verifyHasId(Appointment appointment){
+        if (appointment == null || appointment.getAppointmentId() <= 0)
+            throw new RegraNegocioRunTime("The appointment should have a id!");
+    }
+
+    public static void verifyHasId(Long id){
         if (id <= 0)
-            throw new RegraNegocioRunTime("Consulta deve ter um identificador!");
+            throw new RegraNegocioRunTime("The appointment should have a id!");
+    }
+
+    public static void verifyAllRules(Appointment appointment){
+        verifyIsNull(appointment);
+        verifyHasId(appointment);
+        verifyHasAnimal(appointment);
+        verifyHasType(appointment);
+        verifyHasDate(appointment);
+        verifyHasVeterinary(appointment);
+    }
+
+    public static void verifyIsNullHasAnimalHasTypeHasDateHasVeterinary(Appointment appointment){
+        verifyIsNull(appointment);
+        verifyHasAnimal(appointment);
+        verifyHasType(appointment);
+        verifyHasDate(appointment);
+        verifyHasVeterinary(appointment);
     }
 
     @Transactional
-    public Appointment salvar(Appointment consulta){
-        verificaConsulta(consulta);
-        return repo.save(consulta);
+    public Appointment save(Appointment appointment){
+        verifyIsNullHasAnimalHasTypeHasDateHasVeterinary(appointment);
+        return repo.save(appointment);
     }
 
     @Transactional
-    public Appointment atualizar(Appointment consulta){
-        verificaConsulta(consulta);
-        verificaId(consulta);
-        return repo.save(consulta);
+    public Appointment update(Appointment appointment){
+        verifyAllRules(appointment);
+        return repo.save(appointment);
     }
 
     @Transactional
-    public Appointment atualizarVeterinario(Appointment destino, Veterinary veterinarioNovo){
-        VeterinarioService.verificaVeterinario(veterinarioNovo);
-        VeterinarioService.verificaId(veterinarioNovo);
-        verificaConsulta(destino);
-        verificaId(destino);
-        destino.setVeterinary(veterinarioNovo);
-        return repo.save(destino);
+    public Appointment updateAppointment(Appointment destiny, Veterinary newVeterinary){
+        VeterinarioService.verifyAllRules(newVeterinary);
+        VeterinarioService.verifyHasId(newVeterinary);
+        verifyAllRules(destiny);
+        destiny.setVeterinary(newVeterinary);
+        return repo.save(destiny);
     }
 
     @Transactional
-    public Appointment atualizarAnimal(Appointment destino, Animal animalNovo){
-        AnimalService.verificaAnimal(animalNovo);
-        AnimalService.verificaId(animalNovo);
-        verificaConsulta(destino);
-        verificaId(destino);
-        destino.setAnimal(animalNovo);
-        return repo.save(destino);
+    public Appointment updateAnimal(Appointment destiny, Animal newAnimal){
+        AnimalService.verifyAllRules(newAnimal);
+        verifyAllRules(destiny);
+        destiny.setAnimal(newAnimal);
+        return repo.save(destiny);
     }
 
     @Transactional
-    public Appointment atualizarTipoConsulta(Appointment destino, AppointmentType tipoConsultaNovo){
-        TipoConsultaService.verificaTipoConsulta(tipoConsultaNovo);
-        TipoConsultaService.verificaId(tipoConsultaNovo);
-        verificaConsulta(destino);
-        verificaId(destino);
-        destino.setAppointmentType(tipoConsultaNovo);
-        return repo.save(destino);
+    public Appointment updateAppointmentType(Appointment destiny, AppointmentType newType){
+        TipoConsultaService.verifyAllRules(newType);
+        TipoConsultaService.verifyId(newType);
+        verifyAllRules(destiny);
+        destiny.setAppointmentType(newType);
+        return repo.save(destiny);
     }
 
     @Transactional
-    public void remover(Appointment consulta){
-        verificaConsulta(consulta);
-        verificaId(consulta);
-        repo.delete(consulta);
+    public void remove(Appointment appointment){
+        verifyAllRules(appointment);
+        repo.delete(appointment);
     }
 
     @Transactional
-    public void removerPorId(Long id){
-        verificaId(id);
+    public void removeById(Long id){
+        verifyHasId(id);
         repo.deleteById(id);
     }
 
     @Transactional
-    public Appointment removerComFeedback(Long id){
-        verificaId(id);
-        Optional<Appointment> consultasEncontradas = repo.findById(id);
-        if (consultasEncontradas.isPresent()) {
-            Appointment consultaFeedback = consultasEncontradas.get();
-            repo.delete(consultaFeedback);
-            return consultaFeedback;
-        }
-        return null;
+    public Appointment removeByIdWithFeedback(Long id){
+        verifyHasId(id);
+        Appointment feedback = repo.findByAppointmentId(id);
+        repo.delete(feedback);
+        return feedback;
     }
 
     @Transactional
-    public Appointment buscarPorId(Long id){
-        verificaId(id);
-        Optional<Appointment> consultasEncotradas = repo.findById(id);
-        return consultasEncotradas.orElse(null);
+    public Appointment findById(Long id){
+        verifyHasId(id);
+        return repo.findByAppointmentId(id);
     }
 
     @Transactional
-    public List<Appointment> buscarTodos(){
+    public List<Appointment> findAll(){
         return repo.findAll();
     }
 }

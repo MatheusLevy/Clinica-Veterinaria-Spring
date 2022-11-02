@@ -21,7 +21,7 @@ public class RoleController {
     public ResponseEntity<?> salvar(@RequestBody RoleDTO roleDTO){
         try {
             Role role = roleDTO.toRole();
-            Role roleSalva = roleService.salvar(role);
+            Role roleSalva = roleService.save(role);
             RoleDTO dtoRetorno = roleSalva.toRoleDTO();
             return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
@@ -33,7 +33,7 @@ public class RoleController {
     public ResponseEntity<?> atualizar(@RequestBody RoleDTO roleDTO){
         try {
             Role role = roleDTO.toRole();
-            Role roleAtualizada = roleService.atualizar(role);
+            Role roleAtualizada = roleService.update(role);
             RoleDTO dtoRetorno = roleAtualizada.toRoleDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
@@ -44,7 +44,7 @@ public class RoleController {
     @DeleteMapping("/remover/{id}")
     public ResponseEntity<?> remover(@PathVariable(value = "id") Long id){
         try {
-            roleService.removerPorId(id);
+            roleService.removeById(id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -54,7 +54,7 @@ public class RoleController {
     @DeleteMapping("/remover/feedback/{id}")
     public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id) {
         try {
-            Role roleFeedback = roleService.RemoverComFeedback(id);
+            Role roleFeedback = roleService.removeByIdWithFeedback(id);
             RoleDTO dtoRetorno = roleFeedback.toRoleDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e) {
@@ -65,7 +65,7 @@ public class RoleController {
     @GetMapping("/buscar/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable(value = "id") Long id){
         try {
-            Role role = roleService.buscarPorId(id);
+            Role role = roleService.findById(id);
             RoleDTO dtoRetorno = role.toRoleDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){

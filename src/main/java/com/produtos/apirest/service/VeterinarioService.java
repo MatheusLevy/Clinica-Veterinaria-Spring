@@ -2,7 +2,6 @@ package com.produtos.apirest.service;
 
 import com.produtos.apirest.models.Expertise;
 import com.produtos.apirest.models.Veterinary;
-import com.produtos.apirest.repository.ExpertiseRepo;
 import com.produtos.apirest.repository.VeterinaryRepo;
 import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
 import org.springframework.data.domain.Example;
@@ -11,109 +10,123 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class VeterinarioService {
 
     private final VeterinaryRepo repo;
-    private final ExpertiseRepo expertiseRepo;
 
-    public VeterinarioService(VeterinaryRepo veterinaryRepo, ExpertiseRepo expertiseRepo){
+    public VeterinarioService(VeterinaryRepo veterinaryRepo){
         this.repo = veterinaryRepo;
-        this.expertiseRepo = expertiseRepo;
     }
 
-    public static void verificaVeterinario(Veterinary veterinario){
-        if (veterinario == null)
-            throw new NullPointerException("Veterinario não pode ser Nulo!");
-        if(veterinario.getName().equals(""))
-            throw new RegraNegocioRunTime("Veterinario deve ter um Nome!");
-        if (veterinario.getCpf().equals(""))
-            throw new RegraNegocioRunTime("Veterinario deve ter um CPF");
-        if (veterinario.getExpertise() == null)
-            throw new RegraNegocioRunTime("Veterinario deve ter uma Especialidade");
+    public static void verifyIsNull(Veterinary veterinary){
+        if (veterinary == null)
+            throw new NullPointerException("Veterinary must not be null!");
     }
 
-    public static void verificaId(Veterinary veterinario){
-        if (veterinario.getVeterinaryId() <= 0)
-            throw new RegraNegocioRunTime("Veterinario deve ter um identificador");
+    public static void verifyHasName(Veterinary veterinary){
+        if(veterinary.getName().equals(""))
+            throw new RegraNegocioRunTime("The veterinary should have a name!");
     }
 
-    public static void verificaId(Long id){
+    public static void verifyHasCPF(Veterinary veterinary){
+        if (veterinary.getCpf().equals(""))
+            throw new RegraNegocioRunTime("The veterinary should have a CPF!");
+    }
+
+    public static void verifyHasExpertise(Veterinary veterinary){
+        if (veterinary.getExpertise() == null)
+            throw new RegraNegocioRunTime("The veterinary should have a Expertise!");
+    }
+
+    public static void verifyHasId(Veterinary veterinary){
+        if (veterinary.getVeterinaryId() <= 0)
+            throw new RegraNegocioRunTime("The veterinary should have a id!");
+    }
+
+    public static void verifyHasId(Long id){
         if (id <= 0)
-            throw new RegraNegocioRunTime("Veterinario deve ter um identificador");
+            throw new RegraNegocioRunTime("The veterinary should have a id!");
+    }
+
+    public static void verifyAllRules(Veterinary veterinary){
+        verifyIsNull(veterinary);
+        verifyHasId(veterinary);
+        verifyHasName(veterinary);
+        verifyHasCPF(veterinary);
+        verifyHasExpertise(veterinary);
+    }
+
+    public static void verifyIsNullHasNameHasCPFHasExpertise(Veterinary veterinary){
+        verifyIsNull(veterinary);
+        verifyHasName(veterinary);
+        verifyHasCPF(veterinary);
+        verifyHasExpertise(veterinary);
+    }
+
+    public static Example<Veterinary> generateFilter(Veterinary veterinary){
+        return Example.of(veterinary, ExampleMatcher.matching()
+                .withIgnoreCase()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
     }
 
     @Transactional
-    public Veterinary salvar(Veterinary veterinario){
-        verificaVeterinario(veterinario);
-        return repo.save(veterinario);
+    public Veterinary save(Veterinary veterinary){
+        verifyIsNullHasNameHasCPFHasExpertise(veterinary);
+        return repo.save(veterinary);
     }
 
     @Transactional
-    public Veterinary atualizar(Veterinary veterinario){
-        verificaVeterinario(veterinario);
-        verificaId(veterinario);
-        return repo.save(veterinario);
+    public Veterinary update(Veterinary veterinary){
+        verifyAllRules(veterinary);
+        return repo.save(veterinary);
     }
 
     @Transactional
-    public void remover(Long id){
-        verificaId(id);
+    public void removeById(Long id){
+        verifyHasId(id);
         repo.deleteById(id);
     }
 
     @Transactional
-    public Veterinary removerComFeedback(Long id){
-        verificaId(id);
-        Optional<Veterinary> veterinariosEncontrados = repo.findById(id);
-        if (veterinariosEncontrados.isPresent()) {
-            Veterinary veterinarioFeedback = veterinariosEncontrados.get();
-            repo.delete(veterinarioFeedback);
-            return veterinarioFeedback;
-        }
-        return null;
+    public Veterinary removeByIdWithFeedback(Long id){
+        verifyHasId(id);
+        Veterinary feedback = repo.findByVeterinaryId(id);
+        repo.delete(feedback);
+        return feedback;
     }
 
     @Transactional
-    public Veterinary buscarPorId(Long id){
-        verificaId(id);
-        Optional<Veterinary> veterinariosEncontrados = repo.findById(id);
-        return veterinariosEncontrados.orElse(null);
+    public Veterinary findById(Long id){
+        verifyHasId(id);
+        return repo.findByVeterinaryId(id);
     }
 
     @Transactional
-    public List<Veterinary> buscar(Veterinary filtro){
-        if (filtro == null)
-            throw new NullPointerException("Filtro não pode ser nulo");
-        Example<Veterinary> example = Example.of(filtro, ExampleMatcher.matching()
-                .withIgnoreCase()
-                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
+    public List<Veterinary> find(Veterinary veterinary){
+        verifyIsNull(veterinary);
+        Example<Veterinary> example = generateFilter(veterinary);
         return repo.findAll(example);
     }
 
     @Transactional
-    public List<Veterinary> buscarTodos(){
+    public List<Veterinary> findAll(){
         return repo.findAll();
     }
 
     @Transactional
-    public Expertise buscarEspecialidade(Veterinary veterinario){
-        verificaVeterinario(veterinario);
-        verificaId(veterinario);
-        Long id = veterinario.getVeterinaryId();
-        Optional<Veterinary> veterinariosEncontrados = repo.findById(id);
-        return veterinariosEncontrados.map(Veterinary::getExpertise).orElse(null);
+    public Expertise findExpertisesById(Long id){
+        verifyHasId(id);
+        Veterinary veteFind = repo.findByVeterinaryId(id);
+        return veteFind.getExpertise();
     }
 
     @Transactional
-    public Veterinary atualizarEspecialidade(Veterinary destino, Expertise especialidadeNova){
-        EspecialidadeService.verificaEspecialidade(especialidadeNova);
-        EspecialidadeService.verificaId(especialidadeNova);
-        verificaVeterinario(destino);
-        verificaId(destino);
-        destino.setExpertise(especialidadeNova);
-        return  repo.save(destino);
+    public Veterinary updateExpertise(Veterinary destiny, Expertise newExpertise){
+        EspecialidadeService.verifyAllRules(newExpertise);
+        verifyAllRules(destiny);
+        destiny.setExpertise(newExpertise);
+        return repo.save(destiny);
     }
 }

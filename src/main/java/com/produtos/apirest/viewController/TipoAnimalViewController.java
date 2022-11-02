@@ -33,9 +33,9 @@ public class TipoAnimalViewController {
     public String tipoAnimalCadastroControll(AnimalType tipo){
 
         if(Long.valueOf(tipo.getAnimalTypeId()) == null){
-            tipoService.salvar(tipo);
+            tipoService.save(tipo);
         }else {
-            tipoService.atualizar(tipo);
+            tipoService.update(tipo);
         }
         return "redirect:/tipoAnimal/tipoAnimalList";
     }
@@ -43,7 +43,7 @@ public class TipoAnimalViewController {
     @PreAuthorize("hasRole('A')")
     @GetMapping("/tipoAnimal/atualizar/{id}")
     public ModelAndView tipoAnimalAtualizar(@PathVariable(value = "id", required = true) Long id){
-        AnimalType tipoFind = tipoService.buscarPorId(id);
+        AnimalType tipoFind = tipoService.findById(id);
         ModelAndView mv = new ModelAndView("/tipoAnimal/tipoAnimalCadastro");
         mv.addObject("tipoAnimal", tipoFind);
         return mv;
@@ -52,15 +52,15 @@ public class TipoAnimalViewController {
     @PreAuthorize("hasRole('A')")
     @GetMapping("/tipoAnimal/remover/{id}")
     public String tipoAnimalRemover(@PathVariable(value = "id", required = true) Long id){
-        AnimalType tipoFind = tipoService.buscarPorId(id);
-        tipoService.removerPorId(tipoFind.getAnimalTypeId());
+        AnimalType tipoFind = tipoService.findById(id);
+        tipoService.removeById(tipoFind.getAnimalTypeId());
         return "redirect:/tipoAnimal/tipoAnimalList";
     }
 
     @PreAuthorize("hasRole('A')")
     @GetMapping("/tipoAnimal/tipoAnimalList")
     public ModelAndView tipoAnimalList(){
-        List<AnimalType> tipos = tipoService.buscarTodos();
+        List<AnimalType> tipos = tipoService.findAll();
         ModelAndView mv = new ModelAndView("/tipoAnimal/tipoAnimalList");
         mv.addObject("tipos", tipos);
         return mv;

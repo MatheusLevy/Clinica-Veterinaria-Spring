@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static com.produtos.apirest.Util.Util.generateCPF;
-import static com.produtos.apirest.Util.Util.generateTelefone;
+import static com.produtos.apirest.Util.Util.generatePhone;
 
 @SpringBootTest
 public class DonoTeste {
@@ -20,7 +20,7 @@ public class DonoTeste {
         return Owner.builder()
                 .name("name")
                 .cpf(generateCPF())
-                .phone(generateTelefone())
+                .phone(generatePhone())
                 .build();
     }
 

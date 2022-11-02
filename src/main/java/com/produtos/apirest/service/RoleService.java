@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class RoleService {
@@ -20,74 +19,75 @@ public class RoleService {
         this.roleRepo = roleRepo;
     }
 
-    public static void verificaRole(Role role){
+    public static void verifyIsNull(Role role){
         if (role == null)
-            throw new NullPointerException("Role não pode ser Nula!");
+            throw new NullPointerException("Role must not be null!");
     }
 
-    public static void verificaId(Role role){
-        if (role.getRoleId() == null)
-            throw new RegraNegocioRunTime("Role deve ter um identificador!");
+    public static void verifyHasId(Role role){
+        if (role.getRoleId() <= 0)
+            throw new RegraNegocioRunTime("The role should have a id");
     }
 
-    public static void verificaId(Long id){
-        if (id == null || id <= 0)
-            throw new RegraNegocioRunTime("Role deve ter um identificador!");
+    public static void verifyHasId(Long id){
+        if (id <= 0)
+            throw new RegraNegocioRunTime("The role should have a id");
+    }
+
+    public static void verifyAllRules(Role role){
+        verifyIsNull(role);
+        verifyHasId(role);
+    }
+
+    public static Example<Role> generateExample(Role role){
+        return Example.of(role, ExampleMatcher.matching()
+                .withIgnoreCase()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
     }
 
     @Transactional
-    public Role salvar(Role role){
-        verificaRole(role);
+    public Role save(Role role){
+        verifyIsNull(role);
         return roleRepo.save(role);
     }
 
     @Transactional
-    public Role atualizar(Role role){
-        verificaRole(role);
-        verificaId(role);
+    public Role update(Role role){
+        verifyAllRules(role);
         return roleRepo.save(role);
     }
 
     @Transactional
-    public void remover(Role role){
-        verificaRole(role);
-        verificaId(role);
+    public void remove(Role role){
+        verifyAllRules(role);
         roleRepo.delete(role);
     }
 
     @Transactional
-    public void removerPorId(Long id){
-        verificaId(id);
+    public void removeById(Long id){
+        verifyHasId(id);
         roleRepo.deleteById(id);
     }
 
     @Transactional
-    public Role RemoverComFeedback(Long id){
-        verificaId(id);
-        Optional<Role> rolesEncontradas = roleRepo .findById(id);
-        if (rolesEncontradas.isPresent()) {
-            Role roleFeedback = rolesEncontradas.get();
-            roleRepo.deleteById(id);
-            return roleFeedback;
-        }
-        return null;
+    public Role removeByIdWithFeedback(Long id){
+        verifyHasId(id);
+        Role feedback = roleRepo .findByRoleId(id);
+        roleRepo.delete(feedback);
+        return feedback;
     }
 
     @Transactional
-    public List<Role> buscar(Role filtro){
-        if (filtro == null)
-            throw new NullPointerException("Filtro não pode ser nulo");
-        Example<Role> example = Example.of(filtro, ExampleMatcher.matching()
-                .withIgnoreCase()
-                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
+    public List<Role> find(Role role){
+        verifyIsNull(role);
+        Example<Role> example = generateExample(role);
         return roleRepo.findAll(example);
     }
 
     @Transactional
-    public Role buscarPorId(Long id){
-        verificaId(id);
-        Optional<Role> rolesEncontradas = roleRepo.findById(id);
-        return rolesEncontradas.orElse(null);
+    public Role findById(Long id){
+        verifyHasId(id);
+        return roleRepo.findByRoleId(id);
     }
 
     @Transactional

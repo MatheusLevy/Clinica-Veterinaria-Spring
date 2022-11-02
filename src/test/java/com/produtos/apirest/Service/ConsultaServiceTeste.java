@@ -114,7 +114,7 @@ public class ConsultaServiceTeste {
 
     @Test
     public void deveSalvar(){
-        Appointment consultaSalva = consultaService.salvar(generateConsulta(true));
+        Appointment consultaSalva = consultaService.save(generateConsulta(true));
         Assertions.assertNotNull(consultaSalva);
         rollback(consultaSalva, false);
     }
@@ -123,7 +123,7 @@ public class ConsultaServiceTeste {
     public void deveAtualizar(){
         Appointment consultaSalva = consultaRepo.save(generateConsulta(true));
         consultaSalva.setDescription("Nova Descrição");
-        Appointment consultaAtualizada = consultaService.atualizar(consultaSalva);
+        Appointment consultaAtualizada = consultaService.update(consultaSalva);
         Assertions.assertNotNull(consultaAtualizada);
         Assertions.assertEquals(consultaSalva.getAppointmentId(), consultaAtualizada.getAppointmentId());
         Assertions.assertEquals(consultaAtualizada.getDescription(), "Nova Descrição");
@@ -134,7 +134,7 @@ public class ConsultaServiceTeste {
     public void deveRemover(){
         Appointment consultaSalva = consultaRepo.save(generateConsulta(true));
         Long id = consultaSalva.getAppointmentId();
-        consultaService.remover(consultaSalva);
+        consultaService.remove(consultaSalva);
         Assertions.assertFalse(consultaRepo.findById(id).isPresent());
         rollback(consultaSalva, true);
     }
@@ -143,7 +143,7 @@ public class ConsultaServiceTeste {
     public void deveRemoverComId(){
         Appointment consultaSalva = consultaRepo.save(generateConsulta(true));
         Long id = consultaSalva.getAppointmentId();
-        consultaService.removerPorId(consultaSalva.getAppointmentId());
+        consultaService.removeById(consultaSalva.getAppointmentId());
         Assertions.assertFalse(consultaRepo.findById(id).isPresent());
         rollback(consultaSalva, true);
     }
@@ -151,7 +151,7 @@ public class ConsultaServiceTeste {
     @Test
     public void deveRemoverComFeedback(){
         Appointment consultaSalva = consultaRepo.save(generateConsulta(true));
-        Appointment consultaFeedback = consultaService.removerComFeedback(consultaSalva.getAppointmentId());
+        Appointment consultaFeedback = consultaService.removeByIdWithFeedback(consultaSalva.getAppointmentId());
         Assertions.assertNotNull(consultaFeedback);
         Assertions.assertEquals(consultaFeedback.getAppointmentId(), consultaSalva.getAppointmentId());
         rollback(consultaSalva, true);
@@ -162,7 +162,7 @@ public class ConsultaServiceTeste {
         Appointment consultaSalva = consultaRepo.save(generateConsulta(true));
         Veterinary veterinarioAntigo = consultaSalva.getVeterinary();
         Veterinary veterinarioNovo = veterinaryRepo.save(generateVeterinario(true, areaRepo, expertiseRepo));
-        Appointment consultaAtualizada = consultaService.atualizarVeterinario(consultaSalva, veterinarioNovo);
+        Appointment consultaAtualizada = consultaService.updateAppointment(consultaSalva, veterinarioNovo);
         Assertions.assertNotNull(consultaAtualizada);
         Assertions.assertEquals(consultaAtualizada.getVeterinary().getVeterinaryId(), veterinarioNovo.getVeterinaryId());
         rollback(consultaAtualizada, false);
@@ -174,7 +174,7 @@ public class ConsultaServiceTeste {
         Appointment consultaSalva = consultaRepo.save(generateConsulta(true));
         Animal animalAntigo = consultaSalva.getAnimal();
         Animal animalNovo = animalRepo.save(generateAnimal(animalTypeRepo, ownerRepo, true));
-        Appointment consultaAtualizada = consultaService.atualizarAnimal(consultaSalva, animalNovo);
+        Appointment consultaAtualizada = consultaService.updateAnimal(consultaSalva, animalNovo);
         Assertions.assertNotNull(consultaAtualizada);
         Assertions.assertEquals(consultaAtualizada.getAnimal().getAnimalId(), animalNovo.getAnimalId());
         rollback(consultaAtualizada, false);
@@ -186,7 +186,7 @@ public class ConsultaServiceTeste {
         Appointment consultaSalva = consultaRepo.save(generateConsulta(true));
         AppointmentType tipoConsultaAntiga = consultaSalva.getAppointmentType();
         AppointmentType tipoConsultaNovo = appointmentTypeRepo.save(generateTipoConsulta());
-        Appointment consultaAtualizada = consultaService.atualizarTipoConsulta(consultaSalva, tipoConsultaNovo);
+        Appointment consultaAtualizada = consultaService.updateAppointmentType(consultaSalva, tipoConsultaNovo);
         Assertions.assertNotNull(consultaAtualizada);
         Assertions.assertEquals(consultaAtualizada.getAppointmentType().getAppointmentTypeId(), tipoConsultaNovo.getAppointmentTypeId());
         rollback(consultaSalva, false);
@@ -195,8 +195,8 @@ public class ConsultaServiceTeste {
 
     @Test
     public void deveBuscarPorId(){
-        Appointment consultaSalva = consultaService.salvar(generateConsulta(true));
-        Appointment consultaEncontrada = consultaService.buscarPorId(consultaSalva.getAppointmentId());
+        Appointment consultaSalva = consultaService.save(generateConsulta(true));
+        Appointment consultaEncontrada = consultaService.findById(consultaSalva.getAppointmentId());
         Assertions.assertNotNull(consultaEncontrada);
         Assertions.assertEquals(consultaEncontrada.getAppointmentId(), consultaSalva.getAppointmentId());
         rollback(consultaSalva, false);
@@ -204,8 +204,8 @@ public class ConsultaServiceTeste {
 
     @Test
     public void deveBuscarTodos(){
-        Appointment consultaSalva = consultaService.salvar(generateConsulta(true));
-        List<Appointment> consultasList = consultaService.buscarTodos();
+        Appointment consultaSalva = consultaService.save(generateConsulta(true));
+        List<Appointment> consultasList = consultaService.findAll();
         Assertions.assertNotNull(consultasList);
         Assertions.assertFalse(consultasList.isEmpty());
         rollback(consultaSalva, false);

@@ -28,7 +28,7 @@ public class TipoConsultaController {
     public ResponseEntity<?> salvar(@RequestBody AppointmentTypeDTO dto){
         try{
             AppointmentType tipoConsulta = dto.toAppointment();
-            AppointmentType tipoSalvo = tipoService.salvar(tipoConsulta);
+            AppointmentType tipoSalvo = tipoService.save(tipoConsulta);
             AppointmentTypeDTO dtoRetorno = tipoSalvo.toAppointmentTypeDTO();
             return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
@@ -39,7 +39,7 @@ public class TipoConsultaController {
     @DeleteMapping("/remover/{id}")
     public ResponseEntity<?> removerComId(@PathVariable(value = "id") Long id){
         try {
-            tipoService.removerPorId(id);
+            tipoService.removeById(id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -49,7 +49,7 @@ public class TipoConsultaController {
     @DeleteMapping("/remover/feedback/{id}")
     public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
         try{
-            AppointmentType tipoRemovido = tipoService.removerComFeedback(id);
+            AppointmentType tipoRemovido = tipoService.removeByIdWithFeedback(id);
             AppointmentTypeDTO dtoRetorno = tipoRemovido.toAppointmentTypeDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
@@ -60,7 +60,7 @@ public class TipoConsultaController {
     @GetMapping("/buscar/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable(value = "id") Long id){
         try{
-            AppointmentType tipoBuscado = tipoService.buscarPorId(id);
+            AppointmentType tipoBuscado = tipoService.findById(id);
             AppointmentTypeDTO dtoRetorno = tipoBuscado.toAppointmentTypeDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
@@ -72,7 +72,7 @@ public class TipoConsultaController {
     public ResponseEntity<?> atualizar(@RequestBody AppointmentTypeDTO dto){
         try{
             AppointmentType tipoConsulta = dto.toAppointment();
-            AppointmentType tipoConsultaAtualizado = tipoService.atualizar(tipoConsulta);
+            AppointmentType tipoConsultaAtualizado = tipoService.update(tipoConsulta);
             AppointmentTypeDTO dtoRetorno = tipoConsultaAtualizado.toAppointmentTypeDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){

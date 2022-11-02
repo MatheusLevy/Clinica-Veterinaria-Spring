@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TipoConsultaService {
@@ -20,73 +19,84 @@ public class TipoConsultaService {
         this.repo = appointmentTypeRepo;
     }
 
-    public static void verificaTipoConsulta(AppointmentType tipo){
-        if (tipo == null)
-            throw new NullPointerException("Tipo de Consulta não pode ser Nulo!");
-        if (tipo.getName().equals(""))
+    public static void verifyIsNull(AppointmentType appointmentType){
+        if (appointmentType == null)
+            throw new NullPointerException("Appointment Type must not be null!");
+    }
+
+    public static void verifyHasName(AppointmentType appointmentType){
+        if (appointmentType.getName().equals(""))
             throw new RegraNegocioRunTime("Tipo de Consulta deve ter um nome!");
     }
 
-    public static void verificaId(AppointmentType tipo){
-        if(tipo == null || tipo.getAppointmentTypeId() <= 0)
-            throw new RegraNegocioRunTime("Tipo de Consulta deve ter um identificador!");
+    public static void verifyId(AppointmentType appointmentType){
+        if(appointmentType.getAppointmentTypeId() <= 0)
+            throw new RegraNegocioRunTime("The appointment type should have a id!");
     }
 
-    public static void verificaId(Long id){
+    public static void verifyId(Long id){
         if(id <= 0)
-            throw new RegraNegocioRunTime("Tipo de Consulta deve ter um identificador!");
+            throw new RegraNegocioRunTime("The appointment type should have a id!");
+    }
+
+    public static void verifyAllRules(AppointmentType appointmentType){
+        verifyIsNull(appointmentType);
+        verifyId(appointmentType);
+        verifyHasName(appointmentType);
+    }
+
+    public static void verifyIsNullHasName(AppointmentType appointmentType){
+        verifyIsNull(appointmentType);
+        verifyHasName(appointmentType);
+    }
+
+    public static Example<AppointmentType> generateFilter(AppointmentType appointmentType){
+        return Example.of(appointmentType, ExampleMatcher.matching()
+                .withIgnoreCase()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
     }
 
     @Transactional
-    public AppointmentType salvar(AppointmentType tipo){
-        verificaTipoConsulta(tipo);
-        return repo.save(tipo);
+    public AppointmentType save(AppointmentType type){
+        verifyIsNullHasName(type);
+        return repo.save(type);
     }
 
     @Transactional
-    public AppointmentType atualizar(AppointmentType tipo){
-        verificaTipoConsulta(tipo);
-        verificaId(tipo);
-        return repo.save(tipo);
+    public AppointmentType update(AppointmentType type){
+        verifyAllRules(type);
+        return repo.save(type);
     }
 
     @Transactional
-    public void removerPorId(Long id){
-        verificaId(id);
+    public void removeById(Long id){
+        verifyId(id);
         repo.deleteById(id);
     }
 
     @Transactional
-    public AppointmentType removerComFeedback(Long id){
-        verificaId(id);
-        Optional<AppointmentType> tipoConsultaEncontradas = repo.findById(id);
-        if (tipoConsultaEncontradas.isPresent()) {
-            AppointmentType tipoConsultaFeedback = tipoConsultaEncontradas.get();
-            repo.delete(tipoConsultaFeedback);
-            return tipoConsultaFeedback;
-        }
-        return null;
+    public AppointmentType removeByIdWithFeedback(Long id){
+        verifyId(id);
+        AppointmentType feedback = repo.findByAppointmentTypeId(id);
+        repo.delete(feedback);
+        return feedback;
     }
 
     @Transactional
-    public AppointmentType buscarPorId(Long id){
-        verificaId(id);
-        Optional<AppointmentType> tipoConsultaEncontradas = repo.findById(id);
-        return tipoConsultaEncontradas.orElse(null);
+    public AppointmentType findById(Long id){
+        verifyId(id);
+        return repo.findByAppointmentTypeId(id);
     }
 
     @Transactional
-    public List<AppointmentType> buscar(AppointmentType filtro){
-        if (filtro == null)
-            throw new NullPointerException("Filtro não pode ser nulo");
-        Example<AppointmentType> example = Example.of(filtro, ExampleMatcher.matching()
-                .withIgnoreCase()
-                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
+    public List<AppointmentType> find(AppointmentType appointmentType){
+        verifyIsNull(appointmentType);
+        Example<AppointmentType> example = generateFilter(appointmentType);
         return repo.findAll(example);
     }
 
     @Transactional
-    public List<AppointmentType> buscarTodos(){
+    public List<AppointmentType> findAll(){
         return repo.findAll();
     }
 }

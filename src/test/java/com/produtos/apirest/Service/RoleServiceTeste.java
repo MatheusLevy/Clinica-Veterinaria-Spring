@@ -57,7 +57,7 @@ public class RoleServiceTeste {
 
     @Test
     public void deveSalvar(){
-        Role roleSalva = roleService.salvar(generateRole());
+        Role roleSalva = roleService.save(generateRole());
         Assertions.assertNotNull(roleSalva);
         Assertions.assertNotNull(roleSalva.getRoleId());
         rollback(roleSalva);
@@ -67,7 +67,7 @@ public class RoleServiceTeste {
     public void deveAtualizar(){
         Role roleSalva = roleRepo.save(generateRole());
         roleSalva.setRoleName(RoleName.ROLE_TESTE2);
-        Role roleAtualizada = roleService.atualizar(roleSalva);
+        Role roleAtualizada = roleService.update(roleSalva);
         Assertions.assertNotNull(roleAtualizada);
         Assertions.assertEquals(roleSalva.getRoleId(), roleAtualizada.getRoleId());
         rollback(roleAtualizada);
@@ -77,7 +77,7 @@ public class RoleServiceTeste {
     public void deveRemover(){
         Role roleSalva = roleRepo.save(generateRole());
         Long id = roleSalva.getRoleId();
-        roleService.remover(roleSalva);
+        roleService.remove(roleSalva);
         Assertions.assertFalse(roleRepo.findById(id).isPresent());
     }
 
@@ -85,7 +85,7 @@ public class RoleServiceTeste {
     public void deveRemoverComFeedback(){
         Role roleSalva = roleRepo.save(generateRole());
         Long id = roleSalva.getRoleId();
-        Role roleFeedback = roleService.RemoverComFeedback(id);
+        Role roleFeedback = roleService.removeByIdWithFeedback(id);
         Assertions.assertNotNull(roleFeedback);
         Assertions.assertEquals(roleSalva.getRoleId(), roleFeedback.getRoleId());
     }
@@ -94,14 +94,14 @@ public class RoleServiceTeste {
     public void deveRemoverComId(){
         Role roleSalva = roleRepo.save(generateRole());
         Long id = roleSalva.getRoleId();
-        roleService.removerPorId(id);
+        roleService.removeById(id);
         Assertions.assertFalse(roleRepo.findById(id).isPresent());
     }
 
     @Test
     public void deveBuscar(){
         Role roleSalva = roleRepo.save(generateRole());
-        List<Role> rolesEncontradas = roleService.buscar(roleSalva);
+        List<Role> rolesEncontradas = roleService.find(roleSalva);
         Assertions.assertFalse(rolesEncontradas.isEmpty());
         rollback(roleSalva);
     }
@@ -110,7 +110,7 @@ public class RoleServiceTeste {
     public void deveBuscarPorId(){
         Role roleSalva = roleRepo.save(generateRole());
         Long id = roleSalva.getRoleId();
-        Role roleEncontrada = roleService.buscarPorId(id);
+        Role roleEncontrada = roleService.findById(id);
         Assertions.assertNotNull(roleEncontrada);
         rollback(roleSalva);
     }

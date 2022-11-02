@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class EspecialidadeService {
@@ -21,92 +20,105 @@ public class EspecialidadeService {
         this.repo = expertiseRepo;
     }
 
-    public static void verificaEspecialidade(Expertise especialidade){
-        if (especialidade == null)
-            throw new NullPointerException("Especialidade não pode ser Nula!");
-        if (especialidade.getName().equals(""))
-            throw new RegraNegocioRunTime("Especialidade deve ter um nome");
-        if (especialidade.getArea() == null)
-            throw new RegraNegocioRunTime("Especialidade deve ter uma Area!");
+    public static void verifyIsNull(Expertise expertise){
+        if (expertise == null)
+            throw new NullPointerException("Expertise must not be null!");
     }
 
-    public static void verificaId(Expertise especialidade){
-        if (especialidade == null || especialidade.getExpertiseId() <= 0)
-            throw new RegraNegocioRunTime("Especialidade deve ter um identificador!s");
+    public static void verifyHasId(Expertise expertise){
+        if (expertise.getExpertiseId() <= 0)
+            throw new RegraNegocioRunTime("The expertise should have a id!");
     }
 
-    public static void verificaId(Long id){
+    public static void verifyHasId(Long id){
         if (id <= 0)
-            throw new RegraNegocioRunTime("Especialidade deve ter um identificador!s");
+            throw new RegraNegocioRunTime("The expertise should have a id!");
+    }
+
+    public static void verifyHasName(Expertise expertise){
+        if (expertise.getName().equals(""))
+            throw new RegraNegocioRunTime("The expertise should have a name!");
+    }
+
+    public static void verifyHasArea(Expertise expertise){
+        if (expertise.getArea() == null)
+            throw new RegraNegocioRunTime("The expertise should have a name!");
+    }
+
+    public static void verifyAllRules(Expertise expertise){
+        verifyIsNull(expertise);
+        verifyHasId(expertise);
+        verifyHasName(expertise);
+        verifyHasArea(expertise);
+    }
+
+    public static void verifyIsNullHasNameHasArea(Expertise expertise){
+        verifyIsNull(expertise);
+        verifyHasName(expertise);
+        verifyHasArea(expertise);
+    }
+
+    public static Example<Expertise> generateFilter(Expertise expertise){
+        return Example.of(expertise, ExampleMatcher.matching()
+                .withIgnoreCase()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
     }
 
     @Transactional
-    public Expertise salvar(Expertise especialidade){
-        verificaEspecialidade(especialidade);
-        return repo.save(especialidade);
+    public Expertise save(Expertise expertise){
+        verifyIsNullHasNameHasArea(expertise);
+        return repo.save(expertise);
     }
 
     @Transactional
-    public Expertise atualizar(Expertise especialidade){
-        verificaEspecialidade(especialidade);
-        verificaId(especialidade);
-        return repo.save(especialidade);
+    public Expertise update(Expertise expertise){
+        verifyAllRules(expertise);
+        return repo.save(expertise);
     }
 
     @Transactional
-    public Expertise atualizarArea(Expertise destino, Area areaNova){
-        verificaEspecialidade(destino);
-        verificaId(destino);
-        AreaService.verificaArea(areaNova);
-        AreaService.verificaId(areaNova);
-        destino.setArea(areaNova);
-        return repo.save(destino);
+    public Expertise updateArea(Expertise destiny, Area newArea){
+        verifyAllRules(destiny);
+        AreaService.verifyAllRules(newArea);
+        destiny.setArea(newArea);
+        return repo.save(destiny);
     }
 
     @Transactional
-    public void remover(Expertise especialidade){
-        verificaEspecialidade(especialidade);
-        verificaId(especialidade);
-        repo.delete(especialidade);
+    public void remove(Expertise expertise){
+        verifyAllRules(expertise);
+        repo.delete(expertise);
     }
 
     @Transactional
-    public Expertise removerFeedback(Long id){
-        verificaId(id);
-        Optional<Expertise> especialidadesEncotradas = repo.findById(id);
-        if (especialidadesEncotradas.isPresent()) {
-            Expertise especialidadeFeedback = especialidadesEncotradas.get();
-            repo.delete(especialidadeFeedback);
-            return especialidadeFeedback;
-        }
-        return null;
+    public Expertise removeByIdWithFeedback(Long id){
+        verifyHasId(id);
+        Expertise feedback = repo.findByExpertiseId(id);
+        repo.delete(feedback);
+        return feedback;
     }
 
     @Transactional
-    public void removerPorId(Long id){
-        verificaId(id);
+    public void removeById(Long id){
+        verifyHasId(id);
         repo.deleteById(id);
     }
 
     @Transactional
-    public Expertise buscarPorId(Long id){
-        verificaId(id);
-        Optional<Expertise> especialidadeEncontradas = repo.findById(id);
-        return especialidadeEncontradas.orElse(null);
+    public Expertise findById(Long id){
+        verifyHasId(id);
+        return repo.findByExpertiseId(id);
     }
 
     @Transactional
-    public List<Expertise> buscar(Expertise filtro){
-        if (filtro == null)
-            throw new NullPointerException("Filtro não pode ser nulo");
-        Example<Expertise> example = Example.of(filtro, ExampleMatcher.matching()
-                .withIgnoreCase()
-                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
+    public List<Expertise> find(Expertise expertise){
+        verifyIsNull(expertise);
+        Example<Expertise> example = generateFilter(expertise);
         return repo.findAll(example);
     }
 
     @Transactional
-    public List<Expertise> buscarTodos(){
+    public List<Expertise> findAll(){
         return repo.findAll();
     }
 }

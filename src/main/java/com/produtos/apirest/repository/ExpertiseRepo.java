@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ExpertiseRepo extends JpaRepository<Expertise, Long> {
+    Expertise findByExpertiseId(Long id);
 }

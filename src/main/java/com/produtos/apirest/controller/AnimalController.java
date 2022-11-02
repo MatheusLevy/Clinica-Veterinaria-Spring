@@ -36,10 +36,10 @@ public class AnimalController {
     @PostMapping("/salvar")
     public ResponseEntity<?> salvar(@RequestBody AnimalDTO animaldto){
         try{
-            Owner donoEncontrado = donoService.buscarPorId(animaldto.getOwnerId());
-            AnimalType tipoEncontrado = tipoAnimalService.buscarPorId(animaldto.getAnimalTypeId());
+            Owner donoEncontrado = donoService.findById(animaldto.getOwnerId());
+            AnimalType tipoEncontrado = tipoAnimalService.findById(animaldto.getAnimalTypeId());
             Animal animal = animaldto.toAnimal(donoEncontrado, tipoEncontrado);
-            Animal animalSalvo = animalService.salvar(animal);
+            Animal animalSalvo = animalService.save(animal);
             AnimalDTO dtoRetorno = animalSalvo.toAnimalDTO();
             return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
@@ -50,7 +50,7 @@ public class AnimalController {
     @DeleteMapping("/remover/{id}")
     public ResponseEntity<?> remover(@PathVariable(value = "id") Long id){
         try{
-            animalService.removerPorId(id);
+            animalService.removeById(id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -60,7 +60,7 @@ public class AnimalController {
     @DeleteMapping("/remover/feedback/{id}")
     public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
         try{
-            Animal animalRemovido = animalService.removerComFeedback(id);
+            Animal animalRemovido = animalService.removeByIdWithFeedback(id);
             AnimalDTO dtoRetorno = animalRemovido.toAnimalDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
@@ -71,7 +71,7 @@ public class AnimalController {
     @GetMapping("/buscarId/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable(value = "id") Long id){
         try{
-            Animal animalBuscado = animalService.buscarPorId(id);
+            Animal animalBuscado = animalService.findById(id);
             AnimalDTO dtoRetorno = animalBuscado.toAnimalDTO();
         return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
@@ -82,10 +82,10 @@ public class AnimalController {
     @PutMapping("/atualizar")
     public ResponseEntity<?> atualizar(@RequestBody  AnimalDTO animalDTO){
         try{
-            Owner donoEncontrado = donoService.buscarPorId(animalDTO.getOwnerId());
-            AnimalType tipoEncontrado = tipoAnimalService.buscarPorId(animalDTO.getAnimalTypeId());
+            Owner donoEncontrado = donoService.findById(animalDTO.getOwnerId());
+            AnimalType tipoEncontrado = tipoAnimalService.findById(animalDTO.getAnimalTypeId());
             Animal animal = animalDTO.toAnimal(donoEncontrado, tipoEncontrado);
-            Animal atualizado = animalService.atualizar(animal);
+            Animal atualizado = animalService.update(animal);
             AnimalDTO dtoRetorno = atualizado.toAnimalDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
@@ -96,7 +96,7 @@ public class AnimalController {
     @GetMapping("/buscarDono/{id}")
     public ResponseEntity<?> buscarDono(@PathVariable(value = "id") Long id){
         try {
-            Owner donoEncontrado = animalService.buscarDonoPorId(id);
+            Owner donoEncontrado = animalService.findOwnerByAnimalId(id);
             OwnerDTO dtoRetorno = donoEncontrado.toOwnerDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
@@ -107,9 +107,9 @@ public class AnimalController {
     @PutMapping("/atualizar/dono")
     public ResponseEntity<?> atualizarDono(@RequestBody AnimalDTO animalDTO){
         try {
-            Owner donoBuscado = donoService.buscarPorId(animalDTO.getOwnerId());
-            Animal animalBuscado = animalService.buscarPorId(animalDTO.getId());
-            Animal animaAtualizado = animalService.atualizarDono(animalBuscado, donoBuscado);
+            Owner donoBuscado = donoService.findById(animalDTO.getOwnerId());
+            Animal animalBuscado = animalService.findById(animalDTO.getId());
+            Animal animaAtualizado = animalService.updateOwner(animalBuscado, donoBuscado);
             AnimalDTO dtoRetorno = animaAtualizado.toAnimalDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){

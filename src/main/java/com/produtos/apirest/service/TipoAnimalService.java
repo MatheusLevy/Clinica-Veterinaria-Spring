@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TipoAnimalService {
@@ -20,80 +19,90 @@ public class TipoAnimalService {
         this.repo = animalTypeRepo;
     }
 
-    public static void verificaTipoAnimal(AnimalType tipo){
-        if (tipo == null)
-            throw new NullPointerException("Tipo de Animal não pode ser Nulo!");
-        if (tipo.getName().equals(""))
-            throw new RegraNegocioRunTime("Tipo de Animal deve ter um nome!");
+    public static void verifyIsNull(AnimalType animalType){
+        if (animalType == null)
+            throw new NullPointerException("Animal Type must not be null!");
     }
 
-    public static void verificaId(AnimalType tipo){
-        if(tipo == null || tipo.getAnimalTypeId() <= 0)
-            throw new RegraNegocioRunTime("Tipo de Animal deve ter um identificador!");
+    public static void verifyHasName(AnimalType type){
+        if (type.getName().equals(""))
+            throw new RegraNegocioRunTime("The animal type should have a name!");
     }
 
-    public static void verificaId(Long id){
+    public static void verifyHasId(AnimalType type){
+        if(type.getAnimalTypeId() <= 0)
+            throw new RegraNegocioRunTime("The animal type should have a id!");
+    }
+
+    public static void verifyHasId(Long id){
         if(id <= 0)
-            throw new RegraNegocioRunTime("Tipo de Animal deve ter um identificador!");
+            throw new RegraNegocioRunTime("The animal type should have a id!");
+    }
+
+    public static void verifyAllRules(AnimalType type){
+        verifyIsNull(type);
+        verifyHasId(type);
+        verifyHasName(type);
+    }
+
+    public static void verifyIsNullHasName(AnimalType type){
+        verifyIsNull(type);
+        verifyHasName(type);
+    }
+
+    public static Example<AnimalType> generateFilter(AnimalType animalType){
+        return Example.of(animalType, ExampleMatcher.matching()
+                .withIgnoreCase()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
     }
 
     @Transactional
-    public AnimalType salvar(AnimalType tipo){
-        verificaTipoAnimal(tipo);
-        return repo.save(tipo);
+    public AnimalType save(AnimalType type){
+        verifyIsNullHasName(type);
+        return repo.save(type);
     }
 
     @Transactional
-    public AnimalType atualizar(AnimalType tipo){
-        verificaTipoAnimal(tipo);
-        verificaId(tipo);
-        return repo.save(tipo);
+    public AnimalType update(AnimalType type){
+        verifyAllRules(type);
+        return repo.save(type);
     }
 
     @Transactional
-    public void remover(AnimalType tipo){
-        verificaTipoAnimal(tipo);
-        verificaId(tipo);
-        repo.delete(tipo);
+    public void remove(AnimalType type){
+        verifyAllRules(type);
+        repo.delete(type);
     }
 
     @Transactional
-    public AnimalType removerComFeedback(Long id){
-        verificaId(id);
-        Optional<AnimalType> tipoAnimalEncontrados = repo.findById(id);
-        if (tipoAnimalEncontrados.isPresent()) {
-            AnimalType tipoAnimalFeedback = tipoAnimalEncontrados.get();
-            repo.delete(tipoAnimalFeedback);
-            return tipoAnimalFeedback;
-        }
-        return null;
+    public AnimalType removeByIdWithFeedback(Long id){
+        verifyHasId(id);
+        AnimalType feedback = repo.findByAnimalTypeId(id);
+        repo.delete(feedback);
+        return feedback;
     }
 
     @Transactional
-    public void removerPorId(Long id){
-        verificaId(id);
+    public void removeById(Long id){
+        verifyHasId(id);
         repo.deleteById(id);
     }
 
     @Transactional
-    public AnimalType buscarPorId(Long id){
-        verificaId(id);
-        Optional<AnimalType> tipoAnimalEncontrados = repo.findById(id);
-        return tipoAnimalEncontrados.orElse(null);
+    public AnimalType findById(Long id){
+        verifyHasId(id);
+        return repo.findByAnimalTypeId(id);
     }
 
     @Transactional
-    public List<AnimalType> buscar(AnimalType filtro){
-        if (filtro == null)
-            throw new NullPointerException("Filtro não pode ser nulo");
-        Example<AnimalType> example = Example.of(filtro, ExampleMatcher.matching()
-                .withIgnoreCase()
-                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
+    public List<AnimalType> find(AnimalType animalType){
+        verifyIsNull(animalType);
+        Example<AnimalType> example = generateFilter(animalType);
         return repo.findAll(example);
     }
 
     @Transactional
-    public List<AnimalType> buscarTodos(){
+    public List<AnimalType> findAll(){
         return repo.findAll();
     }
 }

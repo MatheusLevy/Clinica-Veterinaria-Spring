@@ -16,7 +16,7 @@ import java.util.List;
 import static com.produtos.apirest.Service.EspecialidadeServiceTeste.generateEspecialidade;
 import static com.produtos.apirest.Service.EspecialidadeServiceTeste.rollbackEspecialidade;
 import static com.produtos.apirest.Util.Util.generateCPF;
-import static com.produtos.apirest.Util.Util.generateTelefone;
+import static com.produtos.apirest.Util.Util.generatePhone;
 
 @SpringBootTest
 public class VeterinarioServiceTeste {
@@ -37,7 +37,7 @@ public class VeterinarioServiceTeste {
     private Veterinary generateVeterinario(Boolean initalizeFields){
         Veterinary veterinario = Veterinary.builder()
                 .name("test")
-                .phone(generateTelefone())
+                .phone(generatePhone())
                 .cpf(generateCPF())
                 .expertise(generateEspecialidade(false, areaRepo))
                 .build();
@@ -52,7 +52,7 @@ public class VeterinarioServiceTeste {
                                                      ExpertiseRepo expertiseRepo){
         Veterinary veterinario = Veterinary.builder()
                 .name("test")
-                .phone(generateTelefone())
+                .phone(generatePhone())
                 .cpf(generateCPF())
                 .expertise(generateEspecialidade(false, areaRepo))
                 .build();
@@ -81,7 +81,7 @@ public class VeterinarioServiceTeste {
 
     @Test
     public void deveSalvar(){
-        Veterinary veterinarioSalvo = veterinarioService.salvar(generateVeterinario(true));
+        Veterinary veterinarioSalvo = veterinarioService.save(generateVeterinario(true));
         Assertions.assertNotNull(veterinarioSalvo);
         rollback(veterinarioSalvo, false);
     }
@@ -90,7 +90,7 @@ public class VeterinarioServiceTeste {
     public void deveAtualizar(){
         Veterinary veterinarioSalvo = veterinaryRepo.save(generateVeterinario(true));
         veterinarioSalvo.setName("Veterinario Atualizado");
-        Veterinary veterinarioAtualizado = veterinarioService.atualizar(veterinarioSalvo);
+        Veterinary veterinarioAtualizado = veterinarioService.update(veterinarioSalvo);
         Assertions.assertNotNull(veterinarioAtualizado);
         Assertions.assertEquals(veterinarioAtualizado.getVeterinaryId(), veterinarioSalvo.getVeterinaryId());
         Assertions.assertEquals(veterinarioAtualizado.getName(), "Veterinario Atualizado");
@@ -101,7 +101,7 @@ public class VeterinarioServiceTeste {
     public void deveRemover(){
         Veterinary veterinarioSalvo = veterinaryRepo.save(generateVeterinario(true));
         Long id = veterinarioSalvo.getVeterinaryId();
-        veterinarioService.remover(veterinarioSalvo.getVeterinaryId());
+        veterinarioService.removeById(veterinarioSalvo.getVeterinaryId());
         Assertions.assertFalse(veterinaryRepo.findById(id).isPresent());
         rollback(veterinarioSalvo, true);
     }
@@ -109,7 +109,7 @@ public class VeterinarioServiceTeste {
     @Test
     public void deveRemoverComFeedback(){
         Veterinary veterinarioSalvo = veterinaryRepo.save(generateVeterinario(true));
-        Veterinary veterinarioFeedback = veterinarioService.removerComFeedback(veterinarioSalvo.getVeterinaryId());
+        Veterinary veterinarioFeedback = veterinarioService.removeByIdWithFeedback(veterinarioSalvo.getVeterinaryId());
         Assertions.assertNotNull(veterinarioFeedback);
         Assertions.assertEquals(veterinarioSalvo.getVeterinaryId(), veterinarioFeedback.getVeterinaryId());
         rollback(veterinarioFeedback, true);
@@ -119,7 +119,7 @@ public class VeterinarioServiceTeste {
     public void deveBuscarPorId(){
         Veterinary veterinarioSalvo = veterinaryRepo.save(generateVeterinario(true));
         Long id = veterinarioSalvo.getVeterinaryId();
-        Veterinary veterinarioEncontrado = veterinarioService.buscarPorId(id);
+        Veterinary veterinarioEncontrado = veterinarioService.findById(id);
         Assertions.assertNotNull(veterinarioEncontrado);
         Assertions.assertEquals(veterinarioSalvo.getVeterinaryId(), veterinarioEncontrado.getVeterinaryId());
         rollback(veterinarioSalvo, false);
@@ -128,7 +128,7 @@ public class VeterinarioServiceTeste {
     @Test
     public void deveBuscarComFiltro(){
         Veterinary veterinarioSalvo = veterinaryRepo.save(generateVeterinario(true));
-        List<Veterinary> veterinarioEncontradosList = veterinarioService.buscar(veterinarioSalvo);
+        List<Veterinary> veterinarioEncontradosList = veterinarioService.find(veterinarioSalvo);
         Assertions.assertNotNull(veterinarioEncontradosList);
         Assertions.assertFalse(veterinarioEncontradosList.isEmpty());
         rollback(veterinarioSalvo, false);
@@ -137,7 +137,7 @@ public class VeterinarioServiceTeste {
     @Test
     public void deveBuscarEspecialidade(){
         Veterinary veterinarioSalvo = veterinaryRepo.save(generateVeterinario(true));
-        Expertise especialidadeEncontrada = veterinarioService.buscarEspecialidade(veterinarioSalvo);
+        Expertise especialidadeEncontrada = veterinarioService.findExpertisesById(veterinarioSalvo.getVeterinaryId());
         Assertions.assertNotNull(especialidadeEncontrada);
         Assertions.assertEquals(veterinarioSalvo.getExpertise().getExpertiseId(), especialidadeEncontrada.getExpertiseId());
         rollback(veterinarioSalvo, false);
@@ -148,7 +148,7 @@ public class VeterinarioServiceTeste {
         Veterinary veterinarioSalvo = veterinaryRepo.save(generateVeterinario(true));
         Expertise especialidadeAntiga = veterinarioSalvo.getExpertise();
         Expertise especialidadeNova = expertiseRepo.save(generateEspecialidade(true, areaRepo));
-        Veterinary veterinarioAtualizado = veterinarioService.atualizarEspecialidade(veterinarioSalvo, especialidadeNova);
+        Veterinary veterinarioAtualizado = veterinarioService.updateExpertise(veterinarioSalvo, especialidadeNova);
         Assertions.assertNotNull(veterinarioAtualizado);
         Assertions.assertEquals(veterinarioSalvo.getVeterinaryId(), veterinarioAtualizado.getVeterinaryId());
         rollback(veterinarioAtualizado, false);
@@ -157,8 +157,8 @@ public class VeterinarioServiceTeste {
 
     @Test
     public void deveBuscarTodos(){
-        Veterinary veterinarioSalvo = veterinarioService.salvar(generateVeterinario(true));
-        List<Veterinary> veterinarioList = veterinarioService.buscarTodos();
+        Veterinary veterinarioSalvo = veterinarioService.save(generateVeterinario(true));
+        List<Veterinary> veterinarioList = veterinarioService.findAll();
         Assertions.assertNotNull(veterinarioList);
         Assertions.assertFalse(veterinarioList.isEmpty());
         rollback(veterinarioSalvo, false);

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DonoService {
@@ -22,94 +21,105 @@ public class DonoService {
         this.repo = ownerRepo;
     }
 
-    public static void verificaDono(Owner dono){
-        if (dono == null)
-            throw new NullPointerException("Dono não pode ser Nulo!");
-        if (dono.getName().equals(""))
-            throw new RegraNegocioRunTime("Dono deve ter um nome!");
-        if (dono.getCpf().equals(""))
-            throw new RegraNegocioRunTime("Dono deve ter um CPF!");
+    public static void verifyIsNull(Owner owner){
+        if (owner == null)
+            throw new NullPointerException("Owner must not be null!");
     }
 
-    public static void verificaId(Owner dono){
-        if (dono == null || dono.getOwnerId() <= 0)
-            throw new RegraNegocioRunTime("Dono deve ter um indentificador!");
+    public static void verifyHasId(Owner owner){
+        if (owner == null || owner.getOwnerId() <= 0)
+            throw new RegraNegocioRunTime("The owner should have a id!");
     }
 
-    public static void verificaId(Long id){
+    public static void verifyHasId(Long id){
         if (id <= 0)
-            throw new RegraNegocioRunTime("Dono deve ter um indentificador!");
+            throw new RegraNegocioRunTime("The owner should have a id!");
+    }
+
+    public static void verifyHasName(Owner owner){
+        if (owner.getName().equals(""))
+            throw new RegraNegocioRunTime("The owner should have a name!");
+    }
+
+    public static void verifyHasCPF(Owner owner){
+        if (owner.getCpf().equals(""))
+            throw new RegraNegocioRunTime("The owner should have a CPF!");
+    }
+
+    public static void verifyAllRules(Owner owner){
+        verifyIsNull(owner);
+        verifyHasId(owner);
+        verifyHasCPF(owner);
+        verifyHasName(owner);
+    }
+
+    public static void verifyIsNullHasCPFHasName(Owner owner){
+        verifyIsNull(owner);
+        verifyHasCPF(owner);
+        verifyHasName(owner);
+    }
+
+    public static Example<Owner> generateFilter(Owner owner){
+        return Example.of(owner, ExampleMatcher.matching()
+                .withIgnoreCase()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
     }
 
     @Transactional
-    public Owner salvar(Owner Dono){
-        verificaDono(Dono);
-        return repo.save(Dono);
+    public Owner save(Owner owner){
+        verifyIsNullHasCPFHasName(owner);
+        return repo.save(owner);
     }
 
     @Transactional
-    public Owner atualizar(Owner Dono){
-        verificaDono(Dono);
-        verificaId(Dono);
-        return repo.save(Dono);
+    public Owner update(Owner owner){
+        verifyAllRules(owner);
+        return repo.save(owner);
     }
 
     @Transactional
-    public void remover(Owner dono){
-        verificaDono(dono);
-        verificaId(dono);
-        repo.delete(dono);
+    public void remove(Owner owner){
+        verifyAllRules(owner);
+        repo.delete(owner);
     }
 
     @Transactional
-    public void removerPorId(Long id){
-        verificaId(id);
+    public void removeById(Long id){
+        verifyHasId(id);
         repo.deleteById(id);
     }
 
     @Transactional
-    public Owner removerComFeedback(Long id){
-        verificaId(id);
-        Optional<Owner> donosEncontrados = repo.findById(id);
-        if (donosEncontrados.isPresent()) {
-            Owner donoFeedback = donosEncontrados.get();
-            repo.delete(donoFeedback);
-            return donoFeedback;
-        }
-        return null;
+    public Owner removeByIdWithFeedback(Long id){
+        verifyHasId(id);
+        Owner feedback = repo.findByOwnerId(id);
+        repo.delete(feedback);
+        return feedback;
     }
 
     @Transactional
-    public Owner buscarPorId(Long id){
-        verificaId(id);
-        Optional<Owner> donosEncontrados = repo.findById(id);
-        return donosEncontrados.orElse(null);
+    public Owner findById(Long id){
+        verifyHasId(id);
+        return repo.findByOwnerId(id);
     }
 
     @Transactional
-    public List<Owner> buscar(Owner filtro){
-        if (filtro == null)
-            throw new NullPointerException("Filtro não pode ser nulo");
-        Example<Owner> example = Example.of(filtro, ExampleMatcher.matching()
-                .withIgnoreCase()
-                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
+    public List<Owner> find(Owner owner){
+        verifyIsNull(owner);
+        Example<Owner> example = generateFilter(owner);
         return repo.findAll(example);
     }
 
     @Transactional
-    public List<Owner> buscarTodos(){
+    public List<Owner> findAll(){
         return repo.findAll();
     }
 
     @Transactional
-    public List<Animal> buscarTodosAnimais(Long id){
-        verificaId(id);
-        Optional<Owner> donosEncontrados = repo.findById(id);
-        if (donosEncontrados.isPresent()) {
-            Owner donoEncontrado = donosEncontrados.get();
-            Hibernate.initialize(donoEncontrado.getAnimals());
-            return donoEncontrado.getAnimals();
-        }
-        return null;
+    public List<Animal> findAllAnimalsByOwnerId(Long ownerId){
+        verifyHasId(ownerId);
+        Owner ownerFind = repo.findByOwnerId(ownerId);
+        Hibernate.initialize(ownerFind.getAnimals());
+        return ownerFind.getAnimals();
     }
 }

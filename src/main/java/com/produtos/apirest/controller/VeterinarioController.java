@@ -35,9 +35,9 @@ public class VeterinarioController {
     @PostMapping("/salvar")
     public ResponseEntity<?> salvar(@RequestBody VeterinaryDTO dto){
         try{
-            Expertise especialidadeEncontrada = especialidadeService.buscarPorId(dto.getExpertiseId());
+            Expertise especialidadeEncontrada = especialidadeService.findById(dto.getExpertiseId());
             Veterinary veterinario = dto.toVeterinary(especialidadeEncontrada);
-            Veterinary veterinarioSalvo = veterinarioService.salvar(veterinario);
+            Veterinary veterinarioSalvo = veterinarioService.save(veterinario);
             VeterinaryDTO dtoRetorno = veterinarioSalvo.toVeterinaryDTO();
             return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
@@ -48,9 +48,9 @@ public class VeterinarioController {
     @PutMapping("/atualizar")
     public ResponseEntity<?> atualizar(@RequestBody VeterinaryDTO dto){
         try{
-            Expertise especialidadeEncontrada = especialidadeService.buscarPorId(dto.getExpertiseId());
+            Expertise especialidadeEncontrada = especialidadeService.findById(dto.getExpertiseId());
             Veterinary veterinario = dto.toVeterinary(especialidadeEncontrada);
-            Veterinary veterinarioAtualizado = veterinarioService.atualizar(veterinario);
+            Veterinary veterinarioAtualizado = veterinarioService.update(veterinario);
             VeterinaryDTO retornoDTO = veterinarioAtualizado.toVeterinaryDTO();
             return ResponseEntity.ok(retornoDTO);
         } catch (Exception e){
@@ -61,7 +61,7 @@ public class VeterinarioController {
     @DeleteMapping("/remover/{id}")
     public ResponseEntity<?> removerComId(@PathVariable(value = "id") Long id){
         try {
-            veterinarioService.remover(id);
+            veterinarioService.removeById(id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -71,7 +71,7 @@ public class VeterinarioController {
     @DeleteMapping("/remover/feedback/{id}")
     public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
         try{
-            Veterinary veterinarioFeedback = veterinarioService.removerComFeedback(id);
+            Veterinary veterinarioFeedback = veterinarioService.removeByIdWithFeedback(id);
             VeterinaryDTO dtoRetorno = veterinarioFeedback.toVeterinaryDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
@@ -82,7 +82,7 @@ public class VeterinarioController {
     @GetMapping("/buscar/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable(value = "id") Long id){
         try{
-            Veterinary veterinarioEncontrado = veterinarioService.buscarPorId(id);
+            Veterinary veterinarioEncontrado = veterinarioService.findById(id);
             VeterinaryDTO dtoRetorno = veterinarioEncontrado.toVeterinaryDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
@@ -93,7 +93,7 @@ public class VeterinarioController {
     @GetMapping("/buscarTodos")
     public ResponseEntity<?> buscarTodos(){
         try{
-            List<Veterinary> veterinariosList = veterinarioService.buscarTodos();
+            List<Veterinary> veterinariosList = veterinarioService.findAll();
             List<VeterinaryDTO> dtosRetorno = veterinariosList
                     .stream()
                     .map(Veterinary::toVeterinaryDTO)

@@ -32,9 +32,9 @@ public class tipoConsultaViewController {
     public String tipoConsultaCadastroControll(AppointmentType tipo){
 
         if(Long.valueOf(tipo.getAppointmentTypeId()) == null){
-            tipoService.salvar(tipo);
+            tipoService.save(tipo);
         }else {
-            tipoService.atualizar(tipo);
+            tipoService.update(tipo);
         }
         return "redirect:/tipoConsulta/tipoConsultaList";
     }
@@ -43,7 +43,7 @@ public class tipoConsultaViewController {
     @GetMapping("/tipoConsulta/atualizar/{id}")
     public ModelAndView tipoConsultaAtualizar(@PathVariable(value = "id", required = true) Long id){
 
-        AppointmentType tipoFind = tipoService.buscarPorId(id);
+        AppointmentType tipoFind = tipoService.findById(id);
         ModelAndView mv = new ModelAndView("/tipoConsulta/tipoConsultaCadastro");
         mv.addObject("tipoConsulta", tipoFind);
         return mv;
@@ -52,14 +52,14 @@ public class tipoConsultaViewController {
     @PreAuthorize("hasRole('A')")
     @GetMapping("/tipoConsulta/remover/{id}")
     public String tipoConsultaRemover(@PathVariable(value = "id", required = true) Long id){
-        tipoService.removerPorId(id);
+        tipoService.removeById(id);
         return "redirect:/tipoConsulta/tipoConsultaList";
     }
 
     @PreAuthorize("hasRole('A')")
     @GetMapping("/tipoConsulta/tipoConsultaList")
     public ModelAndView tipoConsultaList(){
-        List<AppointmentType> tipos = tipoService.buscarTodos();
+        List<AppointmentType> tipos = tipoService.findAll();
         ModelAndView mv = new ModelAndView("/tipoConsulta/tipoConsultaList");
         mv.addObject("tipos", tipos);
         return mv;

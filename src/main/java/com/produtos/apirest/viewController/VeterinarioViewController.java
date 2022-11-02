@@ -28,7 +28,7 @@ public class VeterinarioViewController {
     @GetMapping("/veterinario/cadastro")
     public ModelAndView veterinarioCadastroPage(){
         VeterinaryDTO dto = new VeterinaryDTO();
-        dto.setExpertises(especialidadeService.buscarTodos());
+        dto.setExpertises(especialidadeService.findAll());
         ModelAndView mv = new ModelAndView("veterinario/veterinarioCadastro");
         mv.addObject("veterinarioDTO", dto);
         return mv;
@@ -44,10 +44,10 @@ public class VeterinarioViewController {
                 .expertise(dto.getExpertise())
                 .build();
         if(dto.getId() == null){
-            veterinarioService.salvar(veterinario);
+            veterinarioService.save(veterinario);
         }else{
             veterinario.setVeterinaryId(dto.getId());
-            veterinarioService.atualizar(veterinario);
+            veterinarioService.update(veterinario);
 
         }
         return "redirect:/veterinario/veterinarioList";
@@ -56,7 +56,7 @@ public class VeterinarioViewController {
     @PreAuthorize("hasRole('S')")
     @GetMapping("/veterinario/veterinarioList")
     public ModelAndView veterinarioList(){
-        List<Veterinary> veterinarios = veterinarioService.buscarTodos();
+        List<Veterinary> veterinarios = veterinarioService.findAll();
         ModelAndView mv = new ModelAndView("/veterinario/veterinarioList");
         mv.addObject("veterinarios", veterinarios);
         //System.out.println(mv);
@@ -67,10 +67,10 @@ public class VeterinarioViewController {
     @GetMapping("/veterinario/atualizar/{id}")
     public ModelAndView veterinarioAtualizar(@PathVariable(value = "id", required = true) Long id){
         //Veterinario
-        Veterinary veterinarioBuscado = veterinarioService.buscarPorId(id);
+        Veterinary veterinarioBuscado = veterinarioService.findById(id);
 
         //Especialidades
-        List<Expertise> especialidades = especialidadeService.buscarTodos();
+        List<Expertise> especialidades = especialidadeService.findAll();
 
         //DTO
         VeterinaryDTO veterinarioDTO = VeterinaryDTO.builder()
@@ -90,7 +90,7 @@ public class VeterinarioViewController {
     @PreAuthorize("hasRole('S')")
     @GetMapping("/veterinario/remover/{id}")
     public String veterinarioRemover(@PathVariable(value = "id", required = true) Long id){;
-        veterinarioService.remover(id);
+        veterinarioService.removeById(id);
         return "redirect:/veterinario/veterinarioList";
     }
 }

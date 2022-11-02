@@ -34,8 +34,8 @@ public class AnimalViewController {
     public ModelAndView animalCadastroControl(){
         ModelAndView mv = new ModelAndView("/animal/animalCadastro");
         AnimalDTO dto = new AnimalDTO();
-        dto.setOwners(donoService.buscarTodos());
-        dto.setTypes(tipoAnimalService.buscarTodos());
+        dto.setOwners(donoService.findAll());
+        dto.setTypes(tipoAnimalService.findAll());
         mv.addObject("animaldto", dto);
         return mv;
     }
@@ -48,10 +48,10 @@ public class AnimalViewController {
                 .owner(dto.getOwner())
                 .animalType(dto.getType()).build();
         if(dto.getId() == null){
-            animalService.salvar(animal);
+            animalService.save(animal);
         }else{
             animal.setAnimalId(dto.getId());
-            animalService.atualizar(animal);
+            animalService.update(animal);
         }
         return "redirect:/animal/animalList";
     }
@@ -59,7 +59,7 @@ public class AnimalViewController {
     @PreAuthorize("hasRole('S')")
     @GetMapping("/animal/animalList")
     public ModelAndView animalList(){
-        List<Animal> animais = animalService.buscarTodos();
+        List<Animal> animais = animalService.findAll();
         ModelAndView mv = new ModelAndView("/animal/animalList");
         mv.addObject("animais", animais);
         System.out.println(mv);
@@ -69,13 +69,13 @@ public class AnimalViewController {
     @PreAuthorize("hasRole('S')")
     @GetMapping("/animal/atualizar/{id}")
     public ModelAndView animalAtualizar(@PathVariable(value = "id", required = true) Long id){
-        Animal animalFind = animalService.buscarPorId(id);
+        Animal animalFind = animalService.findById(id);
 
         //Tipo Animal List
-        List<AnimalType> tipoAnimal = tipoAnimalService.buscarTodos();
+        List<AnimalType> tipoAnimal = tipoAnimalService.findAll();
 
         //Dono List
-        List<Owner> donos = donoService.buscarTodos();
+        List<Owner> donos = donoService.findAll();
 
         //AnimalDTO
         AnimalDTO dto = AnimalDTO.builder().id(animalFind.getAnimalId()).
@@ -94,8 +94,8 @@ public class AnimalViewController {
     @PreAuthorize("hasRole('S')")
     @GetMapping("/animal/remover/{id}")
     public String animalRemover(@PathVariable(value = "id", required = true) Long id){
-        Animal animalFind = animalService.buscarPorId(id);
-        animalService.removerPorId(animalFind.getAnimalId());
+        Animal animalFind = animalService.findById(id);
+        animalService.removeById(animalFind.getAnimalId());
         return "redirect:/animal/animalList";
     }
 

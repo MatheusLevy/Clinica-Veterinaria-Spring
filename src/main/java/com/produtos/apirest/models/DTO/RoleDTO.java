@@ -17,7 +17,7 @@ public class RoleDTO {
 
     public Role toRole(){
         return Role.builder()
-                .RoleId(this.id)
+                .roleId(this.id)
                 .roleName(this.roleName)
                 .build();
     }

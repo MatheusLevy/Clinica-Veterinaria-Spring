@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AppointmentTypeRepo extends JpaRepository<AppointmentType, Long> {
+    AppointmentType findByAppointmentTypeId(Long id);
 }

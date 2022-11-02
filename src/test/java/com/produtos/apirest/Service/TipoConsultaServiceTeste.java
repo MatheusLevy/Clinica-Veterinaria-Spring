@@ -35,7 +35,7 @@ public class TipoConsultaServiceTeste {
 
     @Test
     public void deveSalvar(){
-        AppointmentType tipoConsultaSalva = tipoConsultaService.salvar(generateTipoConsulta());
+        AppointmentType tipoConsultaSalva = tipoConsultaService.save(generateTipoConsulta());
         Assertions.assertNotNull(tipoConsultaSalva);
         rollback(tipoConsultaSalva);
     }
@@ -54,21 +54,21 @@ public class TipoConsultaServiceTeste {
     public void deveRemover(){
         AppointmentType tipoConsultaSalvo = appointmentTypeRepo.save(generateTipoConsulta());
         Long id = tipoConsultaSalvo.getAppointmentTypeId();
-        tipoConsultaService.removerPorId(id);
+        tipoConsultaService.removeById(id);
         Assertions.assertFalse(appointmentTypeRepo.findById(id).isPresent());
     }
 
     @Test
     public void deveRemoverComFeedback(){
         AppointmentType tipoConsultaSalvo = appointmentTypeRepo.save(generateTipoConsulta());
-        AppointmentType tipoConsultaFeedback = tipoConsultaService.removerComFeedback(tipoConsultaSalvo.getAppointmentTypeId());
+        AppointmentType tipoConsultaFeedback = tipoConsultaService.removeByIdWithFeedback(tipoConsultaSalvo.getAppointmentTypeId());
         Assertions.assertNotNull(tipoConsultaFeedback);
     }
 
     @Test
     public void deveBuscarPorId(){
         AppointmentType tipoConsultaSalvo = appointmentTypeRepo.save(generateTipoConsulta());
-        AppointmentType tipoConsultaEncontrado = tipoConsultaService.buscarPorId(tipoConsultaSalvo.getAppointmentTypeId());
+        AppointmentType tipoConsultaEncontrado = tipoConsultaService.findById(tipoConsultaSalvo.getAppointmentTypeId());
         Assertions.assertNotNull(tipoConsultaEncontrado);
         Assertions.assertEquals(tipoConsultaSalvo.getAppointmentTypeId(), tipoConsultaEncontrado.getAppointmentTypeId());
         rollback(tipoConsultaSalvo);
@@ -77,14 +77,14 @@ public class TipoConsultaServiceTeste {
     @Test
     public void deveBuscarComFiltro(){
         AppointmentType tipoConsultaSalvo = appointmentTypeRepo.save(generateTipoConsulta());
-        Assertions.assertFalse(tipoConsultaService.buscar(tipoConsultaSalvo).isEmpty());
+        Assertions.assertFalse(tipoConsultaService.find(tipoConsultaSalvo).isEmpty());
         rollback(tipoConsultaSalvo);
     }
 
     @Test
     public void deveBuscarTodos(){
         AppointmentType tipoConsultaSalvo = appointmentTypeRepo.save(generateTipoConsulta());
-        List<AppointmentType> tiposList = tipoConsultaService.buscarTodos();
+        List<AppointmentType> tiposList = tipoConsultaService.findAll();
         Assertions.assertNotNull(tiposList);
         Assertions.assertFalse(tiposList.isEmpty());
         rollback(tipoConsultaSalvo);

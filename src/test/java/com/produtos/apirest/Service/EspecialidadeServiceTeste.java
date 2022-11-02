@@ -62,7 +62,7 @@ public class EspecialidadeServiceTeste {
 
     @Test
     public void deveSalvar(){
-        Expertise especialidadeSalva = especialidadeService.salvar(generateEspecialidade(true));
+        Expertise especialidadeSalva = especialidadeService.save(generateEspecialidade(true));
         Assertions.assertNotNull(especialidadeSalva);
         rollback(especialidadeSalva);
     }
@@ -71,7 +71,7 @@ public class EspecialidadeServiceTeste {
     public void deveAtualizar(){
         Expertise especialidadeSalva = expertiseRepo.save(generateEspecialidade(true));
         especialidadeSalva.setName("Especialidade Atualizada");
-        Expertise especialidadeAtualizada = especialidadeService.atualizar(especialidadeSalva);
+        Expertise especialidadeAtualizada = especialidadeService.update(especialidadeSalva);
         Assertions.assertNotNull(especialidadeAtualizada);
         Assertions.assertEquals(especialidadeSalva.getExpertiseId(), especialidadeAtualizada.getExpertiseId());
         rollback(especialidadeSalva);
@@ -82,7 +82,7 @@ public class EspecialidadeServiceTeste {
         Expertise especialidadeSalva = expertiseRepo.save(generateEspecialidade(true));
         Area areaAntiga = especialidadeSalva.getArea();
         Area areaNova = areaRepo.save(generateArea());
-        Expertise especialidadeAtualizada = especialidadeService.atualizarArea(especialidadeSalva, areaNova);
+        Expertise especialidadeAtualizada = especialidadeService.updateArea(especialidadeSalva, areaNova);
         Assertions.assertNotNull(especialidadeAtualizada);
         Assertions.assertEquals(especialidadeAtualizada.getArea().getAreaId(), areaNova.getAreaId());
         Assertions.assertEquals(especialidadeAtualizada.getArea().getName(), areaNova.getName());
@@ -93,7 +93,7 @@ public class EspecialidadeServiceTeste {
     public void deveRemover(){
         Expertise especialidadeSalva = expertiseRepo.save(generateEspecialidade(true));
         Long id = especialidadeSalva.getExpertiseId();
-        especialidadeService.remover(especialidadeSalva);
+        especialidadeService.remove(especialidadeSalva);
         Assertions.assertFalse(expertiseRepo.findById(id).isPresent());
         rollbackArea(especialidadeSalva.getArea(), areaRepo);
     }
@@ -101,7 +101,7 @@ public class EspecialidadeServiceTeste {
     @Test
     public void deveRemovercomFeedback(){
         Expertise especialidadeSalva = expertiseRepo.save(generateEspecialidade(true));
-        Expertise especialidadeFeedback = especialidadeService.removerFeedback(especialidadeSalva.getExpertiseId());
+        Expertise especialidadeFeedback = especialidadeService.removeByIdWithFeedback(especialidadeSalva.getExpertiseId());
         Assertions.assertNotNull(especialidadeFeedback);
         Assertions.assertEquals(especialidadeSalva.getExpertiseId(), especialidadeFeedback.getExpertiseId());
         rollbackArea(especialidadeSalva.getArea(), areaRepo);
@@ -111,7 +111,7 @@ public class EspecialidadeServiceTeste {
     public void deveRemoverPorId(){
         Expertise especialidadeSalva = expertiseRepo.save(generateEspecialidade(true));
         Long id = especialidadeSalva.getExpertiseId();
-        especialidadeService.removerPorId(id);
+        especialidadeService.removeById(id);
         Assertions.assertFalse(expertiseRepo.findById(id).isPresent());
         rollbackArea(especialidadeSalva.getArea(), areaRepo);
     }
@@ -120,7 +120,7 @@ public class EspecialidadeServiceTeste {
     public void deveBuscarPorId(){
         Expertise especialidadeSalva = expertiseRepo.save(generateEspecialidade(true));
         Long id = especialidadeSalva.getExpertiseId();
-        Expertise especialidadeEncontrada = especialidadeService.buscarPorId(id);
+        Expertise especialidadeEncontrada = especialidadeService.findById(id);
         Assertions.assertNotNull(especialidadeEncontrada);
         Assertions.assertEquals(especialidadeSalva.getExpertiseId(), especialidadeEncontrada.getExpertiseId());
         rollback(especialidadeSalva);
@@ -129,7 +129,7 @@ public class EspecialidadeServiceTeste {
     @Test
     public void deveBuscarPorFiltro(){
         Expertise especialidadeSalva = expertiseRepo.save(generateEspecialidade(true));
-        List<Expertise> especialidadesEncontradas = especialidadeService.buscar(especialidadeSalva);
+        List<Expertise> especialidadesEncontradas = especialidadeService.find(especialidadeSalva);
         Assertions.assertFalse(especialidadesEncontradas.isEmpty());
         rollback(especialidadeSalva);
     }
@@ -137,7 +137,7 @@ public class EspecialidadeServiceTeste {
     @Test
     public void deveBuscarTodos(){
         Expertise especialidadeSalva = expertiseRepo.save(generateEspecialidade(true));
-        List<Expertise> especialidades = especialidadeService.buscarTodos();
+        List<Expertise> especialidades = especialidadeService.findAll();
         Assertions.assertNotNull(especialidades);
         Assertions.assertFalse(especialidades.isEmpty());
         rollback(especialidadeSalva);

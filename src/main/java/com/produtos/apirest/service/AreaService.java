@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AreaService {
@@ -22,100 +21,98 @@ public class AreaService {
         this.repo = areaRepo;
     }
 
-    public static void verificaArea(Area area){
+    public static void verifyAllRules(Area area){
+        verifyIsNull(area);
+        verifyHasName(area);
+        verifyHasId(area);
+    }
+
+    public static void verifyIsNullAndHasNome(Area area){
+        verifyIsNull(area);
+        verifyHasName(area);
+    }
+
+    public static void verifyIsNull(Area area){
         if (area == null)
-            throw new NullPointerException("A Area não pode ser Nula!");
-        if(area.getName() == null || area.getName().equals(""))
-            throw new RegraNegocioRunTime("A Area deve ter um nome!");
+            throw new NullPointerException("The area must not be null!");
     }
 
-    public static void verificaId(Area area){
+    public static void verifyHasName(Area area){
+        if(area.getName().equals(""))
+            throw new RegraNegocioRunTime("The area should have a name!");
+    }
+
+    public static void verifyHasId(Area area){
         if (area.getAreaId() <= 0)
-            throw new RegraNegocioRunTime("A Area deve possuir um identificador!");
+            throw new RegraNegocioRunTime("The area should have a id!");
     }
 
-    public static void verificaId(Long id){
+    public static void verifyHasId(Long id){
         if (id <= 0)
-            throw new RegraNegocioRunTime("A Area deve possuir um identificador!");
+            throw new RegraNegocioRunTime("The area should have a id!");
+    }
+
+    public static Example<Area> generateExample(Area area){
+        return Example.of(area, ExampleMatcher.matching()
+                .withIgnoreCase()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
     }
 
     @Transactional
-    public Area salvar(Area area){
-        verificaArea(area);
+    public Area save(Area area){
+        verifyIsNullAndHasNome(area);
         return repo.save(area);
     }
 
     @Transactional
-    public Area atualizar(Area area){
-        verificaArea(area);
-        verificaId(area);
+    public Area update(Area area){
+        verifyAllRules(area);
         return repo.save(area);
     }
 
     @Transactional
-    public void removerPorId(Long id){
-        verificaId(id);
+    public void removeById(Long id){
+        verifyHasId(id);
         repo.deleteById(id);
     }
 
     @Transactional
-    public void remover(Area area){
-        verificaArea(area);
-        verificaId(area);
+    public void remove(Area area){
+        verifyAllRules(area);
         repo.delete(area);
     }
 
     @Transactional
-    public Area removerComFeedback(Long id){
-        verificaId(id);
-        Optional<Area> areasEncontradas = repo.findById(id);
-        if (areasEncontradas.isPresent()) {
-            Area areaFeedback = areasEncontradas.get();
-            repo.delete(areaFeedback);
-            return areaFeedback;
-        }
-        return null;
+    public Area removeByIdWithFeedback(Long id){
+        verifyHasId(id);
+        Area feedback = repo.findByAreaId(id);
+        repo.delete(feedback);
+        return feedback;
     }
 
     @Transactional
-    public Area buscarPorId(Long id){
-        verificaId(id);
-        Optional<Area> areasEncontradas = repo.findById(id);
-        return areasEncontradas.orElse(null);
+    public Area findById(Long id){
+        verifyHasId(id);
+        return repo.findByAreaId(id);
     }
 
     @Transactional
-    public List<Area> buscar(Area filtro){
-        if (filtro == null)
-            throw new NullPointerException("Filtro não pode ser nulo");
-        Example<Area> example = Example.of(filtro, ExampleMatcher.matching()
-                .withIgnoreCase()
-                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
+    public List<Area> find(Area area){
+        verifyIsNull(area);
+        Example<Area> example = generateExample(area);
         return repo.findAll(example);
     }
 
     @Transactional
-    public List<Area> buscarTodos(){
+    public List<Area> findAll(){
         return repo.findAll();
     }
 
     @Transactional
-    public List<Expertise> buscarTodasEspecialidades(Area area){
-        verificaArea(area);
-        verificaId(area);
-        try {
-            Optional<Area> areasEncontradas = repo.findById(area.getAreaId());
-            if(areasEncontradas.isPresent()) {
-                Area areaEncontrada = areasEncontradas.get();
-                Hibernate.initialize(areaEncontrada.getExpertises());
-                verificaArea(areaEncontrada);
-                verificaId(areaEncontrada);
-                return areaEncontrada.getExpertises();
-            }
-            return null;
-        } catch (Exception e){
-            System.out.println(e);
-            throw e;
-        }
+    public List<Expertise> findAllExpertiseByAreaId(Long areaId){
+        verifyHasId(areaId);
+        Area areaFind = repo.findByAreaId(areaId);
+        Hibernate.initialize(areaFind.getExpertises());
+        return areaFind.getExpertises();
     }
 }

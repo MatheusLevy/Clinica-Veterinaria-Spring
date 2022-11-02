@@ -1,5 +1,6 @@
 package com.produtos.apirest.Controller;
 
+import com.produtos.apirest.Util.Util;
 import com.produtos.apirest.enums.RoleName;
 import com.produtos.apirest.models.DTO.RoleDTO;
 import com.produtos.apirest.models.Role;
@@ -16,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static com.produtos.apirest.Util.Util.request;
+import static com.produtos.apirest.Util.Util.buildRequest;
 import static com.produtos.apirest.Util.Util.toJson;
 
 @ActiveProfiles("test")
@@ -34,7 +35,7 @@ public class RoleControllerTeste {
 
     public Role generateRoleInstance(){
         return Role.builder()
-                .RoleId(1L)
+                .roleId(1L)
                 .roleName(RoleName.ROLE_TESTE)
                 .build();
     }
@@ -48,18 +49,18 @@ public class RoleControllerTeste {
 
     @Test
     public void deveSalvar() throws Exception{
-        Mockito.when(roleService.salvar(Mockito.any(Role.class))).thenReturn(generateRoleInstance());
+        Mockito.when(roleService.save(Mockito.any(Role.class))).thenReturn(generateRoleInstance());
         String json = toJson(generateRoleDTOInstance());
-        MockHttpServletRequestBuilder request = request(HttpMethod.POST, API.concat("/salvar"), json);
+        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.POST, API.concat("/salvar"), json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
 
     @Test
     public void deveAtualizar() throws Exception {
-        Mockito.when(roleService.atualizar(Mockito.any(Role.class))).thenReturn(generateRoleInstance());
+        Mockito.when(roleService.update(Mockito.any(Role.class))).thenReturn(generateRoleInstance());
         String json = toJson(generateRoleDTOInstance());
-        MockHttpServletRequestBuilder request = request(HttpMethod.PUT, API.concat("/atualizar"), json);
+        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.PUT, API.concat("/atualizar"), json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -67,8 +68,8 @@ public class RoleControllerTeste {
     @Test
     public void deveRemover() throws Exception{
         Long id = 1L;
-        Mockito.doNothing().when(roleService).removerPorId(Mockito.anyLong());
-        MockHttpServletRequestBuilder request = request(HttpMethod.DELETE, API.concat("/remover/").concat(String.valueOf(id)));
+        Mockito.doNothing().when(roleService).removeById(Mockito.anyLong());
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/remover/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -76,8 +77,8 @@ public class RoleControllerTeste {
     @Test
     public void deveRemoverComFeedback() throws Exception{
         Long id = 1L;
-        Mockito.when(roleService.RemoverComFeedback(Mockito.anyLong())).thenReturn(generateRoleInstance());
-        MockHttpServletRequestBuilder request = request(HttpMethod.DELETE, API.concat("/remover/feedback/").concat(String.valueOf(id)));
+        Mockito.when(roleService.removeByIdWithFeedback(Mockito.anyLong())).thenReturn(generateRoleInstance());
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/remover/feedback/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -85,8 +86,8 @@ public class RoleControllerTeste {
     @Test
     public void deveBuscarPorId() throws Exception{
         Long id = 1L;
-        Mockito.when(roleService.buscarPorId(Mockito.anyLong())).thenReturn(generateRoleInstance());
-        MockHttpServletRequestBuilder request = request(HttpMethod.GET, API.concat("/buscar/").concat(String.valueOf(id)));
+        Mockito.when(roleService.findById(Mockito.anyLong())).thenReturn(generateRoleInstance());
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/buscar/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }

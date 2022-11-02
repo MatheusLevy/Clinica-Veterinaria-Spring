@@ -43,7 +43,7 @@ public class AreaServiceTeste {
 
     @Test
     public void deveSalvar(){
-        Area areaSalva = areaService.salvar(generateArea());
+        Area areaSalva = areaService.save(generateArea());
         Assertions.assertNotNull(areaSalva);
         rollback(areaSalva);
     }
@@ -52,7 +52,7 @@ public class AreaServiceTeste {
     public void deveAtualizar(){
         Area areaSalva = areaRepo.save(generateArea());
         areaSalva.setName("Area Atualizada");
-        Area areaAtualizada = areaService.atualizar(areaSalva);
+        Area areaAtualizada = areaService.update(areaSalva);
         Assertions.assertNotNull(areaAtualizada);
         Assertions.assertEquals(areaSalva.getAreaId(), areaAtualizada.getAreaId());
         rollback(areaAtualizada);
@@ -62,7 +62,7 @@ public class AreaServiceTeste {
     public void deveRemover(){
         Area areaSalva = areaRepo.save(generateArea());
         Long id = areaSalva.getAreaId();
-        areaService.remover(areaSalva);
+        areaService.remove(areaSalva);
         Assertions.assertFalse(areaRepo.findById(id).isPresent());
     }
 
@@ -70,14 +70,14 @@ public class AreaServiceTeste {
     public void deveRemoverPorId(){
         Area areSalva = areaRepo.save(generateArea());
         Long id = areSalva.getAreaId();
-        areaService.removerPorId(id);
+        areaService.removeById(id);
         Assertions.assertFalse(areaRepo.findById(id).isPresent());
     }
 
     @Test
     public void deveRemovercomFeedback(){
         Area areaSalva = areaRepo.save(generateArea());
-        Area areaFeedback = areaService.removerComFeedback(areaSalva.getAreaId());
+        Area areaFeedback = areaService.removeByIdWithFeedback(areaSalva.getAreaId());
         Assertions.assertNotNull(areaFeedback);
         Assertions.assertEquals(areaFeedback.getAreaId(), areaSalva.getAreaId());
     }
@@ -86,7 +86,7 @@ public class AreaServiceTeste {
     @Test
     public void deveBuscarPorId(){
         Area areaSalva = areaRepo.save(generateArea());
-        Area AreaEncontrada = areaService.buscarPorId(areaSalva.getAreaId());
+        Area AreaEncontrada = areaService.findById(areaSalva.getAreaId());
         Assertions.assertNotNull(AreaEncontrada);
         Assertions.assertEquals(areaSalva.getAreaId(), AreaEncontrada.getAreaId());
         Assertions.assertEquals(areaSalva.getName(), AreaEncontrada.getName());
@@ -100,7 +100,7 @@ public class AreaServiceTeste {
                 .areaId(areaSalva.getAreaId())
                 .name(areaSalva.getName())
                 .build();
-        Assertions.assertFalse(areaService.buscar(filtro).isEmpty());
+        Assertions.assertFalse(areaService.find(filtro).isEmpty());
         rollback(areaSalva);
     }
 
@@ -110,7 +110,7 @@ public class AreaServiceTeste {
         Expertise especialidadeComAreaNaoSalva = generateEspecialidade(false, areaRepo);
         especialidadeComAreaNaoSalva.setArea(areaSalva);
         expertiseRepo.save(especialidadeComAreaNaoSalva);
-        List<Expertise> especialidadeList = areaService.buscarTodasEspecialidades(areaSalva);
+        List<Expertise> especialidadeList = areaService.findAllExpertiseByAreaId(areaSalva.getAreaId());
         Assertions.assertFalse(especialidadeList.isEmpty());
         rollbackEspecialidade(especialidadeComAreaNaoSalva, expertiseRepo, areaRepo);
     }

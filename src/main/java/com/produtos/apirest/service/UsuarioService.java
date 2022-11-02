@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UsuarioService {
@@ -24,85 +23,112 @@ public class UsuarioService {
         return new BCryptPasswordEncoder();
     }
 
-    public static void verificaUsuario(User usuario){
-        if(usuario == null)
-            throw new NullPointerException("Usuario não pode ser nulo!");
-        if (usuario.getUsername() == null)
-            throw  new RegraNegocioRunTime("Nome de usuário não pode ser nulo!");
-        if (usuario.getPassword().equals(""))
-            throw new RegraNegocioRunTime("Senha não pode ser vazia!");
-        if (usuario.getRoles().isEmpty())
-            throw new RegraNegocioRunTime("As roles do usuário não podem ser nulas!");
+    public static void verifyIsNull(User user){
+        if(user == null)
+            throw new NullPointerException("User must not be null!");
     }
 
-    public static void verificaId(User usuario){
-        if (usuario == null || usuario.getUserId() <= 0){
-            throw new RegraNegocioRunTime("Usuario deve possuir um identificador!");
+    public static void verifyHasUsername(User user){
+        if (user.getUsername().equals(""))
+            throw  new RegraNegocioRunTime("The user should have a username!");
+    }
+
+    public static void verifyHasPassword(User user){
+        if (user.getPassword().equals(""))
+            throw new RegraNegocioRunTime("The user should have a password!");
+    }
+
+    public static void verifyHasRoles(User user){
+        if (user.getRoles().isEmpty())
+            throw new RegraNegocioRunTime("The user should have roles!");
+    }
+
+    public static void verifyHasId(User user){
+        if (user.getUserId() <= 0){
+            throw new RegraNegocioRunTime("The user should have a id!");
         }
     }
 
-    public static void verificaId(Long id){
+    public static void verifyHasId(Long id){
         if (id <= 0){
-            throw new RegraNegocioRunTime("Usuario deve possuir um identificador!");
+            throw new RegraNegocioRunTime("The user should have a id!");
         }
     }
 
-    @Transactional
-    public User autenticar (String username, String senha){
-        User usuario = userRepo.findByUsername(username);
-        if(passwordEncoder().matches(senha, usuario.getPassword()))
-            return usuario;
+    public static void verifyAllRules(User user){
+        verifyIsNull(user);
+        verifyHasId(user);
+        verifyHasUsername(user);
+        verifyHasPassword(user);
+        verifyHasRoles(user);
+    }
+
+    public static void verifyIsNullHasUsernameHasPasswordHasRoles(User user){
+        verifyIsNull(user);
+        verifyHasUsername(user);
+        verifyHasPassword(user);
+        verifyHasRoles(user);
+    }
+
+    private User matchPasswordWithUser(String rawPassword, User user){
+        if(passwordEncoder().matches(rawPassword, user.getPassword()))
+            return user;
         else
-            throw new AuthenticationFailedExpection("Usuário ou senha inválidos!");
+            throw new AuthenticationFailedExpection("Username or password incorrect!");
+    }
+
+    private void encodePassword(User user){
+        String password = user.getPassword();
+        String encodedPassword = passwordEncoder().encode(password);
+        user.setPassword(encodedPassword);
     }
 
     @Transactional
-    public User salvar(User usuario){
-        verificaUsuario(usuario);
-        usuario.setPassword(passwordEncoder().encode(usuario.getPassword()));
-        return userRepo.save(usuario);
+    public User authenticate(String username, String password){
+        User user = userRepo.findByUsername(username);
+        return matchPasswordWithUser(password, user);
     }
 
     @Transactional
-    public User atualizar(User usuario){
-        verificaUsuario(usuario);
-        verificaId(usuario);
-        return userRepo.save(usuario);
+    public User save(User user){
+        verifyIsNullHasUsernameHasPasswordHasRoles(user);
+        encodePassword(user);
+        return userRepo.save(user);
     }
 
     @Transactional
-    public void remover(User usuario){
-        verificaUsuario(usuario);
-        verificaId(usuario);
-        userRepo.delete(usuario);
+    public User update(User user){
+        verifyAllRules(user);
+        return userRepo.save(user);
     }
 
     @Transactional
-    public User removerComFeedback(Long id){
-        verificaId(id);
-        Optional<User> usuariosEncontrados = userRepo.findById(id);
-        if (usuariosEncontrados.isPresent()) {
-            User usuarioFeedback = usuariosEncontrados.get();
-            userRepo.delete(usuarioFeedback);
-            return usuarioFeedback;
-        }
-        return null;
+    public void remove(User user){
+        verifyAllRules(user);
+        userRepo.delete(user);
     }
 
     @Transactional
-    public User buscarPorId(Long id){
-        verificaId(id);
-        Optional<User> usuariosEncontrados = userRepo.findById(id);
-        return usuariosEncontrados.orElse(null);
+    public User removeByIdWithFeedback(Long id){
+        verifyHasId(id);
+        User feedback = userRepo.findByUserId(id);
+        userRepo.delete(feedback);
+        return feedback;
     }
 
     @Transactional
-    public User buscarPorUsername(String username){
+    public User findById(Long id){
+        verifyHasId(id);
+        return userRepo.findByUserId(id);
+    }
+
+    @Transactional
+    public User findByUsername(String username){
         return userRepo.findByUsername(username);
     }
 
     @Transactional
-    public List<User> buscarTodos(){
+    public List<User> findAll(){
         return userRepo.findAll();
     }
 }

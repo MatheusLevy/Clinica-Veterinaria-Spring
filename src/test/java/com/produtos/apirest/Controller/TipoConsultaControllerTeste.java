@@ -1,5 +1,6 @@
 package com.produtos.apirest.Controller;
 
+import com.produtos.apirest.Util.Util;
 import com.produtos.apirest.models.AppointmentType;
 import com.produtos.apirest.models.DTO.AppointmentTypeDTO;
 import com.produtos.apirest.service.TipoConsultaService;
@@ -16,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static com.produtos.apirest.Util.Util.request;
+import static com.produtos.apirest.Util.Util.buildRequest;
 import static com.produtos.apirest.Util.Util.toJson;
 
 @ActiveProfiles("test")
@@ -47,9 +48,9 @@ public class TipoConsultaControllerTeste {
     @WithUserDetails("Admin")
     @Test
     public void deveSalvar() throws Exception{
-        Mockito.when(tipoConsultaService.salvar(Mockito.any(AppointmentType.class))).thenReturn(generateTipoConsultaInstance());
+        Mockito.when(tipoConsultaService.save(Mockito.any(AppointmentType.class))).thenReturn(generateTipoConsultaInstance());
         String json = toJson(generateTipoConsultaDTOInstance());
-        MockHttpServletRequestBuilder request = request(HttpMethod.POST, API.concat("/salvar"), json);
+        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.POST, API.concat("/salvar"), json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
@@ -57,9 +58,9 @@ public class TipoConsultaControllerTeste {
     @WithUserDetails("Admin")
     @Test
     public void deveAtualizar() throws Exception{
-        Mockito.when(tipoConsultaService.atualizar(Mockito.any(AppointmentType.class))).thenReturn(generateTipoConsultaInstance());
+        Mockito.when(tipoConsultaService.update(Mockito.any(AppointmentType.class))).thenReturn(generateTipoConsultaInstance());
         String json = toJson(generateTipoConsultaDTOInstance());
-        MockHttpServletRequestBuilder request = request(HttpMethod.PUT, API.concat("/atualizar"), json);
+        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.PUT, API.concat("/atualizar"), json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -68,9 +69,9 @@ public class TipoConsultaControllerTeste {
     @Test
     public void deveRemoverPorId() throws Exception{
         Long id = 1L;
-        Mockito.doNothing().when(tipoConsultaService).removerPorId(Mockito.anyLong());
-        Mockito.when(tipoConsultaService.buscarPorId(Mockito.anyLong())).thenReturn(generateTipoConsultaInstance());
-        MockHttpServletRequestBuilder request = request(HttpMethod.DELETE, API.concat("/remover/").concat(String.valueOf(id)));
+        Mockito.doNothing().when(tipoConsultaService).removeById(Mockito.anyLong());
+        Mockito.when(tipoConsultaService.findById(Mockito.anyLong())).thenReturn(generateTipoConsultaInstance());
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/remover/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -79,8 +80,8 @@ public class TipoConsultaControllerTeste {
     @Test
     public void deveRemoverComFeedback() throws Exception{
         Long id = 1L;
-        Mockito.when(tipoConsultaService.removerComFeedback(Mockito.anyLong())).thenReturn(generateTipoConsultaInstance());
-        MockHttpServletRequestBuilder request = request(HttpMethod.DELETE, API.concat("/remover/feedback/").concat(String.valueOf(id)));
+        Mockito.when(tipoConsultaService.removeByIdWithFeedback(Mockito.anyLong())).thenReturn(generateTipoConsultaInstance());
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/remover/feedback/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -89,8 +90,8 @@ public class TipoConsultaControllerTeste {
     @Test
     public void deveBuscarPorId() throws Exception {
         Long id = 1L;
-        Mockito.when(tipoConsultaService.buscarPorId(Mockito.anyLong())).thenReturn(generateTipoConsultaInstance());
-        MockHttpServletRequestBuilder request = request(HttpMethod.GET, API.concat("/buscar/").concat(String.valueOf(id)));
+        Mockito.when(tipoConsultaService.findById(Mockito.anyLong())).thenReturn(generateTipoConsultaInstance());
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/buscar/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
