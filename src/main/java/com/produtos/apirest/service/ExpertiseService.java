@@ -3,7 +3,7 @@ package com.produtos.apirest.service;
 import com.produtos.apirest.models.Area;
 import com.produtos.apirest.models.Expertise;
 import com.produtos.apirest.repository.ExpertiseRepo;
-import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
+import com.produtos.apirest.service.excecoes.BusinessRuleException;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
@@ -12,11 +12,11 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
-public class EspecialidadeService {
+public class ExpertiseService {
 
     private final ExpertiseRepo repo;
 
-    public EspecialidadeService(ExpertiseRepo expertiseRepo){
+    public ExpertiseService(ExpertiseRepo expertiseRepo){
         this.repo = expertiseRepo;
     }
 
@@ -27,22 +27,22 @@ public class EspecialidadeService {
 
     public static void hasId(Expertise expertise){
         if (expertise.getExpertiseId() <= 0)
-            throw new RegraNegocioRunTime("The expertise should have a id!");
+            throw new BusinessRuleException("The expertise should have a id!");
     }
 
     public static void hasId(Long id){
         if (id <= 0)
-            throw new RegraNegocioRunTime("The expertise should have a id!");
+            throw new BusinessRuleException("The expertise should have a id!");
     }
 
     public static void hasName(Expertise expertise){
         if (expertise.getName().equals(""))
-            throw new RegraNegocioRunTime("The expertise should have a name!");
+            throw new BusinessRuleException("The expertise should have a name!");
     }
 
     public static void hasArea(Expertise expertise){
         if (expertise.getArea() == null)
-            throw new RegraNegocioRunTime("The expertise should have a name!");
+            throw new BusinessRuleException("The expertise should have a name!");
     }
 
     public static void verifyAllRules(Expertise expertise){

@@ -2,7 +2,7 @@ package com.produtos.apirest.viewController;
 
 
 import com.produtos.apirest.models.AnimalType;
-import com.produtos.apirest.service.TipoAnimalService;
+import com.produtos.apirest.service.AnimalTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -17,7 +17,7 @@ import java.util.List;
 public class TipoAnimalViewController {
 
     @Autowired
-    private TipoAnimalService tipoService;
+    private AnimalTypeService tipoService;
 
     @PreAuthorize("hasRole('A')")
     @GetMapping("/tipoAnimal/cadastro")

@@ -2,7 +2,7 @@ package com.produtos.apirest.controller;
 
 import com.produtos.apirest.models.AnimalType;
 import com.produtos.apirest.models.DTO.AnimalTypeDTO;
-import com.produtos.apirest.service.TipoAnimalService;
+import com.produtos.apirest.service.AnimalTypeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/tipoAnimal")
 public class TipoAnimalController {
 
-    private final TipoAnimalService tipoService;
+    private final AnimalTypeService tipoService;
 
-    public TipoAnimalController(TipoAnimalService tipoService) {
+    public TipoAnimalController(AnimalTypeService tipoService) {
         this.tipoService = tipoService;
     }
 

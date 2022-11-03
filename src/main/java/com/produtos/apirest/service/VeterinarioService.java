@@ -3,7 +3,7 @@ package com.produtos.apirest.service;
 import com.produtos.apirest.models.Expertise;
 import com.produtos.apirest.models.Veterinary;
 import com.produtos.apirest.repository.VeterinaryRepo;
-import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
+import com.produtos.apirest.service.excecoes.BusinessRuleException;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
@@ -27,27 +27,27 @@ public class VeterinarioService {
 
     public static void hasName(Veterinary veterinary){
         if(veterinary.getName().equals(""))
-            throw new RegraNegocioRunTime("The veterinary should have a name!");
+            throw new BusinessRuleException("The veterinary should have a name!");
     }
 
     public static void hasCPF(Veterinary veterinary){
         if (veterinary.getCpf().equals(""))
-            throw new RegraNegocioRunTime("The veterinary should have a CPF!");
+            throw new BusinessRuleException("The veterinary should have a CPF!");
     }
 
     public static void hasExpertise(Veterinary veterinary){
         if (veterinary.getExpertise() == null)
-            throw new RegraNegocioRunTime("The veterinary should have a Expertise!");
+            throw new BusinessRuleException("The veterinary should have a Expertise!");
     }
 
     public static void hasId(Veterinary veterinary){
         if (veterinary.getVeterinaryId() <= 0)
-            throw new RegraNegocioRunTime("The veterinary should have a id!");
+            throw new BusinessRuleException("The veterinary should have a id!");
     }
 
     public static void hasId(Long id){
         if (id <= 0)
-            throw new RegraNegocioRunTime("The veterinary should have a id!");
+            throw new BusinessRuleException("The veterinary should have a id!");
     }
 
     public static void verifyAllRules(Veterinary veterinary){
@@ -124,7 +124,7 @@ public class VeterinarioService {
 
     @Transactional
     public Veterinary updateExpertise(Veterinary destiny, Expertise newExpertise){
-        EspecialidadeService.verifyAllRules(newExpertise);
+        ExpertiseService.verifyAllRules(newExpertise);
         verifyAllRules(destiny);
         destiny.setExpertise(newExpertise);
         return repo.save(destiny);

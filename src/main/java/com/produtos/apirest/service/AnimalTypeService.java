@@ -2,7 +2,7 @@ package com.produtos.apirest.service;
 
 import com.produtos.apirest.models.AnimalType;
 import com.produtos.apirest.repository.AnimalTypeRepo;
-import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
+import com.produtos.apirest.service.excecoes.BusinessRuleException;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
@@ -11,11 +11,11 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
-public class TipoAnimalService {
+public class AnimalTypeService {
 
     private final AnimalTypeRepo repo;
 
-    public TipoAnimalService(AnimalTypeRepo animalTypeRepo){
+    public AnimalTypeService(AnimalTypeRepo animalTypeRepo){
         this.repo = animalTypeRepo;
     }
 
@@ -26,17 +26,17 @@ public class TipoAnimalService {
 
     public static void hasName(AnimalType type){
         if (type.getName().equals(""))
-            throw new RegraNegocioRunTime("The animal type should have a name!");
+            throw new BusinessRuleException("The animal type should have a name!");
     }
 
     public static void hasId(AnimalType type){
         if(type.getAnimalTypeId() <= 0)
-            throw new RegraNegocioRunTime("The animal type should have a id!");
+            throw new BusinessRuleException("The animal type should have a id!");
     }
 
     public static void hasId(Long id){
         if(id <= 0)
-            throw new RegraNegocioRunTime("The animal type should have a id!");
+            throw new BusinessRuleException("The animal type should have a id!");
     }
 
     public static void verifyAllRules(AnimalType type){

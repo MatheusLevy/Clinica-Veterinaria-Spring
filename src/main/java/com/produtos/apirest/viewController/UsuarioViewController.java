@@ -1,7 +1,7 @@
 package com.produtos.apirest.viewController;
 
 import com.produtos.apirest.models.User;
-import com.produtos.apirest.service.UsuarioService;
+import com.produtos.apirest.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -16,7 +16,7 @@ import java.util.List;
 public class UsuarioViewController {
 
     @Autowired
-    private UsuarioService usarioService;
+    private UserService usarioService;
 
     //TODO:
     @PreAuthorize("hasRole('A')")

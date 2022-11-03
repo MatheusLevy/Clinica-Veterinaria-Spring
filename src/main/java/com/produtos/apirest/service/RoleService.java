@@ -2,7 +2,7 @@ package com.produtos.apirest.service;
 
 import com.produtos.apirest.models.Role;
 import com.produtos.apirest.repository.RoleRepo;
-import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
+import com.produtos.apirest.service.excecoes.BusinessRuleException;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
@@ -26,12 +26,12 @@ public class RoleService {
 
     public static void hasId(Role role){
         if (role.getRoleId() <= 0)
-            throw new RegraNegocioRunTime("The role should have a id");
+            throw new BusinessRuleException("The role should have a id");
     }
 
     public static void hasId(Long id){
         if (id <= 0)
-            throw new RegraNegocioRunTime("The role should have a id");
+            throw new BusinessRuleException("The role should have a id");
     }
 
     public static void verifyAllRules(Role role){

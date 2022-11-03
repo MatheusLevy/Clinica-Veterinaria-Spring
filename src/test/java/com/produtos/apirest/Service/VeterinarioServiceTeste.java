@@ -13,8 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-import static com.produtos.apirest.Service.EspecialidadeServiceTeste.generateEspecialidade;
-import static com.produtos.apirest.Service.EspecialidadeServiceTeste.rollbackEspecialidade;
+import static com.produtos.apirest.Service.ExpertiseServiceTeste.generateEspecialidade;
+import static com.produtos.apirest.Service.ExpertiseServiceTeste.rollbackEspecialidade;
 import static com.produtos.apirest.Util.Util.generateCPF;
 import static com.produtos.apirest.Util.Util.generatePhone;
 

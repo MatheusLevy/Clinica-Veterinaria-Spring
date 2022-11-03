@@ -3,7 +3,7 @@ package com.produtos.apirest.service;
 import com.produtos.apirest.models.Area;
 import com.produtos.apirest.models.Expertise;
 import com.produtos.apirest.repository.AreaRepo;
-import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
+import com.produtos.apirest.service.excecoes.BusinessRuleException;
 import org.hibernate.Hibernate;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -39,17 +39,17 @@ public class AreaService {
 
     public static void hasName(Area area){
         if(area.getName().equals(""))
-            throw new RegraNegocioRunTime("The area should have a name!");
+            throw new BusinessRuleException("The area should have a name!");
     }
 
     public static void hasId(Area area){
         if (area.getAreaId() <= 0)
-            throw new RegraNegocioRunTime("The area should have a id!");
+            throw new BusinessRuleException("The area should have a id!");
     }
 
     public static void hasId(Long id){
         if (id <= 0)
-            throw new RegraNegocioRunTime("The area should have a id!");
+            throw new BusinessRuleException("The area should have a id!");
     }
 
     public static Example<Area> generateExample(Area area){

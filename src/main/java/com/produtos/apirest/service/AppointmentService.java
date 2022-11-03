@@ -5,7 +5,7 @@ import com.produtos.apirest.models.Appointment;
 import com.produtos.apirest.models.AppointmentType;
 import com.produtos.apirest.models.Veterinary;
 import com.produtos.apirest.repository.AppointmentRepo;
-import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
+import com.produtos.apirest.service.excecoes.BusinessRuleException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -13,11 +13,11 @@ import java.util.List;
 
 
 @Service
-public class ConsultaService {
+public class AppointmentService {
 
     private final AppointmentRepo repo;
 
-    public ConsultaService(AppointmentRepo consultaRepo){
+    public AppointmentService(AppointmentRepo consultaRepo){
         this.repo = consultaRepo;
     }
 
@@ -28,32 +28,32 @@ public class ConsultaService {
 
     public static void hasAnimal(Appointment appointment){
         if(appointment.getAnimal() == null)
-            throw new RegraNegocioRunTime("The appointment should hava a animal!");
+            throw new BusinessRuleException("The appointment should hava a animal!");
     }
 
     public static void hasType(Appointment appointment){
         if(appointment.getAppointmentType() == null)
-            throw new RegraNegocioRunTime("The appointment should have a type!");
+            throw new BusinessRuleException("The appointment should have a type!");
     }
 
     public static void hasVeterinary(Appointment appointment){
         if (appointment.getVeterinary() == null)
-            throw new RegraNegocioRunTime("The appointment should have a veterinary!");
+            throw new BusinessRuleException("The appointment should have a veterinary!");
     }
 
     public static void hasDate(Appointment appointment){
         if(appointment.getDate() == null)
-            throw new RegraNegocioRunTime("The appointment should have a date!");
+            throw new BusinessRuleException("The appointment should have a date!");
     }
 
     public static void hasId(Appointment appointment){
         if (appointment == null || appointment.getAppointmentId() <= 0)
-            throw new RegraNegocioRunTime("The appointment should have a id!");
+            throw new BusinessRuleException("The appointment should have a id!");
     }
 
     public static void hasId(Long id){
         if (id <= 0)
-            throw new RegraNegocioRunTime("The appointment should have a id!");
+            throw new BusinessRuleException("The appointment should have a id!");
     }
 
     public static void verifyAllRules(Appointment appointment){
@@ -104,8 +104,8 @@ public class ConsultaService {
 
     @Transactional
     public Appointment updateAppointmentType(Appointment destiny, AppointmentType newType){
-        TipoConsultaService.verifyAllRules(newType);
-        TipoConsultaService.hasId(newType);
+        AppointmentTypeService.verifyAllRules(newType);
+        AppointmentTypeService.hasId(newType);
         verifyAllRules(destiny);
         destiny.setAppointmentType(newType);
         return repo.save(destiny);

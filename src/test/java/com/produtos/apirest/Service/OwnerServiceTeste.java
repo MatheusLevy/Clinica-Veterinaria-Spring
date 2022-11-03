@@ -5,7 +5,7 @@ import com.produtos.apirest.models.Owner;
 import com.produtos.apirest.repository.AnimalRepo;
 import com.produtos.apirest.repository.AnimalTypeRepo;
 import com.produtos.apirest.repository.OwnerRepo;
-import com.produtos.apirest.service.DonoService;
+import com.produtos.apirest.service.OwnerService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +19,10 @@ import static com.produtos.apirest.Util.Util.generateCPF;
 import static com.produtos.apirest.Util.Util.generatePhone;
 
 @SpringBootTest
-public class DonoServiceTeste {
+public class OwnerServiceTeste {
 
     @Autowired
-    public DonoService donoService;
+    public OwnerService ownerService;
 
     @Autowired
     public OwnerRepo ownerRepo;
@@ -51,7 +51,7 @@ public class DonoServiceTeste {
 
     @Test
     public void deveSalvar(){
-        Owner donoSalvo = donoService.save(generateDono());
+        Owner donoSalvo = ownerService.save(generateDono());
         Assertions.assertNotNull(donoSalvo);
         rollback(donoSalvo);
     }
@@ -60,7 +60,7 @@ public class DonoServiceTeste {
     public void deveAtualizar(){
         Owner donoSalvo = ownerRepo.save(generateDono());
         donoSalvo.setName("Dono Atualizado");
-        Owner donoAtualizado = donoService.update(donoSalvo);
+        Owner donoAtualizado = ownerService.update(donoSalvo);
         Assertions.assertNotNull(donoAtualizado);
         Assertions.assertEquals(donoSalvo.getOwnerId(), donoAtualizado.getOwnerId());
         rollback(donoAtualizado);
@@ -70,14 +70,14 @@ public class DonoServiceTeste {
     public void deveRemover(){
         Owner donoSalvo = ownerRepo.save(generateDono());
         Long id = donoSalvo.getOwnerId();
-        donoService.remove(donoSalvo);
+        ownerService.remove(donoSalvo);
         Assertions.assertFalse(ownerRepo.findById(id).isPresent());
     }
 
     @Test
     public void deveRemoverComFeedback(){
         Owner donoSalvo = ownerRepo.save(generateDono());
-        Owner donoFeedback = donoService.removeByIdWithFeedback(donoSalvo.getOwnerId());
+        Owner donoFeedback = ownerService.removeByIdWithFeedback(donoSalvo.getOwnerId());
         Assertions.assertNotNull(donoFeedback);
         Assertions.assertEquals(donoFeedback.getOwnerId(), donoSalvo.getOwnerId());
     }
@@ -86,13 +86,13 @@ public class DonoServiceTeste {
     public void deveRemoverPorId(){
         Owner donoSalvo = ownerRepo.save(generateDono());
         Long id = donoSalvo.getOwnerId();
-        donoService.removeById(donoSalvo.getOwnerId());
+        ownerService.removeById(donoSalvo.getOwnerId());
         Assertions.assertFalse(ownerRepo.findById(id).isPresent());
     }
     @Test
     public void deveBuscarPorId(){
         Owner donoSalvo = ownerRepo.save(generateDono());
-        Owner donoEncontrado = donoService.findById(donoSalvo.getOwnerId());
+        Owner donoEncontrado = ownerService.findById(donoSalvo.getOwnerId());
         Assertions.assertNotNull(donoEncontrado);
         Assertions.assertEquals(donoSalvo.getOwnerId(), donoEncontrado.getOwnerId());
         rollback(donoEncontrado);
@@ -100,8 +100,8 @@ public class DonoServiceTeste {
 
     @Test
     public void deveBuscarTodos(){
-        Owner donoSalvo = donoService.save(generateDono());
-        List<Owner> donosList = donoService.findAll();
+        Owner donoSalvo = ownerService.save(generateDono());
+        List<Owner> donosList = ownerService.findAll();
         Assertions.assertNotNull(donosList);
         Assertions.assertFalse(donosList.isEmpty());
         rollback(donoSalvo);
@@ -110,7 +110,7 @@ public class DonoServiceTeste {
     @Test
     public void deveBuscarComFiltro(){
         Owner donoSalvo = ownerRepo.save(generateDono());
-        List<Owner> donosEncontradosList = donoService.find(donoSalvo);
+        List<Owner> donosEncontradosList = ownerService.find(donoSalvo);
         Assertions.assertNotNull(donosEncontradosList);
         Assertions.assertFalse(donosEncontradosList.isEmpty());
         rollback(donoSalvo);
@@ -120,7 +120,7 @@ public class DonoServiceTeste {
     public void deveBuscarTodosAnimais(){
         Animal animal = animalRepo.save(generateAnimal(animalTypeRepo, ownerRepo, true));
         Owner donoDoAnimal = animal.getOwner();
-        List<Animal> animaisList = donoService.findAllAnimalsByOwnerId(donoDoAnimal.getOwnerId());
+        List<Animal> animaisList = ownerService.findAllAnimalsByOwnerId(donoDoAnimal.getOwnerId());
         Assertions.assertNotNull(animaisList);
         Assertions.assertFalse(animaisList.isEmpty());
         rollbackAnimal(animal, animalRepo, ownerRepo, animalTypeRepo);

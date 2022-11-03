@@ -1,7 +1,7 @@
 package com.produtos.apirest.viewController;
 
 import com.produtos.apirest.models.Owner;
-import com.produtos.apirest.service.DonoService;
+import com.produtos.apirest.service.OwnerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -16,7 +16,7 @@ import java.util.List;
 public class DonoViewController {
 
     @Autowired
-    public DonoService donoService;
+    public OwnerService ownerService;
 
     @PreAuthorize("hasRole('S')")
     @GetMapping("/dono/donoCadastro")
@@ -31,9 +31,9 @@ public class DonoViewController {
     public String donoCadastroControll(Owner dono){
 
         if(Long.valueOf(dono.getOwnerId()) == null){
-            donoService.save(dono);
+            ownerService.save(dono);
         }else {
-            donoService.update(dono);
+            ownerService.update(dono);
         }
         return "redirect:/dono/donoList";
     }
@@ -41,7 +41,7 @@ public class DonoViewController {
     @PreAuthorize("hasRole('S')")
     @GetMapping("/dono/donoList")
     public ModelAndView donoList(){
-        List<Owner> donos = donoService.findAll();
+        List<Owner> donos = ownerService.findAll();
         ModelAndView mv = new ModelAndView("/dono/donoList");
         mv.addObject( "donos", donos);
         //System.out.println(mv);
@@ -51,7 +51,7 @@ public class DonoViewController {
     @PreAuthorize("hasRole('S')")
     @GetMapping("/dono/atualizar/{id}")
     public ModelAndView donoAtualizar(@PathVariable(value = "id", required = true) Long id){
-        Owner donoFind = donoService.findById(id);
+        Owner donoFind = ownerService.findById(id);
         ModelAndView mv = new ModelAndView("/dono/donoCadastro");
         mv.addObject("dono", donoFind);
         return mv;
@@ -60,8 +60,8 @@ public class DonoViewController {
     @PreAuthorize("hasRole('S')")
     @GetMapping("/dono/remover/{id}")
     public String donoRemover(@PathVariable(value = "id", required = true) Long id){
-        Owner donoFind = donoService.findById(id);
-        donoService.removeById(donoFind.getOwnerId());
+        Owner donoFind = ownerService.findById(id);
+        ownerService.removeById(donoFind.getOwnerId());
         return "redirect:/dono/donoList";
     }
 }

@@ -3,7 +3,7 @@ package com.produtos.apirest.Service;
 import com.produtos.apirest.models.User;
 import com.produtos.apirest.repository.RoleRepo;
 import com.produtos.apirest.repository.UserRepo;
-import com.produtos.apirest.service.UsuarioService;
+import com.produtos.apirest.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class UsarioServiceTeste {
     public UserRepo userRepo;
 
     @Autowired
-    public UsuarioService usuarioService;
+    public UserService userService;
 
     protected static User generateUsuario(Boolean initializeRole, RoleRepo roleRepo){
         return User.builder()
@@ -52,7 +52,7 @@ public class UsarioServiceTeste {
 
     @Test
     public void deveSalvar(){
-        User usuarioSalvo = usuarioService.save(generateUsuario(true));
+        User usuarioSalvo = userService.save(generateUsuario(true));
         Assertions.assertNotNull(usuarioSalvo);
         Assertions.assertNotNull(usuarioSalvo.getUserId());
         rollback(usuarioSalvo);
@@ -60,9 +60,9 @@ public class UsarioServiceTeste {
 
     @Test
     public void deveAtualizar(){
-        User usuarioSalvo = usuarioService.save(generateUsuario(true));
+        User usuarioSalvo = userService.save(generateUsuario(true));
         usuarioSalvo.setUsername("Novo Username");
-        User usuarioAtualizado = usuarioService.update(usuarioSalvo);
+        User usuarioAtualizado = userService.update(usuarioSalvo);
         Assertions.assertNotNull(usuarioAtualizado);
         Assertions.assertEquals(usuarioAtualizado.getUserId(), usuarioSalvo.getUserId());
         rollback(usuarioSalvo);
@@ -70,25 +70,25 @@ public class UsarioServiceTeste {
 
     @Test
     public void deveAutenticar(){
-        User usuarioSalvo = usuarioService.save(generateUsuario(true));
-        User autenticado = usuarioService.authenticate(usuarioSalvo.getUsername(), "password");
+        User usuarioSalvo = userService.save(generateUsuario(true));
+        User autenticado = userService.authenticate(usuarioSalvo.getUsername(), "password");
         Assertions.assertNotNull(autenticado.getUserId());
         rollback(usuarioSalvo);
     }
 
     @Test
     public void deveRemover(){
-        User usuarioSalvo = usuarioService.save(generateUsuario(true));
+        User usuarioSalvo = userService.save(generateUsuario(true));
         Long id = usuarioSalvo.getUserId();
-        usuarioService.remove(usuarioSalvo);
+        userService.remove(usuarioSalvo);
         Assertions.assertFalse(userRepo.findById(id).isPresent());
         rollbackRolesList(usuarioSalvo.getRoles(), roleRepo);
     }
 
     @Test
     public void deveRemoverComFeedback(){
-        User usuarioSalvo = usuarioService.save(generateUsuario(true));
-        User usuarioFeeback = usuarioService.removeByIdWithFeedback(usuarioSalvo.getUserId());
+        User usuarioSalvo = userService.save(generateUsuario(true));
+        User usuarioFeeback = userService.removeByIdWithFeedback(usuarioSalvo.getUserId());
         Assertions.assertNotNull(usuarioFeeback);
         Assertions.assertEquals(usuarioFeeback.getUserId(), usuarioSalvo.getUserId());
         rollbackRolesList(usuarioSalvo.getRoles(), roleRepo);
@@ -96,8 +96,8 @@ public class UsarioServiceTeste {
 
     @Test
     public void deveBuscarPorUsername(){
-        User usuarioSalvo = usuarioService.save(generateUsuario(true));
-        User usuarioBuscado = usuarioService.findByUsername(usuarioSalvo.getUsername());
+        User usuarioSalvo = userService.save(generateUsuario(true));
+        User usuarioBuscado = userService.findByUsername(usuarioSalvo.getUsername());
         Assertions.assertNotNull(usuarioBuscado);
         Assertions.assertEquals(usuarioBuscado.getUserId(), usuarioSalvo.getUserId());
         rollback(usuarioSalvo);
@@ -105,9 +105,9 @@ public class UsarioServiceTeste {
 
     @Test
     public void deveBuscarPorId(){
-        User usuarioSalvo = usuarioService.save(generateUsuario(true));
+        User usuarioSalvo = userService.save(generateUsuario(true));
         Long id = usuarioSalvo.getUserId();
-        User usuarioBuscado = usuarioService.findById(id);
+        User usuarioBuscado = userService.findById(id);
         Assertions.assertNotNull(usuarioBuscado);
         Assertions.assertEquals(usuarioBuscado.getUserId(), usuarioSalvo.getUserId());
         rollback(usuarioSalvo);
@@ -115,8 +115,8 @@ public class UsarioServiceTeste {
 
     @Test
     public void deveBuscarTodos(){
-        User usuarioSalvo = usuarioService.save(generateUsuario(true));
-        Assertions.assertFalse(usuarioService.findAll().isEmpty());
+        User usuarioSalvo = userService.save(generateUsuario(true));
+        Assertions.assertFalse(userService.findAll().isEmpty());
         rollback(usuarioSalvo);
     }
 }

@@ -4,7 +4,7 @@ import com.produtos.apirest.models.Animal;
 import com.produtos.apirest.models.DTO.AnimalDTO;
 import com.produtos.apirest.models.DTO.OwnerDTO;
 import com.produtos.apirest.models.Owner;
-import com.produtos.apirest.service.DonoService;
+import com.produtos.apirest.service.OwnerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,17 +23,17 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/dono")
 public class DonoController {
 
-    private final DonoService donoService;
+    private final OwnerService ownerService;
 
-    public DonoController(DonoService donoService){
-        this.donoService = donoService;
+    public DonoController(OwnerService ownerService){
+        this.ownerService = ownerService;
     }
 
     @PostMapping("/salvar")
     public ResponseEntity<?> salvar(@RequestBody OwnerDTO donodto){
         try{
             Owner dono = donodto.toOwner();
-            Owner donoSalvo = donoService.save(dono);
+            Owner donoSalvo = ownerService.save(dono);
             OwnerDTO dtoRetorno = donoSalvo.toOwnerDTO();
             return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
@@ -45,7 +45,7 @@ public class DonoController {
     public ResponseEntity<?> atualizar(@RequestBody OwnerDTO donodto){
         try{
             Owner dono = donodto.toOwner();
-            Owner donoAtualizado = donoService.update(dono);
+            Owner donoAtualizado = ownerService.update(dono);
             OwnerDTO dtoRetorno = donoAtualizado.toOwnerDTO();
             return ResponseEntity.ok(dtoRetorno);
         }catch (Exception e){
@@ -56,7 +56,7 @@ public class DonoController {
     @DeleteMapping("/remover/{id}")
     public ResponseEntity<?> remover(@PathVariable(value = "id") Long id){
         try{
-            donoService.removeById(id);
+            ownerService.removeById(id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -65,7 +65,7 @@ public class DonoController {
 
     @GetMapping("/buscarTodos")
     public ResponseEntity<?> buscarTodos(){
-        List<Owner> donos = donoService.findAll();
+        List<Owner> donos = ownerService.findAll();
         List<OwnerDTO> donosDTOS = donos
                 .stream()
                 .map(Owner::toOwnerDTO)
@@ -76,7 +76,7 @@ public class DonoController {
     @GetMapping("/buscar/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable(value = "id") Long id){
         try{
-            Owner donoBuscado = donoService.findById(id);
+            Owner donoBuscado = ownerService.findById(id);
             OwnerDTO dtoRetorno = donoBuscado.toOwnerDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
@@ -87,7 +87,7 @@ public class DonoController {
     @DeleteMapping("remover/feedback/{id}")
     public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
         try{
-            Owner removido = donoService.removeByIdWithFeedback(id);
+            Owner removido = ownerService.removeByIdWithFeedback(id);
             OwnerDTO dtoRetorno = removido.toOwnerDTO();
             return  ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
@@ -99,7 +99,7 @@ public class DonoController {
     public ResponseEntity<?> buscarUtilizandoFiltro(@RequestBody OwnerDTO dto){
         try{
             Owner filtro = dto.toOwner();
-            List<Owner> donosEncontrados = donoService.find(filtro);
+            List<Owner> donosEncontrados = ownerService.find(filtro);
             List<OwnerDTO> dtosRetorno = donosEncontrados
                     .stream()
                     .map(Owner::toOwnerDTO)
@@ -113,7 +113,7 @@ public class DonoController {
     @GetMapping("/animais/{id}")
     public ResponseEntity<?> buscarTodosAnimais(@PathVariable(value = "id") Long id){
         try{
-            List<Animal> animais  =  donoService.findAllAnimalsByOwnerId(id);
+            List<Animal> animais  =  ownerService.findAllAnimalsByOwnerId(id);
             List<AnimalDTO> dtosRetorno = animais
                     .stream()
                     .map(Animal::toAnimalDTO)

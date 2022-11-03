@@ -2,7 +2,7 @@ package com.produtos.apirest.Service;
 
 import com.produtos.apirest.models.AppointmentType;
 import com.produtos.apirest.repository.AppointmentTypeRepo;
-import com.produtos.apirest.service.TipoConsultaService;
+import com.produtos.apirest.service.AppointmentTypeService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +11,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 @SpringBootTest
-public class TipoConsultaServiceTeste {
+public class TipoAppointmentServiceTeste {
 
     @Autowired
-    public TipoConsultaService tipoConsultaService;
+    public AppointmentTypeService appointmentTypeService;
 
     @Autowired
     public AppointmentTypeRepo appointmentTypeRepo;
@@ -35,7 +35,7 @@ public class TipoConsultaServiceTeste {
 
     @Test
     public void deveSalvar(){
-        AppointmentType tipoConsultaSalva = tipoConsultaService.save(generateTipoConsulta());
+        AppointmentType tipoConsultaSalva = appointmentTypeService.save(generateTipoConsulta());
         Assertions.assertNotNull(tipoConsultaSalva);
         rollback(tipoConsultaSalva);
     }
@@ -54,21 +54,21 @@ public class TipoConsultaServiceTeste {
     public void deveRemover(){
         AppointmentType tipoConsultaSalvo = appointmentTypeRepo.save(generateTipoConsulta());
         Long id = tipoConsultaSalvo.getAppointmentTypeId();
-        tipoConsultaService.removeById(id);
+        appointmentTypeService.removeById(id);
         Assertions.assertFalse(appointmentTypeRepo.findById(id).isPresent());
     }
 
     @Test
     public void deveRemoverComFeedback(){
         AppointmentType tipoConsultaSalvo = appointmentTypeRepo.save(generateTipoConsulta());
-        AppointmentType tipoConsultaFeedback = tipoConsultaService.removeByIdWithFeedback(tipoConsultaSalvo.getAppointmentTypeId());
+        AppointmentType tipoConsultaFeedback = appointmentTypeService.removeByIdWithFeedback(tipoConsultaSalvo.getAppointmentTypeId());
         Assertions.assertNotNull(tipoConsultaFeedback);
     }
 
     @Test
     public void deveBuscarPorId(){
         AppointmentType tipoConsultaSalvo = appointmentTypeRepo.save(generateTipoConsulta());
-        AppointmentType tipoConsultaEncontrado = tipoConsultaService.findById(tipoConsultaSalvo.getAppointmentTypeId());
+        AppointmentType tipoConsultaEncontrado = appointmentTypeService.findById(tipoConsultaSalvo.getAppointmentTypeId());
         Assertions.assertNotNull(tipoConsultaEncontrado);
         Assertions.assertEquals(tipoConsultaSalvo.getAppointmentTypeId(), tipoConsultaEncontrado.getAppointmentTypeId());
         rollback(tipoConsultaSalvo);
@@ -77,14 +77,14 @@ public class TipoConsultaServiceTeste {
     @Test
     public void deveBuscarComFiltro(){
         AppointmentType tipoConsultaSalvo = appointmentTypeRepo.save(generateTipoConsulta());
-        Assertions.assertFalse(tipoConsultaService.find(tipoConsultaSalvo).isEmpty());
+        Assertions.assertFalse(appointmentTypeService.find(tipoConsultaSalvo).isEmpty());
         rollback(tipoConsultaSalvo);
     }
 
     @Test
     public void deveBuscarTodos(){
         AppointmentType tipoConsultaSalvo = appointmentTypeRepo.save(generateTipoConsulta());
-        List<AppointmentType> tiposList = tipoConsultaService.findAll();
+        List<AppointmentType> tiposList = appointmentTypeService.findAll();
         Assertions.assertNotNull(tiposList);
         Assertions.assertFalse(tiposList.isEmpty());
         rollback(tipoConsultaSalvo);

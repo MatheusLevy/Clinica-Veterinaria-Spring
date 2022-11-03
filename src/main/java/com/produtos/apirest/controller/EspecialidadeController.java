@@ -4,7 +4,7 @@ import com.produtos.apirest.models.Area;
 import com.produtos.apirest.models.DTO.ExpertiseDTO;
 import com.produtos.apirest.models.Expertise;
 import com.produtos.apirest.service.AreaService;
-import com.produtos.apirest.service.EspecialidadeService;
+import com.produtos.apirest.service.ExpertiseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,11 +23,11 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/especialidade")
 public class EspecialidadeController {
 
-    private final EspecialidadeService especialidadeService;
+    private final ExpertiseService expertiseService;
     private final AreaService areaService;
 
-    public EspecialidadeController(EspecialidadeService especialidadeService, AreaService areaService){
-        this.especialidadeService = especialidadeService;
+    public EspecialidadeController(ExpertiseService expertiseService, AreaService areaService){
+        this.expertiseService = expertiseService;
         this.areaService = areaService;
     }
 
@@ -36,7 +36,7 @@ public class EspecialidadeController {
         try {
             Area areaBuscada = areaService.findById(dto.getAreaId());
             Expertise especialidade = dto.toExpertise(areaBuscada);
-            Expertise especialidadeSalva = especialidadeService.save(especialidade);
+            Expertise especialidadeSalva = expertiseService.save(especialidade);
             ExpertiseDTO dtoRetorno = especialidadeSalva.toExpertiseDTO();
             return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
@@ -49,7 +49,7 @@ public class EspecialidadeController {
         try{
             Area areaBuscada = areaService.findById(dto.getAreaId());
             Expertise especialidade = dto.toExpertise(areaBuscada);
-            Expertise especialidadeAtualizada = especialidadeService.update(especialidade);
+            Expertise especialidadeAtualizada = expertiseService.update(especialidade);
             ExpertiseDTO dtoRetorno = especialidadeAtualizada.toExpertiseDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
@@ -60,8 +60,8 @@ public class EspecialidadeController {
     @DeleteMapping("/remover/{id}")
     public ResponseEntity<?> remover(@PathVariable(value = "id") Long id){
         try {
-            Expertise especialidadeBuscada = especialidadeService.findById(id);
-            especialidadeService.remove(especialidadeBuscada);
+            Expertise especialidadeBuscada = expertiseService.findById(id);
+            expertiseService.remove(especialidadeBuscada);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -71,7 +71,7 @@ public class EspecialidadeController {
     @DeleteMapping("/remover/feedback/{id}")
     public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
         try {
-            Expertise especialidadeRemovida = especialidadeService.removeByIdWithFeedback(id);
+            Expertise especialidadeRemovida = expertiseService.removeByIdWithFeedback(id);
             ExpertiseDTO dtoRetorno = especialidadeRemovida.toExpertiseDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
@@ -82,7 +82,7 @@ public class EspecialidadeController {
     @GetMapping("/buscar/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable(value = "id") Long id){
         try {
-            Expertise especialidadeBuscada = especialidadeService.findById(id);
+            Expertise especialidadeBuscada = expertiseService.findById(id);
             ExpertiseDTO dtoRetorno = especialidadeBuscada.toExpertiseDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
@@ -94,7 +94,7 @@ public class EspecialidadeController {
     public ResponseEntity<?> buscar(@RequestBody ExpertiseDTO dto){
         try{
             Expertise filtro = dto.toExpertise();
-            List<Expertise> especialidades = especialidadeService.find(filtro);
+            List<Expertise> especialidades = expertiseService.find(filtro);
             List<ExpertiseDTO> dtos = especialidades
                     .stream()
                     .map(Expertise::toExpertiseDTO)
@@ -108,7 +108,7 @@ public class EspecialidadeController {
     @GetMapping("/buscarTodos")
     public ResponseEntity<?> buscarTodos(){
         try{
-            List<Expertise> especialidadeList = especialidadeService.findAll();
+            List<Expertise> especialidadeList = expertiseService.findAll();
             List<ExpertiseDTO> dtos = especialidadeList
                     .stream()
                     .map(Expertise::toExpertiseDTO)

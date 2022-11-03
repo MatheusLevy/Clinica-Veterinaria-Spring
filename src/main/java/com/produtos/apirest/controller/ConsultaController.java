@@ -6,8 +6,8 @@ import com.produtos.apirest.models.AppointmentType;
 import com.produtos.apirest.models.DTO.AppointmentDTO;
 import com.produtos.apirest.models.Veterinary;
 import com.produtos.apirest.service.AnimalService;
-import com.produtos.apirest.service.ConsultaService;
-import com.produtos.apirest.service.TipoConsultaService;
+import com.produtos.apirest.service.AppointmentService;
+import com.produtos.apirest.service.AppointmentTypeService;
 import com.produtos.apirest.service.VeterinarioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,27 +27,27 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/consulta")
 public class ConsultaController {
 
-    private final ConsultaService consultaService;
+    private final AppointmentService appointmentService;
     private final VeterinarioService veterinarioService;
     private final AnimalService animalService;
-    private final TipoConsultaService tipoConsultaService;
+    private final AppointmentTypeService appointmentTypeService;
 
-    public ConsultaController(ConsultaService consultaService, VeterinarioService veterinarioService,
-                              AnimalService animalService, TipoConsultaService tipoConsultaService){
-        this.consultaService = consultaService;
+    public ConsultaController(AppointmentService appointmentService, VeterinarioService veterinarioService,
+                              AnimalService animalService, AppointmentTypeService appointmentTypeService){
+        this.appointmentService = appointmentService;
         this.veterinarioService = veterinarioService;
         this.animalService = animalService;
-        this.tipoConsultaService = tipoConsultaService;
+        this.appointmentTypeService = appointmentTypeService;
     }
 
     @PostMapping("/salvar")
     public ResponseEntity<?> salvar(@RequestBody AppointmentDTO consultadto){
         try {
-            AppointmentType tipoConsultaEncontrada = tipoConsultaService.findById(consultadto.getAppointmentTypeId());
+            AppointmentType tipoConsultaEncontrada = appointmentTypeService.findById(consultadto.getAppointmentTypeId());
             Veterinary veterinarioEncontrado = veterinarioService.findById(consultadto.getVetId());
             Animal AnimalEncontrado = animalService.findById(consultadto.getAnimalId());
             Appointment consulta = consultadto.toAppointment(AnimalEncontrado, veterinarioEncontrado, tipoConsultaEncontrada);
-            Appointment consultaSalva = consultaService.save(consulta);
+            Appointment consultaSalva = appointmentService.save(consulta);
             AppointmentDTO dtoRetorno = consultaSalva.toAppointmentDTO();
             return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
         } catch (Exception e){
@@ -58,11 +58,11 @@ public class ConsultaController {
     @PutMapping("/atualizar")
     public ResponseEntity<?> atualizar(@RequestBody AppointmentDTO consultadto){
         try {
-            AppointmentType tipoConsultaEncontrada = tipoConsultaService.findById(consultadto.getAppointmentTypeId());
+            AppointmentType tipoConsultaEncontrada = appointmentTypeService.findById(consultadto.getAppointmentTypeId());
             Veterinary veterinarioEncontrado = veterinarioService.findById(consultadto.getVetId());
             Animal AnimalEncontrado = animalService.findById(consultadto.getAnimalId());
             Appointment consulta = consultadto.toAppointment(AnimalEncontrado, veterinarioEncontrado, tipoConsultaEncontrada);
-            Appointment consultaAtualizada = consultaService.update(consulta);
+            Appointment consultaAtualizada = appointmentService.update(consulta);
             AppointmentDTO dtoRetorno = consultaAtualizada.toAppointmentDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){
@@ -73,7 +73,7 @@ public class ConsultaController {
     @GetMapping("/buscarTodos")
     public ResponseEntity<?> buscarTodos(){
         try{
-            List<Appointment> consultas = consultaService.findAll();
+            List<Appointment> consultas = appointmentService.findAll();
             List<AppointmentDTO> dtos = consultas
                     .stream()
                     .map(Appointment::toAppointmentDTO)
@@ -88,7 +88,7 @@ public class ConsultaController {
     @DeleteMapping("/remover/{id}")
     public ResponseEntity<?> removerPorId(@PathVariable(value = "id") Long id){
         try{
-            consultaService.removeById(id);
+            appointmentService.removeById(id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -98,7 +98,7 @@ public class ConsultaController {
     @DeleteMapping("/remover/feedback/{id}")
     public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
         try{
-            Appointment consultaRemovida = consultaService.removeByIdWithFeedback(id);
+            Appointment consultaRemovida = appointmentService.removeByIdWithFeedback(id);
             AppointmentDTO dtoRetorno = consultaRemovida.toAppointmentDTO();
             return ResponseEntity.ok(dtoRetorno);
         } catch (Exception e){

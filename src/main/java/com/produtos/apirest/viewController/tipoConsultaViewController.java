@@ -1,7 +1,7 @@
 package com.produtos.apirest.viewController;
 
 import com.produtos.apirest.models.AppointmentType;
-import com.produtos.apirest.service.TipoConsultaService;
+import com.produtos.apirest.service.AppointmentTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -16,7 +16,7 @@ import java.util.List;
 public class tipoConsultaViewController {
 
     @Autowired
-    private TipoConsultaService tipoService;
+    private AppointmentTypeService tipoService;
 
     @PreAuthorize("hasRole('A')")
     @GetMapping("/tipoConsulta/cadastro")

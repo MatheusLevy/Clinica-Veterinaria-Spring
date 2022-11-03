@@ -3,7 +3,7 @@ package com.produtos.apirest.viewController;
 import com.produtos.apirest.models.DTO.VeterinaryDTO;
 import com.produtos.apirest.models.Expertise;
 import com.produtos.apirest.models.Veterinary;
-import com.produtos.apirest.service.EspecialidadeService;
+import com.produtos.apirest.service.ExpertiseService;
 import com.produtos.apirest.service.VeterinarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,13 +22,13 @@ public class VeterinarioViewController {
     public VeterinarioService veterinarioService;
 
     @Autowired
-    public EspecialidadeService especialidadeService;
+    public ExpertiseService expertiseService;
 
     @PreAuthorize("hasRole('S')")
     @GetMapping("/veterinario/cadastro")
     public ModelAndView veterinarioCadastroPage(){
         VeterinaryDTO dto = new VeterinaryDTO();
-        dto.setExpertises(especialidadeService.findAll());
+        dto.setExpertises(expertiseService.findAll());
         ModelAndView mv = new ModelAndView("veterinario/veterinarioCadastro");
         mv.addObject("veterinarioDTO", dto);
         return mv;
@@ -70,7 +70,7 @@ public class VeterinarioViewController {
         Veterinary veterinarioBuscado = veterinarioService.findById(id);
 
         //Especialidades
-        List<Expertise> especialidades = especialidadeService.findAll();
+        List<Expertise> especialidades = expertiseService.findAll();
 
         //DTO
         VeterinaryDTO veterinarioDTO = VeterinaryDTO.builder()

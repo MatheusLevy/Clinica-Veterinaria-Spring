@@ -6,8 +6,8 @@ import com.produtos.apirest.models.Animal;
 import com.produtos.apirest.models.DTO.AnimalDTO;
 import com.produtos.apirest.models.Owner;
 import com.produtos.apirest.service.AnimalService;
-import com.produtos.apirest.service.DonoService;
-import com.produtos.apirest.service.TipoAnimalService;
+import com.produtos.apirest.service.OwnerService;
+import com.produtos.apirest.service.AnimalTypeService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,10 +45,10 @@ public class AnimalControllerTeste {
     public MockMvc mvc;
 
     @MockBean
-    private DonoService donoService;
+    private OwnerService ownerService;
 
     @MockBean
-    private TipoAnimalService tipoAnimalService;
+    private AnimalTypeService animalTypeService;
 
     public static List<Animal> generateAnimalList(){
         return new ArrayList<>(){{
@@ -80,8 +80,8 @@ public class AnimalControllerTeste {
     @WithUserDetails("Admin")
     public void deveSalvar() throws Exception{
         Mockito.when(animalService.save(Mockito.any(Animal.class))).thenReturn(generateAnimalInstance());
-        Mockito.when(donoService.findById(Mockito.anyLong())).thenReturn(generateOwner());
-        Mockito.when(tipoAnimalService.findById(Mockito.anyLong())).thenReturn(generateTipoAnimalInstance());
+        Mockito.when(ownerService.findById(Mockito.anyLong())).thenReturn(generateOwner());
+        Mockito.when(animalTypeService.findById(Mockito.anyLong())).thenReturn(generateTipoAnimalInstance());
         String json = new ObjectMapper().writeValueAsString(generateAnimalDTOInstance());
         MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.POST, API.concat("/salvar"), json);
         mvc.perform(request)
@@ -101,7 +101,7 @@ public class AnimalControllerTeste {
     @Test
     @WithUserDetails("Admin")
     public void deveAtualizarDono() throws Exception{
-        Mockito.when(donoService.findById(Mockito.anyLong())).thenReturn(generateOwner());
+        Mockito.when(ownerService.findById(Mockito.anyLong())).thenReturn(generateOwner());
         Mockito.when(animalService.findById(Mockito.anyLong())).thenReturn(generateAnimalInstance());
         Mockito.when(animalService.updateOwner(Mockito.any(Animal.class), Mockito.any(Owner.class))).thenReturn(generateAnimalInstance());
         String json = toJson(generateAnimalDTOInstance());

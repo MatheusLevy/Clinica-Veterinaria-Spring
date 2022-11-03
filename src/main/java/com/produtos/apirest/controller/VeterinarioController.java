@@ -3,7 +3,7 @@ package com.produtos.apirest.controller;
 import com.produtos.apirest.models.DTO.VeterinaryDTO;
 import com.produtos.apirest.models.Expertise;
 import com.produtos.apirest.models.Veterinary;
-import com.produtos.apirest.service.EspecialidadeService;
+import com.produtos.apirest.service.ExpertiseService;
 import com.produtos.apirest.service.VeterinarioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,17 +25,17 @@ public class VeterinarioController {
 
     private final VeterinarioService veterinarioService;
 
-    private final EspecialidadeService especialidadeService;
+    private final ExpertiseService expertiseService;
 
-    public VeterinarioController(VeterinarioService veterinarioService, EspecialidadeService especialidadeService) {
+    public VeterinarioController(VeterinarioService veterinarioService, ExpertiseService expertiseService) {
         this.veterinarioService = veterinarioService;
-        this.especialidadeService = especialidadeService;
+        this.expertiseService = expertiseService;
     }
 
     @PostMapping("/salvar")
     public ResponseEntity<?> salvar(@RequestBody VeterinaryDTO dto){
         try{
-            Expertise especialidadeEncontrada = especialidadeService.findById(dto.getExpertiseId());
+            Expertise especialidadeEncontrada = expertiseService.findById(dto.getExpertiseId());
             Veterinary veterinario = dto.toVeterinary(especialidadeEncontrada);
             Veterinary veterinarioSalvo = veterinarioService.save(veterinario);
             VeterinaryDTO dtoRetorno = veterinarioSalvo.toVeterinaryDTO();
@@ -48,7 +48,7 @@ public class VeterinarioController {
     @PutMapping("/atualizar")
     public ResponseEntity<?> atualizar(@RequestBody VeterinaryDTO dto){
         try{
-            Expertise especialidadeEncontrada = especialidadeService.findById(dto.getExpertiseId());
+            Expertise especialidadeEncontrada = expertiseService.findById(dto.getExpertiseId());
             Veterinary veterinario = dto.toVeterinary(especialidadeEncontrada);
             Veterinary veterinarioAtualizado = veterinarioService.update(veterinario);
             VeterinaryDTO retornoDTO = veterinarioAtualizado.toVeterinaryDTO();

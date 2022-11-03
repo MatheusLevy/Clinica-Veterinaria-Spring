@@ -2,7 +2,7 @@ package com.produtos.apirest.service;
 
 import com.produtos.apirest.models.AppointmentType;
 import com.produtos.apirest.repository.AppointmentTypeRepo;
-import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
+import com.produtos.apirest.service.excecoes.BusinessRuleException;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
@@ -11,11 +11,11 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
-public class TipoConsultaService {
+public class AppointmentTypeService {
 
     private final AppointmentTypeRepo repo;
 
-    public TipoConsultaService(AppointmentTypeRepo appointmentTypeRepo){
+    public AppointmentTypeService(AppointmentTypeRepo appointmentTypeRepo){
         this.repo = appointmentTypeRepo;
     }
 
@@ -26,17 +26,17 @@ public class TipoConsultaService {
 
     public static void hasName(AppointmentType appointmentType){
         if (appointmentType.getName().equals(""))
-            throw new RegraNegocioRunTime("Tipo de Consulta deve ter um nome!");
+            throw new BusinessRuleException("Tipo de Consulta deve ter um nome!");
     }
 
     public static void hasId(AppointmentType appointmentType){
         if(appointmentType.getAppointmentTypeId() <= 0)
-            throw new RegraNegocioRunTime("The appointment type should have a id!");
+            throw new BusinessRuleException("The appointment type should have a id!");
     }
 
     public static void hasId(Long id){
         if(id <= 0)
-            throw new RegraNegocioRunTime("The appointment type should have a id!");
+            throw new BusinessRuleException("The appointment type should have a id!");
     }
 
     public static void verifyAllRules(AppointmentType appointmentType){

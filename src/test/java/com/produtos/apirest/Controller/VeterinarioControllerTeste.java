@@ -3,7 +3,7 @@ package com.produtos.apirest.Controller;
 import com.produtos.apirest.Util.Util;
 import com.produtos.apirest.models.DTO.VeterinaryDTO;
 import com.produtos.apirest.models.Veterinary;
-import com.produtos.apirest.service.EspecialidadeService;
+import com.produtos.apirest.service.ExpertiseService;
 import com.produtos.apirest.service.VeterinarioService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -36,7 +36,7 @@ public class VeterinarioControllerTeste {
     private VeterinarioService veterinarioService;
 
     @MockBean
-    private EspecialidadeService especialidadeService;
+    private ExpertiseService expertiseService;
 
     @Autowired
     MockMvc mvc;
@@ -70,7 +70,7 @@ public class VeterinarioControllerTeste {
     @WithUserDetails("Admin")
     @Test
     public void deveSalvar() throws Exception{
-        Mockito.when(especialidadeService.findById(Mockito.anyLong())).thenReturn(generateEspecialidadeInstance());
+        Mockito.when(expertiseService.findById(Mockito.anyLong())).thenReturn(generateEspecialidadeInstance());
         Mockito.when(veterinarioService.save(Mockito.any(Veterinary.class))).thenReturn(generateVeterinarioInstance());
         String json = toJson(generateVeterinarioDTOInstance());
         MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.POST, API.concat("/salvar"), json);

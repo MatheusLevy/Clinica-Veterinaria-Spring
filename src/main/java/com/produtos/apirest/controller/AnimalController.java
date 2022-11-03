@@ -6,8 +6,8 @@ import com.produtos.apirest.models.DTO.AnimalDTO;
 import com.produtos.apirest.models.DTO.OwnerDTO;
 import com.produtos.apirest.models.Owner;
 import com.produtos.apirest.service.AnimalService;
-import com.produtos.apirest.service.DonoService;
-import com.produtos.apirest.service.TipoAnimalService;
+import com.produtos.apirest.service.OwnerService;
+import com.produtos.apirest.service.AnimalTypeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,20 +24,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class AnimalController {
 
     private final AnimalService animalService;
-    private final DonoService donoService;
-    private final TipoAnimalService tipoAnimalService;
+    private final OwnerService ownerService;
+    private final AnimalTypeService animalTypeService;
 
-    public AnimalController(AnimalService animalService, DonoService donoService, TipoAnimalService tipoAnimalService){
+    public AnimalController(AnimalService animalService, OwnerService ownerService, AnimalTypeService animalTypeService){
         this.animalService = animalService;
-        this.donoService = donoService;
-        this.tipoAnimalService = tipoAnimalService;
+        this.ownerService = ownerService;
+        this.animalTypeService = animalTypeService;
     }
 
     @PostMapping("/salvar")
     public ResponseEntity<?> salvar(@RequestBody AnimalDTO animaldto){
         try{
-            Owner donoEncontrado = donoService.findById(animaldto.getOwnerId());
-            AnimalType tipoEncontrado = tipoAnimalService.findById(animaldto.getAnimalTypeId());
+            Owner donoEncontrado = ownerService.findById(animaldto.getOwnerId());
+            AnimalType tipoEncontrado = animalTypeService.findById(animaldto.getAnimalTypeId());
             Animal animal = animaldto.toAnimal(donoEncontrado, tipoEncontrado);
             Animal animalSalvo = animalService.save(animal);
             AnimalDTO dtoRetorno = animalSalvo.toAnimalDTO();
@@ -82,8 +82,8 @@ public class AnimalController {
     @PutMapping("/atualizar")
     public ResponseEntity<?> atualizar(@RequestBody  AnimalDTO animalDTO){
         try{
-            Owner donoEncontrado = donoService.findById(animalDTO.getOwnerId());
-            AnimalType tipoEncontrado = tipoAnimalService.findById(animalDTO.getAnimalTypeId());
+            Owner donoEncontrado = ownerService.findById(animalDTO.getOwnerId());
+            AnimalType tipoEncontrado = animalTypeService.findById(animalDTO.getAnimalTypeId());
             Animal animal = animalDTO.toAnimal(donoEncontrado, tipoEncontrado);
             Animal atualizado = animalService.update(animal);
             AnimalDTO dtoRetorno = atualizado.toAnimalDTO();
@@ -107,7 +107,7 @@ public class AnimalController {
     @PutMapping("/atualizar/dono")
     public ResponseEntity<?> atualizarDono(@RequestBody AnimalDTO animalDTO){
         try {
-            Owner donoBuscado = donoService.findById(animalDTO.getOwnerId());
+            Owner donoBuscado = ownerService.findById(animalDTO.getOwnerId());
             Animal animalBuscado = animalService.findById(animalDTO.getId());
             Animal animaAtualizado = animalService.updateOwner(animalBuscado, donoBuscado);
             AnimalDTO dtoRetorno = animaAtualizado.toAnimalDTO();

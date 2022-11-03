@@ -3,7 +3,7 @@ package com.produtos.apirest.service;
 import com.produtos.apirest.models.User;
 import com.produtos.apirest.repository.UserRepo;
 import com.produtos.apirest.service.excecoes.AuthenticationFailedExpection;
-import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
+import com.produtos.apirest.service.excecoes.BusinessRuleException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -11,11 +11,11 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
-public class UsuarioService {
+public class UserService {
 
     private final UserRepo userRepo;
 
-    public UsuarioService(UserRepo userRepo){
+    public UserService(UserRepo userRepo){
         this.userRepo = userRepo;
     }
 
@@ -30,28 +30,28 @@ public class UsuarioService {
 
     public static void hasUsername(User user){
         if (user.getUsername().equals(""))
-            throw  new RegraNegocioRunTime("The user should have a username!");
+            throw  new BusinessRuleException("The user should have a username!");
     }
 
     public static void hasPassword(User user){
         if (user.getPassword().equals(""))
-            throw new RegraNegocioRunTime("The user should have a password!");
+            throw new BusinessRuleException("The user should have a password!");
     }
 
     public static void hasRoles(User user){
         if (user.getRoles().isEmpty())
-            throw new RegraNegocioRunTime("The user should have roles!");
+            throw new BusinessRuleException("The user should have roles!");
     }
 
     public static void hasId(User user){
         if (user.getUserId() <= 0){
-            throw new RegraNegocioRunTime("The user should have a id!");
+            throw new BusinessRuleException("The user should have a id!");
         }
     }
 
     public static void hasId(Long id){
         if (id <= 0){
-            throw new RegraNegocioRunTime("The user should have a id!");
+            throw new BusinessRuleException("The user should have a id!");
         }
     }
 

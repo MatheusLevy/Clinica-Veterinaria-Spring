@@ -13,8 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-import static com.produtos.apirest.Service.DonoServiceTeste.generateDono;
-import static com.produtos.apirest.Service.TipoAnimalServiceTeste.generateTipoAnimal;
+import static com.produtos.apirest.Service.OwnerServiceTeste.generateDono;
+import static com.produtos.apirest.Service.AnimalTypeServiceTeste.generateTipoAnimal;
 
 @SpringBootTest
 public class AnimalServiceTeste {

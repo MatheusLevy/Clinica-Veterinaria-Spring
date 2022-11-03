@@ -3,8 +3,8 @@ package com.produtos.apirest.viewController;
 import com.produtos.apirest.models.*;
 import com.produtos.apirest.models.DTO.AppointmentDTO;
 import com.produtos.apirest.service.AnimalService;
-import com.produtos.apirest.service.ConsultaService;
-import com.produtos.apirest.service.TipoConsultaService;
+import com.produtos.apirest.service.AppointmentService;
+import com.produtos.apirest.service.AppointmentTypeService;
 import com.produtos.apirest.service.VeterinarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,10 +20,10 @@ import java.util.List;
 public class ConsultaViewController {
 
     @Autowired
-    public ConsultaService  consultaService;
+    public AppointmentService appointmentService;
 
     @Autowired
-    public TipoConsultaService tipo_consultaService;
+    public AppointmentTypeService tipo_consultaService;
 
     @Autowired
     public AnimalService animalService;
@@ -56,10 +56,10 @@ public class ConsultaViewController {
                 .build();
 
         if(dto.getId() == null){
-            consultaService.save(consulta);
+            appointmentService.save(consulta);
         }else{
             consulta.setAppointmentId(dto.getId());
-            consultaService.update(consulta);
+            appointmentService.update(consulta);
         }
         return "redirect:/consulta/consultaList";
     }
@@ -67,7 +67,7 @@ public class ConsultaViewController {
     @PreAuthorize("hasRole('S')")
     @GetMapping("/consulta/consultaList")
     public ModelAndView consultaList(){
-        List<Appointment> consultas = consultaService.findAll();
+        List<Appointment> consultas = appointmentService.findAll();
         ModelAndView mv = new ModelAndView("/consulta/consultaList");
         mv.addObject("consultas", consultas);
         //System.out.println(mv);
@@ -78,7 +78,7 @@ public class ConsultaViewController {
     @GetMapping("/consulta/atualizar/{id}")
     public ModelAndView consultaAtualizar(@PathVariable(value = "id") Long id){
         Appointment consulta = Appointment.builder().appointmentId(id).build();
-        Appointment consultaFind = consultaService.findById(consulta.getAppointmentId());
+        Appointment consultaFind = appointmentService.findById(consulta.getAppointmentId());
 
         //Lista Veterinarios
         List<Veterinary> veterinarios = veterinarioService.findAll();
@@ -110,8 +110,8 @@ public class ConsultaViewController {
     @GetMapping("/consulta/remover/{id}")
     public String consultaRemover(@PathVariable(value = "id", required = true) Long id){
         Appointment consulta = Appointment.builder().appointmentId(id).build();
-        Appointment consultaFind = consultaService.findById(consulta.getAppointmentId());
-        consultaService.remove(consultaFind);
+        Appointment consultaFind = appointmentService.findById(consulta.getAppointmentId());
+        appointmentService.remove(consultaFind);
         return "redirect:/consulta/consultaList";
     }
 }

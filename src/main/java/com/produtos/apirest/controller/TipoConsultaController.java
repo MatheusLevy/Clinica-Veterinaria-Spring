@@ -2,7 +2,7 @@ package com.produtos.apirest.controller;
 
 import com.produtos.apirest.models.AppointmentType;
 import com.produtos.apirest.models.DTO.AppointmentTypeDTO;
-import com.produtos.apirest.service.TipoConsultaService;
+import com.produtos.apirest.service.AppointmentTypeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/tipoConsulta")
 public class TipoConsultaController {
 
-    private final TipoConsultaService tipoService;
+    private final AppointmentTypeService tipoService;
 
-    public TipoConsultaController(TipoConsultaService tipoService) {
+    public TipoConsultaController(AppointmentTypeService tipoService) {
         this.tipoService = tipoService;
     }
 

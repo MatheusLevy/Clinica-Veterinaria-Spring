@@ -3,7 +3,7 @@ package com.produtos.apirest.service;
 import com.produtos.apirest.models.Animal;
 import com.produtos.apirest.models.Owner;
 import com.produtos.apirest.repository.OwnerRepo;
-import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
+import com.produtos.apirest.service.excecoes.BusinessRuleException;
 import org.hibernate.Hibernate;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -13,11 +13,11 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
-public class DonoService {
+public class OwnerService {
 
     private final OwnerRepo repo;
 
-    public DonoService(OwnerRepo ownerRepo){
+    public OwnerService(OwnerRepo ownerRepo){
         this.repo = ownerRepo;
     }
 
@@ -28,22 +28,22 @@ public class DonoService {
 
     public static void hasId(Owner owner){
         if (owner == null || owner.getOwnerId() <= 0)
-            throw new RegraNegocioRunTime("The owner should have a id!");
+            throw new BusinessRuleException("The owner should have a id!");
     }
 
     public static void hasId(Long id){
         if (id <= 0)
-            throw new RegraNegocioRunTime("The owner should have a id!");
+            throw new BusinessRuleException("The owner should have a id!");
     }
 
     public static void hasName(Owner owner){
         if (owner.getName().equals(""))
-            throw new RegraNegocioRunTime("The owner should have a name!");
+            throw new BusinessRuleException("The owner should have a name!");
     }
 
     public static void hasCPF(Owner owner){
         if (owner.getCpf().equals(""))
-            throw new RegraNegocioRunTime("The owner should have a CPF!");
+            throw new BusinessRuleException("The owner should have a CPF!");
     }
 
     public static void verifyAllRules(Owner owner){

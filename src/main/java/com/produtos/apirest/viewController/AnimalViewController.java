@@ -5,8 +5,8 @@ import com.produtos.apirest.models.AnimalType;
 import com.produtos.apirest.models.DTO.AnimalDTO;
 import com.produtos.apirest.models.Owner;
 import com.produtos.apirest.service.AnimalService;
-import com.produtos.apirest.service.DonoService;
-import com.produtos.apirest.service.TipoAnimalService;
+import com.produtos.apirest.service.OwnerService;
+import com.produtos.apirest.service.AnimalTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -24,18 +24,18 @@ public class AnimalViewController {
     public AnimalService animalService;
 
     @Autowired
-    public DonoService donoService;
+    public OwnerService ownerService;
 
     @Autowired
-    public TipoAnimalService tipoAnimalService;
+    public AnimalTypeService animalTypeService;
 
     @PreAuthorize("hasRole('S')")
     @GetMapping("/animal/cadastro")
     public ModelAndView animalCadastroControl(){
         ModelAndView mv = new ModelAndView("/animal/animalCadastro");
         AnimalDTO dto = new AnimalDTO();
-        dto.setOwners(donoService.findAll());
-        dto.setTypes(tipoAnimalService.findAll());
+        dto.setOwners(ownerService.findAll());
+        dto.setTypes(animalTypeService.findAll());
         mv.addObject("animaldto", dto);
         return mv;
     }
@@ -72,10 +72,10 @@ public class AnimalViewController {
         Animal animalFind = animalService.findById(id);
 
         //Tipo Animal List
-        List<AnimalType> tipoAnimal = tipoAnimalService.findAll();
+        List<AnimalType> tipoAnimal = animalTypeService.findAll();
 
         //Dono List
-        List<Owner> donos = donoService.findAll();
+        List<Owner> donos = ownerService.findAll();
 
         //AnimalDTO
         AnimalDTO dto = AnimalDTO.builder().id(animalFind.getAnimalId()).

@@ -3,7 +3,7 @@ package com.produtos.apirest.service;
 import com.produtos.apirest.models.Animal;
 import com.produtos.apirest.models.Owner;
 import com.produtos.apirest.repository.AnimalRepo;
-import com.produtos.apirest.service.excecoes.RegraNegocioRunTime;
+import com.produtos.apirest.service.excecoes.BusinessRuleException;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
@@ -38,17 +38,17 @@ public class AnimalService {
 
     public static void hasName(Animal animal){
         if(animal.getName().equals(""))
-                throw new RegraNegocioRunTime("The animal should have a name!");
+                throw new BusinessRuleException("The animal should have a name!");
     }
 
     public static void hasId(Animal animal){
         if (animal.getAnimalId() <= 0)
-            throw new RegraNegocioRunTime("The animal should have a id!");
+            throw new BusinessRuleException("The animal should have a id!");
     }
 
     public static void hasId(Long id){
         if (id <= 0)
-            throw new RegraNegocioRunTime("The animal should have a id!");
+            throw new BusinessRuleException("The animal should have a id!");
     }
 
     public static Example<Animal> generateExample(Animal animal){
@@ -71,8 +71,8 @@ public class AnimalService {
 
     @Transactional
     public Animal updateOwner(Animal source, Owner newOwner){
-        DonoService.verifyAllRules(newOwner);
-        DonoService.hasId(newOwner);
+        OwnerService.verifyAllRules(newOwner);
+        OwnerService.hasId(newOwner);
         verifyAllRules(source);
         source.setOwner(newOwner);
         return repo.save(source);
