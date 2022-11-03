@@ -21,32 +21,32 @@ public class AnimalService {
     }
 
     public static void verifyAllRules(Animal animal){
-        verifyIsNull(animal);
-        verifyHasName(animal);
-        verifyHasId(animal);
+        isNotNull(animal);
+        hasName(animal);
+        hasId(animal);
     }
 
-    public static void verifyIsNull(Animal animal){
+    public static void isNotNull(Animal animal){
         if (animal == null)
             throw new NullPointerException("The animal must not be null!");
     }
 
-    public static void verifyIsNullAndHasName(Animal animal){
-        verifyIsNull(animal);
-        verifyHasName(animal);
+    public static void isNotNullHasName(Animal animal){
+        isNotNull(animal);
+        hasName(animal);
     }
 
-    public static void verifyHasName(Animal animal){
+    public static void hasName(Animal animal){
         if(animal.getName().equals(""))
                 throw new RegraNegocioRunTime("The animal should have a name!");
     }
 
-    public static void verifyHasId(Animal animal){
+    public static void hasId(Animal animal){
         if (animal.getAnimalId() <= 0)
             throw new RegraNegocioRunTime("The animal should have a id!");
     }
 
-    public static void verifyHasId(Long id){
+    public static void hasId(Long id){
         if (id <= 0)
             throw new RegraNegocioRunTime("The animal should have a id!");
     }
@@ -59,7 +59,7 @@ public class AnimalService {
 
     @Transactional
     public Animal save(Animal animal){
-        verifyIsNullAndHasName(animal);
+        isNotNullHasName(animal);
         return repo.save(animal);
     }
 
@@ -72,7 +72,7 @@ public class AnimalService {
     @Transactional
     public Animal updateOwner(Animal source, Owner newOwner){
         DonoService.verifyAllRules(newOwner);
-        DonoService.verifyHasId(newOwner);
+        DonoService.hasId(newOwner);
         verifyAllRules(source);
         source.setOwner(newOwner);
         return repo.save(source);
@@ -86,13 +86,13 @@ public class AnimalService {
 
     @Transactional
     public void removeById(Long id){
-        verifyHasId(id);
+        hasId(id);
         repo.deleteById(id);
     }
 
     @Transactional
     public Animal removeByIdWithFeedback(Long id){
-        verifyHasId(id);
+        hasId(id);
         Animal feedback = repo.findByAnimalId(id);
         repo.delete(feedback);
         return feedback;
@@ -100,13 +100,13 @@ public class AnimalService {
 
     @Transactional
     public Animal findById(Long id){
-        verifyHasId(id);
+        hasId(id);
         return repo.findByAnimalId(id);
     }
 
     @Transactional
     public List<Animal> find(Animal animal){
-        verifyIsNull(animal);
+        isNotNull(animal);
         Example<Animal> example = generateExample(animal);
         return repo.findAll(example);
     }
@@ -118,7 +118,7 @@ public class AnimalService {
 
     @Transactional
     public Owner findOwnerByAnimalId(Long animalId){
-        verifyHasId(animalId);
+        hasId(animalId);
         Animal animalFind = repo.findByAnimalId(animalId);
         return animalFind.getOwner();
     }

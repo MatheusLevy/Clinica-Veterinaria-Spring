@@ -20,45 +20,45 @@ public class EspecialidadeService {
         this.repo = expertiseRepo;
     }
 
-    public static void verifyIsNull(Expertise expertise){
+    public static void isNotNull(Expertise expertise){
         if (expertise == null)
             throw new NullPointerException("Expertise must not be null!");
     }
 
-    public static void verifyHasId(Expertise expertise){
+    public static void hasId(Expertise expertise){
         if (expertise.getExpertiseId() <= 0)
             throw new RegraNegocioRunTime("The expertise should have a id!");
     }
 
-    public static void verifyHasId(Long id){
+    public static void hasId(Long id){
         if (id <= 0)
             throw new RegraNegocioRunTime("The expertise should have a id!");
     }
 
-    public static void verifyHasName(Expertise expertise){
+    public static void hasName(Expertise expertise){
         if (expertise.getName().equals(""))
             throw new RegraNegocioRunTime("The expertise should have a name!");
     }
 
-    public static void verifyHasArea(Expertise expertise){
+    public static void hasArea(Expertise expertise){
         if (expertise.getArea() == null)
             throw new RegraNegocioRunTime("The expertise should have a name!");
     }
 
     public static void verifyAllRules(Expertise expertise){
-        verifyIsNull(expertise);
-        verifyHasId(expertise);
-        verifyHasName(expertise);
-        verifyHasArea(expertise);
+        isNotNull(expertise);
+        hasId(expertise);
+        hasName(expertise);
+        hasArea(expertise);
     }
 
-    public static void verifyIsNullHasNameHasArea(Expertise expertise){
-        verifyIsNull(expertise);
-        verifyHasName(expertise);
-        verifyHasArea(expertise);
+    public static void IsNotNullHasNameHasArea(Expertise expertise){
+        isNotNull(expertise);
+        hasName(expertise);
+        hasArea(expertise);
     }
 
-    public static Example<Expertise> generateFilter(Expertise expertise){
+    public static Example<Expertise> generateExample(Expertise expertise){
         return Example.of(expertise, ExampleMatcher.matching()
                 .withIgnoreCase()
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
@@ -66,7 +66,7 @@ public class EspecialidadeService {
 
     @Transactional
     public Expertise save(Expertise expertise){
-        verifyIsNullHasNameHasArea(expertise);
+        IsNotNullHasNameHasArea(expertise);
         return repo.save(expertise);
     }
 
@@ -92,7 +92,7 @@ public class EspecialidadeService {
 
     @Transactional
     public Expertise removeByIdWithFeedback(Long id){
-        verifyHasId(id);
+        hasId(id);
         Expertise feedback = repo.findByExpertiseId(id);
         repo.delete(feedback);
         return feedback;
@@ -100,20 +100,20 @@ public class EspecialidadeService {
 
     @Transactional
     public void removeById(Long id){
-        verifyHasId(id);
+        hasId(id);
         repo.deleteById(id);
     }
 
     @Transactional
     public Expertise findById(Long id){
-        verifyHasId(id);
+        hasId(id);
         return repo.findByExpertiseId(id);
     }
 
     @Transactional
     public List<Expertise> find(Expertise expertise){
-        verifyIsNull(expertise);
-        Example<Expertise> example = generateFilter(expertise);
+        isNotNull(expertise);
+        Example<Expertise> example = generateExample(expertise);
         return repo.findAll(example);
     }
 

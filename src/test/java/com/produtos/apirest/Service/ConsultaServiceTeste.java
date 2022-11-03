@@ -162,7 +162,7 @@ public class ConsultaServiceTeste {
         Appointment consultaSalva = consultaRepo.save(generateConsulta(true));
         Veterinary veterinarioAntigo = consultaSalva.getVeterinary();
         Veterinary veterinarioNovo = veterinaryRepo.save(generateVeterinario(true, areaRepo, expertiseRepo));
-        Appointment consultaAtualizada = consultaService.updateAppointment(consultaSalva, veterinarioNovo);
+        Appointment consultaAtualizada = consultaService.updateVeterinary(consultaSalva, veterinarioNovo);
         Assertions.assertNotNull(consultaAtualizada);
         Assertions.assertEquals(consultaAtualizada.getVeterinary().getVeterinaryId(), veterinarioNovo.getVeterinaryId());
         rollback(consultaAtualizada, false);

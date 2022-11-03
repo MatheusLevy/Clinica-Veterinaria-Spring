@@ -21,45 +21,45 @@ public class DonoService {
         this.repo = ownerRepo;
     }
 
-    public static void verifyIsNull(Owner owner){
+    public static void isNotNull(Owner owner){
         if (owner == null)
             throw new NullPointerException("Owner must not be null!");
     }
 
-    public static void verifyHasId(Owner owner){
+    public static void hasId(Owner owner){
         if (owner == null || owner.getOwnerId() <= 0)
             throw new RegraNegocioRunTime("The owner should have a id!");
     }
 
-    public static void verifyHasId(Long id){
+    public static void hasId(Long id){
         if (id <= 0)
             throw new RegraNegocioRunTime("The owner should have a id!");
     }
 
-    public static void verifyHasName(Owner owner){
+    public static void hasName(Owner owner){
         if (owner.getName().equals(""))
             throw new RegraNegocioRunTime("The owner should have a name!");
     }
 
-    public static void verifyHasCPF(Owner owner){
+    public static void hasCPF(Owner owner){
         if (owner.getCpf().equals(""))
             throw new RegraNegocioRunTime("The owner should have a CPF!");
     }
 
     public static void verifyAllRules(Owner owner){
-        verifyIsNull(owner);
-        verifyHasId(owner);
-        verifyHasCPF(owner);
-        verifyHasName(owner);
+        isNotNull(owner);
+        hasId(owner);
+        hasCPF(owner);
+        hasName(owner);
     }
 
-    public static void verifyIsNullHasCPFHasName(Owner owner){
-        verifyIsNull(owner);
-        verifyHasCPF(owner);
-        verifyHasName(owner);
+    public static void IsNotNullHasCPFHasName(Owner owner){
+        isNotNull(owner);
+        hasCPF(owner);
+        hasName(owner);
     }
 
-    public static Example<Owner> generateFilter(Owner owner){
+    public static Example<Owner> generateExample(Owner owner){
         return Example.of(owner, ExampleMatcher.matching()
                 .withIgnoreCase()
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
@@ -67,7 +67,7 @@ public class DonoService {
 
     @Transactional
     public Owner save(Owner owner){
-        verifyIsNullHasCPFHasName(owner);
+        IsNotNullHasCPFHasName(owner);
         return repo.save(owner);
     }
 
@@ -85,13 +85,13 @@ public class DonoService {
 
     @Transactional
     public void removeById(Long id){
-        verifyHasId(id);
+        hasId(id);
         repo.deleteById(id);
     }
 
     @Transactional
     public Owner removeByIdWithFeedback(Long id){
-        verifyHasId(id);
+        hasId(id);
         Owner feedback = repo.findByOwnerId(id);
         repo.delete(feedback);
         return feedback;
@@ -99,14 +99,14 @@ public class DonoService {
 
     @Transactional
     public Owner findById(Long id){
-        verifyHasId(id);
+        hasId(id);
         return repo.findByOwnerId(id);
     }
 
     @Transactional
     public List<Owner> find(Owner owner){
-        verifyIsNull(owner);
-        Example<Owner> example = generateFilter(owner);
+        isNotNull(owner);
+        Example<Owner> example = generateExample(owner);
         return repo.findAll(example);
     }
 
@@ -117,7 +117,7 @@ public class DonoService {
 
     @Transactional
     public List<Animal> findAllAnimalsByOwnerId(Long ownerId){
-        verifyHasId(ownerId);
+        hasId(ownerId);
         Owner ownerFind = repo.findByOwnerId(ownerId);
         Hibernate.initialize(ownerFind.getAnimals());
         return ownerFind.getAnimals();

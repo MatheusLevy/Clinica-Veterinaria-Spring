@@ -20,52 +20,52 @@ public class VeterinarioService {
         this.repo = veterinaryRepo;
     }
 
-    public static void verifyIsNull(Veterinary veterinary){
+    public static void isNotNull(Veterinary veterinary){
         if (veterinary == null)
             throw new NullPointerException("Veterinary must not be null!");
     }
 
-    public static void verifyHasName(Veterinary veterinary){
+    public static void hasName(Veterinary veterinary){
         if(veterinary.getName().equals(""))
             throw new RegraNegocioRunTime("The veterinary should have a name!");
     }
 
-    public static void verifyHasCPF(Veterinary veterinary){
+    public static void hasCPF(Veterinary veterinary){
         if (veterinary.getCpf().equals(""))
             throw new RegraNegocioRunTime("The veterinary should have a CPF!");
     }
 
-    public static void verifyHasExpertise(Veterinary veterinary){
+    public static void hasExpertise(Veterinary veterinary){
         if (veterinary.getExpertise() == null)
             throw new RegraNegocioRunTime("The veterinary should have a Expertise!");
     }
 
-    public static void verifyHasId(Veterinary veterinary){
+    public static void hasId(Veterinary veterinary){
         if (veterinary.getVeterinaryId() <= 0)
             throw new RegraNegocioRunTime("The veterinary should have a id!");
     }
 
-    public static void verifyHasId(Long id){
+    public static void hasId(Long id){
         if (id <= 0)
             throw new RegraNegocioRunTime("The veterinary should have a id!");
     }
 
     public static void verifyAllRules(Veterinary veterinary){
-        verifyIsNull(veterinary);
-        verifyHasId(veterinary);
-        verifyHasName(veterinary);
-        verifyHasCPF(veterinary);
-        verifyHasExpertise(veterinary);
+        isNotNull(veterinary);
+        hasId(veterinary);
+        hasName(veterinary);
+        hasCPF(veterinary);
+        hasExpertise(veterinary);
     }
 
-    public static void verifyIsNullHasNameHasCPFHasExpertise(Veterinary veterinary){
-        verifyIsNull(veterinary);
-        verifyHasName(veterinary);
-        verifyHasCPF(veterinary);
-        verifyHasExpertise(veterinary);
+    public static void IsNotNullHasNameHasCPFHasExpertise(Veterinary veterinary){
+        isNotNull(veterinary);
+        hasName(veterinary);
+        hasCPF(veterinary);
+        hasExpertise(veterinary);
     }
 
-    public static Example<Veterinary> generateFilter(Veterinary veterinary){
+    public static Example<Veterinary> generateExample(Veterinary veterinary){
         return Example.of(veterinary, ExampleMatcher.matching()
                 .withIgnoreCase()
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
@@ -73,7 +73,7 @@ public class VeterinarioService {
 
     @Transactional
     public Veterinary save(Veterinary veterinary){
-        verifyIsNullHasNameHasCPFHasExpertise(veterinary);
+        IsNotNullHasNameHasCPFHasExpertise(veterinary);
         return repo.save(veterinary);
     }
 
@@ -85,13 +85,13 @@ public class VeterinarioService {
 
     @Transactional
     public void removeById(Long id){
-        verifyHasId(id);
+        hasId(id);
         repo.deleteById(id);
     }
 
     @Transactional
     public Veterinary removeByIdWithFeedback(Long id){
-        verifyHasId(id);
+        hasId(id);
         Veterinary feedback = repo.findByVeterinaryId(id);
         repo.delete(feedback);
         return feedback;
@@ -99,14 +99,14 @@ public class VeterinarioService {
 
     @Transactional
     public Veterinary findById(Long id){
-        verifyHasId(id);
+        hasId(id);
         return repo.findByVeterinaryId(id);
     }
 
     @Transactional
     public List<Veterinary> find(Veterinary veterinary){
-        verifyIsNull(veterinary);
-        Example<Veterinary> example = generateFilter(veterinary);
+        isNotNull(veterinary);
+        Example<Veterinary> example = generateExample(veterinary);
         return repo.findAll(example);
     }
 
@@ -117,7 +117,7 @@ public class VeterinarioService {
 
     @Transactional
     public Expertise findExpertisesById(Long id){
-        verifyHasId(id);
+        hasId(id);
         Veterinary veteFind = repo.findByVeterinaryId(id);
         return veteFind.getExpertise();
     }

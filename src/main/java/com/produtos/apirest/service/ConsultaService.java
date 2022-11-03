@@ -21,61 +21,61 @@ public class ConsultaService {
         this.repo = consultaRepo;
     }
 
-    public static void verifyIsNull(Appointment appointment){
+    public static void isNotNull(Appointment appointment){
         if(appointment == null)
             throw new NullPointerException("The appointment must not be null!");
     }
 
-    public static void verifyHasAnimal(Appointment appointment){
+    public static void hasAnimal(Appointment appointment){
         if(appointment.getAnimal() == null)
             throw new RegraNegocioRunTime("The appointment should hava a animal!");
     }
 
-    public static void verifyHasType(Appointment appointment){
+    public static void hasType(Appointment appointment){
         if(appointment.getAppointmentType() == null)
             throw new RegraNegocioRunTime("The appointment should have a type!");
     }
 
-    public static void verifyHasVeterinary(Appointment appointment){
+    public static void hasVeterinary(Appointment appointment){
         if (appointment.getVeterinary() == null)
             throw new RegraNegocioRunTime("The appointment should have a veterinary!");
     }
 
-    public static void verifyHasDate(Appointment appointment){
+    public static void hasDate(Appointment appointment){
         if(appointment.getDate() == null)
             throw new RegraNegocioRunTime("The appointment should have a date!");
     }
 
-    public static void verifyHasId(Appointment appointment){
+    public static void hasId(Appointment appointment){
         if (appointment == null || appointment.getAppointmentId() <= 0)
             throw new RegraNegocioRunTime("The appointment should have a id!");
     }
 
-    public static void verifyHasId(Long id){
+    public static void hasId(Long id){
         if (id <= 0)
             throw new RegraNegocioRunTime("The appointment should have a id!");
     }
 
     public static void verifyAllRules(Appointment appointment){
-        verifyIsNull(appointment);
-        verifyHasId(appointment);
-        verifyHasAnimal(appointment);
-        verifyHasType(appointment);
-        verifyHasDate(appointment);
-        verifyHasVeterinary(appointment);
+        isNotNull(appointment);
+        hasId(appointment);
+        hasAnimal(appointment);
+        hasType(appointment);
+        hasDate(appointment);
+        hasVeterinary(appointment);
     }
 
-    public static void verifyIsNullHasAnimalHasTypeHasDateHasVeterinary(Appointment appointment){
-        verifyIsNull(appointment);
-        verifyHasAnimal(appointment);
-        verifyHasType(appointment);
-        verifyHasDate(appointment);
-        verifyHasVeterinary(appointment);
+    public static void IsNotNullHasAnimalHasTypeHasDateHasVeterinary(Appointment appointment){
+        isNotNull(appointment);
+        hasAnimal(appointment);
+        hasType(appointment);
+        hasDate(appointment);
+        hasVeterinary(appointment);
     }
 
     @Transactional
     public Appointment save(Appointment appointment){
-        verifyIsNullHasAnimalHasTypeHasDateHasVeterinary(appointment);
+        IsNotNullHasAnimalHasTypeHasDateHasVeterinary(appointment);
         return repo.save(appointment);
     }
 
@@ -86,9 +86,9 @@ public class ConsultaService {
     }
 
     @Transactional
-    public Appointment updateAppointment(Appointment destiny, Veterinary newVeterinary){
+    public Appointment updateVeterinary(Appointment destiny, Veterinary newVeterinary){
         VeterinarioService.verifyAllRules(newVeterinary);
-        VeterinarioService.verifyHasId(newVeterinary);
+        VeterinarioService.hasId(newVeterinary);
         verifyAllRules(destiny);
         destiny.setVeterinary(newVeterinary);
         return repo.save(destiny);
@@ -105,7 +105,7 @@ public class ConsultaService {
     @Transactional
     public Appointment updateAppointmentType(Appointment destiny, AppointmentType newType){
         TipoConsultaService.verifyAllRules(newType);
-        TipoConsultaService.verifyId(newType);
+        TipoConsultaService.hasId(newType);
         verifyAllRules(destiny);
         destiny.setAppointmentType(newType);
         return repo.save(destiny);
@@ -119,13 +119,13 @@ public class ConsultaService {
 
     @Transactional
     public void removeById(Long id){
-        verifyHasId(id);
+        hasId(id);
         repo.deleteById(id);
     }
 
     @Transactional
     public Appointment removeByIdWithFeedback(Long id){
-        verifyHasId(id);
+        hasId(id);
         Appointment feedback = repo.findByAppointmentId(id);
         repo.delete(feedback);
         return feedback;
@@ -133,7 +133,7 @@ public class ConsultaService {
 
     @Transactional
     public Appointment findById(Long id){
-        verifyHasId(id);
+        hasId(id);
         return repo.findByAppointmentId(id);
     }
 

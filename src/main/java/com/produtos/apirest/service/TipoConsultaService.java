@@ -19,38 +19,38 @@ public class TipoConsultaService {
         this.repo = appointmentTypeRepo;
     }
 
-    public static void verifyIsNull(AppointmentType appointmentType){
+    public static void isNotNull(AppointmentType appointmentType){
         if (appointmentType == null)
             throw new NullPointerException("Appointment Type must not be null!");
     }
 
-    public static void verifyHasName(AppointmentType appointmentType){
+    public static void hasName(AppointmentType appointmentType){
         if (appointmentType.getName().equals(""))
             throw new RegraNegocioRunTime("Tipo de Consulta deve ter um nome!");
     }
 
-    public static void verifyId(AppointmentType appointmentType){
+    public static void hasId(AppointmentType appointmentType){
         if(appointmentType.getAppointmentTypeId() <= 0)
             throw new RegraNegocioRunTime("The appointment type should have a id!");
     }
 
-    public static void verifyId(Long id){
+    public static void hasId(Long id){
         if(id <= 0)
             throw new RegraNegocioRunTime("The appointment type should have a id!");
     }
 
     public static void verifyAllRules(AppointmentType appointmentType){
-        verifyIsNull(appointmentType);
-        verifyId(appointmentType);
-        verifyHasName(appointmentType);
+        isNotNull(appointmentType);
+        hasId(appointmentType);
+        hasName(appointmentType);
     }
 
-    public static void verifyIsNullHasName(AppointmentType appointmentType){
-        verifyIsNull(appointmentType);
-        verifyHasName(appointmentType);
+    public static void IsNotNullHasName(AppointmentType appointmentType){
+        isNotNull(appointmentType);
+        hasName(appointmentType);
     }
 
-    public static Example<AppointmentType> generateFilter(AppointmentType appointmentType){
+    public static Example<AppointmentType> generateExample(AppointmentType appointmentType){
         return Example.of(appointmentType, ExampleMatcher.matching()
                 .withIgnoreCase()
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
@@ -58,7 +58,7 @@ public class TipoConsultaService {
 
     @Transactional
     public AppointmentType save(AppointmentType type){
-        verifyIsNullHasName(type);
+        IsNotNullHasName(type);
         return repo.save(type);
     }
 
@@ -70,13 +70,13 @@ public class TipoConsultaService {
 
     @Transactional
     public void removeById(Long id){
-        verifyId(id);
+        hasId(id);
         repo.deleteById(id);
     }
 
     @Transactional
     public AppointmentType removeByIdWithFeedback(Long id){
-        verifyId(id);
+        hasId(id);
         AppointmentType feedback = repo.findByAppointmentTypeId(id);
         repo.delete(feedback);
         return feedback;
@@ -84,14 +84,14 @@ public class TipoConsultaService {
 
     @Transactional
     public AppointmentType findById(Long id){
-        verifyId(id);
+        hasId(id);
         return repo.findByAppointmentTypeId(id);
     }
 
     @Transactional
     public List<AppointmentType> find(AppointmentType appointmentType){
-        verifyIsNull(appointmentType);
-        Example<AppointmentType> example = generateFilter(appointmentType);
+        isNotNull(appointmentType);
+        Example<AppointmentType> example = generateExample(appointmentType);
         return repo.findAll(example);
     }
 

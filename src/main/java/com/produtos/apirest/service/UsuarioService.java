@@ -23,51 +23,51 @@ public class UsuarioService {
         return new BCryptPasswordEncoder();
     }
 
-    public static void verifyIsNull(User user){
+    public static void isNotNull(User user){
         if(user == null)
             throw new NullPointerException("User must not be null!");
     }
 
-    public static void verifyHasUsername(User user){
+    public static void hasUsername(User user){
         if (user.getUsername().equals(""))
             throw  new RegraNegocioRunTime("The user should have a username!");
     }
 
-    public static void verifyHasPassword(User user){
+    public static void hasPassword(User user){
         if (user.getPassword().equals(""))
             throw new RegraNegocioRunTime("The user should have a password!");
     }
 
-    public static void verifyHasRoles(User user){
+    public static void hasRoles(User user){
         if (user.getRoles().isEmpty())
             throw new RegraNegocioRunTime("The user should have roles!");
     }
 
-    public static void verifyHasId(User user){
+    public static void hasId(User user){
         if (user.getUserId() <= 0){
             throw new RegraNegocioRunTime("The user should have a id!");
         }
     }
 
-    public static void verifyHasId(Long id){
+    public static void hasId(Long id){
         if (id <= 0){
             throw new RegraNegocioRunTime("The user should have a id!");
         }
     }
 
     public static void verifyAllRules(User user){
-        verifyIsNull(user);
-        verifyHasId(user);
-        verifyHasUsername(user);
-        verifyHasPassword(user);
-        verifyHasRoles(user);
+        isNotNull(user);
+        hasId(user);
+        hasUsername(user);
+        hasPassword(user);
+        hasRoles(user);
     }
 
-    public static void verifyIsNullHasUsernameHasPasswordHasRoles(User user){
-        verifyIsNull(user);
-        verifyHasUsername(user);
-        verifyHasPassword(user);
-        verifyHasRoles(user);
+    public static void IsNotNullHasUsernameHasPasswordHasRoles(User user){
+        isNotNull(user);
+        hasUsername(user);
+        hasPassword(user);
+        hasRoles(user);
     }
 
     private User matchPasswordWithUser(String rawPassword, User user){
@@ -91,7 +91,7 @@ public class UsuarioService {
 
     @Transactional
     public User save(User user){
-        verifyIsNullHasUsernameHasPasswordHasRoles(user);
+        IsNotNullHasUsernameHasPasswordHasRoles(user);
         encodePassword(user);
         return userRepo.save(user);
     }
@@ -110,7 +110,7 @@ public class UsuarioService {
 
     @Transactional
     public User removeByIdWithFeedback(Long id){
-        verifyHasId(id);
+        hasId(id);
         User feedback = userRepo.findByUserId(id);
         userRepo.delete(feedback);
         return feedback;
@@ -118,7 +118,7 @@ public class UsuarioService {
 
     @Transactional
     public User findById(Long id){
-        verifyHasId(id);
+        hasId(id);
         return userRepo.findByUserId(id);
     }
 

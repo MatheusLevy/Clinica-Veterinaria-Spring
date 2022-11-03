@@ -19,38 +19,38 @@ public class TipoAnimalService {
         this.repo = animalTypeRepo;
     }
 
-    public static void verifyIsNull(AnimalType animalType){
+    public static void isNotNull(AnimalType animalType){
         if (animalType == null)
             throw new NullPointerException("Animal Type must not be null!");
     }
 
-    public static void verifyHasName(AnimalType type){
+    public static void hasName(AnimalType type){
         if (type.getName().equals(""))
             throw new RegraNegocioRunTime("The animal type should have a name!");
     }
 
-    public static void verifyHasId(AnimalType type){
+    public static void hasId(AnimalType type){
         if(type.getAnimalTypeId() <= 0)
             throw new RegraNegocioRunTime("The animal type should have a id!");
     }
 
-    public static void verifyHasId(Long id){
+    public static void hasId(Long id){
         if(id <= 0)
             throw new RegraNegocioRunTime("The animal type should have a id!");
     }
 
     public static void verifyAllRules(AnimalType type){
-        verifyIsNull(type);
-        verifyHasId(type);
-        verifyHasName(type);
+        isNotNull(type);
+        hasId(type);
+        hasName(type);
     }
 
-    public static void verifyIsNullHasName(AnimalType type){
-        verifyIsNull(type);
-        verifyHasName(type);
+    public static void IsNotNullHasName(AnimalType type){
+        isNotNull(type);
+        hasName(type);
     }
 
-    public static Example<AnimalType> generateFilter(AnimalType animalType){
+    public static Example<AnimalType> generateExample(AnimalType animalType){
         return Example.of(animalType, ExampleMatcher.matching()
                 .withIgnoreCase()
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
@@ -58,7 +58,7 @@ public class TipoAnimalService {
 
     @Transactional
     public AnimalType save(AnimalType type){
-        verifyIsNullHasName(type);
+        IsNotNullHasName(type);
         return repo.save(type);
     }
 
@@ -76,7 +76,7 @@ public class TipoAnimalService {
 
     @Transactional
     public AnimalType removeByIdWithFeedback(Long id){
-        verifyHasId(id);
+        hasId(id);
         AnimalType feedback = repo.findByAnimalTypeId(id);
         repo.delete(feedback);
         return feedback;
@@ -84,20 +84,20 @@ public class TipoAnimalService {
 
     @Transactional
     public void removeById(Long id){
-        verifyHasId(id);
+        hasId(id);
         repo.deleteById(id);
     }
 
     @Transactional
     public AnimalType findById(Long id){
-        verifyHasId(id);
+        hasId(id);
         return repo.findByAnimalTypeId(id);
     }
 
     @Transactional
     public List<AnimalType> find(AnimalType animalType){
-        verifyIsNull(animalType);
-        Example<AnimalType> example = generateFilter(animalType);
+        isNotNull(animalType);
+        Example<AnimalType> example = generateExample(animalType);
         return repo.findAll(example);
     }
 

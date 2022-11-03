@@ -19,24 +19,24 @@ public class RoleService {
         this.roleRepo = roleRepo;
     }
 
-    public static void verifyIsNull(Role role){
+    public static void isNotNull(Role role){
         if (role == null)
             throw new NullPointerException("Role must not be null!");
     }
 
-    public static void verifyHasId(Role role){
+    public static void hasId(Role role){
         if (role.getRoleId() <= 0)
             throw new RegraNegocioRunTime("The role should have a id");
     }
 
-    public static void verifyHasId(Long id){
+    public static void hasId(Long id){
         if (id <= 0)
             throw new RegraNegocioRunTime("The role should have a id");
     }
 
     public static void verifyAllRules(Role role){
-        verifyIsNull(role);
-        verifyHasId(role);
+        isNotNull(role);
+        hasId(role);
     }
 
     public static Example<Role> generateExample(Role role){
@@ -47,7 +47,7 @@ public class RoleService {
 
     @Transactional
     public Role save(Role role){
-        verifyIsNull(role);
+        isNotNull(role);
         return roleRepo.save(role);
     }
 
@@ -65,13 +65,13 @@ public class RoleService {
 
     @Transactional
     public void removeById(Long id){
-        verifyHasId(id);
+        hasId(id);
         roleRepo.deleteById(id);
     }
 
     @Transactional
     public Role removeByIdWithFeedback(Long id){
-        verifyHasId(id);
+        hasId(id);
         Role feedback = roleRepo .findByRoleId(id);
         roleRepo.delete(feedback);
         return feedback;
@@ -79,14 +79,14 @@ public class RoleService {
 
     @Transactional
     public List<Role> find(Role role){
-        verifyIsNull(role);
+        isNotNull(role);
         Example<Role> example = generateExample(role);
         return roleRepo.findAll(example);
     }
 
     @Transactional
     public Role findById(Long id){
-        verifyHasId(id);
+        hasId(id);
         return roleRepo.findByRoleId(id);
     }
 

@@ -22,32 +22,32 @@ public class AreaService {
     }
 
     public static void verifyAllRules(Area area){
-        verifyIsNull(area);
-        verifyHasName(area);
-        verifyHasId(area);
+        isNotNull(area);
+        hasName(area);
+        hasId(area);
     }
 
-    public static void verifyIsNullAndHasNome(Area area){
-        verifyIsNull(area);
-        verifyHasName(area);
+    public static void IsNotNullHasNome(Area area){
+        isNotNull(area);
+        hasName(area);
     }
 
-    public static void verifyIsNull(Area area){
+    public static void isNotNull(Area area){
         if (area == null)
             throw new NullPointerException("The area must not be null!");
     }
 
-    public static void verifyHasName(Area area){
+    public static void hasName(Area area){
         if(area.getName().equals(""))
             throw new RegraNegocioRunTime("The area should have a name!");
     }
 
-    public static void verifyHasId(Area area){
+    public static void hasId(Area area){
         if (area.getAreaId() <= 0)
             throw new RegraNegocioRunTime("The area should have a id!");
     }
 
-    public static void verifyHasId(Long id){
+    public static void hasId(Long id){
         if (id <= 0)
             throw new RegraNegocioRunTime("The area should have a id!");
     }
@@ -60,7 +60,7 @@ public class AreaService {
 
     @Transactional
     public Area save(Area area){
-        verifyIsNullAndHasNome(area);
+        IsNotNullHasNome(area);
         return repo.save(area);
     }
 
@@ -72,7 +72,7 @@ public class AreaService {
 
     @Transactional
     public void removeById(Long id){
-        verifyHasId(id);
+        hasId(id);
         repo.deleteById(id);
     }
 
@@ -84,7 +84,7 @@ public class AreaService {
 
     @Transactional
     public Area removeByIdWithFeedback(Long id){
-        verifyHasId(id);
+        hasId(id);
         Area feedback = repo.findByAreaId(id);
         repo.delete(feedback);
         return feedback;
@@ -92,13 +92,13 @@ public class AreaService {
 
     @Transactional
     public Area findById(Long id){
-        verifyHasId(id);
+        hasId(id);
         return repo.findByAreaId(id);
     }
 
     @Transactional
     public List<Area> find(Area area){
-        verifyIsNull(area);
+        isNotNull(area);
         Example<Area> example = generateExample(area);
         return repo.findAll(example);
     }
@@ -110,7 +110,7 @@ public class AreaService {
 
     @Transactional
     public List<Expertise> findAllExpertiseByAreaId(Long areaId){
-        verifyHasId(areaId);
+        hasId(areaId);
         Area areaFind = repo.findByAreaId(areaId);
         Hibernate.initialize(areaFind.getExpertises());
         return areaFind.getExpertises();
