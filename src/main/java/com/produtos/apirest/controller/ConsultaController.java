@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/consulta")
+@RequestMapping("/api/appointment")
 public class ConsultaController {
 
     private final AppointmentService appointmentService;
@@ -40,53 +40,53 @@ public class ConsultaController {
         this.appointmentTypeService = appointmentTypeService;
     }
 
-    @PostMapping("/salvar")
-    public ResponseEntity<?> salvar(@RequestBody AppointmentDTO consultadto){
+    @PostMapping
+    public ResponseEntity<?> save(@RequestBody AppointmentDTO consultadto){
         try {
-            AppointmentType tipoConsultaEncontrada = appointmentTypeService.findById(consultadto.getAppointmentTypeId());
-            Veterinary veterinarioEncontrado = veterinarioService.findById(consultadto.getVetId());
-            Animal AnimalEncontrado = animalService.findById(consultadto.getAnimalId());
-            Appointment consulta = consultadto.toAppointment(AnimalEncontrado, veterinarioEncontrado, tipoConsultaEncontrada);
-            Appointment consultaSalva = appointmentService.save(consulta);
-            AppointmentDTO dtoRetorno = consultaSalva.toAppointmentDTO();
-            return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
+            AppointmentType appointmentTypeFind = appointmentTypeService.findById(consultadto.getAppointmentTypeId());
+            Veterinary veterinaryFind = veterinarioService.findById(consultadto.getVetId());
+            Animal animalFind = animalService.findById(consultadto.getAnimalId());
+            Appointment appointment = consultadto.toAppointment(animalFind, veterinaryFind, appointmentTypeFind);
+            Appointment appointmentSaved = appointmentService.save(appointment);
+            AppointmentDTO dtoResponse = appointmentSaved.toAppointmentDTO();
+            return new ResponseEntity<>(dtoResponse, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PutMapping("/atualizar")
-    public ResponseEntity<?> atualizar(@RequestBody AppointmentDTO consultadto){
+    @PutMapping
+    public ResponseEntity<?> update(@RequestBody AppointmentDTO consultadto){
         try {
-            AppointmentType tipoConsultaEncontrada = appointmentTypeService.findById(consultadto.getAppointmentTypeId());
-            Veterinary veterinarioEncontrado = veterinarioService.findById(consultadto.getVetId());
-            Animal AnimalEncontrado = animalService.findById(consultadto.getAnimalId());
-            Appointment consulta = consultadto.toAppointment(AnimalEncontrado, veterinarioEncontrado, tipoConsultaEncontrada);
-            Appointment consultaAtualizada = appointmentService.update(consulta);
-            AppointmentDTO dtoRetorno = consultaAtualizada.toAppointmentDTO();
-            return ResponseEntity.ok(dtoRetorno);
+            AppointmentType appointmentTypeFind = appointmentTypeService.findById(consultadto.getAppointmentTypeId());
+            Veterinary veterinaryFind = veterinarioService.findById(consultadto.getVetId());
+            Animal animalFind = animalService.findById(consultadto.getAnimalId());
+            Appointment appointment = consultadto.toAppointment(animalFind, veterinaryFind, appointmentTypeFind);
+            Appointment appointmentUpdated = appointmentService.update(appointment);
+            AppointmentDTO dtoResponse = appointmentUpdated.toAppointmentDTO();
+            return ResponseEntity.ok(dtoResponse);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @GetMapping("/buscarTodos")
-    public ResponseEntity<?> buscarTodos(){
+    @GetMapping
+    public ResponseEntity<?> findAll(){
         try{
-            List<Appointment> consultas = appointmentService.findAll();
-            List<AppointmentDTO> dtos = consultas
+            List<Appointment> appointments = appointmentService.findAll();
+            List<AppointmentDTO> dtosResponse = appointments
                     .stream()
                     .map(Appointment::toAppointmentDTO)
                     .collect(Collectors.toList());
-            return ResponseEntity.ok(dtos);
+            return ResponseEntity.ok(dtosResponse);
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
 
-    @DeleteMapping("/remover/{id}")
-    public ResponseEntity<?> removerPorId(@PathVariable(value = "id") Long id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> removeById(@PathVariable(value = "id") Long id){
         try{
             appointmentService.removeById(id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
@@ -95,12 +95,12 @@ public class ConsultaController {
         }
     }
 
-    @DeleteMapping("/remover/feedback/{id}")
-    public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
+    @DeleteMapping("/feedback/{id}")
+    public ResponseEntity<?> removeWithFeedback(@PathVariable(value = "id") Long id){
         try{
-            Appointment consultaRemovida = appointmentService.removeByIdWithFeedback(id);
-            AppointmentDTO dtoRetorno = consultaRemovida.toAppointmentDTO();
-            return ResponseEntity.ok(dtoRetorno);
+            Appointment appointmentFind = appointmentService.removeByIdWithFeedback(id);
+            AppointmentDTO dtoResponse = appointmentFind.toAppointmentDTO();
+            return ResponseEntity.ok(dtoResponse);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }

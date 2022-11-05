@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/especialidade")
+@RequestMapping("/api/expertise")
 public class EspecialidadeController {
 
     private final ExpertiseService expertiseService;
@@ -31,56 +31,56 @@ public class EspecialidadeController {
         this.areaService = areaService;
     }
 
-    @PostMapping("/salvar")
-    public ResponseEntity<?> salvar(@RequestBody ExpertiseDTO dto){
+    @PostMapping
+    public ResponseEntity<?> save(@RequestBody ExpertiseDTO dto){
         try {
-            Area areaBuscada = areaService.findById(dto.getAreaId());
-            Expertise especialidade = dto.toExpertise(areaBuscada);
-            Expertise especialidadeSalva = expertiseService.save(especialidade);
-            ExpertiseDTO dtoRetorno = especialidadeSalva.toExpertiseDTO();
-            return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
+            Area areaFind = areaService.findById(dto.getAreaId());
+            Expertise expertise = dto.toExpertise(areaFind);
+            Expertise expertiseSaved = expertiseService.save(expertise);
+            ExpertiseDTO dtoResponse = expertiseSaved.toExpertiseDTO();
+            return new ResponseEntity<>(dtoResponse, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PutMapping("/atualizar")
-    public ResponseEntity<?> atualizar(@RequestBody ExpertiseDTO dto){
+    @PutMapping
+    public ResponseEntity<?> update(@RequestBody ExpertiseDTO dto){
         try{
-            Area areaBuscada = areaService.findById(dto.getAreaId());
-            Expertise especialidade = dto.toExpertise(areaBuscada);
-            Expertise especialidadeAtualizada = expertiseService.update(especialidade);
-            ExpertiseDTO dtoRetorno = especialidadeAtualizada.toExpertiseDTO();
-            return ResponseEntity.ok(dtoRetorno);
+            Area areaFind = areaService.findById(dto.getAreaId());
+            Expertise expertise = dto.toExpertise(areaFind);
+            Expertise expertiseUpdated = expertiseService.update(expertise);
+            ExpertiseDTO dtoResponse = expertiseUpdated.toExpertiseDTO();
+            return ResponseEntity.ok(dtoResponse);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @DeleteMapping("/remover/{id}")
-    public ResponseEntity<?> remover(@PathVariable(value = "id") Long id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> remove(@PathVariable(value = "id") Long id){
         try {
-            Expertise especialidadeBuscada = expertiseService.findById(id);
-            expertiseService.remove(especialidadeBuscada);
+            Expertise expertiseFind = expertiseService.findById(id);
+            expertiseService.remove(expertiseFind);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @DeleteMapping("/remover/feedback/{id}")
-    public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
+    @DeleteMapping("/feedback/{id}")
+    public ResponseEntity<?> removeWithFeedback(@PathVariable(value = "id") Long id){
         try {
-            Expertise especialidadeRemovida = expertiseService.removeByIdWithFeedback(id);
-            ExpertiseDTO dtoRetorno = especialidadeRemovida.toExpertiseDTO();
-            return ResponseEntity.ok(dtoRetorno);
+            Expertise expertiseRemoved = expertiseService.removeByIdWithFeedback(id);
+            ExpertiseDTO dtoResponse = expertiseRemoved.toExpertiseDTO();
+            return ResponseEntity.ok(dtoResponse);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @GetMapping("/buscar/{id}")
-    public ResponseEntity<?> buscarPorId(@PathVariable(value = "id") Long id){
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable(value = "id") Long id){
         try {
             Expertise especialidadeBuscada = expertiseService.findById(id);
             ExpertiseDTO dtoRetorno = especialidadeBuscada.toExpertiseDTO();
@@ -90,30 +90,30 @@ public class EspecialidadeController {
         }
     }
 
-    @GetMapping("/buscar/filtro")
-    public ResponseEntity<?> buscar(@RequestBody ExpertiseDTO dto){
+    @GetMapping("/filter")
+    public ResponseEntity<?> find(@RequestBody ExpertiseDTO dto){
         try{
-            Expertise filtro = dto.toExpertise();
-            List<Expertise> especialidades = expertiseService.find(filtro);
-            List<ExpertiseDTO> dtos = especialidades
+            Expertise filter = dto.toExpertise();
+            List<Expertise> expertisesFind = expertiseService.find(filter);
+            List<ExpertiseDTO> dtosResponse = expertisesFind
                     .stream()
                     .map(Expertise::toExpertiseDTO)
                     .collect(Collectors.toList());
-            return ResponseEntity.ok(dtos);
+            return ResponseEntity.ok(dtosResponse);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @GetMapping("/buscarTodos")
-    public ResponseEntity<?> buscarTodos(){
+    @GetMapping
+    public ResponseEntity<?> findAll(){
         try{
-            List<Expertise> especialidadeList = expertiseService.findAll();
-            List<ExpertiseDTO> dtos = especialidadeList
+            List<Expertise> expertises = expertiseService.findAll();
+            List<ExpertiseDTO> dtosResponse = expertises
                     .stream()
                     .map(Expertise::toExpertiseDTO)
                     .collect(Collectors.toList());
-            return ResponseEntity.ok(dtos);
+            return ResponseEntity.ok(dtosResponse);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }

@@ -33,22 +33,22 @@ public class AnimalController {
         this.animalTypeService = animalTypeService;
     }
 
-    @PostMapping("/salvar")
-    public ResponseEntity<?> salvar(@RequestBody AnimalDTO animaldto){
+    @PostMapping
+    public ResponseEntity<?> save(@RequestBody AnimalDTO animaldto){
         try{
-            Owner donoEncontrado = ownerService.findById(animaldto.getOwnerId());
-            AnimalType tipoEncontrado = animalTypeService.findById(animaldto.getAnimalTypeId());
-            Animal animal = animaldto.toAnimal(donoEncontrado, tipoEncontrado);
-            Animal animalSalvo = animalService.save(animal);
-            AnimalDTO dtoRetorno = animalSalvo.toAnimalDTO();
-            return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
+            Owner ownerFind = ownerService.findById(animaldto.getOwnerId());
+            AnimalType typeFind = animalTypeService.findById(animaldto.getAnimalTypeId());
+            Animal animal = animaldto.toAnimal(ownerFind, typeFind);
+            Animal animalSaved = animalService.save(animal);
+            AnimalDTO dtoResponse = animalSaved.toAnimalDTO();
+            return new ResponseEntity<>(dtoResponse, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @DeleteMapping("/remover/{id}")
-    public ResponseEntity<?> remover(@PathVariable(value = "id") Long id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> remove(@PathVariable(value = "id") Long id){
         try{
             animalService.removeById(id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
@@ -57,61 +57,61 @@ public class AnimalController {
         }
     }
 
-    @DeleteMapping("/remover/feedback/{id}")
-    public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
+    @DeleteMapping("/feedback/{id}")
+    public ResponseEntity<?> removeWithFeedback(@PathVariable(value = "id") Long id){
         try{
-            Animal animalRemovido = animalService.removeByIdWithFeedback(id);
-            AnimalDTO dtoRetorno = animalRemovido.toAnimalDTO();
-            return ResponseEntity.ok(dtoRetorno);
+            Animal animalRemoved = animalService.removeByIdWithFeedback(id);
+            AnimalDTO dtoResponse = animalRemoved.toAnimalDTO();
+            return ResponseEntity.ok(dtoResponse);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @GetMapping("/buscarId/{id}")
-    public ResponseEntity<?> buscarPorId(@PathVariable(value = "id") Long id){
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable(value = "id") Long id){
         try{
-            Animal animalBuscado = animalService.findById(id);
-            AnimalDTO dtoRetorno = animalBuscado.toAnimalDTO();
-        return ResponseEntity.ok(dtoRetorno);
+            Animal animalFind = animalService.findById(id);
+            AnimalDTO dtoResponse = animalFind.toAnimalDTO();
+        return ResponseEntity.ok(dtoResponse);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PutMapping("/atualizar")
-    public ResponseEntity<?> atualizar(@RequestBody  AnimalDTO animalDTO){
+    @PutMapping
+    public ResponseEntity<?> update(@RequestBody  AnimalDTO animalDTO){
         try{
-            Owner donoEncontrado = ownerService.findById(animalDTO.getOwnerId());
-            AnimalType tipoEncontrado = animalTypeService.findById(animalDTO.getAnimalTypeId());
-            Animal animal = animalDTO.toAnimal(donoEncontrado, tipoEncontrado);
-            Animal atualizado = animalService.update(animal);
-            AnimalDTO dtoRetorno = atualizado.toAnimalDTO();
-            return ResponseEntity.ok(dtoRetorno);
+            Owner ownerFind = ownerService.findById(animalDTO.getOwnerId());
+            AnimalType typeFind = animalTypeService.findById(animalDTO.getAnimalTypeId());
+            Animal animal = animalDTO.toAnimal(ownerFind, typeFind);
+            Animal animalUpdated = animalService.update(animal);
+            AnimalDTO dtoResponse = animalUpdated.toAnimalDTO();
+            return ResponseEntity.ok(dtoResponse);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @GetMapping("/buscarDono/{id}")
-    public ResponseEntity<?> buscarDono(@PathVariable(value = "id") Long id){
+    @GetMapping("/findOwner/{id}")
+    public ResponseEntity<?> findOwnerByAnimalId(@PathVariable(value = "id") Long id){
         try {
-            Owner donoEncontrado = animalService.findOwnerByAnimalId(id);
-            OwnerDTO dtoRetorno = donoEncontrado.toOwnerDTO();
-            return ResponseEntity.ok(dtoRetorno);
+            Owner ownerFind = animalService.findOwnerByAnimalId(id);
+            OwnerDTO dtoResponse = ownerFind.toOwnerDTO();
+            return ResponseEntity.ok(dtoResponse);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PutMapping("/atualizar/dono")
-    public ResponseEntity<?> atualizarDono(@RequestBody AnimalDTO animalDTO){
+    @PutMapping("/update/dono")
+    public ResponseEntity<?> updateOwner(@RequestBody AnimalDTO animalDTO){
         try {
-            Owner donoBuscado = ownerService.findById(animalDTO.getOwnerId());
-            Animal animalBuscado = animalService.findById(animalDTO.getId());
-            Animal animaAtualizado = animalService.updateOwner(animalBuscado, donoBuscado);
-            AnimalDTO dtoRetorno = animaAtualizado.toAnimalDTO();
-            return ResponseEntity.ok(dtoRetorno);
+            Owner ownerFind = ownerService.findById(animalDTO.getOwnerId());
+            Animal animalFind = animalService.findById(animalDTO.getId());
+            Animal animalUpdated = animalService.updateOwner(animalFind, ownerFind);
+            AnimalDTO dtoResponse = animalUpdated.toAnimalDTO();
+            return ResponseEntity.ok(dtoResponse);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }

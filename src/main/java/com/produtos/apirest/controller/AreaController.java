@@ -29,32 +29,32 @@ public class AreaController {
         this.areaService = areaService;
     }
 
-    @PostMapping("/salvar")
-    public ResponseEntity<?> salvar(@RequestBody AreaDTO areaDTO){
+    @PostMapping
+    public ResponseEntity<?> save(@RequestBody AreaDTO areaDTO){
         try {
             Area area = areaDTO.toArea();
-            Area areaSalva = areaService.save(area);
-            AreaDTO areadtoRetorno = areaSalva.toAreaDTO();
-            return new ResponseEntity<>(areadtoRetorno, HttpStatus.CREATED);
+            Area areaSaved = areaService.save(area);
+            AreaDTO dtoResponse = areaSaved.toAreaDTO();
+            return new ResponseEntity<>(dtoResponse, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PutMapping("/atualizar")
-    public ResponseEntity<?> atualizar(@RequestBody AreaDTO areadto){
+    @PutMapping
+    public ResponseEntity<?> update(@RequestBody AreaDTO areadto){
         try{
             Area area = areadto.toArea();
-            Area areaSalva = areaService.update(area);
-            AreaDTO areaDTORetorno = areaSalva.toAreaDTO();
-            return ResponseEntity.ok(areaDTORetorno);
+            Area areaSaved = areaService.update(area);
+            AreaDTO dtoResponse = areaSaved.toAreaDTO();
+            return ResponseEntity.ok(dtoResponse);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @DeleteMapping("/remover/{id}")
-    public ResponseEntity<?> remover(@PathVariable(value = "id") Long id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> remove(@PathVariable(value = "id") Long id){
         try {
             areaService.removeById(id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
@@ -63,68 +63,68 @@ public class AreaController {
         }
     }
 
-    @DeleteMapping("/remover/feedback/{id}")
-    public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
+    @DeleteMapping("/feedback/{id}")
+    public ResponseEntity<?> removeWithFeedback(@PathVariable(value = "id") Long id){
         try {
-            Area areaRemovida = areaService.removeByIdWithFeedback(id);
-            AreaDTO retornoDTO = areaRemovida.toAreaDTO();
-            return ResponseEntity.ok(retornoDTO);
+            Area areaRemoved = areaService.removeByIdWithFeedback(id);
+            AreaDTO dtoResponse = areaRemoved.toAreaDTO();
+            return ResponseEntity.ok(dtoResponse);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @GetMapping("/buscarId/{id}")
-    public ResponseEntity<?> buscarPorId(@PathVariable(value = "id") Long id){
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable(value = "id") Long id){
         try {
-            Area areaBuscada = areaService.findById(id);
-            AreaDTO retornoDTO = areaBuscada.toAreaDTO();
-            return ResponseEntity.ok(retornoDTO);
+            Area areaFind = areaService.findById(id);
+            AreaDTO dtoResponse = areaFind.toAreaDTO();
+            return ResponseEntity.ok(dtoResponse);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
 
-    @GetMapping("/buscar/filtro")
-    public ResponseEntity<?> buscar(@RequestBody AreaDTO filtro){
+    @GetMapping("/filter")
+    public ResponseEntity<?> find(@RequestBody AreaDTO filtro){
         try{
-            Area filtroArea = filtro.toArea();
-            List<Area> areas = areaService.find(filtroArea);
-            List<AreaDTO> dtos = areas
+            Area filter = filtro.toArea();
+            List<Area> areas = areaService.find(filter);
+            List<AreaDTO> dtosResponse = areas
                     .stream()
                     .map(Area::toAreaDTO)
                     .collect(Collectors.toList());
-            return ResponseEntity.ok(dtos);
+            return ResponseEntity.ok(dtosResponse);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @GetMapping("/buscarTodos")
-    public ResponseEntity<?> buscarTodos(){
+    @GetMapping
+    public ResponseEntity<?> findAll(){
         try {
             List<Area> areas = areaService.findAll();
-            List<AreaDTO> dtos = areas
+            List<AreaDTO> dtosResponse = areas
                     .stream()
                     .map(Area::toAreaDTO)
                     .collect(Collectors.toList());
-            return ResponseEntity.ok(dtos);
+            return ResponseEntity.ok(dtosResponse);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @GetMapping("/buscar/especialidades/{id}")
-    public ResponseEntity<?> buscarEspecialidades(@PathVariable(value = "id") Long id){
+    @GetMapping("/expertises/{id}")
+    public ResponseEntity<?> findExpertises(@PathVariable(value = "id") Long id){
         try {
-            Area areaBuscada = areaService.findById(id);
-            List<Expertise> especialidades = areaService.findAllExpertiseByAreaId(areaBuscada.getAreaId());
-            List<ExpertiseDTO> dtos = especialidades
+            Area areaFind = areaService.findById(id);
+            List<Expertise> expertises = areaService.findAllExpertiseByAreaId(areaFind.getAreaId());
+            List<ExpertiseDTO> dtosResponse = expertises
                     .stream()
                     .map(Expertise::toExpertiseDTO)
                     .collect(Collectors.toList());
-            return ResponseEntity.ok(dtos);
+            return ResponseEntity.ok(dtosResponse);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }

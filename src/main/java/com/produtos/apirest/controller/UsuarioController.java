@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/usuario")
+@RequestMapping("/api/user")
 public class UsuarioController {
 
     private final UserService userService;
@@ -24,35 +24,35 @@ public class UsuarioController {
         this.userService = userService;
     }
 
-    @GetMapping("/autenticar")
+    @GetMapping("/authenticate")
     public ResponseEntity<?> autenticar(@RequestBody UserDTO dto){
         try{
-            User usuarioAutenticado = userService.authenticate(dto.getUsername(), dto.getPassword());
-            UserDTO dtoRetorno = usuarioAutenticado.toUserDTO();
-            return ResponseEntity.ok(dtoRetorno);
+            User authenticatedUser = userService.authenticate(dto.getUsername(), dto.getPassword());
+            UserDTO dtoResponse = authenticatedUser.toUserDTO();
+            return ResponseEntity.ok(dtoResponse);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PostMapping("/salvar")
-    public ResponseEntity<?> salvar(@RequestBody UserDTO dto){
+    @PostMapping
+    public ResponseEntity<?> save(@RequestBody UserDTO dto){
         try{
-            User usuario =  dto.toUser();
-            User usuarioSalvo = userService.save(usuario);
-            UserDTO dtoRetorno = usuarioSalvo.toUserDTO();
-            return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
+            User user =  dto.toUser();
+            User userSaved = userService.save(user);
+            UserDTO dtoResponse = userSaved.toUserDTO();
+            return new ResponseEntity<>(dtoResponse, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
 
-    @DeleteMapping("/remover/{id}")
-    public ResponseEntity<?> removerComId(@PathVariable(value = "id") Long id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> removeById(@PathVariable(value = "id") Long id){
         try{
-            User usuarioBuscado = userService.findById(id);
-            userService.remove(usuarioBuscado);
+            User userFind = userService.findById(id);
+            userService.remove(userFind);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -60,49 +60,49 @@ public class UsuarioController {
     }
 
 
-    @DeleteMapping("/remover/feedback/{id}")
-    public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
+    @DeleteMapping("/feedback/{id}")
+    public ResponseEntity<?> removeWithFeedback(@PathVariable(value = "id") Long id){
         try{
-            User usuarioRemovido = userService.removeByIdWithFeedback(id);
-            UserDTO dtoRetorno = usuarioRemovido.toUserDTO();
-            return ResponseEntity.ok(dtoRetorno);
+            User userRemoved = userService.removeByIdWithFeedback(id);
+            UserDTO dtoResponse = userRemoved.toUserDTO();
+            return ResponseEntity.ok(dtoResponse);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
 
-    @GetMapping("/buscar/{id}")
-    public ResponseEntity<?> buscarPorId(@PathVariable(value = "id") Long id){
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable(value = "id") Long id){
         try{
-            User usuarioBuscado = userService.findById(id);
-            UserDTO dtoRetorno = usuarioBuscado.toUserDTO();
-            return ResponseEntity.ok(dtoRetorno);
+            User userFind = userService.findById(id);
+            UserDTO dtoResponse = userFind.toUserDTO();
+            return ResponseEntity.ok(dtoResponse);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
 
-    @GetMapping("/buscarPorUsername/{username}")
-    public ResponseEntity<?> buscarPorUsername(@PathVariable(value = "username") String username){
+    @GetMapping("/username/{username}")
+    public ResponseEntity<?> findByUsername(@PathVariable(value = "username") String username){
         try {
-            User usuarioEncontrado = userService.findByUsername(username);
-            UserDTO dtoRetorno = usuarioEncontrado.toUserDTO();
-            return ResponseEntity.ok(dtoRetorno);
+            User userFind = userService.findByUsername(username);
+            UserDTO dtoResponse = userFind.toUserDTO();
+            return ResponseEntity.ok(dtoResponse);
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
 
-    @PutMapping("/atualizar")
-    public ResponseEntity<?> atualizar(@RequestBody UserDTO dto){
+    @PutMapping
+    public ResponseEntity<?> update(@RequestBody UserDTO dto){
         try{
-            User usuario = dto.toUser();
-            User atualizado = userService.update(usuario);
-            UserDTO dtoRetorno = atualizado.toUserDTO();
-            return ResponseEntity.ok(dtoRetorno);
+            User user = dto.toUser();
+            User userUpdated = userService.update(user);
+            UserDTO dtoResponse = userUpdated.toUserDTO();
+            return ResponseEntity.ok(dtoResponse);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }

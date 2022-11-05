@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/tipoConsulta")
+@RequestMapping("/api/appointmentType")
 public class TipoConsultaController {
 
     private final AppointmentTypeService tipoService;
@@ -24,20 +24,20 @@ public class TipoConsultaController {
         this.tipoService = tipoService;
     }
 
-    @PostMapping("/salvar")
-    public ResponseEntity<?> salvar(@RequestBody AppointmentTypeDTO dto){
+    @PostMapping
+    public ResponseEntity<?> save(@RequestBody AppointmentTypeDTO dto){
         try{
-            AppointmentType tipoConsulta = dto.toAppointment();
-            AppointmentType tipoSalvo = tipoService.save(tipoConsulta);
-            AppointmentTypeDTO dtoRetorno = tipoSalvo.toAppointmentTypeDTO();
-            return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
+            AppointmentType appointmentType = dto.toAppointment();
+            AppointmentType typeSaved = tipoService.save(appointmentType);
+            AppointmentTypeDTO dtoResponse = typeSaved.toAppointmentTypeDTO();
+            return new ResponseEntity<>(dtoResponse, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @DeleteMapping("/remover/{id}")
-    public ResponseEntity<?> removerComId(@PathVariable(value = "id") Long id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> removeById(@PathVariable(value = "id") Long id){
         try {
             tipoService.removeById(id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
@@ -46,35 +46,35 @@ public class TipoConsultaController {
         }
     }
 
-    @DeleteMapping("/remover/feedback/{id}")
-    public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id){
+    @DeleteMapping("/feedback/{id}")
+    public ResponseEntity<?> removeWithFeedback(@PathVariable(value = "id") Long id){
         try{
-            AppointmentType tipoRemovido = tipoService.removeByIdWithFeedback(id);
-            AppointmentTypeDTO dtoRetorno = tipoRemovido.toAppointmentTypeDTO();
-            return ResponseEntity.ok(dtoRetorno);
+            AppointmentType typeRemoved = tipoService.removeByIdWithFeedback(id);
+            AppointmentTypeDTO dtoResponse = typeRemoved.toAppointmentTypeDTO();
+            return ResponseEntity.ok(dtoResponse);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @GetMapping("/buscar/{id}")
-    public ResponseEntity<?> buscarPorId(@PathVariable(value = "id") Long id){
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable(value = "id") Long id){
         try{
-            AppointmentType tipoBuscado = tipoService.findById(id);
-            AppointmentTypeDTO dtoRetorno = tipoBuscado.toAppointmentTypeDTO();
-            return ResponseEntity.ok(dtoRetorno);
+            AppointmentType typeFind = tipoService.findById(id);
+            AppointmentTypeDTO dtoResponse = typeFind.toAppointmentTypeDTO();
+            return ResponseEntity.ok(dtoResponse);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PutMapping("/atualizar")
-    public ResponseEntity<?> atualizar(@RequestBody AppointmentTypeDTO dto){
+    @PutMapping
+    public ResponseEntity<?> update(@RequestBody AppointmentTypeDTO dto){
         try{
-            AppointmentType tipoConsulta = dto.toAppointment();
-            AppointmentType tipoConsultaAtualizado = tipoService.update(tipoConsulta);
-            AppointmentTypeDTO dtoRetorno = tipoConsultaAtualizado.toAppointmentTypeDTO();
-            return ResponseEntity.ok(dtoRetorno);
+            AppointmentType appointmentType = dto.toAppointment();
+            AppointmentType typeUpdated = tipoService.update(appointmentType);
+            AppointmentTypeDTO dtoResponse = typeUpdated.toAppointmentTypeDTO();
+            return ResponseEntity.ok(dtoResponse);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }

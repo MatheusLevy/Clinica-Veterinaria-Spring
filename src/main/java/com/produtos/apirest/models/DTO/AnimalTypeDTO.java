@@ -20,7 +20,13 @@ public class AnimalTypeDTO {
     private List<Animal> animals;
     private List<AnimalType> animalTypes;
 
+    private void hasId(){
+        if (this.id == null)
+            this.id = 0L;
+    }
+
     public AnimalType toAnimalType(){
+        hasId();
         return AnimalType.builder()
                 .animalTypeId(this.id)
                 .name(this.name)
