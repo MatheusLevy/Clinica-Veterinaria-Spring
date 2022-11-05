@@ -31,7 +31,7 @@ import static com.produtos.apirest.Util.Util.toJson;
 @SpringBootTest
 public class EspecialidadeControllerTeste {
 
-    private final String API = "/api/especialidade";
+    private final String API = "/api/expertise";
 
     @MockBean
     private ExpertiseService expertiseService;
@@ -46,7 +46,7 @@ public class EspecialidadeControllerTeste {
         return ExpertiseDTO.builder()
                 .id(1L)
                 .areaId(1L)
-                .name("nome")
+                .name("name")
                 .area(generateAreaInstance())
                 .build();
     }
@@ -54,7 +54,7 @@ public class EspecialidadeControllerTeste {
     public static Expertise generateEspecialidadeInstance(){
         return Expertise.builder()
                 .expertiseId(1L)
-                .name("nome")
+                .name("name")
                 .area(generateAreaInstance())
                 .build();
     }
@@ -71,7 +71,7 @@ public class EspecialidadeControllerTeste {
         Mockito.when(expertiseService.save(Mockito.any(Expertise.class))).thenReturn(generateEspecialidadeInstance());
         Mockito.when(areaService.save(Mockito.any(Area.class))).thenReturn(generateAreaInstance());
         String json = toJson(generateEspecialidadeDTOInstance());
-        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.POST, API.concat("/salvar"), json);
+        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.POST, API, json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
@@ -81,7 +81,7 @@ public class EspecialidadeControllerTeste {
     public void deveAtualizar() throws Exception{
         Mockito.when(expertiseService.update(Mockito.any(Expertise.class))).thenReturn(generateEspecialidadeInstance());
         String json = toJson(generateEspecialidadeDTOInstance());
-        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.PUT, API.concat("/atualizar"), json);
+        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.PUT, API, json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -92,7 +92,7 @@ public class EspecialidadeControllerTeste {
         Long id = 1L;
         Mockito.when(expertiseService.findById(Mockito.anyLong())).thenReturn(generateEspecialidadeInstance());
         Mockito.doNothing().when(expertiseService).remove(Mockito.any(Expertise.class));
-        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/remover/").concat(String.valueOf(id)));
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -102,7 +102,7 @@ public class EspecialidadeControllerTeste {
     public void deveRemoverComFeedback() throws Exception{
         Long id = 1L;
         Mockito.when(expertiseService.removeByIdWithFeedback(Mockito.anyLong())).thenReturn(generateEspecialidadeInstance());
-        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/remover/feedback/").concat(String.valueOf(id)));
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/feedback/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -112,7 +112,7 @@ public class EspecialidadeControllerTeste {
     public void deveBuscarPorFiltro() throws Exception{
         Mockito.when(expertiseService.find(Mockito.any(Expertise.class))).thenReturn(generateEspecialidadeListInstance());
         String json = toJson(generateEspecialidadeDTOInstance());
-        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.GET, API.concat("/buscar/filtro"), json);
+        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.GET, API.concat("/filter"), json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -122,7 +122,7 @@ public class EspecialidadeControllerTeste {
     public void deveBuscarPorId() throws Exception{
         Long id = 1L;
         Mockito.when(expertiseService.findById(Mockito.anyLong())).thenReturn(generateEspecialidadeInstance());
-        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/buscar/").concat(String.valueOf(id)));
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -131,7 +131,7 @@ public class EspecialidadeControllerTeste {
     @Test
     public void deveBuscarTodos() throws Exception{
         Mockito.when(expertiseService.findAll()).thenReturn(generateEspecialidadeListInstance());
-        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/buscarTodos"));
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }

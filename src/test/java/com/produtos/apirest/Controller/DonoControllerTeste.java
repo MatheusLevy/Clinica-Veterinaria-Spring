@@ -30,7 +30,7 @@ import static org.mockito.ArgumentMatchers.isA;
 @SpringBootTest
 public class DonoControllerTeste {
 
-    private final String API = "/api/dono";
+    private final String API = "/api/owner";
 
     @MockBean
     public OwnerService ownerService;
@@ -50,9 +50,9 @@ public class DonoControllerTeste {
     public static OwnerDTO generateDonoDTOInstance(){
         return OwnerDTO.builder()
                 .id(1L)
-                .name("nome")
+                .name("name")
                 .cpf("cpf")
-                .phone("telefone")
+                .phone("phone")
                 .build();
     }
 
@@ -67,7 +67,7 @@ public class DonoControllerTeste {
     public void deveSalvar() throws Exception{
         Mockito.when(ownerService.save(Mockito.any(Owner.class))).thenReturn(generateOwner());
         String json = toJson(generateDonoDTOInstance());
-        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.POST, API.concat("/salvar"), json);
+        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.POST, API, json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
@@ -77,7 +77,7 @@ public class DonoControllerTeste {
     public void deveAtualizar() throws Exception{
         Mockito.when(ownerService.update(Mockito.any(Owner.class))).thenReturn(generateOwner());
         String json = toJson(generateDonoDTOInstance());
-        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.PUT, API.concat("/atualizar"), json);
+        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.PUT, API, json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -87,7 +87,7 @@ public class DonoControllerTeste {
     public void deveRemoverPorId() throws Exception{
         Long id = 1L;
         Mockito.doNothing().when(ownerService).removeById(isA(Long.class));
-        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/remover/").concat(String.valueOf(id)));
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string("\"NO_CONTENT\""));
@@ -98,7 +98,7 @@ public class DonoControllerTeste {
     public void deveRemoverComFeedback() throws Exception{
         Long id = 1L;
         Mockito.when(ownerService.removeByIdWithFeedback(Mockito.anyLong())).thenReturn(generateOwner());
-        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/remover/feedback/").concat(String.valueOf(id)));
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/feedback/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -108,7 +108,7 @@ public class DonoControllerTeste {
     public void deveBuscarComFiltro() throws Exception{
         Mockito.when(ownerService.find(Mockito.any(Owner.class))).thenReturn(generateListDonoInstance());
         String json = toJson(generateDonoDTOInstance());
-        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.GET, API.concat("/buscar/filtro"), json);
+        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.GET, API.concat("/filter"), json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -118,7 +118,7 @@ public class DonoControllerTeste {
     public void deveBuscarPorId() throws Exception{
         Long id = 1L;
         Mockito.when(ownerService.findById(Mockito.anyLong())).thenReturn(generateOwner());
-        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/buscar/").concat(String.valueOf(id)));
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -127,7 +127,7 @@ public class DonoControllerTeste {
     @Test
     public void deveBuscarTodos() throws Exception{
         Mockito.when(ownerService.findAll()).thenReturn(generateListDonoInstance());
-        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/buscarTodos"));
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -137,7 +137,7 @@ public class DonoControllerTeste {
     public void deveBuscarTodosAnimais() throws Exception{
         Long id = 1L;
         Mockito.when(ownerService.findAllAnimalsByOwnerId(Mockito.anyLong())).thenReturn(generateAnimalList());
-        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/animais/".concat(String.valueOf(id))));
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/animals/".concat(String.valueOf(id))));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }

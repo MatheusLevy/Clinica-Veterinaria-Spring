@@ -24,7 +24,7 @@ import static com.produtos.apirest.Util.Util.toJson;
 @AutoConfigureMockMvc
 @SpringBootTest
 public class TipoConsultaControllerTeste {
-    private final String API = "/api/tipoConsulta";
+    private final String API = "/api/appointmentType";
     @MockBean
     private AppointmentTypeService appointmentTypeService;
 
@@ -41,7 +41,7 @@ public class TipoConsultaControllerTeste {
     public static AppointmentTypeDTO generateTipoConsultaDTOInstance(){
         return AppointmentTypeDTO.builder()
                 .id(1L)
-                .name("nome")
+                .name("name")
                 .build();
     }
 
@@ -50,7 +50,7 @@ public class TipoConsultaControllerTeste {
     public void deveSalvar() throws Exception{
         Mockito.when(appointmentTypeService.save(Mockito.any(AppointmentType.class))).thenReturn(generateTipoConsultaInstance());
         String json = toJson(generateTipoConsultaDTOInstance());
-        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.POST, API.concat("/salvar"), json);
+        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.POST, API, json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
@@ -60,7 +60,7 @@ public class TipoConsultaControllerTeste {
     public void deveAtualizar() throws Exception{
         Mockito.when(appointmentTypeService.update(Mockito.any(AppointmentType.class))).thenReturn(generateTipoConsultaInstance());
         String json = toJson(generateTipoConsultaDTOInstance());
-        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.PUT, API.concat("/atualizar"), json);
+        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.PUT, API, json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -71,7 +71,7 @@ public class TipoConsultaControllerTeste {
         Long id = 1L;
         Mockito.doNothing().when(appointmentTypeService).removeById(Mockito.anyLong());
         Mockito.when(appointmentTypeService.findById(Mockito.anyLong())).thenReturn(generateTipoConsultaInstance());
-        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/remover/").concat(String.valueOf(id)));
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -81,7 +81,7 @@ public class TipoConsultaControllerTeste {
     public void deveRemoverComFeedback() throws Exception{
         Long id = 1L;
         Mockito.when(appointmentTypeService.removeByIdWithFeedback(Mockito.anyLong())).thenReturn(generateTipoConsultaInstance());
-        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/remover/feedback/").concat(String.valueOf(id)));
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/feedback/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -91,7 +91,7 @@ public class TipoConsultaControllerTeste {
     public void deveBuscarPorId() throws Exception {
         Long id = 1L;
         Mockito.when(appointmentTypeService.findById(Mockito.anyLong())).thenReturn(generateTipoConsultaInstance());
-        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/buscar/").concat(String.valueOf(id)));
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }

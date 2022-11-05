@@ -25,7 +25,7 @@ import static com.produtos.apirest.Util.Util.toJson;
 @SpringBootTest
 public class TipoAnimalControllerTeste {
 
-    private final String API = "/api/tipoAnimal";
+    private final String API = "/api/animalType";
 
     @MockBean
     private AnimalTypeService animalTypeService;
@@ -43,7 +43,7 @@ public class TipoAnimalControllerTeste {
     public AnimalTypeDTO generateTipoAnimalDTOInstance(){
         return AnimalTypeDTO.builder()
                 .id(1L)
-                .name("nome")
+                .name("name")
                 .build();
     }
 
@@ -52,7 +52,7 @@ public class TipoAnimalControllerTeste {
     public void deveSalvar() throws Exception{
         Mockito.when(animalTypeService.save(Mockito.any(AnimalType.class))).thenReturn(generateTipoAnimalInstance());
         String json = toJson(generateTipoAnimalDTOInstance());
-        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.POST, API.concat("/salvar"), json);
+        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.POST, API, json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
@@ -62,7 +62,7 @@ public class TipoAnimalControllerTeste {
     public void deveAtualizar() throws Exception{
         Mockito.when(animalTypeService.update(Mockito.any(AnimalType.class))).thenReturn(generateTipoAnimalInstance());
         String json = toJson(generateTipoAnimalDTOInstance());
-        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.PUT, API.concat("/atualizar"), json);
+        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.PUT, API, json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -72,7 +72,7 @@ public class TipoAnimalControllerTeste {
     public void deveRemover() throws Exception{
         Long id = 1L;
         Mockito.doNothing().when(animalTypeService).removeById(Mockito.anyLong());
-        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/remover/").concat(String.valueOf(id)));
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -82,7 +82,7 @@ public class TipoAnimalControllerTeste {
     public void deveRemoverComFeedback() throws Exception{
         Long id = 1L;
         Mockito.when(animalTypeService.removeByIdWithFeedback(Mockito.anyLong())).thenReturn(generateTipoAnimalInstance());
-        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/remover/feedback/").concat(String.valueOf(id)));
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/feedback/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -92,7 +92,7 @@ public class TipoAnimalControllerTeste {
     public void deveBuscarPorId() throws Exception{
         Long id = 1L;
         Mockito.when(animalTypeService.findById(Mockito.anyLong())).thenReturn(generateTipoAnimalInstance());
-        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/buscarPorId/").concat(String.valueOf(id)));
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }

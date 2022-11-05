@@ -25,7 +25,7 @@ import static com.produtos.apirest.Util.Util.toJson;
 @SpringBootTest
 public class UsuarioControllerTeste {
 
-    private final String API = "/api/usuario";
+    private final String API = "/api/user";
 
     @MockBean
     private UserService userService;
@@ -37,7 +37,7 @@ public class UsuarioControllerTeste {
         return UserDTO.builder()
                 .id(1L)
                 .username("username")
-                .password("senha")
+                .password("password")
                 .build();
     }
 
@@ -53,7 +53,7 @@ public class UsuarioControllerTeste {
     public void deveAutenticar() throws Exception{
         Mockito.when(userService.authenticate(Mockito.anyString(), Mockito.anyString())).thenReturn(generateUsuarioInstance());
         String json = toJson(generateUsuarioDTOInstance());
-        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.GET, API.concat("/autenticar"), json);
+        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.GET, API.concat("/authenticate"), json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -63,7 +63,7 @@ public class UsuarioControllerTeste {
     public void deveSalvar() throws Exception{
         Mockito.when(userService.save(Mockito.any(User.class))).thenReturn(generateUsuarioInstance());
         String json = toJson(generateUsuarioDTOInstance());
-        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.POST, API.concat("/salvar"), json);
+        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.POST, API, json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
@@ -73,7 +73,7 @@ public class UsuarioControllerTeste {
     public void deveAtualizar() throws Exception{
         Mockito.when(userService.update(Mockito.any(User.class))).thenReturn(generateUsuarioInstance());
         String json = toJson(generateUsuarioDTOInstance());
-        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.PUT, API.concat("/atualizar"), json);
+        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.PUT, API, json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -84,7 +84,7 @@ public class UsuarioControllerTeste {
         Long id = 1L;
         Mockito.when(userService.findById(Mockito.anyLong())).thenReturn(generateUsuarioInstance());
         Mockito.doNothing().when(userService).remove(Mockito.any(User.class));
-        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/remover/").concat(String.valueOf(id)));
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -94,7 +94,7 @@ public class UsuarioControllerTeste {
     public void deveRemoverComFeedback() throws Exception{
         Long id = 1L;
         Mockito.when(userService.removeByIdWithFeedback(Mockito.anyLong())).thenReturn(generateUsuarioInstance());
-        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/remover/feedback/").concat(String.valueOf(id)));
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/feedback/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -104,7 +104,7 @@ public class UsuarioControllerTeste {
     public void deveBuscarPorId() throws Exception{
         Long id = 1L;
         Mockito.when(userService.findById(Mockito.anyLong())).thenReturn(generateUsuarioInstance());
-        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/buscar/").concat(String.valueOf(id)));
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -114,7 +114,7 @@ public class UsuarioControllerTeste {
     public void deveBuscarPorUsername() throws Exception{
         String username = "username";
         Mockito.when(userService.findByUsername(Mockito.anyString())).thenReturn(generateUsuarioInstance());
-        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/buscarPorUsername/").concat(username));
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/username/").concat(username));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
