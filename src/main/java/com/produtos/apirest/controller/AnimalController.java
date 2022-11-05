@@ -93,7 +93,7 @@ public class AnimalController {
         }
     }
 
-    @GetMapping("/findOwner/{id}")
+    @GetMapping("/owner/{id}")
     public ResponseEntity<?> findOwnerByAnimalId(@PathVariable(value = "id") Long id){
         try {
             Owner ownerFind = animalService.findOwnerByAnimalId(id);
@@ -104,7 +104,7 @@ public class AnimalController {
         }
     }
 
-    @PutMapping("/update/dono")
+    @PutMapping("/owner")
     public ResponseEntity<?> updateOwner(@RequestBody AnimalDTO animalDTO){
         try {
             Owner ownerFind = ownerService.findById(animalDTO.getOwnerId());
