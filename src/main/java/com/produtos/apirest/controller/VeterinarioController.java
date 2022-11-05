@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/veterinarys")
+@RequestMapping("/api/veterinary")
 public class VeterinarioController {
 
     private final VeterinarioService veterinarioService;
@@ -45,7 +45,7 @@ public class VeterinarioController {
         }
     }
 
-    @PutMapping("/atualizar")
+    @PutMapping
     public ResponseEntity<?> update(@RequestBody VeterinaryDTO dto){
         try{
             Expertise expertiseFind = expertiseService.findById(dto.getExpertiseId());
@@ -90,7 +90,7 @@ public class VeterinarioController {
         }
     }
 
-    @GetMapping("/buscarTodos")
+    @GetMapping
     public ResponseEntity<?> findAll(){
         try{
             List<Veterinary> veterinaries = veterinarioService.findAll();
