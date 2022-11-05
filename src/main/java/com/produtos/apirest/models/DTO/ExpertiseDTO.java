@@ -21,7 +21,13 @@ public class ExpertiseDTO {
     private Area area;
     private List<Area> areas;
 
+    private void hasId(){
+        if (this.id == null)
+            this.id = 0L;
+    }
+
     public Expertise toExpertise(){
+        hasId();
         return Expertise.builder()
                 .expertiseId(this.id)
                 .area(this.area)
@@ -30,6 +36,7 @@ public class ExpertiseDTO {
     }
 
     public Expertise toExpertise(Area area){
+        hasId();
         return Expertise.builder()
                 .expertiseId(this.id)
                 .area(area)

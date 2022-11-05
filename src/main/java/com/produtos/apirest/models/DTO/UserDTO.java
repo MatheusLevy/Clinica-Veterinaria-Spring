@@ -20,6 +20,11 @@ public class UserDTO {
     private String password;
     private List<Role> roles;
 
+    private void hasId(){
+        if (this.id == null)
+            this.id = 0L;
+    }
+
     public User toUser(){
         return User.builder()
                 .userId(this.id)

@@ -20,6 +20,12 @@ public class AppointmentTypeDTO {
     private List<Appointment> appointments;
     private List<AppointmentType> appointmentTypes;
 
+    private void hasId(){
+        if (this.id == null){
+            this.id = 0L;
+        }
+    }
+
     public AppointmentType toAppointment(){
         return AppointmentType.builder()
                 .appointmentTypeId(this.id)

@@ -15,6 +15,11 @@ public class RoleDTO {
     private Long id;
     private RoleName roleName;
 
+    private void hasId(){
+        if (this.id == null)
+            this.id = 0L;
+    }
+
     public Role toRole(){
         return Role.builder()
                 .roleId(this.id)

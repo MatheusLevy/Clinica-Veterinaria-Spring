@@ -22,6 +22,10 @@ public class OwnerDTO {
     private List<Animal> animals;
     private List<Owner> owners;
 
+    private void hasId(){
+        if(this.id == null)
+            this.id = 0L;
+    }
     public Owner toOwner(){
         return Owner.builder()
                 .ownerId(this.id)

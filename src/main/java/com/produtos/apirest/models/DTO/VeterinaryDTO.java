@@ -23,7 +23,13 @@ public class VeterinaryDTO {
     private Expertise expertise;
     private List<Expertise> expertises;
 
+    private void hasId(){
+        if (this.id == null)
+            this.id = 0L;
+    }
+
     public Veterinary toVeterinary(){
+        hasId();
         return Veterinary.builder()
                 .veterinaryId(this.id)
                 .name(this.name)
@@ -34,6 +40,7 @@ public class VeterinaryDTO {
     }
 
     public Veterinary toVeterinary(Expertise expertise){
+        hasId();
         return Veterinary.builder()
                 .veterinaryId(this.id)
                 .name(this.name)

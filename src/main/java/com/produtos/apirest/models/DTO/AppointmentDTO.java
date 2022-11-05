@@ -46,6 +46,11 @@ public class AppointmentDTO {
     private Long appointmentTypeId;
     private List<AppointmentType> appointmentTypes;
 
+    private void hasId(){
+        if (this.id == null)
+            this.id = 0L;
+    }
+
     public Appointment toAppointment(){
         return Appointment.builder()
                 .appointmentId(this.id)

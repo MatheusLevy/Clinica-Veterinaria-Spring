@@ -26,7 +26,13 @@ public class AnimalDTO {
     private String animalTypeName;
     private List<AnimalType> types;
 
+    private void hasId(){
+        if (this.id == null)
+            this.id = 0L;
+    }
+
     public Animal toAnimal(){
+        hasId();
         return Animal.builder()
                 .animalId(this.id)
                 .name(this.name)
@@ -36,6 +42,7 @@ public class AnimalDTO {
     }
 
     public Animal toAnimal(Owner owner, AnimalType type){
+        hasId();
         return Animal.builder()
                 .animalId(this.id)
                 .name(this.name)
