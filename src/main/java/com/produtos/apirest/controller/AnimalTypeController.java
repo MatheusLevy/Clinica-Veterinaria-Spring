@@ -1,8 +1,8 @@
 package com.produtos.apirest.controller;
 
-import com.produtos.apirest.models.AppointmentType;
-import com.produtos.apirest.models.DTO.AppointmentTypeDTO;
-import com.produtos.apirest.service.AppointmentTypeService;
+import com.produtos.apirest.models.AnimalType;
+import com.produtos.apirest.models.DTO.AnimalTypeDTO;
+import com.produtos.apirest.service.AnimalTypeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,21 +15,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/appointmentType")
-public class TipoConsultaController {
+@RequestMapping("api/animalType")
+public class AnimalTypeController {
 
-    private final AppointmentTypeService tipoService;
+    private final AnimalTypeService typeService;
 
-    public TipoConsultaController(AppointmentTypeService tipoService) {
-        this.tipoService = tipoService;
+    public AnimalTypeController(AnimalTypeService typeService) {
+        this.typeService = typeService;
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody AppointmentTypeDTO dto){
+    public ResponseEntity<?> save(@RequestBody AnimalTypeDTO animalTypeDTO){
         try{
-            AppointmentType appointmentType = dto.toAppointment();
-            AppointmentType typeSaved = tipoService.save(appointmentType);
-            AppointmentTypeDTO dtoResponse = typeSaved.toAppointmentTypeDTO();
+            AnimalType animalType = animalTypeDTO.toAnimalType();
+            AnimalType typeSaved = typeService.save(animalType);
+            AnimalTypeDTO dtoResponse = typeSaved.toAnimalTypeDTO();
             return new ResponseEntity<>(dtoResponse, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -37,9 +37,9 @@ public class TipoConsultaController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> removeById(@PathVariable(value = "id") Long id){
-        try {
-            tipoService.removeById(id);
+    public ResponseEntity<?> remove(@PathVariable(value = "id") Long id){
+        try{
+            typeService.removeById(id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -49,8 +49,20 @@ public class TipoConsultaController {
     @DeleteMapping("/feedback/{id}")
     public ResponseEntity<?> removeWithFeedback(@PathVariable(value = "id") Long id){
         try{
-            AppointmentType typeRemoved = tipoService.removeByIdWithFeedback(id);
-            AppointmentTypeDTO dtoResponse = typeRemoved.toAppointmentTypeDTO();
+            AnimalType typeRemoved = typeService.removeByIdWithFeedback(id);
+            AnimalTypeDTO dtoResponse = typeRemoved.toAnimalTypeDTO();
+            return ResponseEntity.ok(dtoResponse);
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping
+    public ResponseEntity<?> update(@RequestBody AnimalTypeDTO animalTypeDTO){
+        try{
+            AnimalType animalType = animalTypeDTO.toAnimalType();
+            AnimalType animalTypeUpdated = typeService.update(animalType);
+            AnimalTypeDTO dtoResponse = animalTypeUpdated.toAnimalTypeDTO();
             return ResponseEntity.ok(dtoResponse);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -60,20 +72,8 @@ public class TipoConsultaController {
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id){
         try{
-            AppointmentType typeFind = tipoService.findById(id);
-            AppointmentTypeDTO dtoResponse = typeFind.toAppointmentTypeDTO();
-            return ResponseEntity.ok(dtoResponse);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    @PutMapping
-    public ResponseEntity<?> update(@RequestBody AppointmentTypeDTO dto){
-        try{
-            AppointmentType appointmentType = dto.toAppointment();
-            AppointmentType typeUpdated = tipoService.update(appointmentType);
-            AppointmentTypeDTO dtoResponse = typeUpdated.toAppointmentTypeDTO();
+            AnimalType typeFind = typeService.findById(id);
+            AnimalTypeDTO dtoResponse = typeFind.toAnimalTypeDTO();
             return ResponseEntity.ok(dtoResponse);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());

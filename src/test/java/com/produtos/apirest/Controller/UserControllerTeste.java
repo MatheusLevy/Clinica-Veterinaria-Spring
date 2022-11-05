@@ -1,9 +1,9 @@
 package com.produtos.apirest.Controller;
 
 import com.produtos.apirest.Util.Util;
-import com.produtos.apirest.models.AnimalType;
-import com.produtos.apirest.models.DTO.AnimalTypeDTO;
-import com.produtos.apirest.service.AnimalTypeService;
+import com.produtos.apirest.models.DTO.UserDTO;
+import com.produtos.apirest.models.User;
+import com.produtos.apirest.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,35 +23,46 @@ import static com.produtos.apirest.Util.Util.toJson;
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest
-public class TipoAnimalControllerTeste {
+public class UserControllerTeste {
 
-    private final String API = "/api/animalType";
+    private final String API = "/api/user";
 
     @MockBean
-    private AnimalTypeService animalTypeService;
+    private UserService userService;
 
     @Autowired
     MockMvc mvc;
 
-    public static AnimalType generateTipoAnimalInstance(){
-        return AnimalType.builder()
-                .animalTypeId(1L)
-                .name("name")
+    public static UserDTO generateUsuarioDTOInstance(){
+        return UserDTO.builder()
+                .id(1L)
+                .username("username")
+                .password("password")
                 .build();
     }
 
-    public AnimalTypeDTO generateTipoAnimalDTOInstance(){
-        return AnimalTypeDTO.builder()
-                .id(1L)
-                .name("name")
+    public static User generateUsuarioInstance(){
+        return User.builder()
+                .userId(1L)
+                .username("username")
+                .password("passsword")
                 .build();
+    }
+
+    @Test
+    public void deveAutenticar() throws Exception{
+        Mockito.when(userService.authenticate(Mockito.anyString(), Mockito.anyString())).thenReturn(generateUsuarioInstance());
+        String json = toJson(generateUsuarioDTOInstance());
+        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.GET, API.concat("/authenticate"), json);
+        mvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @WithUserDetails("Admin")
     @Test
     public void deveSalvar() throws Exception{
-        Mockito.when(animalTypeService.save(Mockito.any(AnimalType.class))).thenReturn(generateTipoAnimalInstance());
-        String json = toJson(generateTipoAnimalDTOInstance());
+        Mockito.when(userService.save(Mockito.any(User.class))).thenReturn(generateUsuarioInstance());
+        String json = toJson(generateUsuarioDTOInstance());
         MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.POST, API, json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isCreated());
@@ -60,8 +71,8 @@ public class TipoAnimalControllerTeste {
     @WithUserDetails("Admin")
     @Test
     public void deveAtualizar() throws Exception{
-        Mockito.when(animalTypeService.update(Mockito.any(AnimalType.class))).thenReturn(generateTipoAnimalInstance());
-        String json = toJson(generateTipoAnimalDTOInstance());
+        Mockito.when(userService.update(Mockito.any(User.class))).thenReturn(generateUsuarioInstance());
+        String json = toJson(generateUsuarioDTOInstance());
         MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.PUT, API, json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -69,9 +80,10 @@ public class TipoAnimalControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveRemover() throws Exception{
+    public void deveRemoverComId() throws Exception{
         Long id = 1L;
-        Mockito.doNothing().when(animalTypeService).removeById(Mockito.anyLong());
+        Mockito.when(userService.findById(Mockito.anyLong())).thenReturn(generateUsuarioInstance());
+        Mockito.doNothing().when(userService).remove(Mockito.any(User.class));
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -81,7 +93,7 @@ public class TipoAnimalControllerTeste {
     @Test
     public void deveRemoverComFeedback() throws Exception{
         Long id = 1L;
-        Mockito.when(animalTypeService.removeByIdWithFeedback(Mockito.anyLong())).thenReturn(generateTipoAnimalInstance());
+        Mockito.when(userService.removeByIdWithFeedback(Mockito.anyLong())).thenReturn(generateUsuarioInstance());
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/feedback/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -91,8 +103,18 @@ public class TipoAnimalControllerTeste {
     @Test
     public void deveBuscarPorId() throws Exception{
         Long id = 1L;
-        Mockito.when(animalTypeService.findById(Mockito.anyLong())).thenReturn(generateTipoAnimalInstance());
+        Mockito.when(userService.findById(Mockito.anyLong())).thenReturn(generateUsuarioInstance());
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/").concat(String.valueOf(id)));
+        mvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @WithUserDetails("Admin")
+    @Test
+    public void deveBuscarPorUsername() throws Exception{
+        String username = "username";
+        Mockito.when(userService.findByUsername(Mockito.anyString())).thenReturn(generateUsuarioInstance());
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/username/").concat(username));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }

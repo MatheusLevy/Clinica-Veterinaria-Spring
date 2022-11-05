@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.produtos.apirest.Controller.AnimalControllerTeste.generateAnimalInstance;
-import static com.produtos.apirest.Controller.TipoConsultaControllerTeste.generateTipoConsultaInstance;
-import static com.produtos.apirest.Controller.VeterinarioControllerTeste.generateVeterinarioInstance;
+import static com.produtos.apirest.Controller.TipoAppointmentControllerTeste.generateTipoConsultaInstance;
+import static com.produtos.apirest.Controller.VeterinaryControllerTeste.generateVeterinarioInstance;
 import static com.produtos.apirest.Util.Util.buildRequest;
 import static com.produtos.apirest.Util.Util.toJson;
 import static org.mockito.ArgumentMatchers.isA;
@@ -32,7 +32,7 @@ import static org.mockito.ArgumentMatchers.isA;
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest
-public class ConsultaControllerTeste {
+public class AppointmentControllerTeste {
 
     private final String API = "/api/appointment";
 

@@ -1,10 +1,9 @@
 package com.produtos.apirest.Controller;
 
 import com.produtos.apirest.Util.Util;
-import com.produtos.apirest.models.DTO.VeterinaryDTO;
-import com.produtos.apirest.models.Veterinary;
-import com.produtos.apirest.service.ExpertiseService;
-import com.produtos.apirest.service.VeterinarioService;
+import com.produtos.apirest.models.AppointmentType;
+import com.produtos.apirest.models.DTO.AppointmentTypeDTO;
+import com.produtos.apirest.service.AppointmentTypeService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,61 +17,39 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.produtos.apirest.Controller.EspecialidadeControllerTeste.generateEspecialidadeInstance;
 import static com.produtos.apirest.Util.Util.buildRequest;
 import static com.produtos.apirest.Util.Util.toJson;
 
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest
-public class VeterinarioControllerTeste {
-
-    private final String API = "/api/veterinary";
-
+public class TipoAppointmentControllerTeste {
+    private final String API = "/api/appointmentType";
     @MockBean
-    private VeterinarioService veterinarioService;
-
-    @MockBean
-    private ExpertiseService expertiseService;
+    private AppointmentTypeService appointmentTypeService;
 
     @Autowired
     MockMvc mvc;
 
-    public static Veterinary generateVeterinarioInstance(){
-        return Veterinary.builder()
-                .veterinaryId(1L)
-                .name("nome")
-                .phone("telefone")
-                .cpf("cpf")
-                .expertise(generateEspecialidadeInstance())
+    public static AppointmentType generateTipoConsultaInstance(){
+        return AppointmentType.builder()
+                .appointmentTypeId(1L)
+                .name("name")
                 .build();
     }
 
-    public static VeterinaryDTO generateVeterinarioDTOInstance(){
-        return VeterinaryDTO.builder()
+    public static AppointmentTypeDTO generateTipoConsultaDTOInstance(){
+        return AppointmentTypeDTO.builder()
                 .id(1L)
-                .name("nome")
-                .phone("telefone")
-                .cpf("cpf")
-                .expertise(generateEspecialidadeInstance())
+                .name("name")
                 .build();
-    }
-
-    public static List<Veterinary> generateVeterinarioListInstance(){
-        return new ArrayList<>(){{
-           add(generateVeterinarioInstance());
-        }};
     }
 
     @WithUserDetails("Admin")
     @Test
     public void deveSalvar() throws Exception{
-        Mockito.when(expertiseService.findById(Mockito.anyLong())).thenReturn(generateEspecialidadeInstance());
-        Mockito.when(veterinarioService.save(Mockito.any(Veterinary.class))).thenReturn(generateVeterinarioInstance());
-        String json = toJson(generateVeterinarioDTOInstance());
+        Mockito.when(appointmentTypeService.save(Mockito.any(AppointmentType.class))).thenReturn(generateTipoConsultaInstance());
+        String json = toJson(generateTipoConsultaDTOInstance());
         MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.POST, API, json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isCreated());
@@ -81,8 +58,8 @@ public class VeterinarioControllerTeste {
     @WithUserDetails("Admin")
     @Test
     public void deveAtualizar() throws Exception{
-        Mockito.when(veterinarioService.update(Mockito.any(Veterinary.class))).thenReturn(generateVeterinarioInstance());
-        String json = toJson(generateVeterinarioDTOInstance());
+        Mockito.when(appointmentTypeService.update(Mockito.any(AppointmentType.class))).thenReturn(generateTipoConsultaInstance());
+        String json = toJson(generateTipoConsultaDTOInstance());
         MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.PUT, API, json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -92,7 +69,8 @@ public class VeterinarioControllerTeste {
     @Test
     public void deveRemoverPorId() throws Exception{
         Long id = 1L;
-        Mockito.doNothing().when(veterinarioService).removeById(Mockito.anyLong());
+        Mockito.doNothing().when(appointmentTypeService).removeById(Mockito.anyLong());
+        Mockito.when(appointmentTypeService.findById(Mockito.anyLong())).thenReturn(generateTipoConsultaInstance());
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -102,7 +80,7 @@ public class VeterinarioControllerTeste {
     @Test
     public void deveRemoverComFeedback() throws Exception{
         Long id = 1L;
-        Mockito.when(veterinarioService.removeByIdWithFeedback(Mockito.anyLong())).thenReturn(generateVeterinarioInstance());
+        Mockito.when(appointmentTypeService.removeByIdWithFeedback(Mockito.anyLong())).thenReturn(generateTipoConsultaInstance());
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/feedback/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -110,19 +88,10 @@ public class VeterinarioControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveBuscarPorId() throws Exception{
+    public void deveBuscarPorId() throws Exception {
         Long id = 1L;
-        Mockito.when(veterinarioService.findById(Mockito.anyLong())).thenReturn(generateVeterinarioInstance());
+        Mockito.when(appointmentTypeService.findById(Mockito.anyLong())).thenReturn(generateTipoConsultaInstance());
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/").concat(String.valueOf(id)));
-        mvc.perform(request)
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    @WithUserDetails("Admin")
-    @Test
-    public void deveBuscarTodos() throws Exception{
-        Mockito.when(veterinarioService.findAll()).thenReturn(generateVeterinarioListInstance());
-        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }

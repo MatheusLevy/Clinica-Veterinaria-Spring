@@ -24,8 +24,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.produtos.apirest.Controller.DonoControllerTeste.generateOwner;
-import static com.produtos.apirest.Controller.TipoAnimalControllerTeste.generateTipoAnimalInstance;
+import static com.produtos.apirest.Controller.OwnerControllerTeste.generateOwner;
+import static com.produtos.apirest.Controller.AnimalTypeControllerTeste.generateTipoAnimalInstance;
 import static com.produtos.apirest.Util.Util.buildRequest;
 import static com.produtos.apirest.Util.Util.toJson;
 import static org.mockito.ArgumentMatchers.isA;

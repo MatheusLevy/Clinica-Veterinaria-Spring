@@ -1,9 +1,9 @@
 package com.produtos.apirest.Controller;
 
 import com.produtos.apirest.Util.Util;
-import com.produtos.apirest.models.AppointmentType;
-import com.produtos.apirest.models.DTO.AppointmentTypeDTO;
-import com.produtos.apirest.service.AppointmentTypeService;
+import com.produtos.apirest.models.AnimalType;
+import com.produtos.apirest.models.DTO.AnimalTypeDTO;
+import com.produtos.apirest.service.AnimalTypeService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,23 +23,25 @@ import static com.produtos.apirest.Util.Util.toJson;
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest
-public class TipoConsultaControllerTeste {
-    private final String API = "/api/appointmentType";
+public class AnimalTypeControllerTeste {
+
+    private final String API = "/api/animalType";
+
     @MockBean
-    private AppointmentTypeService appointmentTypeService;
+    private AnimalTypeService animalTypeService;
 
     @Autowired
     MockMvc mvc;
 
-    public static AppointmentType generateTipoConsultaInstance(){
-        return AppointmentType.builder()
-                .appointmentTypeId(1L)
+    public static AnimalType generateTipoAnimalInstance(){
+        return AnimalType.builder()
+                .animalTypeId(1L)
                 .name("name")
                 .build();
     }
 
-    public static AppointmentTypeDTO generateTipoConsultaDTOInstance(){
-        return AppointmentTypeDTO.builder()
+    public AnimalTypeDTO generateTipoAnimalDTOInstance(){
+        return AnimalTypeDTO.builder()
                 .id(1L)
                 .name("name")
                 .build();
@@ -48,8 +50,8 @@ public class TipoConsultaControllerTeste {
     @WithUserDetails("Admin")
     @Test
     public void deveSalvar() throws Exception{
-        Mockito.when(appointmentTypeService.save(Mockito.any(AppointmentType.class))).thenReturn(generateTipoConsultaInstance());
-        String json = toJson(generateTipoConsultaDTOInstance());
+        Mockito.when(animalTypeService.save(Mockito.any(AnimalType.class))).thenReturn(generateTipoAnimalInstance());
+        String json = toJson(generateTipoAnimalDTOInstance());
         MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.POST, API, json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isCreated());
@@ -58,8 +60,8 @@ public class TipoConsultaControllerTeste {
     @WithUserDetails("Admin")
     @Test
     public void deveAtualizar() throws Exception{
-        Mockito.when(appointmentTypeService.update(Mockito.any(AppointmentType.class))).thenReturn(generateTipoConsultaInstance());
-        String json = toJson(generateTipoConsultaDTOInstance());
+        Mockito.when(animalTypeService.update(Mockito.any(AnimalType.class))).thenReturn(generateTipoAnimalInstance());
+        String json = toJson(generateTipoAnimalDTOInstance());
         MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.PUT, API, json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -67,10 +69,9 @@ public class TipoConsultaControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveRemoverPorId() throws Exception{
+    public void deveRemover() throws Exception{
         Long id = 1L;
-        Mockito.doNothing().when(appointmentTypeService).removeById(Mockito.anyLong());
-        Mockito.when(appointmentTypeService.findById(Mockito.anyLong())).thenReturn(generateTipoConsultaInstance());
+        Mockito.doNothing().when(animalTypeService).removeById(Mockito.anyLong());
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -80,7 +81,7 @@ public class TipoConsultaControllerTeste {
     @Test
     public void deveRemoverComFeedback() throws Exception{
         Long id = 1L;
-        Mockito.when(appointmentTypeService.removeByIdWithFeedback(Mockito.anyLong())).thenReturn(generateTipoConsultaInstance());
+        Mockito.when(animalTypeService.removeByIdWithFeedback(Mockito.anyLong())).thenReturn(generateTipoAnimalInstance());
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/feedback/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -88,9 +89,9 @@ public class TipoConsultaControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveBuscarPorId() throws Exception {
+    public void deveBuscarPorId() throws Exception{
         Long id = 1L;
-        Mockito.when(appointmentTypeService.findById(Mockito.anyLong())).thenReturn(generateTipoConsultaInstance());
+        Mockito.when(animalTypeService.findById(Mockito.anyLong())).thenReturn(generateTipoAnimalInstance());
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());

@@ -21,12 +21,12 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/expertise")
-public class EspecialidadeController {
+public class ExpertiseController {
 
     private final ExpertiseService expertiseService;
     private final AreaService areaService;
 
-    public EspecialidadeController(ExpertiseService expertiseService, AreaService areaService){
+    public ExpertiseController(ExpertiseService expertiseService, AreaService areaService){
         this.expertiseService = expertiseService;
         this.areaService = areaService;
     }

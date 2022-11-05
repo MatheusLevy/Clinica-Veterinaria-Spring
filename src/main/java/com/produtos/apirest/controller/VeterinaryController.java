@@ -21,14 +21,14 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/veterinary")
-public class VeterinarioController {
+public class VeterinaryController {
 
-    private final VeterinarioService veterinarioService;
+    private final VeterinarioService veterinaryService;
 
     private final ExpertiseService expertiseService;
 
-    public VeterinarioController(VeterinarioService veterinarioService, ExpertiseService expertiseService) {
-        this.veterinarioService = veterinarioService;
+    public VeterinaryController(VeterinarioService veterinaryService, ExpertiseService expertiseService) {
+        this.veterinaryService = veterinaryService;
         this.expertiseService = expertiseService;
     }
 
@@ -37,7 +37,7 @@ public class VeterinarioController {
         try{
             Expertise expertiseFind = expertiseService.findById(dto.getExpertiseId());
             Veterinary veterinary = dto.toVeterinary(expertiseFind);
-            Veterinary veterinarySaved = veterinarioService.save(veterinary);
+            Veterinary veterinarySaved = veterinaryService.save(veterinary);
             VeterinaryDTO dtoResponse = veterinarySaved.toVeterinaryDTO();
             return new ResponseEntity<>(dtoResponse, HttpStatus.CREATED);
         } catch (Exception e){
@@ -50,7 +50,7 @@ public class VeterinarioController {
         try{
             Expertise expertiseFind = expertiseService.findById(dto.getExpertiseId());
             Veterinary veterinary = dto.toVeterinary(expertiseFind);
-            Veterinary veterinaryUpdate = veterinarioService.update(veterinary);
+            Veterinary veterinaryUpdate = veterinaryService.update(veterinary);
             VeterinaryDTO dtoResponse = veterinaryUpdate.toVeterinaryDTO();
             return ResponseEntity.ok(dtoResponse);
         } catch (Exception e){
@@ -61,7 +61,7 @@ public class VeterinarioController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> removeById(@PathVariable(value = "id") Long id){
         try {
-            veterinarioService.removeById(id);
+            veterinaryService.removeById(id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -71,7 +71,7 @@ public class VeterinarioController {
     @DeleteMapping("/feedback/{id}")
     public ResponseEntity<?> removeWithFeedback(@PathVariable(value = "id") Long id){
         try{
-            Veterinary veterinaryRemoved = veterinarioService.removeByIdWithFeedback(id);
+            Veterinary veterinaryRemoved = veterinaryService.removeByIdWithFeedback(id);
             VeterinaryDTO dtoResponse = veterinaryRemoved.toVeterinaryDTO();
             return ResponseEntity.ok(dtoResponse);
         } catch (Exception e){
@@ -82,7 +82,7 @@ public class VeterinarioController {
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id){
         try{
-            Veterinary veterinary = veterinarioService.findById(id);
+            Veterinary veterinary = veterinaryService.findById(id);
             VeterinaryDTO dtoResponse = veterinary.toVeterinaryDTO();
             return ResponseEntity.ok(dtoResponse);
         } catch (Exception e){
@@ -93,7 +93,7 @@ public class VeterinarioController {
     @GetMapping
     public ResponseEntity<?> findAll(){
         try{
-            List<Veterinary> veterinaries = veterinarioService.findAll();
+            List<Veterinary> veterinaries = veterinaryService.findAll();
             List<VeterinaryDTO> dtosResponse = veterinaries
                     .stream()
                     .map(Veterinary::toVeterinaryDTO)

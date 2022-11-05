@@ -19,7 +19,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.produtos.apirest.Controller.EspecialidadeControllerTeste.generateEspecialidadeListInstance;
+import static com.produtos.apirest.Controller.ExpertiseControllerTeste.generateEspecialidadeListInstance;
 import static com.produtos.apirest.Util.Util.buildRequest;
 import static com.produtos.apirest.Util.Util.toJson;
 import static org.mockito.ArgumentMatchers.isA;

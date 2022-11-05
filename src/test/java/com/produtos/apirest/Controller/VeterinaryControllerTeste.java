@@ -1,9 +1,10 @@
 package com.produtos.apirest.Controller;
 
 import com.produtos.apirest.Util.Util;
-import com.produtos.apirest.models.DTO.UserDTO;
-import com.produtos.apirest.models.User;
-import com.produtos.apirest.service.UserService;
+import com.produtos.apirest.models.DTO.VeterinaryDTO;
+import com.produtos.apirest.models.Veterinary;
+import com.produtos.apirest.service.ExpertiseService;
+import com.produtos.apirest.service.VeterinarioService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,52 +18,61 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.produtos.apirest.Controller.ExpertiseControllerTeste.generateEspecialidadeInstance;
 import static com.produtos.apirest.Util.Util.buildRequest;
 import static com.produtos.apirest.Util.Util.toJson;
 
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest
-public class UsuarioControllerTeste {
+public class VeterinaryControllerTeste {
 
-    private final String API = "/api/user";
+    private final String API = "/api/veterinary";
 
     @MockBean
-    private UserService userService;
+    private VeterinarioService veterinarioService;
+
+    @MockBean
+    private ExpertiseService expertiseService;
 
     @Autowired
     MockMvc mvc;
 
-    public static UserDTO generateUsuarioDTOInstance(){
-        return UserDTO.builder()
+    public static Veterinary generateVeterinarioInstance(){
+        return Veterinary.builder()
+                .veterinaryId(1L)
+                .name("nome")
+                .phone("telefone")
+                .cpf("cpf")
+                .expertise(generateEspecialidadeInstance())
+                .build();
+    }
+
+    public static VeterinaryDTO generateVeterinarioDTOInstance(){
+        return VeterinaryDTO.builder()
                 .id(1L)
-                .username("username")
-                .password("password")
+                .name("nome")
+                .phone("telefone")
+                .cpf("cpf")
+                .expertise(generateEspecialidadeInstance())
                 .build();
     }
 
-    public static User generateUsuarioInstance(){
-        return User.builder()
-                .userId(1L)
-                .username("username")
-                .password("passsword")
-                .build();
-    }
-
-    @Test
-    public void deveAutenticar() throws Exception{
-        Mockito.when(userService.authenticate(Mockito.anyString(), Mockito.anyString())).thenReturn(generateUsuarioInstance());
-        String json = toJson(generateUsuarioDTOInstance());
-        MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.GET, API.concat("/authenticate"), json);
-        mvc.perform(request)
-                .andExpect(MockMvcResultMatchers.status().isOk());
+    public static List<Veterinary> generateVeterinarioListInstance(){
+        return new ArrayList<>(){{
+           add(generateVeterinarioInstance());
+        }};
     }
 
     @WithUserDetails("Admin")
     @Test
     public void deveSalvar() throws Exception{
-        Mockito.when(userService.save(Mockito.any(User.class))).thenReturn(generateUsuarioInstance());
-        String json = toJson(generateUsuarioDTOInstance());
+        Mockito.when(expertiseService.findById(Mockito.anyLong())).thenReturn(generateEspecialidadeInstance());
+        Mockito.when(veterinarioService.save(Mockito.any(Veterinary.class))).thenReturn(generateVeterinarioInstance());
+        String json = toJson(generateVeterinarioDTOInstance());
         MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.POST, API, json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isCreated());
@@ -71,8 +81,8 @@ public class UsuarioControllerTeste {
     @WithUserDetails("Admin")
     @Test
     public void deveAtualizar() throws Exception{
-        Mockito.when(userService.update(Mockito.any(User.class))).thenReturn(generateUsuarioInstance());
-        String json = toJson(generateUsuarioDTOInstance());
+        Mockito.when(veterinarioService.update(Mockito.any(Veterinary.class))).thenReturn(generateVeterinarioInstance());
+        String json = toJson(generateVeterinarioDTOInstance());
         MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.PUT, API, json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -80,10 +90,9 @@ public class UsuarioControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveRemoverComId() throws Exception{
+    public void deveRemoverPorId() throws Exception{
         Long id = 1L;
-        Mockito.when(userService.findById(Mockito.anyLong())).thenReturn(generateUsuarioInstance());
-        Mockito.doNothing().when(userService).remove(Mockito.any(User.class));
+        Mockito.doNothing().when(veterinarioService).removeById(Mockito.anyLong());
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -93,7 +102,7 @@ public class UsuarioControllerTeste {
     @Test
     public void deveRemoverComFeedback() throws Exception{
         Long id = 1L;
-        Mockito.when(userService.removeByIdWithFeedback(Mockito.anyLong())).thenReturn(generateUsuarioInstance());
+        Mockito.when(veterinarioService.removeByIdWithFeedback(Mockito.anyLong())).thenReturn(generateVeterinarioInstance());
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/feedback/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -103,7 +112,7 @@ public class UsuarioControllerTeste {
     @Test
     public void deveBuscarPorId() throws Exception{
         Long id = 1L;
-        Mockito.when(userService.findById(Mockito.anyLong())).thenReturn(generateUsuarioInstance());
+        Mockito.when(veterinarioService.findById(Mockito.anyLong())).thenReturn(generateVeterinarioInstance());
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -111,10 +120,9 @@ public class UsuarioControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveBuscarPorUsername() throws Exception{
-        String username = "username";
-        Mockito.when(userService.findByUsername(Mockito.anyString())).thenReturn(generateUsuarioInstance());
-        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/username/").concat(username));
+    public void deveBuscarTodos() throws Exception{
+        Mockito.when(veterinarioService.findAll()).thenReturn(generateVeterinarioListInstance());
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }

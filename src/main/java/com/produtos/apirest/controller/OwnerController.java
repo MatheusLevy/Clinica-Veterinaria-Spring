@@ -21,11 +21,11 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/owner")
-public class DonoController {
+public class OwnerController {
 
     private final OwnerService ownerService;
 
-    public DonoController(OwnerService ownerService){
+    public OwnerController(OwnerService ownerService){
         this.ownerService = ownerService;
     }
 

@@ -25,17 +25,17 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/appointment")
-public class ConsultaController {
+public class AppointmentController {
 
     private final AppointmentService appointmentService;
-    private final VeterinarioService veterinarioService;
+    private final VeterinarioService veterinaryService;
     private final AnimalService animalService;
     private final AppointmentTypeService appointmentTypeService;
 
-    public ConsultaController(AppointmentService appointmentService, VeterinarioService veterinarioService,
-                              AnimalService animalService, AppointmentTypeService appointmentTypeService){
+    public AppointmentController(AppointmentService appointmentService, VeterinarioService veterinaryService,
+                                 AnimalService animalService, AppointmentTypeService appointmentTypeService){
         this.appointmentService = appointmentService;
-        this.veterinarioService = veterinarioService;
+        this.veterinaryService = veterinaryService;
         this.animalService = animalService;
         this.appointmentTypeService = appointmentTypeService;
     }
@@ -44,7 +44,7 @@ public class ConsultaController {
     public ResponseEntity<?> save(@RequestBody AppointmentDTO consultadto){
         try {
             AppointmentType appointmentTypeFind = appointmentTypeService.findById(consultadto.getAppointmentTypeId());
-            Veterinary veterinaryFind = veterinarioService.findById(consultadto.getVetId());
+            Veterinary veterinaryFind = veterinaryService.findById(consultadto.getVetId());
             Animal animalFind = animalService.findById(consultadto.getAnimalId());
             Appointment appointment = consultadto.toAppointment(animalFind, veterinaryFind, appointmentTypeFind);
             Appointment appointmentSaved = appointmentService.save(appointment);
@@ -59,7 +59,7 @@ public class ConsultaController {
     public ResponseEntity<?> update(@RequestBody AppointmentDTO consultadto){
         try {
             AppointmentType appointmentTypeFind = appointmentTypeService.findById(consultadto.getAppointmentTypeId());
-            Veterinary veterinaryFind = veterinarioService.findById(consultadto.getVetId());
+            Veterinary veterinaryFind = veterinaryService.findById(consultadto.getVetId());
             Animal animalFind = animalService.findById(consultadto.getAnimalId());
             Appointment appointment = consultadto.toAppointment(animalFind, veterinaryFind, appointmentTypeFind);
             Appointment appointmentUpdated = appointmentService.update(appointment);
