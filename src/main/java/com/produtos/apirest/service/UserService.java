@@ -2,8 +2,8 @@ package com.produtos.apirest.service;
 
 import com.produtos.apirest.models.User;
 import com.produtos.apirest.repository.UserRepo;
-import com.produtos.apirest.service.excecoes.AuthenticationFailedExpection;
-import com.produtos.apirest.service.excecoes.BusinessRuleException;
+import com.produtos.apirest.service.exceptions.AuthenticationFailedExpection;
+import com.produtos.apirest.service.exceptions.BusinessRuleException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 

@@ -23,7 +23,7 @@ public class RoleServiceTest {
 
     protected static Role generateRole(Boolean initRole, RoleRepo roleRepo){
         Role role = Role.builder()
-                .roleName(RoleName.ROLE_TESTE)
+                .roleName(RoleName.ROLE_TEST)
                 .build();
         if (initRole)
             role = roleRepo.save(role);
@@ -32,11 +32,11 @@ public class RoleServiceTest {
 
     private Role generateRole(){
         return Role.builder()
-                .roleName(RoleName.ROLE_TESTE)
+                .roleName(RoleName.ROLE_TEST)
                 .build();
     }
 
-    protected static List<Role> genereteRolesList(Boolean initRole, RoleRepo roleRepo){
+    protected static List<Role> generateRolesList(Boolean initRole, RoleRepo roleRepo){
         return new ArrayList<>(){{
             add(generateRole(initRole, roleRepo));
             }};
@@ -66,7 +66,7 @@ public class RoleServiceTest {
     @Test
     public void update(){
         Role roleSaved = roleRepo.save(generateRole());
-        roleSaved.setRoleName(RoleName.ROLE_TESTE2);
+        roleSaved.setRoleName(RoleName.ROLE_TEST2);
         Role roleUpdated = roleService.update(roleSaved);
         Assertions.assertNotNull(roleUpdated);
         Assertions.assertEquals(roleSaved.getRoleId(), roleUpdated.getRoleId());

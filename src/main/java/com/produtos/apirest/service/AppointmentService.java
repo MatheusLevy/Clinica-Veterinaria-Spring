@@ -5,7 +5,7 @@ import com.produtos.apirest.models.Appointment;
 import com.produtos.apirest.models.AppointmentType;
 import com.produtos.apirest.models.Veterinary;
 import com.produtos.apirest.repository.AppointmentRepo;
-import com.produtos.apirest.service.excecoes.BusinessRuleException;
+import com.produtos.apirest.service.exceptions.BusinessRuleException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

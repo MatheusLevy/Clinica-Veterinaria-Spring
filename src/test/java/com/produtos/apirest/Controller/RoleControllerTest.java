@@ -36,14 +36,14 @@ public class RoleControllerTest {
     public Role generateRole(){
         return Role.builder()
                 .roleId(1L)
-                .roleName(RoleName.ROLE_TESTE)
+                .roleName(RoleName.ROLE_TEST)
                 .build();
     }
 
     public RoleDTO generateRoleDTO(){
         return RoleDTO.builder()
                 .id(1L)
-                .roleName(RoleName.ROLE_TESTE)
+                .roleName(RoleName.ROLE_TEST)
                 .build();
     }
 

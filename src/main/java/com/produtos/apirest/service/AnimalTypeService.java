@@ -2,7 +2,7 @@ package com.produtos.apirest.service;
 
 import com.produtos.apirest.models.AnimalType;
 import com.produtos.apirest.repository.AnimalTypeRepo;
-import com.produtos.apirest.service.excecoes.BusinessRuleException;
+import com.produtos.apirest.service.exceptions.BusinessRuleException;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;

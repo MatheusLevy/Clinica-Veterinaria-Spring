@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static com.produtos.apirest.Service.RoleServiceTest.genereteRolesList;
+import static com.produtos.apirest.Service.RoleServiceTest.generateRolesList;
 import static com.produtos.apirest.Service.RoleServiceTest.rollbackRolesList;
 
 @SpringBootTest
@@ -28,7 +28,7 @@ public class UserServiceTest {
         return User.builder()
                 .username("test")
                 .password("password")
-                .roles(genereteRolesList(initRole, roleRepo))
+                .roles(generateRolesList(initRole, roleRepo))
                 .build();
     }
 
@@ -36,7 +36,7 @@ public class UserServiceTest {
         return User.builder()
                 .username("test")
                 .password("password")
-                .roles(genereteRolesList(initRole, roleRepo))
+                .roles(generateRolesList(initRole, roleRepo))
                 .build();
     }
 

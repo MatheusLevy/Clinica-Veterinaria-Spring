@@ -1,4 +1,4 @@
-package com.produtos.apirest.service.excecoes;
+package com.produtos.apirest.service.exceptions;
 
 import org.springframework.security.core.AuthenticationException;
 

@@ -3,7 +3,7 @@ package com.produtos.apirest.service;
 import com.produtos.apirest.models.Animal;
 import com.produtos.apirest.models.Owner;
 import com.produtos.apirest.repository.OwnerRepo;
-import com.produtos.apirest.service.excecoes.BusinessRuleException;
+import com.produtos.apirest.service.exceptions.BusinessRuleException;
 import org.hibernate.Hibernate;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;

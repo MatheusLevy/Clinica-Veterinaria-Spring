@@ -16,7 +16,7 @@ public class RoleTest {
 
     protected static Role generateRole(){
         return Role.builder()
-                .roleName(RoleName.ROLE_TESTE)
+                .roleName(RoleName.ROLE_TEST)
                 .build();
     }
 
@@ -39,11 +39,11 @@ public class RoleTest {
     @Test
     public void update(){
         Role roleSaved = roleRepo.save(generateRole());
-        roleSaved.setRoleName(RoleName.ROLE_TESTE2);
+        roleSaved.setRoleName(RoleName.ROLE_TEST2);
         Role roleUpdated = roleRepo.save(roleSaved);
         Assertions.assertNotNull(roleUpdated);
         Assertions.assertEquals(roleUpdated.getRoleId(), roleSaved.getRoleId());
-        Assertions.assertEquals(roleUpdated.getRoleName(), RoleName.ROLE_TESTE2);
+        Assertions.assertEquals(roleUpdated.getRoleName(), RoleName.ROLE_TEST2);
         rollback(roleUpdated);
     }
 
