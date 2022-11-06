@@ -8,7 +8,7 @@ import com.produtos.apirest.models.Veterinary;
 import com.produtos.apirest.service.AnimalService;
 import com.produtos.apirest.service.AppointmentService;
 import com.produtos.apirest.service.AppointmentTypeService;
-import com.produtos.apirest.service.VeterinarioService;
+import com.produtos.apirest.service.VeterinaryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,11 +28,11 @@ import java.util.stream.Collectors;
 public class AppointmentController {
 
     private final AppointmentService appointmentService;
-    private final VeterinarioService veterinaryService;
+    private final VeterinaryService veterinaryService;
     private final AnimalService animalService;
     private final AppointmentTypeService appointmentTypeService;
 
-    public AppointmentController(AppointmentService appointmentService, VeterinarioService veterinaryService,
+    public AppointmentController(AppointmentService appointmentService, VeterinaryService veterinaryService,
                                  AnimalService animalService, AppointmentTypeService appointmentTypeService){
         this.appointmentService = appointmentService;
         this.veterinaryService = veterinaryService;

@@ -24,6 +24,7 @@ P for Pet, provides end-points for consumers. It has CRUD end-points for each mo
 
 Every function, method, service and controller needs to have a unit test. 
 
+More specif documentation at [documentation](./Doc/DOC.md)
  * **Starting**
 > Clone the repository and opens with your favored java editor. I recommend IntelliJ or Eclipse. Then wait for Maven to download the needed dependencies. Now you can work.
 

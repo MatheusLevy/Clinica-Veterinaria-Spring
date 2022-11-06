@@ -5,7 +5,7 @@ import com.produtos.apirest.models.Veterinary;
 import com.produtos.apirest.repository.AreaRepo;
 import com.produtos.apirest.repository.ExpertiseRepo;
 import com.produtos.apirest.repository.VeterinaryRepo;
-import com.produtos.apirest.service.VeterinarioService;
+import com.produtos.apirest.service.VeterinaryService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class VeterinaryServiceTest {
     public VeterinaryRepo veterinaryRepo;
 
     @Autowired
-    public VeterinarioService veterinarioService;
+    public VeterinaryService veterinaryService;
 
     @Autowired
     public AreaRepo areaRepo;
@@ -81,7 +81,7 @@ public class VeterinaryServiceTest {
 
     @Test
     public void save(){
-        Veterinary veterinarySaved = veterinarioService.save(generateVeterinary(true));
+        Veterinary veterinarySaved = veterinaryService.save(generateVeterinary(true));
         Assertions.assertNotNull(veterinarySaved);
         rollback(veterinarySaved, false);
     }
@@ -90,7 +90,7 @@ public class VeterinaryServiceTest {
     public void update(){
         Veterinary veterinarySaved = veterinaryRepo.save(generateVeterinary(true));
         veterinarySaved.setName("New Name");
-        Veterinary veterinaryUpdated = veterinarioService.update(veterinarySaved);
+        Veterinary veterinaryUpdated = veterinaryService.update(veterinarySaved);
         Assertions.assertNotNull(veterinaryUpdated);
         Assertions.assertEquals(veterinaryUpdated.getVeterinaryId(), veterinarySaved.getVeterinaryId());
         Assertions.assertEquals(veterinaryUpdated.getName(), "New Name");
@@ -101,7 +101,7 @@ public class VeterinaryServiceTest {
     public void removeById(){
         Veterinary veterinarySaved = veterinaryRepo.save(generateVeterinary(true));
         Long id = veterinarySaved.getVeterinaryId();
-        veterinarioService.removeById(veterinarySaved.getVeterinaryId());
+        veterinaryService.removeById(veterinarySaved.getVeterinaryId());
         Assertions.assertNull(veterinaryRepo.findByVeterinaryId(id));
         rollback(veterinarySaved, true);
     }
@@ -109,7 +109,7 @@ public class VeterinaryServiceTest {
     @Test
     public void removeByIdWithFeedback(){
         Veterinary veterinarySaved = veterinaryRepo.save(generateVeterinary(true));
-        Veterinary feedback = veterinarioService.removeByIdWithFeedback(veterinarySaved.getVeterinaryId());
+        Veterinary feedback = veterinaryService.removeByIdWithFeedback(veterinarySaved.getVeterinaryId());
         Assertions.assertNotNull(feedback);
         Assertions.assertEquals(veterinarySaved.getVeterinaryId(), feedback.getVeterinaryId());
         rollback(feedback, true);
@@ -119,7 +119,7 @@ public class VeterinaryServiceTest {
     public void findById(){
         Veterinary veterinarySaved = veterinaryRepo.save(generateVeterinary(true));
         Long id = veterinarySaved.getVeterinaryId();
-        Veterinary veterinaryFind = veterinarioService.findById(id);
+        Veterinary veterinaryFind = veterinaryService.findById(id);
         Assertions.assertNotNull(veterinaryFind);
         Assertions.assertEquals(veterinarySaved.getVeterinaryId(), veterinaryFind.getVeterinaryId());
         rollback(veterinarySaved, false);
@@ -128,7 +128,7 @@ public class VeterinaryServiceTest {
     @Test
     public void find(){
         Veterinary veterinarySaved = veterinaryRepo.save(generateVeterinary(true));
-        List<Veterinary> veterinaries = veterinarioService.find(veterinarySaved);
+        List<Veterinary> veterinaries = veterinaryService.find(veterinarySaved);
         Assertions.assertNotNull(veterinaries);
         Assertions.assertFalse(veterinaries.isEmpty());
         rollback(veterinarySaved, false);
@@ -137,7 +137,7 @@ public class VeterinaryServiceTest {
     @Test
     public void findExpertiseById(){
         Veterinary veterinarySaved = veterinaryRepo.save(generateVeterinary(true));
-        Expertise expertiseFind = veterinarioService.findExpertisesById(veterinarySaved.getVeterinaryId());
+        Expertise expertiseFind = veterinaryService.findExpertisesById(veterinarySaved.getVeterinaryId());
         Assertions.assertNotNull(expertiseFind);
         Assertions.assertEquals(veterinarySaved.getExpertise().getExpertiseId(), expertiseFind.getExpertiseId());
         rollback(veterinarySaved, false);
@@ -148,7 +148,7 @@ public class VeterinaryServiceTest {
         Veterinary veterinarySaved = veterinaryRepo.save(generateVeterinary(true));
         Expertise expertiseOld = veterinarySaved.getExpertise();
         Expertise expertiseNew = expertiseRepo.save(generateExpertise(true, areaRepo));
-        Veterinary veterinaryUpdated = veterinarioService.updateExpertise(veterinarySaved, expertiseNew);
+        Veterinary veterinaryUpdated = veterinaryService.updateExpertise(veterinarySaved, expertiseNew);
         Assertions.assertNotNull(veterinaryUpdated);
         Assertions.assertEquals(veterinarySaved.getVeterinaryId(), veterinaryUpdated.getVeterinaryId());
         rollback(veterinaryUpdated, false);
@@ -157,8 +157,8 @@ public class VeterinaryServiceTest {
 
     @Test
     public void findAll(){
-        Veterinary veterinarySaved = veterinarioService.save(generateVeterinary(true));
-        List<Veterinary> veterinaries = veterinarioService.findAll();
+        Veterinary veterinarySaved = veterinaryService.save(generateVeterinary(true));
+        List<Veterinary> veterinaries = veterinaryService.findAll();
         Assertions.assertNotNull(veterinaries);
         Assertions.assertFalse(veterinaries.isEmpty());
         rollback(veterinarySaved, false);

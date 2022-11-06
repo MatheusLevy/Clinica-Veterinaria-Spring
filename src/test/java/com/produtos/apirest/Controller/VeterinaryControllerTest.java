@@ -4,7 +4,7 @@ import com.produtos.apirest.Util.Util;
 import com.produtos.apirest.models.DTO.VeterinaryDTO;
 import com.produtos.apirest.models.Veterinary;
 import com.produtos.apirest.service.ExpertiseService;
-import com.produtos.apirest.service.VeterinarioService;
+import com.produtos.apirest.service.VeterinaryService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class VeterinaryControllerTest {
     private final String API = "/api/veterinary";
 
     @MockBean
-    private VeterinarioService veterinarioService;
+    private VeterinaryService veterinaryService;
 
     @MockBean
     private ExpertiseService expertiseService;
@@ -69,7 +69,7 @@ public class VeterinaryControllerTest {
     @Test
     public void save() throws Exception{
         Mockito.when(expertiseService.findById(Mockito.anyLong())).thenReturn(generateExpertise());
-        Mockito.when(veterinarioService.save(Mockito.any(Veterinary.class))).thenReturn(generateVeterinary());
+        Mockito.when(veterinaryService.save(Mockito.any(Veterinary.class))).thenReturn(generateVeterinary());
         String json = toJson(generateVeterinaryDTO());
         MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.POST, API, json);
         mvc.perform(request)
@@ -79,7 +79,7 @@ public class VeterinaryControllerTest {
     @WithUserDetails("Admin")
     @Test
     public void update() throws Exception{
-        Mockito.when(veterinarioService.update(Mockito.any(Veterinary.class))).thenReturn(generateVeterinary());
+        Mockito.when(veterinaryService.update(Mockito.any(Veterinary.class))).thenReturn(generateVeterinary());
         String json = toJson(generateVeterinaryDTO());
         MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.PUT, API, json);
         mvc.perform(request)
@@ -90,7 +90,7 @@ public class VeterinaryControllerTest {
     @Test
     public void removeById() throws Exception{
         Long id = 1L;
-        Mockito.doNothing().when(veterinarioService).removeById(Mockito.anyLong());
+        Mockito.doNothing().when(veterinaryService).removeById(Mockito.anyLong());
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -100,7 +100,7 @@ public class VeterinaryControllerTest {
     @Test
     public void removeByIdWithFeeback() throws Exception{
         Long id = 1L;
-        Mockito.when(veterinarioService.removeByIdWithFeedback(Mockito.anyLong())).thenReturn(generateVeterinary());
+        Mockito.when(veterinaryService.removeByIdWithFeedback(Mockito.anyLong())).thenReturn(generateVeterinary());
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/feedback/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -110,7 +110,7 @@ public class VeterinaryControllerTest {
     @Test
     public void findById() throws Exception{
         Long id = 1L;
-        Mockito.when(veterinarioService.findById(Mockito.anyLong())).thenReturn(generateVeterinary());
+        Mockito.when(veterinaryService.findById(Mockito.anyLong())).thenReturn(generateVeterinary());
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -119,7 +119,7 @@ public class VeterinaryControllerTest {
     @WithUserDetails("Admin")
     @Test
     public void findAll() throws Exception{
-        Mockito.when(veterinarioService.findAll()).thenReturn(generateVeterinaryList());
+        Mockito.when(veterinaryService.findAll()).thenReturn(generateVeterinaryList());
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());

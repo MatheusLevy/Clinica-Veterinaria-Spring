@@ -87,8 +87,8 @@ public class AppointmentService {
 
     @Transactional
     public Appointment updateVeterinary(Appointment destiny, Veterinary newVeterinary){
-        VeterinarioService.verifyAllRules(newVeterinary);
-        VeterinarioService.hasId(newVeterinary);
+        VeterinaryService.verifyAllRules(newVeterinary);
+        VeterinaryService.hasId(newVeterinary);
         verifyAllRules(destiny);
         destiny.setVeterinary(newVeterinary);
         return repo.save(destiny);

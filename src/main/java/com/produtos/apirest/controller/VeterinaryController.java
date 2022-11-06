@@ -4,7 +4,7 @@ import com.produtos.apirest.models.DTO.VeterinaryDTO;
 import com.produtos.apirest.models.Expertise;
 import com.produtos.apirest.models.Veterinary;
 import com.produtos.apirest.service.ExpertiseService;
-import com.produtos.apirest.service.VeterinarioService;
+import com.produtos.apirest.service.VeterinaryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,11 +23,11 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/veterinary")
 public class VeterinaryController {
 
-    private final VeterinarioService veterinaryService;
+    private final VeterinaryService veterinaryService;
 
     private final ExpertiseService expertiseService;
 
-    public VeterinaryController(VeterinarioService veterinaryService, ExpertiseService expertiseService) {
+    public VeterinaryController(VeterinaryService veterinaryService, ExpertiseService expertiseService) {
         this.veterinaryService = veterinaryService;
         this.expertiseService = expertiseService;
     }

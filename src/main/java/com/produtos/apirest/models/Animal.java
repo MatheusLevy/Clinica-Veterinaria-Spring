@@ -24,7 +24,7 @@ public class Animal {
     @Column(name = "id")
     private long animalId;
 
-    @Column(name = "nome")
+    @Column(name = "name")
     @NotNull
     private String name;
 

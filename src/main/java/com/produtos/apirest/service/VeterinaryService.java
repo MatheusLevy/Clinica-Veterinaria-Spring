@@ -12,11 +12,11 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
-public class VeterinarioService {
+public class VeterinaryService {
 
     private final VeterinaryRepo repo;
 
-    public VeterinarioService(VeterinaryRepo veterinaryRepo){
+    public VeterinaryService(VeterinaryRepo veterinaryRepo){
         this.repo = veterinaryRepo;
     }
 

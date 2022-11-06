@@ -5,7 +5,7 @@ import com.produtos.apirest.models.DTO.AppointmentDTO;
 import com.produtos.apirest.service.AnimalService;
 import com.produtos.apirest.service.AppointmentService;
 import com.produtos.apirest.service.AppointmentTypeService;
-import com.produtos.apirest.service.VeterinarioService;
+import com.produtos.apirest.service.VeterinaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -29,7 +29,7 @@ public class ConsultaViewController {
     public AnimalService animalService;
 
     @Autowired
-    public VeterinarioService veterinarioService;
+    public VeterinaryService veterinaryService;
 
     @PreAuthorize("hasRole('S')")
     @GetMapping("/consulta/cadastro")
@@ -37,7 +37,7 @@ public class ConsultaViewController {
         ModelAndView mv = new ModelAndView("consulta/consultaCadastro");
         AppointmentDTO dto = AppointmentDTO.builder()
                 .appointmentTypes(tipo_consultaService.findAll())
-                .vets(veterinarioService.findAll())
+                .vets(veterinaryService.findAll())
                 .animals(animalService.findAll())
                 .build();
         mv.addObject("consultadto", dto);
@@ -81,7 +81,7 @@ public class ConsultaViewController {
         Appointment consultaFind = appointmentService.findById(consulta.getAppointmentId());
 
         //Lista Veterinarios
-        List<Veterinary> veterinarios = veterinarioService.findAll();
+        List<Veterinary> veterinarios = veterinaryService.findAll();
 
         //Lista Animais
         List<Animal> animais = animalService.findAll();
