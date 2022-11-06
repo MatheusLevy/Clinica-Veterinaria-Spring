@@ -61,11 +61,11 @@ public class User implements UserDetails{
     }
 
     @Override
-    public String getUsername(){
+    public @NotNull String getUsername(){
         return this.username;
     }
     @Override
-    public String getPassword() {
+    public @NotNull String getPassword() {
         return this.password;
     }
 

@@ -21,6 +21,7 @@ public class RoleDTO {
     }
 
     public Role toRole(){
+        hasId();
         return Role.builder()
                 .roleId(this.id)
                 .roleName(this.roleName)

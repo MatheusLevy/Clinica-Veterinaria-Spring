@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static com.produtos.apirest.Controller.AnimalControllerTest.generateAnimalList;
@@ -57,7 +58,7 @@ public class OwnerControllerTest {
     }
 
     public static List<Owner> generateOwnerList(){
-        return Arrays.asList(generateOwner());
+        return Collections.singletonList(generateOwner());
     }
 
     @WithUserDetails("Admin")

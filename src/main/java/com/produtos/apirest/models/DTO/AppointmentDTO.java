@@ -63,6 +63,7 @@ public class AppointmentDTO {
     }
 
     public Appointment toAppointment(Animal animal, Veterinary vet, AppointmentType appointmentType){
+        hasId();
         return Appointment.builder()
                 .appointmentId(this.id)
                 .date(this.date)

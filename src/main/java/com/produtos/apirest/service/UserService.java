@@ -2,7 +2,7 @@ package com.produtos.apirest.service;
 
 import com.produtos.apirest.models.User;
 import com.produtos.apirest.repository.UserRepo;
-import com.produtos.apirest.service.exceptions.AuthenticationFailedExpection;
+import com.produtos.apirest.service.exceptions.AuthenticationFailedException;
 import com.produtos.apirest.service.exceptions.BusinessRuleException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -74,7 +74,7 @@ public class UserService {
         if(passwordEncoder().matches(rawPassword, user.getPassword()))
             return user;
         else
-            throw new AuthenticationFailedExpection("Username or password incorrect!");
+            throw new AuthenticationFailedException("Username or password incorrect!");
     }
 
     private void encodePassword(User user){

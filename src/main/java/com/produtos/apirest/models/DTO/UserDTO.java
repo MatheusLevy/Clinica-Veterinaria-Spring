@@ -26,6 +26,7 @@ public class UserDTO {
     }
 
     public User toUser(){
+        hasId();
         return User.builder()
                 .userId(this.id)
                 .username(this.username)

@@ -45,7 +45,7 @@ public class UserControllerTest {
         return User.builder()
                 .userId(1L)
                 .username("username")
-                .password("passsword")
+                .password("password")
                 .build();
     }
 

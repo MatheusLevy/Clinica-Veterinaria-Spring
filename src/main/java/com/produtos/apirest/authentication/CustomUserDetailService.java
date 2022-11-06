@@ -22,9 +22,9 @@ public class CustomUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        com.produtos.apirest.models.User usuarioFind = userRepo.findByUsername(username);
-        UserService.verifyAllRules(usuarioFind);
-        UserService.hasId(usuarioFind);
-        return new User(usuarioFind.getUsername(), usuarioFind.getPassword(), true, true, true, true, usuarioFind.getAuthorities());
+        com.produtos.apirest.models.User userFind = userRepo.findByUsername(username);
+        UserService.verifyAllRules(userFind);
+        UserService.hasId(userFind);
+        return new User(userFind.getUsername(), userFind.getPassword(), true, true, true, true, userFind.getAuthorities());
     }
 }

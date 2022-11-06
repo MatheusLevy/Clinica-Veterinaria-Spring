@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static com.produtos.apirest.Controller.ExpertiseControllerTest.generateExpertiseList;
@@ -54,7 +54,7 @@ public class AreaControllerTest {
     }
 
     public static List<Area> generateAreaList(){
-        return Arrays.asList(generateArea());
+        return Collections.singletonList(generateArea());
     }
 
     @Test

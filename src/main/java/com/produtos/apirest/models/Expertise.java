@@ -43,7 +43,7 @@ public class Expertise {
 
     @OneToMany(mappedBy = "expertise", fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<Veterinary> veterinarys;
+    private List<Veterinary> veterinaries;
 
     @Override
     public String toString(){

@@ -30,9 +30,9 @@ public class OwnerController {
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody OwnerDTO donodto){
+    public ResponseEntity<?> save(@RequestBody OwnerDTO ownerDTO){
         try{
-            Owner owner = donodto.toOwner();
+            Owner owner = ownerDTO.toOwner();
             Owner ownerSaved = ownerService.save(owner);
             OwnerDTO dtoResponse = ownerSaved.toOwnerDTO();
             return new ResponseEntity<>(dtoResponse, HttpStatus.CREATED);
@@ -42,9 +42,9 @@ public class OwnerController {
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody OwnerDTO donodto){
+    public ResponseEntity<?> update(@RequestBody OwnerDTO ownerDTO){
         try{
-            Owner owner = donodto.toOwner();
+            Owner owner = ownerDTO.toOwner();
             Owner ownerUpdated = ownerService.update(owner);
             OwnerDTO dtoResponse = ownerUpdated.toOwnerDTO();
             return ResponseEntity.ok(dtoResponse);

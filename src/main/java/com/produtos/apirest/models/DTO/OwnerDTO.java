@@ -27,6 +27,7 @@ public class OwnerDTO {
             this.id = 0L;
     }
     public Owner toOwner(){
+        hasId();
         return Owner.builder()
                 .ownerId(this.id)
                 .name(this.name)

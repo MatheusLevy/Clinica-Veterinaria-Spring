@@ -41,12 +41,12 @@ public class AppointmentController {
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody AppointmentDTO consultadto){
+    public ResponseEntity<?> save(@RequestBody AppointmentDTO appointmentDTO){
         try {
-            AppointmentType appointmentTypeFind = appointmentTypeService.findById(consultadto.getAppointmentTypeId());
-            Veterinary veterinaryFind = veterinaryService.findById(consultadto.getVetId());
-            Animal animalFind = animalService.findById(consultadto.getAnimalId());
-            Appointment appointment = consultadto.toAppointment(animalFind, veterinaryFind, appointmentTypeFind);
+            AppointmentType appointmentTypeFind = appointmentTypeService.findById(appointmentDTO.getAppointmentTypeId());
+            Veterinary veterinaryFind = veterinaryService.findById(appointmentDTO.getVetId());
+            Animal animalFind = animalService.findById(appointmentDTO.getAnimalId());
+            Appointment appointment = appointmentDTO.toAppointment(animalFind, veterinaryFind, appointmentTypeFind);
             Appointment appointmentSaved = appointmentService.save(appointment);
             AppointmentDTO dtoResponse = appointmentSaved.toAppointmentDTO();
             return new ResponseEntity<>(dtoResponse, HttpStatus.CREATED);
@@ -56,12 +56,12 @@ public class AppointmentController {
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody AppointmentDTO consultadto){
+    public ResponseEntity<?> update(@RequestBody AppointmentDTO appointmentDTO){
         try {
-            AppointmentType appointmentTypeFind = appointmentTypeService.findById(consultadto.getAppointmentTypeId());
-            Veterinary veterinaryFind = veterinaryService.findById(consultadto.getVetId());
-            Animal animalFind = animalService.findById(consultadto.getAnimalId());
-            Appointment appointment = consultadto.toAppointment(animalFind, veterinaryFind, appointmentTypeFind);
+            AppointmentType appointmentTypeFind = appointmentTypeService.findById(appointmentDTO.getAppointmentTypeId());
+            Veterinary veterinaryFind = veterinaryService.findById(appointmentDTO.getVetId());
+            Animal animalFind = animalService.findById(appointmentDTO.getAnimalId());
+            Appointment appointment = appointmentDTO.toAppointment(animalFind, veterinaryFind, appointmentTypeFind);
             Appointment appointmentUpdated = appointmentService.update(appointment);
             AppointmentDTO dtoResponse = appointmentUpdated.toAppointmentDTO();
             return ResponseEntity.ok(dtoResponse);

@@ -19,7 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static com.produtos.apirest.Controller.AnimalControllerTest.generateAnimal;
@@ -69,7 +69,7 @@ public class AppointmentControllerTest {
     }
 
     public static List<Appointment> generateAppointmentList(){
-        return Arrays.asList(generateAppointment());
+        return Collections.singletonList(generateAppointment());
     }
 
     @Test

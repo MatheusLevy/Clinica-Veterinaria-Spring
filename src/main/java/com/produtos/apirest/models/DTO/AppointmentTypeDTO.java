@@ -27,6 +27,7 @@ public class AppointmentTypeDTO {
     }
 
     public AppointmentType toAppointment(){
+        hasId();
         return AppointmentType.builder()
                 .appointmentTypeId(this.id)
                 .name(this.name)

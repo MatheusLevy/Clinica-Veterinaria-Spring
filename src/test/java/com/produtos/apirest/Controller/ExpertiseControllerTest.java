@@ -19,7 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static com.produtos.apirest.Controller.AreaControllerTest.generateArea;
@@ -60,7 +60,7 @@ public class ExpertiseControllerTest {
     }
 
     public static List<Expertise> generateExpertiseList(){
-        return Arrays.asList(generateExpertise());
+        return Collections.singletonList(generateExpertise());
     }
 
     @WithUserDetails("Admin")

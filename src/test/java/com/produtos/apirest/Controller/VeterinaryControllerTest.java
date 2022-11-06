@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static com.produtos.apirest.Controller.ExpertiseControllerTest.generateExpertise;
@@ -62,7 +62,7 @@ public class VeterinaryControllerTest {
     }
 
     public static List<Veterinary> generateVeterinaryList(){
-        return Arrays.asList(generateVeterinary());
+        return Collections.singletonList(generateVeterinary());
     }
 
     @WithUserDetails("Admin")
@@ -98,7 +98,7 @@ public class VeterinaryControllerTest {
 
     @WithUserDetails("Admin")
     @Test
-    public void removeByIdWithFeeback() throws Exception{
+    public void removeByIdWithFeedback() throws Exception{
         Long id = 1L;
         Mockito.when(veterinaryService.removeByIdWithFeedback(Mockito.anyLong())).thenReturn(generateVeterinary());
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/feedback/").concat(String.valueOf(id)));
