@@ -1,10 +1,9 @@
 package com.produtos.apirest.Controller;
 
 import com.produtos.apirest.Util.Util;
-import com.produtos.apirest.enums.RoleName;
-import com.produtos.apirest.models.DTO.RoleDTO;
-import com.produtos.apirest.models.Role;
-import com.produtos.apirest.service.RoleService;
+import com.produtos.apirest.models.AppointmentType;
+import com.produtos.apirest.models.DTO.AppointmentTypeDTO;
+import com.produtos.apirest.service.AppointmentTypeService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -23,70 +23,74 @@ import static com.produtos.apirest.Util.Util.toJson;
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest
-public class RoleControllerTeste {
-
-    private final String API = "/api/role";
-
+public class TipoAppointmentControllerTest {
+    private final String API = "/api/appointmentType";
     @MockBean
-    private RoleService roleService;
+    private AppointmentTypeService appointmentTypeService;
 
     @Autowired
     MockMvc mvc;
 
-    public Role generateRoleInstance(){
-        return Role.builder()
-                .roleId(1L)
-                .roleName(RoleName.ROLE_TESTE)
+    public static AppointmentType generateAppointmentType(){
+        return AppointmentType.builder()
+                .appointmentTypeId(1L)
+                .name("name")
                 .build();
     }
 
-    public RoleDTO generateRoleDTOInstance(){
-        return RoleDTO.builder()
+    public static AppointmentTypeDTO generateAppointmentTypeDTO(){
+        return AppointmentTypeDTO.builder()
                 .id(1L)
-                .roleName(RoleName.ROLE_TESTE)
+                .name("name")
                 .build();
     }
 
+    @WithUserDetails("Admin")
     @Test
-    public void deveSalvar() throws Exception{
-        Mockito.when(roleService.save(Mockito.any(Role.class))).thenReturn(generateRoleInstance());
-        String json = toJson(generateRoleDTOInstance());
+    public void save() throws Exception{
+        Mockito.when(appointmentTypeService.save(Mockito.any(AppointmentType.class))).thenReturn(generateAppointmentType());
+        String json = toJson(generateAppointmentTypeDTO());
         MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.POST, API, json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
 
+    @WithUserDetails("Admin")
     @Test
-    public void deveAtualizar() throws Exception {
-        Mockito.when(roleService.update(Mockito.any(Role.class))).thenReturn(generateRoleInstance());
-        String json = toJson(generateRoleDTOInstance());
+    public void update() throws Exception{
+        Mockito.when(appointmentTypeService.update(Mockito.any(AppointmentType.class))).thenReturn(generateAppointmentType());
+        String json = toJson(generateAppointmentTypeDTO());
         MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.PUT, API, json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+    @WithUserDetails("Admin")
     @Test
-    public void deveRemover() throws Exception{
+    public void removeById() throws Exception{
         Long id = 1L;
-        Mockito.doNothing().when(roleService).removeById(Mockito.anyLong());
+        Mockito.doNothing().when(appointmentTypeService).removeById(Mockito.anyLong());
+        Mockito.when(appointmentTypeService.findById(Mockito.anyLong())).thenReturn(generateAppointmentType());
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+    @WithUserDetails("Admin")
     @Test
-    public void deveRemoverComFeedback() throws Exception{
+    public void removeByIdWithFeedback() throws Exception{
         Long id = 1L;
-        Mockito.when(roleService.removeByIdWithFeedback(Mockito.anyLong())).thenReturn(generateRoleInstance());
+        Mockito.when(appointmentTypeService.removeByIdWithFeedback(Mockito.anyLong())).thenReturn(generateAppointmentType());
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/feedback/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+    @WithUserDetails("Admin")
     @Test
-    public void deveBuscarPorId() throws Exception{
+    public void findById() throws Exception {
         Long id = 1L;
-        Mockito.when(roleService.findById(Mockito.anyLong())).thenReturn(generateRoleInstance());
+        Mockito.when(appointmentTypeService.findById(Mockito.anyLong())).thenReturn(generateAppointmentType());
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());

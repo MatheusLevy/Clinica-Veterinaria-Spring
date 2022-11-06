@@ -1,9 +1,10 @@
 package com.produtos.apirest.Controller;
 
 import com.produtos.apirest.Util.Util;
-import com.produtos.apirest.models.AnimalType;
-import com.produtos.apirest.models.DTO.AnimalTypeDTO;
-import com.produtos.apirest.service.AnimalTypeService;
+import com.produtos.apirest.enums.RoleName;
+import com.produtos.apirest.models.DTO.RoleDTO;
+import com.produtos.apirest.models.Role;
+import com.produtos.apirest.service.RoleService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -23,75 +23,70 @@ import static com.produtos.apirest.Util.Util.toJson;
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest
-public class AnimalTypeControllerTeste {
+public class RoleControllerTest {
 
-    private final String API = "/api/animalType";
+    private final String API = "/api/role";
 
     @MockBean
-    private AnimalTypeService animalTypeService;
+    private RoleService roleService;
 
     @Autowired
     MockMvc mvc;
 
-    public static AnimalType generateTipoAnimalInstance(){
-        return AnimalType.builder()
-                .animalTypeId(1L)
-                .name("name")
+    public Role generateRole(){
+        return Role.builder()
+                .roleId(1L)
+                .roleName(RoleName.ROLE_TESTE)
                 .build();
     }
 
-    public AnimalTypeDTO generateTipoAnimalDTOInstance(){
-        return AnimalTypeDTO.builder()
+    public RoleDTO generateRoleDTO(){
+        return RoleDTO.builder()
                 .id(1L)
-                .name("name")
+                .roleName(RoleName.ROLE_TESTE)
                 .build();
     }
 
-    @WithUserDetails("Admin")
     @Test
-    public void deveSalvar() throws Exception{
-        Mockito.when(animalTypeService.save(Mockito.any(AnimalType.class))).thenReturn(generateTipoAnimalInstance());
-        String json = toJson(generateTipoAnimalDTOInstance());
+    public void save() throws Exception{
+        Mockito.when(roleService.save(Mockito.any(Role.class))).thenReturn(generateRole());
+        String json = toJson(generateRoleDTO());
         MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.POST, API, json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
 
-    @WithUserDetails("Admin")
     @Test
-    public void deveAtualizar() throws Exception{
-        Mockito.when(animalTypeService.update(Mockito.any(AnimalType.class))).thenReturn(generateTipoAnimalInstance());
-        String json = toJson(generateTipoAnimalDTOInstance());
+    public void update() throws Exception {
+        Mockito.when(roleService.update(Mockito.any(Role.class))).thenReturn(generateRole());
+        String json = toJson(generateRoleDTO());
         MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.PUT, API, json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
-    @WithUserDetails("Admin")
     @Test
-    public void deveRemover() throws Exception{
+    public void removeById() throws Exception{
         Long id = 1L;
-        Mockito.doNothing().when(animalTypeService).removeById(Mockito.anyLong());
+        Mockito.doNothing().when(roleService).removeById(Mockito.anyLong());
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
-    @WithUserDetails("Admin")
     @Test
-    public void deveRemoverComFeedback() throws Exception{
+    public void removeByIdWithFeedback() throws Exception{
         Long id = 1L;
-        Mockito.when(animalTypeService.removeByIdWithFeedback(Mockito.anyLong())).thenReturn(generateTipoAnimalInstance());
+        Mockito.when(roleService.removeByIdWithFeedback(Mockito.anyLong())).thenReturn(generateRole());
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/feedback/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
-    @WithUserDetails("Admin")
     @Test
-    public void deveBuscarPorId() throws Exception{
+    public void findById() throws Exception{
         Long id = 1L;
-        Mockito.when(animalTypeService.findById(Mockito.anyLong())).thenReturn(generateTipoAnimalInstance());
+        Mockito.when(roleService.findById(Mockito.anyLong())).thenReturn(generateRole());
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());

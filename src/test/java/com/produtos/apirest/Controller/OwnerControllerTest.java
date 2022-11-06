@@ -1,11 +1,9 @@
 package com.produtos.apirest.Controller;
 
 import com.produtos.apirest.Util.Util;
-import com.produtos.apirest.models.Area;
-import com.produtos.apirest.models.DTO.ExpertiseDTO;
-import com.produtos.apirest.models.Expertise;
-import com.produtos.apirest.service.AreaService;
-import com.produtos.apirest.service.ExpertiseService;
+import com.produtos.apirest.models.DTO.OwnerDTO;
+import com.produtos.apirest.models.Owner;
+import com.produtos.apirest.service.OwnerService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,58 +17,54 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import static com.produtos.apirest.Controller.AreaControllerTeste.generateAreaInstance;
+import static com.produtos.apirest.Controller.AnimalControllerTest.generateAnimalList;
 import static com.produtos.apirest.Util.Util.buildRequest;
 import static com.produtos.apirest.Util.Util.toJson;
+import static org.mockito.ArgumentMatchers.isA;
 
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest
-public class ExpertiseControllerTeste {
+public class OwnerControllerTest {
 
-    private final String API = "/api/expertise";
-
-    @MockBean
-    private ExpertiseService expertiseService;
+    private final String API = "/api/owner";
 
     @MockBean
-    private AreaService areaService;
+    public OwnerService ownerService;
 
     @Autowired
     MockMvc mvc;
 
-    public static ExpertiseDTO generateEspecialidadeDTOInstance(){
-        return ExpertiseDTO.builder()
+    protected static Owner generateOwner(){
+        return Owner.builder()
+                .ownerId(1L)
+                .name("name")
+                .cpf("cpf")
+                .phone("phone")
+                .build();
+    }
+
+    public static OwnerDTO generateOwnerDTO(){
+        return OwnerDTO.builder()
                 .id(1L)
-                .areaId(1L)
                 .name("name")
-                .area(generateAreaInstance())
+                .cpf("cpf")
+                .phone("phone")
                 .build();
     }
 
-    public static Expertise generateEspecialidadeInstance(){
-        return Expertise.builder()
-                .expertiseId(1L)
-                .name("name")
-                .area(generateAreaInstance())
-                .build();
-    }
-
-    public static List<Expertise> generateEspecialidadeListInstance(){
-        return new ArrayList<>(){{
-            add(generateEspecialidadeInstance());
-        }};
+    public static List<Owner> generateOwnerList(){
+        return Arrays.asList(generateOwner());
     }
 
     @WithUserDetails("Admin")
     @Test
-    public void deveSalvar() throws Exception{
-        Mockito.when(expertiseService.save(Mockito.any(Expertise.class))).thenReturn(generateEspecialidadeInstance());
-        Mockito.when(areaService.save(Mockito.any(Area.class))).thenReturn(generateAreaInstance());
-        String json = toJson(generateEspecialidadeDTOInstance());
+    public void save() throws Exception{
+        Mockito.when(ownerService.save(Mockito.any(Owner.class))).thenReturn(generateOwner());
+        String json = toJson(generateOwnerDTO());
         MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.POST, API, json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isCreated());
@@ -78,9 +72,9 @@ public class ExpertiseControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveAtualizar() throws Exception{
-        Mockito.when(expertiseService.update(Mockito.any(Expertise.class))).thenReturn(generateEspecialidadeInstance());
-        String json = toJson(generateEspecialidadeDTOInstance());
+    public void update() throws Exception{
+        Mockito.when(ownerService.update(Mockito.any(Owner.class))).thenReturn(generateOwner());
+        String json = toJson(generateOwnerDTO());
         MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.PUT, API, json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -88,20 +82,20 @@ public class ExpertiseControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveRemover() throws Exception{
+    public void removeById() throws Exception{
         Long id = 1L;
-        Mockito.when(expertiseService.findById(Mockito.anyLong())).thenReturn(generateEspecialidadeInstance());
-        Mockito.doNothing().when(expertiseService).remove(Mockito.any(Expertise.class));
+        Mockito.doNothing().when(ownerService).removeById(isA(Long.class));
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/").concat(String.valueOf(id)));
         mvc.perform(request)
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string("\"NO_CONTENT\""));
     }
 
     @WithUserDetails("Admin")
     @Test
-    public void deveRemoverComFeedback() throws Exception{
+    public void removeByIdWithFeedback() throws Exception{
         Long id = 1L;
-        Mockito.when(expertiseService.removeByIdWithFeedback(Mockito.anyLong())).thenReturn(generateEspecialidadeInstance());
+        Mockito.when(ownerService.removeByIdWithFeedback(Mockito.anyLong())).thenReturn(generateOwner());
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/feedback/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -109,9 +103,9 @@ public class ExpertiseControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveBuscarPorFiltro() throws Exception{
-        Mockito.when(expertiseService.find(Mockito.any(Expertise.class))).thenReturn(generateEspecialidadeListInstance());
-        String json = toJson(generateEspecialidadeDTOInstance());
+    public void find() throws Exception{
+        Mockito.when(ownerService.find(Mockito.any(Owner.class))).thenReturn(generateOwnerList());
+        String json = toJson(generateOwnerDTO());
         MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.GET, API.concat("/filter"), json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -119,9 +113,9 @@ public class ExpertiseControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveBuscarPorId() throws Exception{
+    public void findById() throws Exception{
         Long id = 1L;
-        Mockito.when(expertiseService.findById(Mockito.anyLong())).thenReturn(generateEspecialidadeInstance());
+        Mockito.when(ownerService.findById(Mockito.anyLong())).thenReturn(generateOwner());
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -129,9 +123,19 @@ public class ExpertiseControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveBuscarTodos() throws Exception{
-        Mockito.when(expertiseService.findAll()).thenReturn(generateEspecialidadeListInstance());
+    public void findAll() throws Exception{
+        Mockito.when(ownerService.findAll()).thenReturn(generateOwnerList());
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API);
+        mvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @WithUserDetails("Admin")
+    @Test
+    public void findAllAnimals() throws Exception{
+        Long id = 1L;
+        Mockito.when(ownerService.findAllAnimalsByOwnerId(Mockito.anyLong())).thenReturn(generateAnimalList());
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/animals/".concat(String.valueOf(id))));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }

@@ -19,12 +19,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import static com.produtos.apirest.Controller.AnimalControllerTeste.generateAnimalInstance;
-import static com.produtos.apirest.Controller.TipoAppointmentControllerTeste.generateTipoConsultaInstance;
-import static com.produtos.apirest.Controller.VeterinaryControllerTeste.generateVeterinarioInstance;
+import static com.produtos.apirest.Controller.AnimalControllerTest.generateAnimal;
+import static com.produtos.apirest.Controller.TipoAppointmentControllerTest.generateAppointmentType;
+import static com.produtos.apirest.Controller.VeterinaryControllerTest.generateVeterinary;
 import static com.produtos.apirest.Util.Util.buildRequest;
 import static com.produtos.apirest.Util.Util.toJson;
 import static org.mockito.ArgumentMatchers.isA;
@@ -32,7 +32,7 @@ import static org.mockito.ArgumentMatchers.isA;
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest
-public class AppointmentControllerTeste {
+public class AppointmentControllerTest {
 
     private final String API = "/api/appointment";
 
@@ -48,17 +48,17 @@ public class AppointmentControllerTeste {
     @Autowired
     public MockMvc mvc;
 
-    public static Appointment generateConsultaInstance(){
+    public static Appointment generateAppointment(){
         return Appointment.builder()
                 .appointmentId(1L)
                 .description("description")
-                .appointmentType(generateTipoConsultaInstance())
-                .veterinary(generateVeterinarioInstance())
-                .animal(generateAnimalInstance())
+                .appointmentType(generateAppointmentType())
+                .veterinary(generateVeterinary())
+                .animal(generateAnimal())
                 .build();
     }
 
-    public static AppointmentDTO generateConsultaDTOInstance(){
+    public static AppointmentDTO generateAppointmentDTO(){
         return AppointmentDTO.builder()
                 .id(1L)
                 .description("description")
@@ -68,21 +68,17 @@ public class AppointmentControllerTeste {
                 .build();
     }
 
-    public static List<Appointment> generateConsultaListInstance(){
-        return new ArrayList<>(){
-            {
-                add(generateConsultaInstance());
-            }
-        };
+    public static List<Appointment> generateAppointmentList(){
+        return Arrays.asList(generateAppointment());
     }
 
     @Test
     @WithUserDetails("Admin")
-    public void deveSalvar() throws Exception{
-        Mockito.when(appointmentService.save(Mockito.any(Appointment.class))).thenReturn(generateConsultaInstance());
-        Mockito.when(appointmentTypeService.findById(Mockito.anyLong())).thenReturn(generateTipoConsultaInstance());
-        Mockito.when(animalService.findById(Mockito.anyLong())).thenReturn(generateAnimalInstance());
-        String json = toJson(generateConsultaDTOInstance());
+    public void save() throws Exception{
+        Mockito.when(appointmentService.save(Mockito.any(Appointment.class))).thenReturn(generateAppointment());
+        Mockito.when(appointmentTypeService.findById(Mockito.anyLong())).thenReturn(generateAppointmentType());
+        Mockito.when(animalService.findById(Mockito.anyLong())).thenReturn(generateAnimal());
+        String json = toJson(generateAppointmentDTO());
         MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.POST, API, json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isCreated());
@@ -90,9 +86,9 @@ public class AppointmentControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveAtualizar() throws Exception{
-        Mockito.when(appointmentService.update(Mockito.any(Appointment.class))).thenReturn(generateConsultaInstance());
-        String json = toJson(generateConsultaDTOInstance());
+    public void update() throws Exception{
+        Mockito.when(appointmentService.update(Mockito.any(Appointment.class))).thenReturn(generateAppointment());
+        String json = toJson(generateAppointmentDTO());
         MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.PUT, API, json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -102,7 +98,7 @@ public class AppointmentControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveRemoverPorId() throws Exception{
+    public void removeById() throws Exception{
         Long id = 1L;
         Mockito.doNothing().when(appointmentService).removeById(isA(Long.class));
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/").concat(String.valueOf(id)));
@@ -113,8 +109,8 @@ public class AppointmentControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveBuscarTodos() throws Exception{
-        Mockito.when(appointmentService.findAll()).thenReturn(generateConsultaListInstance());
+    public void findAll() throws Exception{
+        Mockito.when(appointmentService.findAll()).thenReturn(generateAppointmentList());
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -122,10 +118,9 @@ public class AppointmentControllerTeste {
 
     @WithUserDetails("Admin")
     @Test
-    public void deveRemoverComFeedback() throws Exception{
-
+    public void removeByIdWithFeedback() throws Exception{
         Long id = 1L;
-        Mockito.when(appointmentService.removeByIdWithFeedback(Mockito.anyLong())).thenReturn(generateConsultaInstance());
+        Mockito.when(appointmentService.removeByIdWithFeedback(Mockito.anyLong())).thenReturn(generateAppointment());
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/feedback/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());

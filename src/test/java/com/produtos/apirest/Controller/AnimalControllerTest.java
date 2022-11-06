@@ -24,8 +24,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.produtos.apirest.Controller.OwnerControllerTeste.generateOwner;
-import static com.produtos.apirest.Controller.AnimalTypeControllerTeste.generateTipoAnimalInstance;
+import static com.produtos.apirest.Controller.OwnerControllerTest.generateOwner;
+import static com.produtos.apirest.Controller.AnimalTypeControllerTest.generateAnimalType;
 import static com.produtos.apirest.Util.Util.buildRequest;
 import static com.produtos.apirest.Util.Util.toJson;
 import static org.mockito.ArgumentMatchers.isA;
@@ -34,7 +34,7 @@ import static org.mockito.Mockito.doNothing;
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest
-public class AnimalControllerTeste {
+public class AnimalControllerTest {
 
     private final String API = "/api/animal";
 
@@ -52,20 +52,20 @@ public class AnimalControllerTeste {
 
     public static List<Animal> generateAnimalList(){
         return new ArrayList<>(){{
-            add(generateAnimalInstance());
+            add(generateAnimal());
         }};
     }
 
-    public static Animal generateAnimalInstance(){
+    public static Animal generateAnimal(){
         return Animal.builder()
                 .animalId(1L)
                 .name("name")
                 .owner(generateOwner())
-                .animalType(generateTipoAnimalInstance())
+                .animalType(generateAnimalType())
                 .build();
     }
 
-    public static AnimalDTO generateAnimalDTOInstance(){
+    public static AnimalDTO generateAnimalDTO(){
         return AnimalDTO.builder()
                 .id(1L)
                 .animalTypeId(1L)
@@ -73,16 +73,16 @@ public class AnimalControllerTeste {
                 .ownerId(1L)
                 .animalTypeId(1L)
                 .owner(generateOwner())
-                .type(generateTipoAnimalInstance())
+                .type(generateAnimalType())
                 .build();
     }
     @Test
     @WithUserDetails("Admin")
-    public void deveSalvar() throws Exception{
-        Mockito.when(animalService.save(Mockito.any(Animal.class))).thenReturn(generateAnimalInstance());
+    public void save() throws Exception{
+        Mockito.when(animalService.save(Mockito.any(Animal.class))).thenReturn(generateAnimal());
         Mockito.when(ownerService.findById(Mockito.anyLong())).thenReturn(generateOwner());
-        Mockito.when(animalTypeService.findById(Mockito.anyLong())).thenReturn(generateTipoAnimalInstance());
-        String json = new ObjectMapper().writeValueAsString(generateAnimalDTOInstance());
+        Mockito.when(animalTypeService.findById(Mockito.anyLong())).thenReturn(generateAnimalType());
+        String json = new ObjectMapper().writeValueAsString(generateAnimalDTO());
         MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.POST, API, json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isCreated());
@@ -90,9 +90,9 @@ public class AnimalControllerTeste {
 
     @Test
     @WithUserDetails("Admin")
-    public void deveAtualizar() throws Exception{
-        Mockito.when(animalService.update(Mockito.any(Animal.class))).thenReturn(generateAnimalInstance());
-        String json = toJson(generateAnimalDTOInstance());
+    public void update() throws Exception{
+        Mockito.when(animalService.update(Mockito.any(Animal.class))).thenReturn(generateAnimal());
+        String json = toJson(generateAnimalDTO());
         MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.PUT, API, json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -100,11 +100,11 @@ public class AnimalControllerTeste {
 
     @Test
     @WithUserDetails("Admin")
-    public void deveAtualizarDono() throws Exception{
+    public void updateOwner() throws Exception{
         Mockito.when(ownerService.findById(Mockito.anyLong())).thenReturn(generateOwner());
-        Mockito.when(animalService.findById(Mockito.anyLong())).thenReturn(generateAnimalInstance());
-        Mockito.when(animalService.updateOwner(Mockito.any(Animal.class), Mockito.any(Owner.class))).thenReturn(generateAnimalInstance());
-        String json = toJson(generateAnimalDTOInstance());
+        Mockito.when(animalService.findById(Mockito.anyLong())).thenReturn(generateAnimal());
+        Mockito.when(animalService.updateOwner(Mockito.any(Animal.class), Mockito.any(Owner.class))).thenReturn(generateAnimal());
+        String json = toJson(generateAnimalDTO());
         MockHttpServletRequestBuilder request = Util.buildRequest(HttpMethod.PUT, API.concat("/owner"), json);
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -112,7 +112,7 @@ public class AnimalControllerTeste {
 
     @Test
     @WithUserDetails("Admin")
-    public void deveRemover() throws Exception{
+    public void removeById() throws Exception{
         Long id = 1L;
         doNothing().when(animalService).removeById(isA(Long.class));
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/").concat(String.valueOf(id)));
@@ -123,9 +123,9 @@ public class AnimalControllerTeste {
 
     @Test
     @WithUserDetails("Admin")
-    public void deveRemoverComFeedback() throws Exception{
+    public void removeByIdWithFeedback() throws Exception{
         Long id = 1L;
-        Mockito.when(animalService.removeByIdWithFeedback(Mockito.anyLong())).thenReturn(generateAnimalInstance());
+        Mockito.when(animalService.removeByIdWithFeedback(Mockito.anyLong())).thenReturn(generateAnimal());
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, API.concat("/feedback/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -133,9 +133,9 @@ public class AnimalControllerTeste {
 
     @Test
     @WithUserDetails("Admin")
-    public void deveBuscarPorId() throws Exception{
+    public void findById() throws Exception{
         Long id = 1L;
-        Mockito.when(animalService.findById(Mockito.anyLong())).thenReturn(generateAnimalInstance());
+        Mockito.when(animalService.findById(Mockito.anyLong())).thenReturn(generateAnimal());
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/").concat(String.valueOf(id)));
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -143,7 +143,7 @@ public class AnimalControllerTeste {
 
     @Test
     @WithUserDetails("Admin")
-    public void deveBuscarDono() throws Exception{
+    public void findOwnerByAnimalId() throws Exception{
         Long id = 1L;
         Mockito.when(animalService.findOwnerByAnimalId(Mockito.anyLong())).thenReturn(generateOwner());
         MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, API.concat("/owner/").concat(String.valueOf(id)));
