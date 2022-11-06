@@ -131,8 +131,8 @@ But, there are more routes tha this, so it easier to do the CRUD operations: fin
 * DELETE: `/api/animal/feedback/<id>` -> removeByIdWithFeedback
 
 ## Basic Routes 
-You call see all routes on the swagger.
-
+You call see all routes on the swagger at http://localhost:8080/swagger-ui/#/ when start the server.
+s
 Pattern:  METHOD:`route -> function `
 
 * GET: `/api/<model>` -> findAll
@@ -179,6 +179,7 @@ Here a list of thing there need to be done:
 * Code Review
 * Refactor Tests
 * Integration Tests
+* Refactor the DTO Response Fields
 
 # About Me
 I'm Levy. I'm a science computer student and develop back-end applications at my free time. I'm trying to learn need things and trying to find a job :p 
