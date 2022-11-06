@@ -17,57 +17,57 @@ public class RoleController {
         this.roleService = roleService;
     }
 
-    @PostMapping("/salvar")
-    public ResponseEntity<?> salvar(@RequestBody RoleDTO roleDTO){
+    @PostMapping
+    public ResponseEntity<?> save(@RequestBody RoleDTO roleDTO){
         try {
             Role role = roleDTO.toRole();
-            Role roleSalva = roleService.salvar(role);
-            RoleDTO dtoRetorno = roleSalva.toRoleDTO();
-            return new ResponseEntity<>(dtoRetorno, HttpStatus.CREATED);
+            Role roleSaved = roleService.save(role);
+            RoleDTO dtoResponse = roleSaved.toRoleDTO();
+            return new ResponseEntity<>(dtoResponse, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PutMapping("/atualizar")
-    public ResponseEntity<?> atualizar(@RequestBody RoleDTO roleDTO){
+    @PutMapping
+    public ResponseEntity<?> update(@RequestBody RoleDTO roleDTO){
         try {
             Role role = roleDTO.toRole();
-            Role roleAtualizada = roleService.atualizar(role);
-            RoleDTO dtoRetorno = roleAtualizada.toRoleDTO();
-            return ResponseEntity.ok(dtoRetorno);
+            Role roleUpdated = roleService.update(role);
+            RoleDTO dtoResponse = roleUpdated.toRoleDTO();
+            return ResponseEntity.ok(dtoResponse);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @DeleteMapping("/remover/{id}")
-    public ResponseEntity<?> remover(@PathVariable(value = "id") Long id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> remove(@PathVariable(value = "id") Long id){
         try {
-            roleService.removerPorId(id);
+            roleService.removeById(id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @DeleteMapping("/remover/feedback/{id}")
-    public ResponseEntity<?> removerComFeedback(@PathVariable(value = "id") Long id) {
+    @DeleteMapping("/feedback/{id}")
+    public ResponseEntity<?> removeWithFeedback(@PathVariable(value = "id") Long id) {
         try {
-            Role roleFeedback = roleService.RemoverComFeedback(id);
-            RoleDTO dtoRetorno = roleFeedback.toRoleDTO();
-            return ResponseEntity.ok(dtoRetorno);
+            Role roleRemoved = roleService.removeByIdWithFeedback(id);
+            RoleDTO dtoResponse = roleRemoved.toRoleDTO();
+            return ResponseEntity.ok(dtoResponse);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @GetMapping("/buscar/{id}")
-    public ResponseEntity<?> buscarPorId(@PathVariable(value = "id") Long id){
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable(value = "id") Long id){
         try {
-            Role role = roleService.buscarPorId(id);
-            RoleDTO dtoRetorno = role.toRoleDTO();
-            return ResponseEntity.ok(dtoRetorno);
+            Role roleFind = roleService.findById(id);
+            RoleDTO dtoResponse = roleFind.toRoleDTO();
+            return ResponseEntity.ok(dtoResponse);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }

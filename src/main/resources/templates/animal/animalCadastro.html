@@ -113,7 +113,7 @@
     <input type="hidden" name="id" id="dto-id-input" th:value="${animaldto.id}" >
     <div class="mb-3">
       <label for="nome-input" class="form-label">Nome</label>
-      <input type="text" class ="form-control" name="nome"  id ="nome-input" placeholder="Digite o nome" required th:value="${animaldto.nome}" >
+      <input type="text" class ="form-control" name="nome"  id ="nome-input" placeholder="Digite o nome" required th:value="${animaldto.getName}" >
     </div>
 
     <div class = "mb-3">
@@ -125,8 +125,8 @@
 
     <div class = "mb-3">
       <label for="tipo-input" class="form-label">Tipo</label>
-      <select  th:field="${animaldto.tipo}" id="tipo-input" class="js-example-basic-single" name="tipo" style="width: 50%">
-        <option th:each="tipo : ${animaldto.tipos}" th:value="${tipo.tipoAnimalId}" th:text="${tipo.nome}" th:selected="${animaldto.tipo == tipo}"> </option>
+      <select th:field="${animaldto.getType}" id="tipo-input" class="js-example-basic-single" name="tipo" style="width: 50%">
+        <option th:each="tipo : ${animaldto.getTypes}" th:value="${tipo.tipoAnimalId}" th:text="${tipo.nome}" th:selected="${animaldto.getType == tipo}"> </option>
       </select>
     </div>
 

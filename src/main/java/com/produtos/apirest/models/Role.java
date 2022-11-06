@@ -22,7 +22,7 @@ public class Role implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private Long RoleId;
+    private Long roleId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "roleName", nullable = false, unique = true)
@@ -36,7 +36,7 @@ public class Role implements GrantedAuthority {
 
     public RoleDTO toRoleDTO(){
         return RoleDTO.builder()
-                .id(this.RoleId)
+                .id(this.roleId)
                 .roleName(this.roleName)
                 .build();
     }

@@ -17,7 +17,7 @@ public class Util {
         return String.valueOf(random.nextInt(9999999));
     }
 
-    public static String generateTelefone(){
+    public static String generatePhone(){
         return String.valueOf(random.nextInt(9999999));
     }
 
@@ -25,7 +25,7 @@ public class Util {
         return new ObjectMapper().writeValueAsString(object);
     }
 
-    public static MockHttpServletRequestBuilder request(HttpMethod method, String url, String content){
+    public static MockHttpServletRequestBuilder buildRequest(HttpMethod method, String url, String content){
         return switch (method) {
             case GET -> MockMvcRequestBuilders
                     .get(url)
@@ -51,7 +51,7 @@ public class Util {
         };
     }
 
-    public static MockHttpServletRequestBuilder request(HttpMethod method, String url){
+    public static MockHttpServletRequestBuilder buildRequest(HttpMethod method, String url){
         return switch (method) {
             case GET -> MockMvcRequestBuilders.get(url);
             case POST -> MockMvcRequestBuilders.post(url);

@@ -1,6 +1,6 @@
 <h1 align="center">
     <p>P for Pet</p>
-    <img src="https://pixabay.com/get/ga39211e441c4ae7872f51730943824f6daa185c62f2e0103958cc15137682bac70311481054abf2f035a92262dd914998e8c6a7c2989c96613e796a102ce1b57cff2d5a983ba9aecf8113cdbc5f76f0a_1280.jpg" alt="P for Pet">
+    <img src="./Doc/logo.jpg" alt="P for Pet">
 </h1>
 
 <p align="center">
@@ -20,15 +20,15 @@
 
 ## Introduction
 
-P for Pet, provides end-points for consume. It has CRUD end-points for each model. The routes provided by the controllers need to be authenticated with basic authentication.
+P for Pet, provides end-points for consumers. It has CRUD end-points for each model. The routes provided by the controllers need to be authenticated with basic authentication.
 
 Every function, method, service and controller needs to have a unit test. 
 
+More specif documentation at [documentation](./Doc/DOC.md)
  * **Starting**
 > Clone the repository and opens with your favored java editor. I recommend IntelliJ or Eclipse. Then wait for Maven to download the needed dependencies. Now you can work.
 
-The idea behind the api is that we have the Secretary and the Admin users. The first have access some end-points of the api when authenticated and the second has access to all end-points. 
-So the users of this api are the secretary and the admin. So the secretary can log into a system and will create the animals, owners and other by making requests to the api. As a future update I'm thinking about adding the client of the clinic as a consumers so the client could book the appointment by itself without the need of the secretary.   
+The idea is to make rest api to provide microservices as save, delete, update and find for the models.
 ## The developing
 
 I originally wrote all the code in portuguese, since I'm brazilian, and now I'm changing to english for a  more international view. So you can sometimes find some method names or variables in portuguese. If you find you can help me on discussion.

@@ -24,18 +24,18 @@ public class Area {
     @Column(name = "id")
     private long areaId;
 
-    @Column(name = "nome")
+    @Column(name = "name")
     @NotNull
-    private String nome;
+    private String name;
 
     @OneToMany(mappedBy = "area", fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<Especialidade> especialidades;
+    private List<Expertise> expertises;
 
     public AreaDTO toAreaDTO(){
         return AreaDTO.builder()
                 .id(this.areaId)
-                .nome(this.nome)
+                .name(this.name)
                 .build();
     }
 }

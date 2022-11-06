@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AreaRepo extends JpaRepository<Area, Long> {
-
+    Area findByAreaId(Long id);
 }

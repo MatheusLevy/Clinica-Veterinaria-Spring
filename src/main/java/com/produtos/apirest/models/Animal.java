@@ -24,34 +24,34 @@ public class Animal {
     @Column(name = "id")
     private long animalId;
 
-    @Column(name = "nome")
+    @Column(name = "name")
     @NotNull
-    private String nome;
+    private String name;
 
     @ManyToOne
-    @JoinColumn(name="tipo_id", nullable = false)
-    private TipoAnimal tipoAnimal;
+    @JoinColumn(name="type_id", nullable = false)
+    private AnimalType animalType;
 
     @ManyToOne
-    @JoinColumn(name = "dono_id", nullable = false)
-    private Dono dono;
+    @JoinColumn(name = "owner_id", nullable = false)
+    private Owner owner;
 
     @OneToMany(mappedBy = "animal")
     @JsonIgnore
-    private List<Consulta> consultas;
+    private List<Appointment> appointments;
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "[id= "+ animalId +", nome= " + nome +", tipo= " + tipoAnimal + ", dono= " + dono + "]";
+        return getClass().getSimpleName() + "[id= "+ animalId +", name= " + name +", type= " + animalType + ", owner= " + owner + "]";
     }
 
     public AnimalDTO toAnimalDTO(){
         return AnimalDTO.builder()
                 .id(this.animalId)
-                .idTipoAnimal(this.tipoAnimal.getTipoAnimalId())
-                .nomeTipoAnimal(this.tipoAnimal.getNome())
-                .nomeDono(this.dono.getNome())
-                .idDono(this.dono.getDonoId())
+                .animalTypeId(this.animalType.getAnimalTypeId())
+                .animalTypeName(this.animalType.getName())
+                .ownerName(this.owner.getName())
+                .ownerId(this.owner.getOwnerId())
                 .build();
     }
 }

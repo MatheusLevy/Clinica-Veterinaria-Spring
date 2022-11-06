@@ -15,13 +15,20 @@ import java.util.List;
 public class AreaDTO {
 
     private Long id;
-    private String nome;
+    private String name;
     private List<Area> areas;
 
+    private void hasId(){
+        if (this.id == null){
+            this.id = 0L;
+        }
+    }
+
     public Area toArea(){
+        hasId();
         return Area.builder()
                 .areaId(this.id)
-                .nome(this.nome)
+                .name(this.name)
                 .build();
     }
 }

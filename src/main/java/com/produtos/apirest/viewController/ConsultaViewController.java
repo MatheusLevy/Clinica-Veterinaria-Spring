@@ -1,11 +1,11 @@
 package com.produtos.apirest.viewController;
 
 import com.produtos.apirest.models.*;
-import com.produtos.apirest.models.DTO.ConsultaDTO;
+import com.produtos.apirest.models.DTO.AppointmentDTO;
 import com.produtos.apirest.service.AnimalService;
-import com.produtos.apirest.service.ConsultaService;
-import com.produtos.apirest.service.TipoConsultaService;
-import com.produtos.apirest.service.VeterinarioService;
+import com.produtos.apirest.service.AppointmentService;
+import com.produtos.apirest.service.AppointmentTypeService;
+import com.produtos.apirest.service.VeterinaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -20,25 +20,25 @@ import java.util.List;
 public class ConsultaViewController {
 
     @Autowired
-    public ConsultaService  consultaService;
+    public AppointmentService appointmentService;
 
     @Autowired
-    public TipoConsultaService tipo_consultaService;
+    public AppointmentTypeService tipo_consultaService;
 
     @Autowired
     public AnimalService animalService;
 
     @Autowired
-    public VeterinarioService veterinarioService;
+    public VeterinaryService veterinaryService;
 
     @PreAuthorize("hasRole('S')")
     @GetMapping("/consulta/cadastro")
     public ModelAndView consultaCadastro(){
         ModelAndView mv = new ModelAndView("consulta/consultaCadastro");
-        ConsultaDTO dto = ConsultaDTO.builder()
-                .tiposConsulta(tipo_consultaService.buscarTodos())
-                .veterinarios(veterinarioService.buscarTodos())
-                .animais(animalService.buscarTodos())
+        AppointmentDTO dto = AppointmentDTO.builder()
+                .appointmentTypes(tipo_consultaService.findAll())
+                .vets(veterinaryService.findAll())
+                .animals(animalService.findAll())
                 .build();
         mv.addObject("consultadto", dto);
         return mv;
@@ -46,20 +46,20 @@ public class ConsultaViewController {
 
     @PreAuthorize("hasRole('S')")
     @PostMapping("/consulta/cadastro")
-    public String consultaCadastro(ConsultaDTO dto){
-        Consulta consulta = Consulta.builder()
-                .veterinario(dto.getVeterinario())
+    public String consultaCadastro(AppointmentDTO dto){
+        Appointment consulta = Appointment.builder()
+                .veterinary(dto.getVeterinary())
                 .animal(dto.getAnimal())
-                .tipoConsulta(dto.getTipo())
-                .descricao(dto.getDescricao())
-                .data(dto.getData())
+                .appointmentType(dto.getType())
+                .description(dto.getDescription())
+                .date(dto.getDate())
                 .build();
 
         if(dto.getId() == null){
-            consultaService.salvar(consulta);
+            appointmentService.save(consulta);
         }else{
-            consulta.setConsultaId(dto.getId());
-            consultaService.atualizar(consulta);
+            consulta.setAppointmentId(dto.getId());
+            appointmentService.update(consulta);
         }
         return "redirect:/consulta/consultaList";
     }
@@ -67,7 +67,7 @@ public class ConsultaViewController {
     @PreAuthorize("hasRole('S')")
     @GetMapping("/consulta/consultaList")
     public ModelAndView consultaList(){
-        List<Consulta> consultas = consultaService.buscarTodos();
+        List<Appointment> consultas = appointmentService.findAll();
         ModelAndView mv = new ModelAndView("/consulta/consultaList");
         mv.addObject("consultas", consultas);
         //System.out.println(mv);
@@ -77,28 +77,28 @@ public class ConsultaViewController {
     @PreAuthorize("hasRole('S')")
     @GetMapping("/consulta/atualizar/{id}")
     public ModelAndView consultaAtualizar(@PathVariable(value = "id") Long id){
-        Consulta consulta = Consulta.builder().consultaId(id).build();
-        Consulta consultaFind = consultaService.buscarPorId(consulta.getConsultaId());
+        Appointment consulta = Appointment.builder().appointmentId(id).build();
+        Appointment consultaFind = appointmentService.findById(consulta.getAppointmentId());
 
         //Lista Veterinarios
-        List<Veterinario> veterinarios = veterinarioService.buscarTodos();
+        List<Veterinary> veterinarios = veterinaryService.findAll();
 
         //Lista Animais
-        List<Animal> animais = animalService.buscarTodos();
+        List<Animal> animais = animalService.findAll();
 
         //Lista Tipo Consulta
-        List<TipoConsulta> tipos = tipo_consultaService.buscarTodos();
+        List<AppointmentType> tipos = tipo_consultaService.findAll();
 
-        ConsultaDTO dto = ConsultaDTO.builder()
-                .id(consultaFind.getConsultaId())
-                .tipo(consultaFind.getTipoConsulta())
+        AppointmentDTO dto = AppointmentDTO.builder()
+                .id(consultaFind.getAppointmentId())
+                .type(consultaFind.getAppointmentType())
                 .animal(consultaFind.getAnimal())
-                .descricao(consultaFind.getDescricao())
-                .data(consultaFind.getData())
-                .veterinario(consultaFind.getVeterinario())
-                .animais(animais)
-                .tiposConsulta(tipos)
-                .veterinarios(veterinarios)
+                .description(consultaFind.getDescription())
+                .date(consultaFind.getDate())
+                .veterinary(consultaFind.getVeterinary())
+                .animals(animais)
+                .appointmentTypes(tipos)
+                .vets(veterinarios)
                 .build();
 
         ModelAndView mv = new ModelAndView("/consulta/consultaCadastro");
@@ -109,9 +109,9 @@ public class ConsultaViewController {
     @PreAuthorize("hasRole('S')")
     @GetMapping("/consulta/remover/{id}")
     public String consultaRemover(@PathVariable(value = "id", required = true) Long id){
-        Consulta consulta = Consulta.builder().consultaId(id).build();
-        Consulta consultaFind = consultaService.buscarPorId(consulta.getConsultaId());
-        consultaService.remover(consultaFind);
+        Appointment consulta = Appointment.builder().appointmentId(id).build();
+        Appointment consultaFind = appointmentService.findById(consulta.getAppointmentId());
+        appointmentService.remove(consultaFind);
         return "redirect:/consulta/consultaList";
     }
 }

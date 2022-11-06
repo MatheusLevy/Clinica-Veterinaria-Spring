@@ -24,7 +24,7 @@ public class AreaViewController {
     public ModelAndView areaCadastroControl(){
         ModelAndView mv = new ModelAndView("/area/areaCadastro");
         AreaDTO dto = new AreaDTO();
-        dto.setAreas(areaService.buscarTodos());
+        dto.setAreas(areaService.findAll());
         mv.addObject("areadto", dto);
         return mv;
     }
@@ -32,19 +32,19 @@ public class AreaViewController {
     @PreAuthorize("hasRole('A')")
     @PostMapping("/area/cadastro")
     public String areaCadastro(AreaDTO dto){
-        Area area = Area.builder().nome(dto.getNome()).build();
+        Area area = Area.builder().name(dto.getName()).build();
         if(dto.getId() == null){
-            areaService.salvar(area);
+            areaService.save(area);
         }else{
             area.setAreaId(dto.getId());
-            areaService.atualizar(area);
+            areaService.update(area);
         }
         return "redirect:/area/areaList";
     }
     @PreAuthorize("hasRole('A')")
     @GetMapping("/area/areaList")
     public ModelAndView areaList(){
-        List<Area> areas = areaService.buscarTodos();
+        List<Area> areas = areaService.findAll();
         ModelAndView mv = new ModelAndView("/area/areaList");
         mv.addObject("areas", areas);
         System.out.println(mv);
@@ -54,12 +54,12 @@ public class AreaViewController {
     @PreAuthorize("hasRole('A')")
     @GetMapping("/area/atualizar/{id}")
     public ModelAndView animalAtualizar(@PathVariable(value = "id", required = true) Long id){
-        Area areaFind = areaService.buscarPorId(id);
+        Area areaFind = areaService.findById(id);
 
         //AreaDTO
         AreaDTO dto = AreaDTO.builder()
                 .id(areaFind.getAreaId())
-                .nome(areaFind.getNome())
+                .name(areaFind.getName())
                 .build();
         ModelAndView mv = new ModelAndView("/area/areaCadastro");
         mv.addObject("areadto", dto);
@@ -69,7 +69,7 @@ public class AreaViewController {
     @PreAuthorize("hasRole('A')")
     @GetMapping("/area/remover/{id}")
     public String areaRemover(@PathVariable(value = "id", required = true) Long id){
-        areaService.removerPorId(id);
+        areaService.removeById(id);
         return "redirect:/area/areaList";
     }
 

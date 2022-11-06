@@ -113,7 +113,7 @@
     <input type="hidden" name="id" id="dto-id-input" th:value="${veterinarioDTO.id}" >
     <div class="mb-3">
       <label for="nome-input" class="form-label">Nome</label>
-      <input type="text" class ="form-control" name="nome"  id ="nome-input" placeholder="Digite o nome" required th:value="${veterinarioDTO.nome}" >
+      <input type="text" class ="form-control" name="nome"  id ="nome-input" placeholder="Digite o nome" required th:value="${veterinarioDTO.getName}" >
     </div>
 
     <div class="mb-3">
@@ -123,13 +123,13 @@
 
     <div class="mb-3">
       <label for="telefone-input" class="form-label">Telefone</label>
-      <input type="text" class ="form-control" name="telefone"  id ="telefone-input" placeholder="Digite o telefone" required th:value="${veterinarioDTO.telefone}" >
+      <input type="text" class ="form-control" name="telefone"  id ="telefone-input" placeholder="Digite o telefone" required th:value="${veterinarioDTO.getPhone}" >
     </div>
 
     <div class = "mb-3">
       <label for="especialidade-input" class="form-label">Especialidade</label>
-      <select  th:field="${veterinarioDTO.especialidade}" id="especialidade-input" class="js-example-basic-single" name="especialidade" style="width: 50%">
-        <option th:each="especialidade : ${veterinarioDTO.especialidades}" th:value="${especialidade.especialidadeId}" th:text="${especialidade.nome}" th:selected="${veterinarioDTO.especialidade == especialidade}"> </option>
+      <select th:field="${veterinarioDTO.getExpertise}" id="especialidade-input" class="js-example-basic-single" name="especialidade" style="width: 50%">
+        <option th:each="especialidade : ${veterinarioDTO.getExpertises}" th:value="${especialidade.especialidadeId}" th:text="${especialidade.nome}" th:selected="${veterinarioDTO.getExpertise == especialidade}"> </option>
       </select>
     </div>
 

@@ -1,7 +1,7 @@
 package com.produtos.apirest.viewController;
 
-import com.produtos.apirest.models.TipoConsulta;
-import com.produtos.apirest.service.TipoConsultaService;
+import com.produtos.apirest.models.AppointmentType;
+import com.produtos.apirest.service.AppointmentTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -16,25 +16,25 @@ import java.util.List;
 public class tipoConsultaViewController {
 
     @Autowired
-    private TipoConsultaService tipoService;
+    private AppointmentTypeService tipoService;
 
     @PreAuthorize("hasRole('A')")
     @GetMapping("/tipoConsulta/cadastro")
     public ModelAndView tipoConsultaCadastro(){
         ModelAndView mv = new ModelAndView("tipoConsulta/tipoConsultaCadastro");
-        TipoConsulta tipoConsulta = TipoConsulta.builder().build();
+        AppointmentType tipoConsulta = AppointmentType.builder().build();
         mv.addObject("tipoConsulta", tipoConsulta);
         return mv;
     }
 
     @PreAuthorize("hasRole('A')")
     @PostMapping("/tipoConsulta/cadastro")
-    public String tipoConsultaCadastroControll(TipoConsulta tipo){
+    public String tipoConsultaCadastroControll(AppointmentType tipo){
 
-        if(Long.valueOf(tipo.getTipoConsultaId()) == null){
-            tipoService.salvar(tipo);
+        if(Long.valueOf(tipo.getAppointmentTypeId()) == null){
+            tipoService.save(tipo);
         }else {
-            tipoService.atualizar(tipo);
+            tipoService.update(tipo);
         }
         return "redirect:/tipoConsulta/tipoConsultaList";
     }
@@ -43,7 +43,7 @@ public class tipoConsultaViewController {
     @GetMapping("/tipoConsulta/atualizar/{id}")
     public ModelAndView tipoConsultaAtualizar(@PathVariable(value = "id", required = true) Long id){
 
-        TipoConsulta tipoFind = tipoService.buscarPorId(id);
+        AppointmentType tipoFind = tipoService.findById(id);
         ModelAndView mv = new ModelAndView("/tipoConsulta/tipoConsultaCadastro");
         mv.addObject("tipoConsulta", tipoFind);
         return mv;
@@ -52,14 +52,14 @@ public class tipoConsultaViewController {
     @PreAuthorize("hasRole('A')")
     @GetMapping("/tipoConsulta/remover/{id}")
     public String tipoConsultaRemover(@PathVariable(value = "id", required = true) Long id){
-        tipoService.removerPorId(id);
+        tipoService.removeById(id);
         return "redirect:/tipoConsulta/tipoConsultaList";
     }
 
     @PreAuthorize("hasRole('A')")
     @GetMapping("/tipoConsulta/tipoConsultaList")
     public ModelAndView tipoConsultaList(){
-        List<TipoConsulta> tipos = tipoService.buscarTodos();
+        List<AppointmentType> tipos = tipoService.findAll();
         ModelAndView mv = new ModelAndView("/tipoConsulta/tipoConsultaList");
         mv.addObject("tipos", tipos);
         return mv;

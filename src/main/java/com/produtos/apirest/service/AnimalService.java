@@ -1,120 +1,125 @@
 package com.produtos.apirest.service;
 
 import com.produtos.apirest.models.Animal;
-import com.produtos.apirest.models.Dono;
+import com.produtos.apirest.models.Owner;
 import com.produtos.apirest.repository.AnimalRepo;
-import com.produtos.apirest.repository.DonoRepo;
-import com.produtos.apirest.service.excecoes.*;
+import com.produtos.apirest.service.exceptions.BusinessRuleException;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AnimalService {
 
     private final AnimalRepo repo;
-    private final DonoRepo donoRepo;
 
-    public AnimalService(AnimalRepo animalRepo, DonoRepo donoRepo){
+    public AnimalService(AnimalRepo animalRepo){
         this.repo = animalRepo;
-        this.donoRepo = donoRepo;
     }
 
-    public static void verificaAnimal(Animal animal){
+    public static void verifyAllRules(Animal animal){
+        isNotNull(animal);
+        hasName(animal);
+        hasId(animal);
+    }
+
+    public static void isNotNull(Animal animal){
         if (animal == null)
-            throw new NullPointerException("O Animal não pode ser Nulo!");
-        if(animal.getNome() == null || animal.getNome().equals(""))
-            throw new RegraNegocioRunTime("Animal deve ter nome!");
+            throw new NullPointerException("The animal must not be null!");
     }
 
-    public static void verificaId(Animal animal){
+    public static void isNotNullHasName(Animal animal){
+        isNotNull(animal);
+        hasName(animal);
+    }
+
+    public static void hasName(Animal animal){
+        if(animal.getName().equals(""))
+                throw new BusinessRuleException("The animal should have a name!");
+    }
+
+    public static void hasId(Animal animal){
         if (animal.getAnimalId() <= 0)
-            throw new RegraNegocioRunTime("O Animal deve possuir um identificador!");
+            throw new BusinessRuleException("The animal should have a id!");
     }
 
-    public static void verificaId(Long id){
+    public static void hasId(Long id){
         if (id <= 0)
-            throw new RegraNegocioRunTime("O Animal deve possuir um identificador!");
+            throw new BusinessRuleException("The animal should have a id!");
+    }
+
+    public static Example<Animal> generateExample(Animal animal){
+        return Example.of(animal, ExampleMatcher.matching()
+                .withIgnoreCase()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
     }
 
     @Transactional
-    public Animal salvar(Animal animal){
-        verificaAnimal(animal);
+    public Animal save(Animal animal){
+        isNotNullHasName(animal);
         return repo.save(animal);
     }
 
     @Transactional
-    public Animal atualizar(Animal animal){
-        verificaAnimal(animal);
-        verificaId(animal);
+    public Animal update(Animal animal){
+        verifyAllRules(animal);
         return repo.save(animal);
     }
 
     @Transactional
-    public Animal atualizarDono(Animal destino, Dono donoNovo){
-        DonoService.verificaDono(donoNovo);
-        DonoService.verificaId(donoNovo);
-        verificaAnimal(destino);
-        verificaId(destino);
-        destino.setDono(donoNovo);
-        return repo.save(destino);
+    public Animal updateOwner(Animal source, Owner newOwner){
+        OwnerService.verifyAllRules(newOwner);
+        OwnerService.hasId(newOwner);
+        verifyAllRules(source);
+        source.setOwner(newOwner);
+        return repo.save(source);
     }
 
     @Transactional
-    public void remover(Animal animal){
-        verificaAnimal(animal);
-        verificaId(animal);
+    public void remove(Animal animal){
+        verifyAllRules(animal);
         repo.delete(animal);
     }
 
     @Transactional
-    public void removerPorId(Long id){
-        verificaId(id);
+    public void removeById(Long id){
+        hasId(id);
         repo.deleteById(id);
     }
 
     @Transactional
-    public Animal removerComFeedback(Long id){
-        verificaId(id);
-        Optional<Animal> animaisEncontrados = repo.findById(id);
-        if (animaisEncontrados.isPresent()) {
-            Animal animalFeedback = animaisEncontrados.get();
-            repo.delete(animalFeedback);
-            return animalFeedback;
-        }
-        return null;
+    public Animal removeByIdWithFeedback(Long id){
+        hasId(id);
+        Animal feedback = repo.findByAnimalId(id);
+        repo.delete(feedback);
+        return feedback;
     }
 
     @Transactional
-    public Animal buscarPorId(Long id){
-        verificaId(id);
-        Optional<Animal> animaisEncontrados = repo.findById(id);
-        return animaisEncontrados.orElse(null);
+    public Animal findById(Long id){
+        hasId(id);
+        return repo.findByAnimalId(id);
     }
 
     @Transactional
-    public List<Animal> buscar(Animal filtro){
-        if (filtro == null)
-            throw new NullPointerException("Filtro não pode ser nulo");
-        Example<Animal> example = Example.of(filtro, ExampleMatcher.matching()
-                .withIgnoreCase()
-                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
+    public List<Animal> find(Animal animal){
+        isNotNull(animal);
+        Example<Animal> example = generateExample(animal);
         return repo.findAll(example);
     }
 
     @Transactional
-    public List<Animal> buscarTodos(){
+    public List<Animal> findAll(){
         return repo.findAll();
     }
 
     @Transactional
-    public Dono buscarDonoPorId(Long id){
-        verificaId(id);
-        Optional<Animal> animaisEncontrados = repo.findById(id);
-        return animaisEncontrados.map(Animal::getDono).orElse(null);
+    public Owner findOwnerByAnimalId(Long animalId){
+        hasId(animalId);
+        Animal animalFind = repo.findByAnimalId(animalId);
+        return animalFind.getOwner();
     }
 }
