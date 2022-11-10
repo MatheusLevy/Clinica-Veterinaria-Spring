@@ -17,59 +17,39 @@ public class RoleController {
         this.roleService = roleService;
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody RoleDTO roleDTO){
-        try {
-            Role role = roleDTO.toRole();
-            Role roleSaved = roleService.save(role);
-            RoleDTO dtoResponse = roleSaved.toRoleDTO();
-            return new ResponseEntity<>(dtoResponse, HttpStatus.CREATED);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public RoleDTO save(@RequestBody RoleDTO roleDTO){
+        Role role = roleDTO.toRole();
+        Role roleSaved = roleService.save(role);
+        return roleSaved.toRoleDTO();
     }
 
     @PutMapping
     public ResponseEntity<?> update(@RequestBody RoleDTO roleDTO){
-        try {
-            Role role = roleDTO.toRole();
-            Role roleUpdated = roleService.update(role);
-            RoleDTO dtoResponse = roleUpdated.toRoleDTO();
-            return ResponseEntity.ok(dtoResponse);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        Role role = roleDTO.toRole();
+        Role roleUpdated = roleService.update(role);
+        RoleDTO dtoResponse = roleUpdated.toRoleDTO();
+        return ResponseEntity.ok(dtoResponse);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> remove(@PathVariable(value = "id") Long id){
-        try {
-            roleService.removeById(id);
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        roleService.removeById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/feedback/{id}")
     public ResponseEntity<?> removeWithFeedback(@PathVariable(value = "id") Long id) {
-        try {
-            Role roleRemoved = roleService.removeByIdWithFeedback(id);
-            RoleDTO dtoResponse = roleRemoved.toRoleDTO();
-            return ResponseEntity.ok(dtoResponse);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        Role roleRemoved = roleService.removeByIdWithFeedback(id);
+        RoleDTO dtoResponse = roleRemoved.toRoleDTO();
+        return ResponseEntity.ok(dtoResponse);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id){
-        try {
-            Role roleFind = roleService.findById(id);
-            RoleDTO dtoResponse = roleFind.toRoleDTO();
-            return ResponseEntity.ok(dtoResponse);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        Role roleFind = roleService.findById(id);
+        RoleDTO dtoResponse = roleFind.toRoleDTO();
+        return ResponseEntity.ok(dtoResponse);
     }
 }

@@ -25,8 +25,15 @@ public class AnimalTypeDTO {
             this.id = 0L;
     }
 
+    private void hasName(){
+        if(this.name == null){
+            this.name = "";
+        }
+    }
+
     public AnimalType toAnimalType(){
         hasId();
+        hasName();
         return AnimalType.builder()
                 .animalTypeId(this.id)
                 .name(this.name)

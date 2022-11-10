@@ -52,6 +52,7 @@ public class AppointmentDTO {
     }
 
     public Appointment toAppointment(){
+        hasId();
         return Appointment.builder()
                 .appointmentId(this.id)
                 .date(this.date)

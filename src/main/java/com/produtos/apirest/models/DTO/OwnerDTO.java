@@ -26,8 +26,32 @@ public class OwnerDTO {
         if(this.id == null)
             this.id = 0L;
     }
-    public Owner toOwner(){
+
+    private void hasName(){
+        if (this.name == null){
+            this.name = "";
+        }
+    }
+
+    private void hasPhone(){
+        if (this.phone == null)
+            this.phone = "";
+    }
+
+    private void hasCPF(){
+        if (this.cpf == null)
+            this.cpf = "";
+    }
+
+    private void hasAllFieldsNotNull(){
         hasId();
+        hasCPF();
+        hasName();
+        hasPhone();
+    }
+
+    public Owner toOwner(){
+        hasAllFieldsNotNull();
         return Owner.builder()
                 .ownerId(this.id)
                 .name(this.name)

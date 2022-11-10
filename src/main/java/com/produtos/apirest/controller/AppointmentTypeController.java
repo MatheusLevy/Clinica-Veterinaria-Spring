@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -24,59 +25,39 @@ public class AppointmentTypeController {
         this.typeService = typeService;
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody AppointmentTypeDTO dto){
-        try{
-            AppointmentType appointmentType = dto.toAppointment();
-            AppointmentType typeSaved = typeService.save(appointmentType);
-            AppointmentTypeDTO dtoResponse = typeSaved.toAppointmentTypeDTO();
-            return new ResponseEntity<>(dtoResponse, HttpStatus.CREATED);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public AppointmentTypeDTO save(@RequestBody AppointmentTypeDTO dto){
+        AppointmentType appointmentType = dto.toAppointment();
+        AppointmentType typeSaved = typeService.save(appointmentType);
+        return typeSaved.toAppointmentTypeDTO();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> removeById(@PathVariable(value = "id") Long id){
-        try {
-            typeService.removeById(id);
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        typeService.removeById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/feedback/{id}")
     public ResponseEntity<?> removeWithFeedback(@PathVariable(value = "id") Long id){
-        try{
-            AppointmentType typeRemoved = typeService.removeByIdWithFeedback(id);
-            AppointmentTypeDTO dtoResponse = typeRemoved.toAppointmentTypeDTO();
-            return ResponseEntity.ok(dtoResponse);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        AppointmentType typeRemoved = typeService.removeByIdWithFeedback(id);
+        AppointmentTypeDTO dtoResponse = typeRemoved.toAppointmentTypeDTO();
+        return ResponseEntity.ok(dtoResponse);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id){
-        try{
-            AppointmentType typeFind = typeService.findById(id);
-            AppointmentTypeDTO dtoResponse = typeFind.toAppointmentTypeDTO();
-            return ResponseEntity.ok(dtoResponse);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        AppointmentType typeFind = typeService.findById(id);
+        AppointmentTypeDTO dtoResponse = typeFind.toAppointmentTypeDTO();
+        return ResponseEntity.ok(dtoResponse);
     }
 
     @PutMapping
     public ResponseEntity<?> update(@RequestBody AppointmentTypeDTO dto){
-        try{
-            AppointmentType appointmentType = dto.toAppointment();
-            AppointmentType typeUpdated = typeService.update(appointmentType);
-            AppointmentTypeDTO dtoResponse = typeUpdated.toAppointmentTypeDTO();
-            return ResponseEntity.ok(dtoResponse);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        AppointmentType appointmentType = dto.toAppointment();
+        AppointmentType typeUpdated = typeService.update(appointmentType);
+        AppointmentTypeDTO dtoResponse = typeUpdated.toAppointmentTypeDTO();
+        return ResponseEntity.ok(dtoResponse);
     }
 }

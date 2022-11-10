@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -33,87 +34,59 @@ public class AnimalController {
         this.animalTypeService = animalTypeService;
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody AnimalDTO animaldto){
-        try{
-            Owner ownerFind = ownerService.findById(animaldto.getOwnerId());
-            AnimalType typeFind = animalTypeService.findById(animaldto.getAnimalTypeId());
-            Animal animal = animaldto.toAnimal(ownerFind, typeFind);
-            Animal animalSaved = animalService.save(animal);
-            AnimalDTO dtoResponse = animalSaved.toAnimalDTO();
-            return new ResponseEntity<>(dtoResponse, HttpStatus.CREATED);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public AnimalDTO save(@RequestBody AnimalDTO animaldto){
+        Owner ownerFind = ownerService.findById(animaldto.getOwnerId());
+        AnimalType typeFind = animalTypeService.findById(animaldto.getAnimalTypeId());
+        Animal animal = animaldto.toAnimal(ownerFind, typeFind);
+        Animal animalSaved = animalService.save(animal);
+        return animalSaved.toAnimalDTO();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> remove(@PathVariable(value = "id") Long id){
-        try{
-            animalService.removeById(id);
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        animalService.removeById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/feedback/{id}")
     public ResponseEntity<?> removeWithFeedback(@PathVariable(value = "id") Long id){
-        try{
-            Animal animalRemoved = animalService.removeByIdWithFeedback(id);
-            AnimalDTO dtoResponse = animalRemoved.toAnimalDTO();
-            return ResponseEntity.ok(dtoResponse);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        Animal animalRemoved = animalService.removeByIdWithFeedback(id);
+        AnimalDTO dtoResponse = animalRemoved.toAnimalDTO();
+        return ResponseEntity.ok(dtoResponse);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id){
-        try{
-            Animal animalFind = animalService.findById(id);
-            AnimalDTO dtoResponse = animalFind.toAnimalDTO();
+        Animal animalFind = animalService.findById(id);
+        AnimalDTO dtoResponse = animalFind.toAnimalDTO();
         return ResponseEntity.ok(dtoResponse);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
     }
 
     @PutMapping
     public ResponseEntity<?> update(@RequestBody  AnimalDTO animalDTO){
-        try{
-            Owner ownerFind = ownerService.findById(animalDTO.getOwnerId());
-            AnimalType typeFind = animalTypeService.findById(animalDTO.getAnimalTypeId());
-            Animal animal = animalDTO.toAnimal(ownerFind, typeFind);
-            Animal animalUpdated = animalService.update(animal);
-            AnimalDTO dtoResponse = animalUpdated.toAnimalDTO();
-            return ResponseEntity.ok(dtoResponse);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        Owner ownerFind = ownerService.findById(animalDTO.getOwnerId());
+        AnimalType typeFind = animalTypeService.findById(animalDTO.getAnimalTypeId());
+        Animal animal = animalDTO.toAnimal(ownerFind, typeFind);
+        Animal animalUpdated = animalService.update(animal);
+        AnimalDTO dtoResponse = animalUpdated.toAnimalDTO();
+        return ResponseEntity.ok(dtoResponse);
     }
 
     @GetMapping("/owner/{id}")
     public ResponseEntity<?> findOwnerByAnimalId(@PathVariable(value = "id") Long id){
-        try {
-            Owner ownerFind = animalService.findOwnerByAnimalId(id);
-            OwnerDTO dtoResponse = ownerFind.toOwnerDTO();
-            return ResponseEntity.ok(dtoResponse);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        Owner ownerFind = animalService.findOwnerByAnimalId(id);
+        OwnerDTO dtoResponse = ownerFind.toOwnerDTO();
+        return ResponseEntity.ok(dtoResponse);
     }
 
     @PutMapping("/owner")
     public ResponseEntity<?> updateOwner(@RequestBody AnimalDTO animalDTO){
-        try {
-            Owner ownerFind = ownerService.findById(animalDTO.getOwnerId());
-            Animal animalFind = animalService.findById(animalDTO.getId());
-            Animal animalUpdated = animalService.updateOwner(animalFind, ownerFind);
-            AnimalDTO dtoResponse = animalUpdated.toAnimalDTO();
-            return ResponseEntity.ok(dtoResponse);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        Owner ownerFind = ownerService.findById(animalDTO.getOwnerId());
+        Animal animalFind = animalService.findById(animalDTO.getId());
+        Animal animalUpdated = animalService.updateOwner(animalFind, ownerFind);
+        AnimalDTO dtoResponse = animalUpdated.toAnimalDTO();
+        return ResponseEntity.ok(dtoResponse);
     }
 }

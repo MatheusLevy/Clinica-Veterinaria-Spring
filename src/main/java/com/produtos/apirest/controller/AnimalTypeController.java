@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -24,59 +25,39 @@ public class AnimalTypeController {
         this.typeService = typeService;
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody AnimalTypeDTO animalTypeDTO){
-        try{
-            AnimalType animalType = animalTypeDTO.toAnimalType();
-            AnimalType typeSaved = typeService.save(animalType);
-            AnimalTypeDTO dtoResponse = typeSaved.toAnimalTypeDTO();
-            return new ResponseEntity<>(dtoResponse, HttpStatus.CREATED);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public AnimalTypeDTO save(@RequestBody AnimalTypeDTO animalTypeDTO){
+        AnimalType animalType = animalTypeDTO.toAnimalType();
+        AnimalType typeSaved = typeService.save(animalType);
+        return typeSaved.toAnimalTypeDTO();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> remove(@PathVariable(value = "id") Long id){
-        try{
-            typeService.removeById(id);
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        typeService.removeById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/feedback/{id}")
     public ResponseEntity<?> removeWithFeedback(@PathVariable(value = "id") Long id){
-        try{
-            AnimalType typeRemoved = typeService.removeByIdWithFeedback(id);
-            AnimalTypeDTO dtoResponse = typeRemoved.toAnimalTypeDTO();
-            return ResponseEntity.ok(dtoResponse);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        AnimalType typeRemoved = typeService.removeByIdWithFeedback(id);
+        AnimalTypeDTO dtoResponse = typeRemoved.toAnimalTypeDTO();
+        return ResponseEntity.ok(dtoResponse);
     }
 
     @PutMapping
     public ResponseEntity<?> update(@RequestBody AnimalTypeDTO animalTypeDTO){
-        try{
-            AnimalType animalType = animalTypeDTO.toAnimalType();
-            AnimalType animalTypeUpdated = typeService.update(animalType);
-            AnimalTypeDTO dtoResponse = animalTypeUpdated.toAnimalTypeDTO();
-            return ResponseEntity.ok(dtoResponse);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        AnimalType animalType = animalTypeDTO.toAnimalType();
+        AnimalType animalTypeUpdated = typeService.update(animalType);
+        AnimalTypeDTO dtoResponse = animalTypeUpdated.toAnimalTypeDTO();
+        return ResponseEntity.ok(dtoResponse);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id){
-        try{
-            AnimalType typeFind = typeService.findById(id);
-            AnimalTypeDTO dtoResponse = typeFind.toAnimalTypeDTO();
-            return ResponseEntity.ok(dtoResponse);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        AnimalType typeFind = typeService.findById(id);
+        AnimalTypeDTO dtoResponse = typeFind.toAnimalTypeDTO();
+        return ResponseEntity.ok(dtoResponse);
     }
 }

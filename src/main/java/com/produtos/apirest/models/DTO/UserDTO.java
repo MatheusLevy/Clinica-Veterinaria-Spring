@@ -25,8 +25,25 @@ public class UserDTO {
             this.id = 0L;
     }
 
-    public User toUser(){
+    private void hasUsername(){
+        if (this.username == null){
+            this.username = "";
+        }
+    }
+
+    private void hasPassword(){
+        if (this.password == null)
+            this.password = "";
+    }
+
+    private void hasAllFieldsNotNull(){
         hasId();
+        hasUsername();
+        hasPassword();
+    }
+
+    public User toUser(){
+        hasAllFieldsNotNull();
         return User.builder()
                 .userId(this.id)
                 .username(this.username)

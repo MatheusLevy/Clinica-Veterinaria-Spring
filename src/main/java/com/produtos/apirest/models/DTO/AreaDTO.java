@@ -24,8 +24,15 @@ public class AreaDTO {
         }
     }
 
+    private void hasName(){
+        if (this.name == null){
+            this.name = "";
+        }
+    }
+
     public Area toArea(){
         hasId();
+        hasName();
         return Area.builder()
                 .areaId(this.id)
                 .name(this.name)

@@ -86,6 +86,8 @@ public class UserService {
     @Transactional
     public User authenticate(String username, String password){
         User user = userRepo.findByUsername(username);
+        if (user == null)
+            throw new AuthenticationFailedException("Username or password incorrect!");
         return matchPasswordWithUser(password, user);
     }
 

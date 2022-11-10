@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -29,38 +30,26 @@ public class OwnerController {
         this.ownerService = ownerService;
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody OwnerDTO ownerDTO){
-        try{
-            Owner owner = ownerDTO.toOwner();
-            Owner ownerSaved = ownerService.save(owner);
-            OwnerDTO dtoResponse = ownerSaved.toOwnerDTO();
-            return new ResponseEntity<>(dtoResponse, HttpStatus.CREATED);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public OwnerDTO save(@RequestBody OwnerDTO ownerDTO){
+        Owner owner = ownerDTO.toOwner();
+        Owner ownerSaved = ownerService.save(owner);
+        return ownerSaved.toOwnerDTO();
     }
 
     @PutMapping
     public ResponseEntity<?> update(@RequestBody OwnerDTO ownerDTO){
-        try{
-            Owner owner = ownerDTO.toOwner();
-            Owner ownerUpdated = ownerService.update(owner);
-            OwnerDTO dtoResponse = ownerUpdated.toOwnerDTO();
-            return ResponseEntity.ok(dtoResponse);
-        }catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        Owner owner = ownerDTO.toOwner();
+        Owner ownerUpdated = ownerService.update(owner);
+        OwnerDTO dtoResponse = ownerUpdated.toOwnerDTO();
+        return ResponseEntity.ok(dtoResponse);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> remove(@PathVariable(value = "id") Long id){
-        try{
-            ownerService.removeById(id);
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        ownerService.removeById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping
@@ -75,52 +64,36 @@ public class OwnerController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id){
-        try{
-            Owner ownerFind = ownerService.findById(id);
-            OwnerDTO dtoResponse = ownerFind.toOwnerDTO();
-            return ResponseEntity.ok(dtoResponse);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        Owner ownerFind = ownerService.findById(id);
+        OwnerDTO dtoResponse = ownerFind.toOwnerDTO();
+        return ResponseEntity.ok(dtoResponse);
     }
 
     @DeleteMapping("/feedback/{id}")
     public ResponseEntity<?> removeWithFeedback(@PathVariable(value = "id") Long id){
-        try{
-            Owner ownerRemoved = ownerService.removeByIdWithFeedback(id);
-            OwnerDTO dtoResponse = ownerRemoved.toOwnerDTO();
-            return  ResponseEntity.ok(dtoResponse);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        Owner ownerRemoved = ownerService.removeByIdWithFeedback(id);
+        OwnerDTO dtoResponse = ownerRemoved.toOwnerDTO();
+        return  ResponseEntity.ok(dtoResponse);
     }
 
     @GetMapping("/filter")
     public ResponseEntity<?> find(@RequestBody OwnerDTO dto){
-        try{
-            Owner filter = dto.toOwner();
-            List<Owner> ownersFind = ownerService.find(filter);
-            List<OwnerDTO> dtosResponse = ownersFind
-                    .stream()
-                    .map(Owner::toOwnerDTO)
-                    .collect(Collectors.toList());
-            return ResponseEntity.ok(dtosResponse);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        Owner filter = dto.toOwner();
+        List<Owner> ownersFind = ownerService.find(filter);
+        List<OwnerDTO> dtosResponse = ownersFind
+                .stream()
+                .map(Owner::toOwnerDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(dtosResponse);
     }
 
     @GetMapping("/animals/{id}")
     public ResponseEntity<?> findAllAnimals(@PathVariable(value = "id") Long id){
-        try{
-            List<Animal> animals  =  ownerService.findAllAnimalsByOwnerId(id);
-            List<AnimalDTO> dtosResponse = animals
-                    .stream()
-                    .map(Animal::toAnimalDTO)
-                    .collect(Collectors.toList());
-            return ResponseEntity.ok(dtosResponse);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        List<Animal> animals  =  ownerService.findAllAnimalsByOwnerId(id);
+        List<AnimalDTO> dtosResponse = animals
+                .stream()
+                .map(Animal::toAnimalDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(dtosResponse);
     }
 }

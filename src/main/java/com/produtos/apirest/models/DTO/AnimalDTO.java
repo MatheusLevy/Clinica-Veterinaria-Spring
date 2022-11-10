@@ -31,8 +31,14 @@ public class AnimalDTO {
             this.id = 0L;
     }
 
+    private void hasName(){
+        if (this.name == null)
+            this.name = "";
+    }
+
     public Animal toAnimal(){
         hasId();
+        hasName();
         return Animal.builder()
                 .animalId(this.id)
                 .name(this.name)
@@ -43,6 +49,7 @@ public class AnimalDTO {
 
     public Animal toAnimal(Owner owner, AnimalType type){
         hasId();
+        hasName();
         return Animal.builder()
                 .animalId(this.id)
                 .name(this.name)

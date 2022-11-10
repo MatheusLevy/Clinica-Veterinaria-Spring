@@ -29,6 +29,11 @@ public class RoleService {
             throw new BusinessRuleException("The role should have a id");
     }
 
+    public static void hasRoleName(Role role){
+        if (role.getRoleName() == null)
+            throw new BusinessRuleException("The role should hava a roleName");
+    }
+
     public static void hasId(Long id){
         if (id <= 0)
             throw new BusinessRuleException("The role should have a id");

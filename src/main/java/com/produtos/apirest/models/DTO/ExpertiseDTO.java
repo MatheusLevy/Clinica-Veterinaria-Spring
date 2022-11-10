@@ -26,8 +26,14 @@ public class ExpertiseDTO {
             this.id = 0L;
     }
 
+    private void hasName(){
+        if (this.name == null)
+            this.name = "";
+    }
+
     public Expertise toExpertise(){
         hasId();
+        hasName();
         return Expertise.builder()
                 .expertiseId(this.id)
                 .area(this.area)
@@ -37,6 +43,7 @@ public class ExpertiseDTO {
 
     public Expertise toExpertise(Area area){
         hasId();
+        hasName();
         return Expertise.builder()
                 .expertiseId(this.id)
                 .area(area)

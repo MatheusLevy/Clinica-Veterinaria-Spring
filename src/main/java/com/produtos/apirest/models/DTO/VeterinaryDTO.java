@@ -24,12 +24,35 @@ public class VeterinaryDTO {
     private List<Expertise> expertises;
 
     private void hasId(){
-        if (this.id == null)
+        if(this.id == null)
             this.id = 0L;
     }
 
-    public Veterinary toVeterinary(){
+    private void hasName(){
+        if (this.name == null){
+            this.name = "";
+        }
+    }
+
+    private void hasPhone(){
+        if (this.phone == null)
+            this.phone = "";
+    }
+
+    private void hasCPF(){
+        if (this.cpf == null)
+            this.cpf = "";
+    }
+
+    private void hasAllFieldsNotNull(){
         hasId();
+        hasCPF();
+        hasName();
+        hasPhone();
+    }
+
+    public Veterinary toVeterinary(){
+        hasAllFieldsNotNull();
         return Veterinary.builder()
                 .veterinaryId(this.id)
                 .name(this.name)
@@ -40,7 +63,7 @@ public class VeterinaryDTO {
     }
 
     public Veterinary toVeterinary(Expertise expertise){
-        hasId();
+        hasAllFieldsNotNull();
         return Veterinary.builder()
                 .veterinaryId(this.id)
                 .name(this.name)

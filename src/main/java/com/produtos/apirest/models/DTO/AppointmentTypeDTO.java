@@ -26,8 +26,15 @@ public class AppointmentTypeDTO {
         }
     }
 
+    private void hasName(){
+        if (this.name == null){
+            this.name = "";
+        }
+    }
+
     public AppointmentType toAppointment(){
         hasId();
+        hasName();
         return AppointmentType.builder()
                 .appointmentTypeId(this.id)
                 .name(this.name)

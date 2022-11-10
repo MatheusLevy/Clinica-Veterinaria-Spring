@@ -183,6 +183,7 @@ Here a list of thing there need to be done:
 * Change the constructor to @AllArgsConstructor
 * Refactor the dates type
 * Use @JsonInclude(Include.NON_NULL) in the DTOs
+* Delete unnecessary value in @PathVariable in Controllers 
 # About Me
 I'm Levy. I'm a science computer student and develop back-end applications at my free time. I'm trying to learn need things and trying to find a job :p 
 
