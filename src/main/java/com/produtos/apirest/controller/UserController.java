@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -26,7 +28,7 @@ public class UserController {
     }
 
     @GetMapping("/authenticate")
-    public ResponseEntity<?> autenticar(@RequestBody UserDTO dto){
+    public ResponseEntity<?> autenticar(@Valid @RequestBody UserDTO dto){
         User user = dto.toUser();
         User authenticatedUser = userService.authenticate(user.getUsername(), user.getPassword());
         UserDTO dtoResponse = authenticatedUser.toUserDTO();

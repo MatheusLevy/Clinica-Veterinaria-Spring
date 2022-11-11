@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Data
@@ -16,6 +17,8 @@ import java.util.List;
 public class UserDTO {
 
     private Long id;
+
+    @NotBlank
     private String username;
     private String password;
     private List<Role> roles;
@@ -25,12 +28,6 @@ public class UserDTO {
             this.id = 0L;
     }
 
-    private void hasUsername(){
-        if (this.username == null){
-            this.username = "";
-        }
-    }
-
     private void hasPassword(){
         if (this.password == null)
             this.password = "";
@@ -38,7 +35,6 @@ public class UserDTO {
 
     private void hasAllFieldsNotNull(){
         hasId();
-        hasUsername();
         hasPassword();
     }
 
